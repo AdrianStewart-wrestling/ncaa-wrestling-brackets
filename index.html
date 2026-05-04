@@ -1837,3 +1837,342 @@ Object.assign(window, {
 </script>
 </body>
 </html>
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- MOBILE ENHANCEMENTS — Purely additive, remove this block to revert -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<style id="mobile-enhancements">
+@media (max-width: 700px) {
+  /* Header — hide the button row, show hamburger instead */
+  .hdr .rst-btn { display: none !important; }
+  .hdr-mobile-menu { display: flex !important; }
+  .hdr-t { font-size: 14px !important; letter-spacing: 1.5px !important; }
+  .hdr-s { font-size: 8px !important; letter-spacing: 1px !important; }
+  .hdr { padding: 0 12px !important; gap: 8px !important; }
+
+  /* Round paginator visibility */
+  .mobile-round-nav { display: flex !important; }
+
+  /* Hide champ rounds 1-4 by default, show only the active one */
+  .bgrid > .rcol.champ-round { display: none !important; }
+  .bgrid > .rcol.champ-round.active-round { display: flex !important; }
+  .bgrid > .rconn.champ-conn { display: none !important; }
+
+  /* Hide consolation rounds same way */
+  .bgrid > .rcol.con-round { display: none !important; }
+  .bgrid > .rcol.con-round.active-round { display: flex !important; }
+  .bgrid > .rconn.con-conn { display: none !important; }
+
+  /* The pigtail column should stay visible only on round 1 */
+  .bgrid > .rcol.pigtail-col { display: none !important; }
+  .bgrid > .rcol.pigtail-col.active-round { display: flex !important; }
+
+  /* Make match cards a bit wider on mobile for readability */
+  .mc { width: calc(100vw - 40px) !important; max-width: 340px; }
+
+  /* Sticky champion pill */
+  .mobile-champ-pill { display: flex !important; }
+
+  /* Larger tap targets */
+  .sl { min-height: 40px !important; padding: 6px 10px !important; }
+  .sl-nm { font-size: 12px !important; }
+  .sl-sc { font-size: 9px !important; max-width: 70px !important; }
+
+  /* Ensure modals are usable on mobile */
+  #print-modal-box, #load-modal-box {
+    padding: 20px 18px !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* Hamburger button — desktop hidden, mobile shown */
+.hdr-mobile-menu {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.8);
+  font-size: 18px;
+  width: 36px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 3px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hdr-mobile-menu:hover { border-color: var(--gold2); color: var(--gold2); }
+
+/* Mobile drawer */
+#mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 52px;
+  right: 8px;
+  background: #1a1f2e;
+  border: 1px solid var(--gold);
+  border-radius: 5px;
+  padding: 6px;
+  z-index: 9000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  flex-direction: column;
+  gap: 2px;
+  min-width: 180px;
+}
+#mobile-drawer.open { display: flex; }
+#mobile-drawer button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+#mobile-drawer button:hover { background: rgba(184,134,11,0.2); color: var(--gold2); }
+
+/* Mobile round navigator */
+.mobile-round-nav {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--s1);
+  border: 1px solid var(--b1);
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  flex-shrink: 0;
+}
+.mobile-round-nav button {
+  background: none;
+  border: 1px solid var(--b2);
+  color: var(--t2);
+  width: 36px;
+  height: 32px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.mobile-round-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+.mobile-round-nav button:not(:disabled):hover { border-color: var(--gold); color: var(--gold); }
+.mobile-round-nav .mrn-label {
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--t1);
+  flex: 1;
+  text-align: center;
+}
+.mobile-round-nav .mrn-counter {
+  font-size: 10px;
+  color: var(--t3);
+  letter-spacing: 1px;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+/* Sticky champion pill */
+.mobile-champ-pill {
+  display: none;
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1a1f2e, #2c2408);
+  border: 1px solid var(--gold);
+  border-radius: 18px;
+  padding: 6px 14px;
+  font-size: 11px;
+  color: var(--gold2);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mobile-champ-pill .mcp-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 9px;
+  margin-right: 6px;
+  letter-spacing: 1.5px;
+}
+.mobile-champ-pill.empty { opacity: 0.5; }
+</style>
+
+<!-- Hamburger button injected into header -->
+<button class="hdr-mobile-menu" id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+
+<!-- Mobile drawer with all the action buttons -->
+<div id="mobile-drawer">
+  <button onclick="resetBracket(); closeMobileMenu();">↺ Reset Bracket</button>
+  <button onclick="openLoadModal(); closeMobileMenu();">📂 Load Entry</button>
+  <button onclick="openResultsModal(); closeMobileMenu();">🏁 Submit Results</button>
+  <button onclick="openLeaderboard(); closeMobileMenu();">🏆 Leaderboard</button>
+  <button onclick="printBracket(); closeMobileMenu();" style="color: var(--gold2); border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4px; padding-top: 12px;">📤 Submit Entry</button>
+</div>
+
+<!-- Round paginator (mobile only) -->
+<div class="mobile-round-nav" id="mobile-round-nav">
+  <button onclick="mobilePrevRound()" id="mrn-prev">◀</button>
+  <div>
+    <div class="mrn-label" id="mrn-label">Round 1</div>
+    <div class="mrn-counter" id="mrn-counter">1 of 6</div>
+  </div>
+  <button onclick="mobileNextRound()" id="mrn-next">▶</button>
+</div>
+
+<!-- Sticky champion pill -->
+<div class="mobile-champ-pill empty" id="mobile-champ-pill">
+  <span class="mcp-label">CHAMP</span>
+  <span id="mcp-name">Undecided</span>
+</div>
+
+<script>
+(function() {
+  // Move hamburger button into the header (after the spacer)
+  const hdr = document.querySelector('.hdr');
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  if (hdr && menuBtn) hdr.appendChild(menuBtn);
+
+  // Move round nav into the area, before the bracket div
+  const area = document.getElementById('area');
+  const bkt = document.getElementById('bkt');
+  const roundNav = document.getElementById('mobile-round-nav');
+  if (area && bkt && roundNav) area.insertBefore(roundNav, bkt);
+})();
+
+// ─── Mobile menu drawer ───────────────────────────────────
+window.toggleMobileMenu = function() {
+  document.getElementById('mobile-drawer').classList.toggle('open');
+};
+window.closeMobileMenu = function() {
+  document.getElementById('mobile-drawer').classList.remove('open');
+};
+// Close drawer on outside click
+document.addEventListener('click', function(e) {
+  const drawer = document.getElementById('mobile-drawer');
+  const btn = document.getElementById('mobile-menu-btn');
+  if (drawer && !drawer.contains(e.target) && e.target !== btn) {
+    drawer.classList.remove('open');
+  }
+});
+
+// ─── Mobile round navigator ───────────────────────────────
+// Round indices 0-5 map to: 0=Pigtail+R1, 1=R2, 2=Quarters, 3=Semis, 4=Finals, 5=Consolation
+let mobileRoundIdx = 0;
+const MOBILE_ROUND_LABELS = [
+  { label: 'Round 1', counter: '1 of 6' },
+  { label: 'Round of 16', counter: '2 of 6' },
+  { label: 'Quarterfinals', counter: '3 of 6' },
+  { label: 'Semifinals', counter: '4 of 6' },
+  { label: 'Finals', counter: '5 of 6' },
+  { label: 'Consolation', counter: '6 of 6' }
+];
+
+window.mobilePrevRound = function() {
+  if (mobileRoundIdx > 0) {
+    mobileRoundIdx--;
+    applyMobileRoundView();
+  }
+};
+window.mobileNextRound = function() {
+  if (mobileRoundIdx < 5) {
+    mobileRoundIdx++;
+    applyMobileRoundView();
+  }
+};
+
+function applyMobileRoundView() {
+  const lbl = MOBILE_ROUND_LABELS[mobileRoundIdx];
+  const labelEl = document.getElementById('mrn-label');
+  const counterEl = document.getElementById('mrn-counter');
+  const prevBtn = document.getElementById('mrn-prev');
+  const nextBtn = document.getElementById('mrn-next');
+  if (labelEl) labelEl.textContent = lbl.label;
+  if (counterEl) counterEl.textContent = lbl.counter;
+  if (prevBtn) prevBtn.disabled = mobileRoundIdx === 0;
+  if (nextBtn) nextBtn.disabled = mobileRoundIdx === 5;
+
+  // Tag the round columns so CSS can show only the active one
+  // The bracket re-renders on every pick, so we re-tag every time
+  const grids = document.querySelectorAll('#bkt .bgrid');
+  if (grids.length === 0) return;
+
+  // First grid = championship, second = consolation
+  const champGrid = grids[0];
+  const conGrid = grids[1];
+
+  if (champGrid) {
+    const cols = champGrid.querySelectorAll('.rcol');
+    const conns = champGrid.querySelectorAll('.rconn');
+    cols.forEach((c, i) => {
+      c.classList.remove('active-round', 'champ-round', 'pigtail-col');
+      // i=0 is pigtail, i=1..5 are champ rounds 0..4
+      if (i === 0) {
+        c.classList.add('pigtail-col');
+        if (mobileRoundIdx === 0) c.classList.add('active-round');
+      } else if (i >= 1 && i <= 5) {
+        c.classList.add('champ-round');
+        if (i - 1 === mobileRoundIdx) c.classList.add('active-round');
+      }
+    });
+    conns.forEach(c => c.classList.add('champ-conn'));
+  }
+
+  if (conGrid) {
+    const cols = conGrid.querySelectorAll('.rcol');
+    const conns = conGrid.querySelectorAll('.rconn');
+    cols.forEach((c) => {
+      c.classList.add('con-round');
+      if (mobileRoundIdx === 5) c.classList.add('active-round');
+      else c.classList.remove('active-round');
+    });
+    conns.forEach(c => c.classList.add('con-conn'));
+  }
+}
+
+// Re-apply the round view after every render (since render() rebuilds the DOM)
+const origRender = window.render;
+if (typeof origRender === 'function') {
+  window.render = function() {
+    origRender.apply(this, arguments);
+    applyMobileRoundView();
+    updateChampPill();
+  };
+} else {
+  // render isn't on window because of module scoping — use MutationObserver instead
+  const observer = new MutationObserver(() => {
+    applyMobileRoundView();
+    updateChampPill();
+  });
+  const bkt = document.getElementById('bkt');
+  if (bkt) observer.observe(bkt, { childList: true, subtree: false });
+}
+
+// ─── Sticky champion pill ─────────────────────────────────
+function updateChampPill() {
+  const pill = document.getElementById('mobile-champ-pill');
+  const nameEl = document.getElementById('mcp-name');
+  if (!pill || !nameEl) return;
+  // Try to find current champion from the page
+  const champCard = document.querySelector('.ccard:not(.empty) .cnm');
+  if (champCard && champCard.textContent && champCard.textContent !== 'Undecided') {
+    nameEl.textContent = champCard.textContent.trim();
+    pill.classList.remove('empty');
+  } else {
+    nameEl.textContent = 'Undecided';
+    pill.classList.add('empty');
+  }
+}
+
+// Initial application
+setTimeout(applyMobileRoundView, 100);
+setTimeout(updateChampPill, 100);
+</script>
+<!-- ════════════════════════════════════════════════════════════ -->
