@@ -1161,8 +1161,7 @@ function render() {
   html+=`<div class="bgrid" style="align-items:flex-start">`;
   const cpHasData=st.conPigtail.a||st.conPigtail.b;
   html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-top:${(MH + GAP) * 4}px;margin-bottom:${GAP}px;">${cpHasData?matchHTML(st.conPigtail,'conPigtail',0,0,'con pt'):`<div style="min-width:168px;padding:8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting pigtail & 3v30…</div>`}</div></div></div>`;
-  html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${MH/2-6}px;"><div style="font-size:10px;color:var(--orange);opacity:.4;">→</div></div>`;
-  st.con.forEach((round,ri)=>{
+html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${((MH + GAP) * 4) + (MH/2 - 6)}px;"><div style="font-size:10px;color:var(--orange);opacity:.4;">→</div></div>`;  st.con.forEach((round,ri)=>{
     html+=`<div class="rcol"><div class="rhdr cc">${CON_RND_NAMES[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
     const hasData=round.some(m=>m.a||m.b);
     if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting results…</div>`;}
