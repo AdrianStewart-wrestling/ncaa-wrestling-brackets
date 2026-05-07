@@ -987,7 +987,7 @@ function renderWeightTabs() {
   const weightBtns = WLIST.map(w=>
     `<button class="wtab ${w===CW && !showScores && !showAA?'on':''}" onclick="switchW(${w})">${w}</button>`
   ).join('');
-  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 Scores</button>`;
+  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 Team Scores</button>`;
   const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ All-Americans</button>`;
   document.getElementById('wtabs').innerHTML = weightBtns + scoreBtn + aaBtn;
 }
