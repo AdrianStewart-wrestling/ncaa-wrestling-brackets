@@ -371,7 +371,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 <div id="leaderboard-view" style="flex:1;overflow:auto;padding:14px 18px 24px;display:none;flex-direction:column;gap:0">
   <div class="scores-title">Leaderboard</div>
-  <div class="scores-sub">Live bracket standings from Google Sheets</div>
+  <div class="scores-sub">Live bracket standings</div>
   <div class="scores-wrap">
     <div class="scores-main">
       <table class="lb-table">
@@ -404,7 +404,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 <div id="print-modal">
   <div id="print-modal-box">
     <h2>📤 Submit Bracket Entry</h2>
-    <p>Select which weight classes to include in this saved entry.<br>Your picks will be written to Google Sheets.</p>
+    <p>Select which weight classes to include in this saved entry.<br>Your brackets will be emailed to you in 5-7 minutes</p>
     <div class="pm-weight-grid" id="pm-checks"></div>
     <div class="pm-row">
       <button class="pm-btn" onclick="pmSelectAll()">Select All</button>
@@ -436,7 +436,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 <div id="load-modal">
   <div id="load-modal-box">
     <h2>📂 Load Saved Entry</h2>
-    <p>Select a saved submission from Google Sheets, enter its PIN, and repopulate the bracket.</p>
+    <p>Select a saved submission, enter its PIN, and repopulate the bracket.</p>
     <div class="pm-row" style="margin-bottom:10px;justify-content:stretch">
       <select id="load-submission-select" style="width:100%;padding:10px 12px;border:1px solid var(--b2);border-radius:4px;font-family:'Barlow',sans-serif;color:var(--t1);background:#fff"></select>
     </div>
