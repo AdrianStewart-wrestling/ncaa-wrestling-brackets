@@ -1,0 +1,63 @@
+<!-- official-print.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Official Bracket Print</title>
+  <style>
+    body { margin: 0; background: white; font-family: Arial, sans-serif; }
+    .page { width: 11in; height: 8.5in; padding: .35in; }
+    svg { width: 100%; height: 100%; }
+    text { font-family: Arial, sans-serif; font-size: 13px; }
+    .title { font-size: 26px; font-weight: bold; }
+    .round { font-size: 16px; font-weight: bold; }
+    .line { stroke: #000; stroke-width: 2; fill: none; }
+  </style>
+</head>
+<body>
+  <div id="print-root"></div>
+
+  <script>
+    function wrestlerText(w) {
+      if (!w) return "";
+      return `(${w.seed}) ${w.n.trim()} (${w.s}) ${w.r || ""}`;
+    }
+
+    function drawMatch(x, y, a, b) {
+      return `
+        <text x="${x}" y="${y}">${wrestlerText(a)}</text>
+        <line class="line" x1="${x}" y1="${y + 8}" x2="${x + 230}" y2="${y + 8}" />
+
+        <text x="${x}" y="${y + 34}">${wrestlerText(b)}</text>
+        <line class="line" x1="${x}" y1="${y + 42}" x2="${x + 230}" y2="${y + 42}" />
+      `;
+    }
+
+    function renderOfficialBracket() {
+      const root = document.getElementById("print-root");
+
+      // test data first
+      const match = {
+        a: { seed: 33, n: "Jace Schafer", s: "BLOO", r: "23-10" },
+        b: { seed: 32, n: "Mack Mauger", s: "MIZZ", r: "23-16" }
+      };
+
+      root.innerHTML = `
+        <div class="page">
+          <svg viewBox="0 0 1400 850">
+            <text class="title" x="40" y="60">2026 NCAA Division I Wrestling Championships</text>
+            <text class="title" x="1030" y="60">125 CHAMPIONSHIP</text>
+
+            <text class="round" x="200" y="95">Thursday Morning</text>
+            <text class="round" x="560" y="95">Thursday Night</text>
+            <text class="round" x="760" y="95">Friday Morning</text>
+
+            ${drawMatch(40, 170, match.a, match.b)}
+          </svg>
+        </div>
+      `;
+    }
+
+    renderOfficialBracket();
+  </script>
+</body>
+</html>
