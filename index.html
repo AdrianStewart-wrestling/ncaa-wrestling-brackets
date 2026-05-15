@@ -2503,7 +2503,10 @@ async function doPrint(){
     weights.forEach(weightBlock => {
       const wt = weightBlock.weight;
       (weightBlock.rows || []).forEach(row => {
-        if (!row.winnerSlot) return;
+       // Write the match if it has wrestlers OR a winner — not just winners.
+// This ensures consolation matches that have been seeded with losers
+// (but not yet decided) still get persisted, so the PDF can render them.
+if (!row.winnerSlot && !row.wrestlerA && !row.wrestlerB) return;
         const matchId = `${meta.submissionId}_${wt}_${row.bracket}_${row.roundIndex}_${row.matchIndex}`;
         matchWrites.push(setDoc(doc(db, "matches", matchId), {
           submissionId : meta.submissionId,
