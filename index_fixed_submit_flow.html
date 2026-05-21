@@ -1,0 +1,3328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAA Division I Wrestling Championships</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0f2f5; --s1:#ffffff; --s2:#f8f9fb; --s3:#eef0f4;
+  --b1:#dde1e9; --b2:#c8cdd8; --b3:#b0b8c6;
+  --gold:#b8860b; --gold2:#d4a017; --gold-bg:rgba(184,134,11,.09);
+  --green:#16a34a; --green-bg:rgba(22,163,74,.09); --green-b:rgba(22,163,74,.35);
+  --red:#dc2626; --red-bg:rgba(220,38,38,.06);
+  --orange:#c2410c; --orange-bg:rgba(194,65,12,.07); --orange-b:rgba(194,65,12,.3);
+  --blue:#2563eb;
+  --t1:#1a2233; --t2:#4a5568; --t3:#8896aa;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;height:100vh}
+
+/* HEADER */
+.hdr{background:linear-gradient(90deg,#1a1f2e,#2c2408,#1a1f2e);border-bottom:2px solid var(--gold);height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;flex-shrink:0;box-shadow:0 2px 16px rgba(201,168,76,.15)}
+.hdr-hex{width:32px;height:32px;background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.hdr-t{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--gold2);line-height:1}
+.hdr-s{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
+.hdr-sp{flex:1}
+.rst-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;padding:5px 14px;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
+.rst-btn:hover{border-color:var(--gold2);color:var(--gold2)}
+
+/* WEIGHT TABS */
+.wtabs{background:var(--s1);border-bottom:2px solid var(--b1);display:flex;padding:0 14px;gap:1px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;height:42px;align-items:stretch;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.wtabs::-webkit-scrollbar{display:none}
+.wtab{display:flex;align-items:center;padding:0 14px;cursor:pointer;border:none;background:none;color:var(--t3);font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.wtab:hover{color:var(--t2)}
+.wtab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.wtab.scores-tab{color:var(--t3);border-left:1px solid var(--b1);margin-left:8px;padding-left:20px;font-size:16px;letter-spacing:1.5px}
+.wtab.scores-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.wtab.aa-tab{color:var(--t3);border-left:1px solid var(--b1);padding-left:20px;font-size:16px;letter-spacing:1.5px}
+.wtab.aa-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* SCORES VIEW */
+#scores-view{flex:1;overflow:auto;padding:14px 18px 24px;display:none;flex-direction:column;gap:0}
+#scores-view.active{display:flex}
+#scores-view::-webkit-scrollbar{width:6px;height:6px}
+#scores-view::-webkit-scrollbar-track{background:var(--bg)}
+#scores-view::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+.scores-wrap{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.scores-main{flex:1;min-width:520px}
+.scores-key{min-width:200px;flex-shrink:0}
+
+.scores-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--t1);margin-bottom:4px}
+.scores-sub{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+
+.lb-table{width:100%;border-collapse:collapse;background:var(--s1);border:1px solid var(--b1);border-radius:5px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.lb-table thead tr{background:linear-gradient(90deg,#1a1f2e,#2c2408);border-bottom:2px solid var(--gold)}
+.lb-table thead th{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);padding:7px 10px;text-align:left;white-space:nowrap}
+.lb-table thead th.num{text-align:right}
+.lb-table tbody tr{border-bottom:1px solid var(--b1);transition:background .1s}
+.lb-table tbody tr:last-child{border-bottom:none}
+.lb-table tbody tr:hover{background:var(--s3)}
+.lb-table tbody tr.rank-1{background:var(--gold-bg)}
+.lb-table tbody tr.rank-2{background:rgba(150,150,160,.06)}
+.lb-table tbody tr.rank-3{background:rgba(150,100,50,.05)}
+.lb-td-rank{font-family:'Bebas Neue',sans-serif;font-size:20px;width:36px;padding:6px 10px;color:var(--t3);text-align:center}
+.lb-table tbody tr.rank-1 .lb-td-rank{color:var(--gold)}
+.lb-table tbody tr.rank-2 .lb-td-rank{color:#6b7280}
+.lb-table tbody tr.rank-3 .lb-td-rank{color:#92400e}
+.lb-td-school{font-size:12px;font-weight:600;color:var(--t1);padding:6px 8px}
+.lb-td-pts{font-family:'Bebas Neue',sans-serif;font-size:18px;text-align:right;padding:6px 12px;color:var(--t1)}
+.lb-table tbody tr.rank-1 .lb-td-pts{color:var(--gold)}
+.lb-td-adv{font-size:10px;text-align:right;padding:6px 8px;color:var(--t3);font-family:'Barlow Condensed',sans-serif;white-space:nowrap}
+.lb-td-place{font-size:10px;text-align:right;padding:6px 10px;color:var(--t3);font-family:'Barlow Condensed',sans-serif;white-space:nowrap}
+.lb-td-aa{font-size:10px;padding:6px 10px;color:var(--t2);font-family:'Barlow Condensed',sans-serif;white-space:nowrap;text-align:right}
+.lb-bar-wrap{width:80px;padding:6px 10px}
+.lb-bar{height:6px;background:var(--b1);border-radius:3px;overflow:hidden}
+.lb-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .3s ease}
+.lb-table tbody tr.rank-1 .lb-bar-fill{background:linear-gradient(90deg,var(--gold),#f0c040)}
+
+.key-card{background:var(--s1);border:1px solid var(--b1);border-radius:5px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.key-hdr{background:linear-gradient(135deg,#1a1f2e,#2c2408);padding:7px 12px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--gold2)}
+.key-row{display:flex;align-items:center;justify-content:space-between;padding:5px 12px;border-bottom:1px solid var(--b1);font-size:11px}
+.key-row:last-child{border-bottom:none}
+.key-lbl{color:var(--t2)}
+.key-val{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--t1)}
+.key-val.gold{color:var(--gold)}
+.key-sep{height:1px;background:var(--b1);margin:4px 0}
+
+.scores-note{font-size:10px;color:var(--t3);margin-top:10px;font-style:italic}
+
+/* ALL-AMERICANS VIEW */
+#aa-view{flex:1;overflow:auto;padding:14px 18px 24px;display:none;flex-direction:column;gap:0}
+#aa-view.active{display:flex}
+#aa-view::-webkit-scrollbar{width:6px;height:6px}
+#aa-view::-webkit-scrollbar-track{background:var(--bg)}
+#aa-view::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+.aa-view-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--t1);margin-bottom:2px}
+.aa-view-sub{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+
+.aa-row-grid{display:flex;gap:10px;flex-wrap:nowrap;margin-bottom:12px;overflow-x:auto;padding-bottom:2px}
+.aa-row-grid::-webkit-scrollbar{height:4px}
+.aa-row-grid::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+.aa-wcard{background:var(--s1);border:1px solid var(--b1);border-radius:5px;overflow:hidden;min-width:168px;flex:1;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.aa-wcard-hdr{background:linear-gradient(90deg,#1a1f2e,#2c2408);padding:5px 10px;display:flex;align-items:baseline;gap:6px;border-bottom:2px solid var(--gold)}
+.aa-wcard-wt{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold2);line-height:1}
+.aa-wcard-lbs{font-size:8px;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase}
+
+.aa-wcard-row{display:flex;align-items:center;padding:4px 8px;border-bottom:1px solid var(--b1);gap:5px;min-height:28px}
+.aa-wcard-row:last-child{border-bottom:none}
+.aa-wcard-row.place-1{background:var(--gold-bg)}
+.aa-wcard-row.place-2{background:rgba(107,114,128,.05)}
+.aa-wcard-row.place-3{background:rgba(146,64,14,.04)}
+
+.aa-wcard-place{font-family:'Bebas Neue',sans-serif;font-size:13px;width:16px;flex-shrink:0;text-align:center;line-height:1}
+.aa-wcard-row.place-1 .aa-wcard-place{color:var(--gold)}
+.aa-wcard-row.place-2 .aa-wcard-place{color:#6b7280}
+.aa-wcard-row.place-3 .aa-wcard-place{color:#92400e}
+.aa-wcard-row.place-4 .aa-wcard-place,.aa-wcard-row.place-5 .aa-wcard-place,
+.aa-wcard-row.place-6 .aa-wcard-place,.aa-wcard-row.place-7 .aa-wcard-place,
+.aa-wcard-row.place-8 .aa-wcard-place{color:var(--t3)}
+
+.aa-wcard-medal{font-size:11px;width:14px;text-align:center;flex-shrink:0}
+.aa-wcard-info{flex:1;min-width:0}
+.aa-wcard-name{font-size:10px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.aa-wcard-school{font-size:8px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.aa-wcard-tbd{font-size:9px;color:var(--t3);font-style:italic}
+
+/* MAIN SCROLL AREA */
+.area{flex:1;overflow:auto;padding:14px 18px 24px;display:flex;flex-direction:column;gap:0}
+.area::-webkit-scrollbar{width:6px;height:6px}
+.area::-webkit-scrollbar-track{background:var(--bg)}
+.area::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+/* TIP */
+.tip{display:flex;align-items:center;gap:8px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:3px;padding:6px 12px;margin-bottom:10px;font-size:11px;color:var(--blue);flex-shrink:0}
+.tip-dot{width:5px;height:5px;background:var(--blue);border-radius:50%;flex-shrink:0;animation:blink 1.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* SECTION LABEL */
+.sec-hd{display:flex;align-items:center;gap:10px;margin:14px 0 8px;flex-shrink:0}
+.sec-hd .line{flex:1;height:1px}
+.sec-hd .lbl{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;padding:0 8px;white-space:nowrap}
+.sec-champ .line{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.sec-champ .lbl{color:var(--gold)}
+.sec-con .line{background:linear-gradient(90deg,transparent,var(--orange),transparent)}
+.sec-con .lbl{color:var(--orange)}
+
+/* BRACKET GRID */
+.bgrid{display:flex;gap:0;align-items:flex-start;min-width:max-content}
+.rcol{display:flex;flex-direction:column;min-width:0}
+.rhdr{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);text-align:center;padding:0 3px 6px;white-space:nowrap}
+.rhdr.gc{color:var(--gold)}
+.rhdr.cc{color:var(--orange);opacity:.9}
+.rconn{width:14px;flex-shrink:0}
+
+/* MATCH */
+.mc{background:var(--s1);border:1px solid var(--b1);border-radius:4px;overflow:hidden;width:168px;flex-shrink:0;transition:box-shadow .15s;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.mc:hover{box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.mc.cm{border-color:var(--gold);box-shadow:0 0 10px rgba(184,134,11,.2)}
+.mc.con{border-color:var(--orange-b)}
+.mc.pm{border-color:rgba(205,127,50,.5)}
+.md{height:1px;background:var(--b1)}
+
+/* SLOTS */
+.sl{display:flex;align-items:center;padding:4px 7px;min-height:30px;cursor:pointer;transition:background .12s;position:relative;user-select:none;gap:0}
+.sl:hover:not(.empty):not(.w):not(.l){background:var(--s3)}
+.sl.w{background:var(--green);border-left:3px solid #0f7a30}
+.sl.l{background:var(--red-bg);opacity:.6}
+.sl.empty{cursor:default;opacity:.35}
+.sl.empty:hover{background:none}
+.sl-sd{font-size:8px;color:var(--t3);width:13px;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:600;text-align:right;padding-right:2px}
+.sl.w .sl-sd{color:rgba(255,255,255,.8)}
+.sl-nm{flex:1;font-size:10.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 3px}
+.sl-nm .fn{font-weight:400;color:var(--t2)}
+.sl.w .sl-nm{color:#fff}
+.sl.w .sl-nm .fn{color:rgba(255,255,255,.7)}
+.sl.l .sl-nm{text-decoration:line-through;text-decoration-color:rgba(239,68,68,.4);color:var(--t3)}
+.sl-sc{font-size:8px;color:var(--t3);flex-shrink:0;font-family:'Barlow Condensed',sans-serif;white-space:nowrap;max-width:46px;overflow:hidden;text-overflow:ellipsis}
+.sl.w .sl-sc{color:rgba(255,255,255,.7);opacity:1}
+.sl-tbd{font-size:9px;color:var(--t3);font-style:italic;padding:0 3px}
+
+/* win flash */
+.sl.w{animation:wflash .35s ease}
+@keyframes wflash{0%{background:#4ade80}100%{background:var(--green)}}
+
+/* CHAMP BOX */
+.cbox{display:flex;align-items:flex-start;padding:0 14px;flex-direction:column;gap:10px}
+
+/* ALL-AMERICANS PANEL */
+.aa-panel{background:var(--s1);border:1px solid var(--b1);border-radius:5px;min-width:152px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.aa-hdr{background:linear-gradient(135deg,#1a1f2e,#2c2408);padding:6px 10px;text-align:center}
+.aa-hdr-t{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--gold2)}
+.aa-hdr-s{font-size:8px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase}
+.aa-row{display:flex;align-items:center;padding:4px 8px;border-bottom:1px solid var(--b1);gap:6px}
+.aa-row:last-child{border-bottom:none}
+.aa-place{font-family:'Bebas Neue',sans-serif;font-size:14px;width:18px;flex-shrink:0;text-align:center}
+.aa-medal{font-size:12px;width:16px;flex-shrink:0;text-align:center}
+.aa-info{flex:1;min-width:0}
+.aa-name{font-size:10px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aa-school{font-size:8px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aa-row.place-1 .aa-place{color:#b8860b}
+.aa-row.place-2 .aa-place{color:#6b7280}
+.aa-row.place-3 .aa-place{color:#92400e}
+.aa-row.place-4 .aa-place{color:var(--t2)}
+.aa-row.place-5,.aa-row.place-6,.aa-row.place-7,.aa-row.place-8{opacity:.85}
+.aa-tbd{font-size:9px;color:var(--t3);font-style:italic;padding:3px 0}
+.ccard{background:linear-gradient(135deg,#fffbf0,#fdf6e3,#fffbf0);border:2px solid var(--gold);border-radius:5px;padding:14px 16px;text-align:center;min-width:152px;box-shadow:0 0 16px rgba(184,134,11,.18)}
+.ccard .crn{font-size:22px;margin-bottom:5px}
+.ccard .clbl{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:3px}
+.ccard .cnm{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;color:var(--t1)}
+.ccard .csc{font-size:9px;color:var(--gold);opacity:.8;margin-top:1px}
+.ccard.empty .cnm{font-size:11px;color:var(--t3);font-family:'Barlow',sans-serif;letter-spacing:0;font-style:italic}
+
+/* PIGTAIL */
+.mc.pt{border-color:rgba(201,168,76,.5);box-shadow:0 0 8px rgba(201,168,76,.1)}
+.mc.pt-pending{border-color:rgba(201,168,76,.25);border-style:dashed}
+
+/* PLACE LABELS */
+.pl-lbl{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;font-family:'Barlow Condensed',sans-serif;color:var(--t3)}
+
+/* SWAP HINT */
+.swap-hint{display:none;font-size:8px;color:var(--red);opacity:.8;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;margin-left:3px;flex-shrink:0;white-space:nowrap}
+.sl.l:hover .swap-hint{display:inline}
+
+.prt-btn{border-color:var(--gold);color:var(--gold);margin-left:6px}
+.prt-btn:hover{background:var(--gold);color:#000}
+
+/* PRINT MODAL */
+#print-modal,#load-modal,#results-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center}
+#print-modal.open,#load-modal.open,#results-modal.open{display:flex}
+#print-modal-box,#load-modal-box{background:#ffffff;border:1px solid var(--gold);border-radius:6px;padding:28px 32px;max-width:420px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+#print-modal-box h2,#load-modal-box h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold);margin-bottom:8px}
+#print-modal-box p,#load-modal-box p{font-size:12px;color:var(--t2);margin-bottom:20px;line-height:1.6}
+.pm-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.pm-btn{background:none;border:1px solid var(--b2);color:var(--t2);font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;padding:7px 18px;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
+.pm-btn:hover{border-color:var(--gold);color:var(--gold)}
+.pm-btn.primary{background:var(--gold);color:#fff;border-color:var(--gold);font-weight:700}
+.pm-btn.primary:hover{background:var(--gold2)}
+.pm-weight-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:18px}
+.pm-wchk{display:flex;align-items:center;gap:5px;cursor:pointer}
+.pm-wchk input{accent-color:var(--gold);width:13px;height:13px;cursor:pointer}
+.pm-wchk span{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--t2)}
+.pm-wchk:hover span{color:var(--gold)}
+
+/* PRINT STYLES (legacy — bracket modal print rules are below; @page rule removed to avoid conflict) */
+@media print {
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#000!important}
+  .hdr,.wtabs,#area,#scores-view,#aa-view,#leaderboard-view,#print-modal,#load-modal,#results-modal{display:none!important}
+  #print-root{display:block!important}
+  .print-page{break-after:page;break-inside:avoid;width:100%;overflow:hidden;background:#fff;color:#000;font-family:Arial,Helvetica,sans-serif}
+  .print-page:last-child{break-after:avoid}
+  .psw{display:block}
+  .ph{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:2px;margin-bottom:3px}
+  .ph-title{font-size:10pt;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;line-height:1}
+  .ph-sub{font-size:5.5pt;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:1px}
+  .ph-wt{font-size:24pt;font-weight:900;line-height:1}
+  .ph-right{text-align:right;min-width:82px}
+  .ph-clbl{font-size:5pt;text-transform:uppercase;letter-spacing:1.5px;color:#888}
+  .ph-cnm{font-size:9pt;font-weight:900;line-height:1.15}
+  .ph-csc{font-size:5.5pt;color:#555}
+  .ps-lbl{font-size:5pt;text-transform:uppercase;letter-spacing:1.5px;color:#999;border-top:1px solid #e0e0e0;padding-top:1px;margin:2px 0}
+  .pbg{display:flex;align-items:flex-start;gap:0}
+  .prc{display:flex;flex-direction:column}
+  .prh{font-size:4.6pt;text-transform:uppercase;letter-spacing:.8px;color:#aaa;text-align:center;padding:0 1px 1px;white-space:nowrap}
+  .prcn{width:5px;flex-shrink:0}
+  .pm{border:1px solid #ccc;border-radius:1px;overflow:hidden;width:98px;flex-shrink:0;background:#fff}
+  .pm.champ-final{border:2px solid #111}
+  .pm.pigtail{border:1px dashed #bbb}
+  .pm.consolation{border-color:#bbb;background:#fafafa}
+  .pm.place-match{border:1.5px solid #666}
+  .pmd{height:1px;background:#ddd}
+  .ps{display:flex;align-items:center;padding:1px 2px;min-height:14px}
+  .ps.win{background:#e8f5e9;border-left:2px solid #2e7d32}
+  .ps.los{opacity:0.4}
+  .ps.tbd{opacity:0.2}
+  .psseed{font-size:4.6pt;color:#bbb;width:8px;flex-shrink:0;text-align:right;padding-right:1px}
+  .ps.win .psseed{color:#2e7d32}
+  .psname{flex:1;font-size:5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 1px;font-weight:500}
+  .ps.win .psname{font-weight:700;color:#1b5e20}
+  .ps.los .psname{text-decoration:line-through;color:#bbb}
+  .pssch{font-size:4.1pt;color:#bbb;flex-shrink:0;max-width:24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pstbd{font-size:4.8pt;color:#ccc;font-style:italic}
+  .pchbox{display:flex;align-items:center;padding:0 3px}
+  .pchcard{border:2px solid #111;border-radius:2px;padding:3px 5px;text-align:center;min-width:58px;background:#fffdf5}
+  .pchcard .pcrown{font-size:10pt;margin-bottom:1px;line-height:1}
+  .pchcard .pclbl{font-size:4.2pt;text-transform:uppercase;letter-spacing:1.5px;color:#888}
+  .pchcard .pcnm{font-size:6.3pt;font-weight:900;text-transform:uppercase;line-height:1.2}
+  .pchcard .pcsc{font-size:4.6pt;color:#555}
+  .pchcard.empty .pcnm{color:#aaa;font-weight:400}
+  .ppl-lbl{font-size:4.2pt;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:0}
+}
+
+
+/* === BRACKET PREVIEW STYLES (added by integration) === */
+
+/* Bracket renderer styles (from brackets-from-firestore.html) */
+.bracket-page {
+  width: 8.5in; 
+  height: 11in;
+  background: white;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.bracket-page svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.bracket-page .ln    { stroke: #000; stroke-width: 1.8; fill: none; }
+.bracket-page .ln-th { stroke: #000; stroke-width: 2.2; fill: none; }
+.bracket-page .t     { font: 13px Arial, sans-serif; fill: #000; }
+.bracket-page .t-sm  { font: 12px Arial, sans-serif; fill: #000; }
+.bracket-page .num   { font: bold 17px Arial, sans-serif; fill: #000; }
+.bracket-page .hdr   { font: bold 30px Arial, sans-serif; fill: #000; }
+.bracket-page .hdr-r { font: bold 30px Arial, sans-serif; fill: #000; text-anchor: end; }
+.bracket-page .col   { font: bold 16px Arial, sans-serif; fill: #000; }
+.bracket-page .champ-lbl { font: bold 19px Arial, sans-serif; fill: #000; text-anchor: middle; }
+.bracket-page .place { font: bold 14px Arial, sans-serif; fill: #000; }
+.bracket-page .wb    { font: bold 26px Arial, sans-serif; fill: #000; text-anchor: middle; }
+
+
+/* Bracket preview modal */
+#bracket-preview-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  overflow-y: auto;
+  padding: 20px;
+}
+#bracket-preview-modal.open {
+  display: block;
+}
+#bracket-preview-modal .bp-shell {
+  max-width: 1700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+#bracket-preview-modal .bp-toolbar {
+  position: sticky;
+  top: 0;
+  background: #18181b;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+#bracket-preview-modal .bp-toolbar h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+#bracket-preview-modal .bp-toolbar .bp-info {
+  font-size: 13px;
+  color: #a1a1aa;
+}
+#bracket-preview-modal .bp-actions {
+  display: flex;
+  gap: 8px;
+}
+#bracket-preview-modal .bp-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: white;
+  color: #18181b;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 13px;
+}
+#bracket-preview-modal .bp-btn:hover {
+  background: #f4f4f5;
+}
+#bracket-preview-modal .bp-btn.primary {
+  background: #f59e0b;
+  color: #18181b;
+}
+#bracket-preview-modal .bp-btn.primary:hover {
+  background: #d97706;
+}
+#bracket-preview-modal .bp-pages {
+  padding: 20px;
+  background: #e5e5e5;
+}
+
+/* Print styles — only show the brackets when printing */
+@media print {
+  /* Force portrait Letter, narrow margins so the bracket fills the printable area */
+  @page {
+    size: 8.5in 11in;
+    margin: 0.25in;
+  }
+  /* Hide everything except the modal */
+  body * {
+    visibility: hidden;
+  }
+  #bracket-preview-modal,
+  #bracket-preview-modal * {
+    visibility: visible;
+  }
+  /* Strip the modal chrome — turn it into a flat print container */
+  #bracket-preview-modal {
+    display: block !important;
+    position: static !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    inset: auto !important;
+    overflow: visible !important;
+  }
+  #bracket-preview-modal .bp-toolbar {
+    display: none !important;
+  }
+  #bracket-preview-modal .bp-shell {
+    box-shadow: none !important;
+    max-width: none !important;
+    background: white !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+  #bracket-preview-modal .bp-pages {
+    padding: 0 !important;
+    background: white !important;
+    margin: 0 !important;
+  }
+  /* Each bracket sized to fit one printed page exactly */
+  .bracket-page {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    box-shadow: none !important;
+    page-break-after: always;
+    break-after: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .bracket-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+  /* Force SVG to use full width of the page; height scales by viewBox ratio */
+  .bracket-page svg {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-hex">🤼</div>
+  <div>
+    <div class="hdr-t">NCAA Wrestling Championships</div>
+    <div class="hdr-s">Division I · Cleveland, OH · March 19–21, 2026</div>
+  </div>
+  <div class="hdr-sp"></div>
+  <button class="rst-btn" onclick="resetBracket()">↺ Reset</button>
+  <button class="rst-btn" onclick="openLoadModal()">📂 Load Entry</button>
+<!-- <button class="rst-btn" onclick="openResultsModal()">🏁 Submit Results</button> -->
+  <button class="rst-btn" onclick="openLeaderboard()">🏆 Leaderboard</button>
+  <button class="rst-btn prt-btn" onclick="printBracket()">📤 Submit Entry</button>
+</div>
+
+<div class="wtabs" id="wtabs"></div>
+
+<div class="area" id="area">
+  <div class="tip"><div class="tip-dot"></div>Click a wrestler's name to advance them — their opponent automatically drops to the consolation bracket below</div>
+  <div id="bkt"></div>
+</div>
+
+<!-- Scores View -->
+<div id="scores-view">
+  <div class="scores-wrap">
+    <div class="scores-main">
+      <div class="scores-title">Team Standings</div>
+      <div class="scores-sub">Live · Top 15 Teams · 2026 NCAA Division I Wrestling</div>
+      <table class="lb-table" id="lb-table">
+        <thead>
+          <tr>
+            <th style="text-align:center">#</th>
+            <th>School</th>
+            <th class="num">Total</th>
+            <th class="num">Adv Pts</th>
+            <th class="num">Place Pts</th>
+            <th class="num">AA Count</th>
+            <th style="min-width:90px"></th>
+          </tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+      <div class="scores-note" id="scores-note"></div>
+    </div>
+    <div class="scores-key">
+      <div class="key-card">
+        <div class="key-hdr">📊 Scoring Key</div>
+        <div class="key-row"><span class="key-lbl">🥇 1st Place</span><span class="key-val gold">16 pts</span></div>
+        <div class="key-row"><span class="key-lbl">🥈 2nd Place</span><span class="key-val">12 pts</span></div>
+        <div class="key-row"><span class="key-lbl">🥉 3rd Place</span><span class="key-val">10 pts</span></div>
+        <div class="key-row"><span class="key-lbl">4th Place</span><span class="key-val">9 pts</span></div>
+        <div class="key-row"><span class="key-lbl">5th Place</span><span class="key-val">7 pts</span></div>
+        <div class="key-row"><span class="key-lbl">6th Place</span><span class="key-val">6 pts</span></div>
+        <div class="key-row"><span class="key-lbl">7th Place</span><span class="key-val">4 pts</span></div>
+        <div class="key-row"><span class="key-lbl">8th Place</span><span class="key-val">3 pts</span></div>
+        <div style="height:6px;background:var(--b1);margin:0"></div>
+        <div class="key-row"><span class="key-lbl">Champ Win</span><span class="key-val">+1 pt</span></div>
+        <div class="key-row"><span class="key-lbl">Con Win</span><span class="key-val">+0.5 pt</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- All-Americans View -->
+<div id="aa-view">
+  <div class="aa-view-title">All-Americans</div>
+  <div class="aa-view-sub">Top 8 Finishers Per Weight · 2026 NCAA Division I Wrestling</div>
+  <div id="aa-grid-125-157"></div>
+  <div id="aa-grid-165-285"></div>
+</div>
+
+<div id="leaderboard-view" style="flex:1;overflow:auto;padding:14px 18px 24px;display:none;flex-direction:column;gap:0">
+  <div class="scores-title">Leaderboard</div>
+  <div class="scores-sub">Live bracket standings</div>
+  <div class="scores-wrap">
+    <div class="scores-main">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th style="text-align:center">#</th>
+            <th>Entry</th>
+            <th>User</th>
+            <th class="num">Correct</th>
+            <th class="num">Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+      <div class="scores-note" id="leaderboard-note"></div>
+    </div>
+    <div class="scores-key">
+      <div class="key-card">
+        <div class="key-hdr">🏆 Leaderboard</div>
+        <div class="key-row"><span class="key-lbl">Scoring</span><span class="key-val">1 / correct pick</span></div>
+        <div class="key-row"><span class="key-lbl">Source</span><span class="key-val">OfficialResults</span></div>
+        <div class="key-row"><span class="key-lbl">Refresh</span><span class="key-val"><button class="pm-btn" style="padding:4px 10px" onclick="refreshLeaderboard()">Refresh</button></span></div>
+        <div class="key-row"><span class="key-lbl">Admin</span><span class="key-val"><button class="pm-btn" style="padding:4px 10px" onclick="adminRecomputeLeaderboard()">Recompute</button></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Print modal -->
+<div id="print-modal">
+  <div id="print-modal-box">
+    <h2>📤 Submit Bracket Entry</h2>
+    <p>Select which weight classes to include in this saved entry.<br>Your brackets will be shown for review and printing after submit.</p>
+    <div class="pm-weight-grid" id="pm-checks"></div>
+    <div class="pm-row">
+      <button class="pm-btn" onclick="pmSelectAll()">Select All</button>
+      <button class="pm-btn" onclick="pmSelectNone()">Clear</button>
+    </div>
+    <div class="pm-row">
+      <button class="pm-btn" onclick="closePrintModal()">Cancel</button>
+      <button type="button" class="pm-btn primary" id="submit-entry-btn" onclick="doPrint()">Submit Selected</button>
+    </div>
+  </div>
+</div>
+
+<div id="results-modal">
+  <div id="print-modal-box">
+    <h2>🏁 Submit Official Results</h2>
+    <p>Select which weight classes to send to the OfficialResults tab. Use the current bracket clicks as the official winners.</p>
+    <div class="pm-weight-grid" id="results-checks"></div>
+    <div class="pm-row">
+      <button class="pm-btn" onclick="resultsSelectAll()">Select All</button>
+      <button class="pm-btn" onclick="resultsSelectNone()">Clear</button>
+    </div>
+    <div class="pm-row">
+      <button class="pm-btn" onclick="closeResultsModal()">Cancel</button>
+      <button class="pm-btn primary" onclick="submitOfficialResults()">Submit Results</button>
+    </div>
+  </div>
+</div>
+
+<div id="load-modal">
+  <div id="load-modal-box">
+    <h2>📂 Load Saved Entry</h2>
+    <p>Select a saved submission, enter its PIN, and repopulate the bracket.</p>
+    <div class="pm-row" style="margin-bottom:10px;justify-content:stretch">
+      <select id="load-submission-select" style="width:100%;padding:10px 12px;border:1px solid var(--b2);border-radius:4px;font-family:'Barlow',sans-serif;color:var(--t1);background:#fff"></select>
+    </div>
+    <div class="pm-row" style="margin-bottom:10px;justify-content:stretch">
+      <input id="load-pin-input" type="password" inputmode="numeric" placeholder="Enter 4-8 digit PIN" style="width:100%;padding:10px 12px;border:1px solid var(--b2);border-radius:4px;font-family:'Barlow',sans-serif;color:var(--t1);background:#fff">
+    </div>
+    <div id="load-meta" style="font-size:11px;color:var(--t3);margin-bottom:14px;min-height:16px"></div>
+    <div class="pm-row">
+      <button class="pm-btn" onclick="refreshSubmissionList()">Refresh List</button>
+      <button class="pm-btn" onclick="closeLoadModal()">Cancel</button>
+      <button class="pm-btn primary" onclick="loadSelectedSubmission()">Load Entry</button>
+    </div>
+  </div>
+</div>
+
+<div id="print-root" style="display:none"></div>
+
+<!-- ============================================
+     BRACKET RENDERER (added by integration)
+     Pure JS, no module dependencies — exposes window.showBracketPreview(docs)
+     ============================================ -->
+<script>
+(function() {
+
+/* =========================================================================
+   SCHOOL ABBREVIATION TABLE
+   Maps Firestore school strings (as they appear in your data) to the
+   3-4 character abbreviations used on the official PDF brackets.
+   Easy to extend — just add entries.
+   ========================================================================= */
+const SCHOOL_ABBREV = {
+  // From your sample data
+  "Penn State":     "PSU",
+  "Bloomsburg":     "BLOO",
+  "Penn":           "PENN",
+  "SD State":       "SDSU",
+  "Illinois":       "ILL",
+  "Nebraska":       "NEB",
+  "Lehigh":         "LEH",
+  "NC State":       "NCST",
+  // Common D1 schools — extend as needed
+  "Iowa":           "IOWA",
+  "Oklahoma State": "OKST",
+  "Ohio State":     "OHST",
+  "Iowa State":     "ISU",
+  "Wisconsin":      "WIS",
+  "Minnesota":      "MINN",
+  "Michigan":       "MICH",
+  "Cornell":        "COR",
+  "Princeton":      "PRIN",
+  "Virginia Tech":  "VT",
+  "Missouri":       "MIZZ",
+  "Rutgers":        "RUT",
+  "Oklahoma":       "OKLA",
+  "Oregon State":   "ORST",
+  "Pittsburgh":     "PITT",
+  "Stanford":       "STAN",
+  "West Virginia":  "WVU",
+  "Navy":           "NAVY",
+  "Army":           "ARMY",
+  "Air Force":      "AF",
+  "Northwestern":   "NW",
+  "North Dakota State": "NDSU",
+  "Northern Iowa":  "UNI",
+  "Northern Colorado": "UNCO",
+  "Indiana":        "IND",
+  "Maryland":       "MD",
+  "Drexel":         "DREX",
+  "Rider":          "RID",
+  "Chattanooga":    "CHAT",
+  "Cal Poly":       "POLY",
+  "Edinboro":       "EDIN",
+  "George Mason":   "GMU",
+  "Bucknell":       "BUCK",
+  "American":       "AMER",
+  "Brown":          "BRWN",
+  "Harvard":        "HARV",
+  "Columbia":       "COL",
+  "Duke":           "DUKE",
+  "SIU Edwardsville": "SIUE",
+  "Davidson":       "DAV",
+  "Wyoming":        "WYO",
+  "Binghamton":     "BING",
+  "Bellarmine":     "BELL",
+  "Utah Valley":    "UVU",
+  "Virginia":       "UVA",
+  "Citadel":        "CIT",
+  "GW":             "GW",
+  "Purdue":         "PUR",
+  "Cleveland State": "CLEV",
+  "Central Michigan": "CMU",
+  "Kent State":     "KENT",
+  "Buffalo":        "BUFF",
+  "Lock Haven":     "LH",
+  "App State":      "APP",
+  "Little Rock":    "UALR",
+  "Northern Illinois": "NIU",
+  "N. Illinois":    "NIU",
+  "Ohio":           "OHIO",
+  "North Carolina": "UNC",
+  "Mercyhurst":     "MERC",
+  "Franklin & Marshall": "FM",
+  "Michigan State": "MSU",
+  "VMI":            "VMI",
+  "Morgan State":   "MORG",
+  "Long Island":    "LIU",
+  "Fairleigh Dickinson": "FDU",
+  "Hofstra":        "HOF",
+  "Arizona State":  "ASU",
+  // Schools from 133+ weight classes
+  "N. Colorado":    "UNCO",
+  "Northern Colorado": "UNCO",
+  "Gardner-Webb":   "GWEB",
+  "ND State":       "NDSU",
+  "Wyoming":        "WYO",
+  "Cornell":        "COR",
+  "Lock Haven":     "LH",
+  "Campbell":       "CAMP",
+  "Penn":           "PENN",
+  "SD State":       "SDSU",
+  "Bucknell":       "BUCK",
+  "South Dakota State": "SDSU",
+};
+
+const UNKNOWN_SCHOOLS = new Set();
+
+function abbrev(school) {
+  if (!school) return "";
+  if (SCHOOL_ABBREV[school]) return SCHOOL_ABBREV[school];
+  UNKNOWN_SCHOOLS.add(school);
+  // Fallback: uppercase first 3-4 letters
+  return school.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4);
+}
+
+/* =========================================================================
+   TRANSFORMER: Firestore docs → W125-shape bracket object
+   ========================================================================= */
+
+// Map of weight class → 0-indexed position in the official weight ordering
+// Bout numbers are sequential across ALL weights, organized by round
+const WEIGHT_ORDER = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
+
+function weightIndex(weight) {
+  return WEIGHT_ORDER.indexOf(Number(weight));
+}
+
+// Bout number bases per round, given weight index 0-9.
+// Each round runs ALL weights consecutively: 125 first, then 133, etc.
+function boutNumbers(weight) {
+  const w = weightIndex(weight);
+  if (w < 0) return null;
+  return {
+    pigtail:     1 + w,
+    r1Start:    11 + w * 16,    // R1:    16 matches per weight (10 weights × 16 = 160 bouts)
+    r2Start:   171 + w * 8,     // R2:     8 matches per weight
+    preCons:   251 + w,         // 251-series pre-consolation (1 per weight)
+    c1Start:   261 + w * 8,     // C-R1:   8 matches per weight
+    qfStart:   341 + w * 4,     // QF:     4 matches per weight
+    c2Start:   381 + w * 8,     // C-R2:   8 matches per weight
+    c3Start:   461 + w * 4,     // C-R3:   4 matches per weight
+    semiStart: 501 + w * 2,     // Semi:   2 matches per weight
+    c4Start:   521 + w * 4,     // C-R4:   4 matches per weight
+    cQtrsStart:561 + w * 2,     // C-Qtrs: 2 matches per weight
+    cSemisStart:581 + w * 2,    // C-Semi: 2 matches per weight
+    seventh:   601 + w,
+    fifth:     611 + w,
+    third:     621 + w,
+    final:     631 + w,
+  };
+}
+
+// Round mapping (matches the click UI's CHAMP_RND_NAMES / CON_RND_NAMES)
+const ROUND_INDEX = {
+  Pigtail: {
+    "Pigtail": 0,
+  },
+  Championship: {
+    "Round 1": 0,
+    "Rd of 16": 1,
+    "Quarterfinals": 2,
+    "Semifinals": 3,
+    "Finals": 4,
+  },
+  Consolation: {
+    "Con Pigtail": -1,
+    "Con. Rd 1": 0,
+    "Con. Rd 2": 1,
+    "Con. Rd 3": 2,
+    "Con. Rd 4": 3,
+    "Con. Qtrs": 4,
+    "Con. Semis": 5,
+  },
+  Placement: {
+    "3rd Place": 0,
+    "5th Place": 1,
+    "7th Place": 2,
+  }
+};
+
+// Strip record parens: "(20-0)" → "20-0"
+function cleanRecord(r) {
+  if (!r) return "";
+  return r.replace(/[()]/g, "");
+}
+
+// Build wrestler object from a doc's slot ('a' or 'b')
+function wrestlerFromDoc(doc, slot) {
+  return {
+    seed:   doc[`seed${slot.toUpperCase()}`],
+    name:   doc[`wrestler${slot.toUpperCase()}`],
+    school: abbrev(doc[`school${slot.toUpperCase()}`]),
+    rec:    cleanRecord(doc[`record${slot.toUpperCase()}`]),
+  };
+}
+
+// Format winner line: "(1) LastName (SCHOOL)"
+function formatWinnerLine(doc) {
+  if (!doc || !doc.winnerName) return "";
+  const seed = doc.winnerSlot === "a" ? doc.seedA : doc.seedB;
+  const school = abbrev(doc.winnerSchool);
+  const lastName = doc.winnerName.split(" ").slice(-1)[0];
+  return `(${seed}) ${lastName} (${school})`;
+}
+
+// Group docs by (weight, bracket, roundIndex, matchIndex) for fast lookup
+function groupDocs(docs) {
+  const out = {};
+  docs.forEach(d => {
+    const key = `${d.weight}|${d.bracket}|${d.roundIndex}|${d.matchIndex}`;
+    out[key] = d;
+  });
+  return out;
+}
+
+function findDoc(group, weight, bracket, roundIndex, matchIndex) {
+  return group[`${weight}|${bracket}|${roundIndex}|${matchIndex}`] || null;
+}
+
+// Transform docs for ONE weight class → W125-shape object
+function transformWeight(docs, weight) {
+  const group = groupDocs(docs);
+  const all = docs.filter(d => d.weight === weight);
+  if (all.length === 0) return null;
+
+  // ---- Championship side ----
+  // R1: 16 matches (matchIndex 0-15). Match 0 has the pigtail winner as one wrestler.
+  // (In click UI, R1 doc for matchIndex=0 has the pigtail winner already filled in as wrestlerB.)
+  // We'll build R1 from the 16 docs, plus a separate pigtail handling.
+
+  const r1Docs = [];
+  for (let i = 0; i < 16; i++) {
+    r1Docs.push(findDoc(group, weight, "Championship", 0, i));
+  }
+  const r2Docs = [];
+  for (let i = 0; i < 8; i++) r2Docs.push(findDoc(group, weight, "Championship", 1, i));
+  const qfDocs = [];
+  for (let i = 0; i < 4; i++) qfDocs.push(findDoc(group, weight, "Championship", 2, i));
+  const sfDocs = [];
+  for (let i = 0; i < 2; i++) sfDocs.push(findDoc(group, weight, "Championship", 3, i));
+  const finalDoc = findDoc(group, weight, "Championship", 4, 0);
+
+  // Look up the bout-number bases for this weight (each weight uses different
+  // numbers because bouts run sequentially across all 10 weights per round)
+  const B = boutNumbers(weight);
+  if (!B) return null;
+
+  // R1 — bout numbers B.r1Start..B.r1Start+15
+  // Keep ALL 16 entries (matchIndex 0-15) with proper indexing; missing docs become empty placeholders
+  const r1 = [];
+  for (let i = 0; i < 16; i++) {
+    const d = r1Docs[i];
+    if (d) {
+      r1.push({
+        top: wrestlerFromDoc(d, "a"),
+        bot: wrestlerFromDoc(d, "b"),
+        no:  B.r1Start + i,
+        win: formatWinnerLine(d),
+        res: "",
+      });
+    } else {
+      r1.push({
+        top: null,
+        bot: null,
+        no:  B.r1Start + i,
+        win: "",
+        res: "",
+      });
+    }
+  }
+
+  // Pigtail — bracket="Pigtail", roundIndex=0, matchIndex=0
+  // Wrestler A = seed 32, wrestler B = seed 33 (or whoever was paired in click UI)
+  const pigtailDoc = findDoc(group, weight, "Pigtail", 0, 0);
+  const pigtail = pigtailDoc ? {
+    a: wrestlerFromDoc(pigtailDoc, "a"),
+    b: wrestlerFromDoc(pigtailDoc, "b"),
+    result: "",
+    winnerText: formatWinnerLine(pigtailDoc),
+    no: B.pigtail
+  } : {
+    a: { seed: 33, name: "—", school: "—", rec: "" },
+    b: { seed: 32, name: "—", school: "—", rec: "" },
+    result: "",
+    winnerText: "",
+    no: B.pigtail
+  };
+
+  // R2 (Thursday Night)
+  const r2 = r2Docs.map((d, i) => ({
+    no:  B.r2Start + i,
+    win: d ? formatWinnerLine(d) : "",
+    res: ""
+  }));
+
+  // Quarterfinals
+  const r3 = qfDocs.map((d, i) => ({
+    no:  B.qfStart + i,
+    win: d ? formatWinnerLine(d) : "",
+    res: ""
+  }));
+
+  // Semifinals
+  const r4 = sfDocs.map((d, i) => ({
+    no:  B.semiStart + i,
+    win: d ? formatWinnerLine(d) : "",
+    res: ""
+  }));
+
+  // Final
+  const r5 = {
+    no:  B.final,
+    win: finalDoc ? formatWinnerLine(finalDoc) : "",
+    res: ""
+  };
+
+  // ---- Consolation side ----
+  // Per-round A/B convention based on the click UI's advancement logic:
+  //   - Con. Rd 1 (ri=0): A=loser of even mi, B=loser of odd mi → A=top visually
+  //   - Con. Rd 2 (ri=1): A=R2 drop-in loser, B=C-R1 winner → FLIP (winner should be top)
+  //   - Con. Rd 3 (ri=2): pairs C-R2 winners → A=top, B=bot
+  //   - Con. Rd 4 (ri=3): A=QF drop-in loser, B=C-R3 winner → FLIP
+  //   - Con. Qtrs (ri=4): pairs C-R4 winners → A=top, B=bot
+  //   - Con. Semis (ri=5): A=SF drop-in loser, B=C-Qtrs winner → FLIP
+  const FLIP_AB = { 1: true, 3: true, 5: true };  // roundIndices where A/B are reversed visually
+
+  const consMatches = (roundIdx, count, baseNo) => {
+    const arr = [];
+    const flip = FLIP_AB[roundIdx] === true;
+    for (let i = 0; i < count; i++) {
+      const d = findDoc(group, weight, "Consolation", roundIdx, i);
+      const topSlot = flip ? "B" : "A";
+      const botSlot = flip ? "A" : "B";
+      arr.push({
+        no:  baseNo + i,
+        top: d ? `${d[`wrestler${topSlot}`]} (${abbrev(d[`school${topSlot}`])})` : "",
+        bot: d ? `${d[`wrestler${botSlot}`]} (${abbrev(d[`school${botSlot}`])})` : "",
+        res: "",
+        win: d ? formatWinnerLine(d) : ""
+      });
+    }
+    return arr;
+  };
+
+  const c1 = consMatches(0, 8, B.c1Start);
+  const c2 = consMatches(1, 8, B.c2Start);
+  const c3 = consMatches(2, 4, B.c3Start);
+  const c4 = consMatches(3, 4, B.c4Start);
+  const c5 = consMatches(4, 2, B.cQtrsStart);
+  const c6 = consMatches(5, 2, B.cSemisStart);
+
+  // Pre-cons match — bracket="Consolation", roundIndex=-1, matchIndex=0
+  // Pairs pigtail loser vs R1 #(R1Start+8) loser. Stored with "Con Pigtail" round.
+  const consPreDoc = findDoc(group, weight, "Consolation", -1, 0);
+  // The pre-cons match labels "Loser of X" reference the bout numbers, not match indices:
+  //   - Upper line: pigtail loser (Loser of pigtail = B.pigtail)
+  //   - Lower line: R1 match #19 loser. For 125 that's bout 19; in general it's the R1 bout
+  //     at position 8 (matchIndex 8) which is bouts 11+8=19 for 125, 27+8=35 for 133, etc.
+  const losOfPig = `Loser of ${B.pigtail}`;
+  const losOfR1m8 = `Loser of ${B.r1Start + 8}`;
+  const consPre = consPreDoc ? {
+    no: B.preCons,
+    topA: losOfPig,
+    topB: `${consPreDoc.wrestlerA} (${abbrev(consPreDoc.schoolA)})`,
+    botA: `${consPreDoc.wrestlerB} (${abbrev(consPreDoc.schoolB)})`,
+    botB: losOfR1m8,
+    result: "",
+    winner: formatWinnerLine(consPreDoc)
+  } : {
+    no: B.preCons,
+    topA: losOfPig,
+    topB: "—",
+    botA: "—",
+    botB: losOfR1m8,
+    result: "",
+    winner: ""
+  };
+
+  // ---- Placement matches (3rd, 5th, 7th) ----
+  const placementDoc = (roundIdx) => findDoc(group, weight, "Placement", roundIdx, 0);
+  const third   = placementDoc(0);
+  const fifth   = placementDoc(1);
+  const seventh = placementDoc(2);
+
+  // Helper: format a wrestler name with seed and school abbrev for placement boxes
+  const placeWrestler = (doc, slot) => {
+    if (!doc) return "";
+    const u = slot.toUpperCase();
+    return `(${doc[`seed${u}`]}) ${doc[`wrestler${u}`].split(" ").slice(-1)[0]} (${abbrev(doc[`school${u}`])})`;
+  };
+
+  const placementObj = (d, no) => ({
+    no,
+    top: placeWrestler(d, "a"),    // wrestler A (upper line of pairing)
+    bot: placeWrestler(d, "b"),    // wrestler B (lower line of pairing)
+    res: "",
+    winLine1: d ? formatWinnerLine(d) : "",
+    winLine2: ""
+  });
+
+  return {
+    weight: String(weight),
+    pigtail,
+    r1, r2, r3, r4, r5,
+    consPre, c1, c2, c3, c4, c5, c6,
+    third:   placementObj(third,   B.third),
+    fifth:   placementObj(fifth,   B.fifth),
+    seventh: placementObj(seventh, B.seventh),
+  };
+}
+
+/* =========================================================================
+   RENDERER — same as brackets.html but in "picks only" mode (no result strings)
+   Compacted into a single function that takes a W125-shape object.
+   ========================================================================= */
+
+const escapeXml = s => String(s).replace(/[<>&'"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'})[c]);
+const wText = w => w ? `(${w.seed}) ${w.name} (${w.school}) ${w.rec}` : "";
+
+function renderChampPage(data) {
+  const W = 1700, H = 2200;
+  const HDR_Y = 60, COL_LBL_Y = 110, TOP_RULE_Y = 122;
+  const X_PIG_L = 60, X_PIG_R = 265, X_R1_L = 273;
+  const X_R1_R = 634, X_R2_R = 850, X_R3_R = 1060;
+  const X_R4_R = 1260, X_R5_R = 1420, X_FAR_R = 1640;
+  const R1_PITCH = 71, R1_TOP_0 = 168, R1_BOX_H = 47;
+  const R1_TEXT_T = 14, R1_TEXT_B = 41;
+
+  const out = [];
+  const line = (x1,y1,x2,y2, cls="ln") => out.push(`<line class="${cls}" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`);
+  const txt = (x,y,s, cls="t", extra="") => out.push(`<text class="${cls}" x="${x.toFixed(1)}" y="${y.toFixed(1)}"${extra}>${escapeXml(s)}</text>`);
+
+  // Header
+  txt(60, HDR_Y, "2026 NCAA Division I Wrestling Championships", "hdr");
+  txt(W - 60, HDR_Y, `${data.weight} CHAMPIONSHIP`, "hdr-r");
+
+  // Column labels + rule
+  const colCenters = [
+    { c: (X_R1_L + X_R1_R) / 2, label: "Thursday Morning" },
+    { c: (X_R1_R + X_R2_R) / 2, label: "Thursday Night" },
+    { c: (X_R2_R + X_R3_R) / 2, label: "Friday Morning" },
+    { c: (X_R3_R + X_R4_R) / 2, label: "Friday Night" },
+    { c: (X_R4_R + X_R5_R) / 2, label: "Saturday Night" }
+  ];
+  colCenters.forEach(({c,label}) => txt(c, COL_LBL_Y, label, "col", ` text-anchor="middle"`));
+  line(60, TOP_RULE_Y, W - 60, TOP_RULE_Y, "ln-th");
+  [X_R1_L - 5, X_R1_R, X_R2_R, X_R3_R, X_R4_R].forEach(x => {
+    line(x, COL_LBL_Y - 18, x, TOP_RULE_Y, "ln-th");
+  });
+
+  // R1 boxes
+  const r1Centers = [];
+  for (let i = 0; i < 16; i++) {
+    const m = data.r1[i];
+    const yTop = R1_TOP_0 + i * R1_PITCH;
+    const yBot = yTop + R1_BOX_H;
+    const yCen = (yTop + yBot) / 2;
+    r1Centers.push(yCen);
+
+    line(X_R1_L - 5, yTop, X_R1_R, yTop);
+    line(X_R1_L - 5, yBot, X_R1_R, yBot);
+    line(X_R1_R, yTop, X_R1_R, yBot);
+
+    if (m.top) txt(X_R1_L, yTop + R1_TEXT_T, wText(m.top));
+    if (m.bot) txt(X_R1_L, yTop + R1_TEXT_B, wText(m.bot));
+    txt(X_R1_R - 6, yCen + 6, String(m.no), "num", ` text-anchor="end"`);
+
+    // R1 winner above outgoing H-line (picks-only — no result below)
+    if (m.win) txt(X_R1_R + 8, yCen - 4, m.win);
+  }
+
+  // Pigtail
+  {
+    const p = data.pigtail;
+    const advanceY = R1_TOP_0 + R1_TEXT_B;
+    const boxH = 36;
+    const pTop = advanceY - boxH/2 - 6;
+    const pBot = advanceY + boxH/2 - 2;
+    const xL = X_PIG_L;
+    const xR = X_PIG_R;
+    line(xL, pTop, xR, pTop);
+    line(xL, pBot, xR, pBot);
+    line(xR, pTop, xR, pBot);
+    if (p.a) txt(xL, pTop + 14, wText(p.a));
+    if (p.b) txt(xL, pTop + 30, wText(p.b));
+    txt(xR + 8, (pTop + pBot) / 2 + 5, String(p.no ?? 1), "num");
+    line(xR, advanceY, X_R1_L - 5, advanceY);
+  }
+
+  // R2 pairings (picks only)
+  const r2MidYs = [];
+  for (let i = 0; i < 8; i++) {
+    const yA = r1Centers[i*2];
+    const yB = r1Centers[i*2 + 1];
+    const yMid = (yA + yB) / 2;
+    r2MidYs.push(yMid);
+
+    line(X_R1_R, yA, X_R2_R, yA);
+    line(X_R1_R, yB, X_R2_R, yB);
+    line(X_R2_R, yA, X_R2_R, yB);
+
+    const m = data.r2[i];
+    if (m.win) txt(X_R2_R + 8, yMid - 4, m.win);
+    txt(X_R2_R - 6, yMid - 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // R3 (Quarterfinals)
+  const r3MidYs = [];
+  for (let i = 0; i < 4; i++) {
+    const yA = r2MidYs[i*2];
+    const yB = r2MidYs[i*2 + 1];
+    const yMid = (yA + yB) / 2;
+    r3MidYs.push(yMid);
+
+    line(X_R2_R, yA, X_R3_R, yA);
+    line(X_R2_R, yB, X_R3_R, yB);
+    line(X_R3_R, yA, X_R3_R, yB);
+
+    const m = data.r3[i];
+    if (m.win) txt(X_R3_R + 8, yMid - 4, m.win);
+    txt(X_R3_R - 6, yMid - 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // R4 (Semifinals)
+  const r4MidYs = [];
+  for (let i = 0; i < 2; i++) {
+    const yA = r3MidYs[i*2];
+    const yB = r3MidYs[i*2 + 1];
+    const yMid = (yA + yB) / 2;
+    r4MidYs.push(yMid);
+
+    line(X_R3_R, yA, X_R4_R, yA);
+    line(X_R3_R, yB, X_R4_R, yB);
+    line(X_R4_R, yA, X_R4_R, yB);
+
+    const m = data.r4[i];
+    if (m.win) txt(X_R4_R + 8, yMid - 4, m.win);
+    txt(X_R4_R - 6, yMid - 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // Final + CHAMPION box
+  const finalMidY = (r4MidYs[0] + r4MidYs[1]) / 2;
+  {
+    line(X_R4_R, r4MidYs[0], X_R5_R, r4MidYs[0]);
+    line(X_R4_R, r4MidYs[1], X_R5_R, r4MidYs[1]);
+    line(X_R5_R, r4MidYs[0], X_R5_R, r4MidYs[1]);
+
+    const m = data.r5;
+    const champBoxW = 130;
+    const champBoxH = 56;
+    const champBoxR = X_R5_R - 4;
+    const champBoxL = champBoxR - champBoxW;
+    const cyTop = finalMidY - champBoxH/2;
+    const cyBot = finalMidY + champBoxH/2;
+    line(champBoxL, cyTop, champBoxR, cyTop, "ln-th");
+    line(champBoxL, cyBot, champBoxR, cyBot, "ln-th");
+    line(champBoxL, cyTop, champBoxL, cyBot, "ln-th");
+    line(champBoxR, cyTop, champBoxR, cyBot, "ln-th");
+    const cx = (champBoxL + champBoxR) / 2;
+    txt(cx, finalMidY - 2, "CHAMPION", "champ-lbl");
+    txt(cx, finalMidY + 22, String(m.no), "champ-lbl");
+
+    line(X_R5_R, finalMidY, X_FAR_R, finalMidY);
+    if (m.win) txt(X_R5_R + 8, finalMidY - 4, m.win, "t-sm");
+  }
+
+  // ---- WRESTLEBACKS section ----
+  txt(W/2, 1450, "WRESTLEBACKS", "wb");
+
+  const X_C_PRE = 60, X_C1_L = 280, X_C1_R = 460;
+  const X_C2_L = 575, X_C2_R = 675, X_C3_R = 880;
+  const X_C4_R = 1085, X_C5_R = 1275, X_C6_R = 1460, X_C_END = 1640;
+  const C1_TOP_0 = 1490, C1_PITCH = 65, C1_BOX_H = 42;
+  const WB_BOT_RULE = 2054;
+
+  // C-R1 boxes
+  const c1Centers = [];
+  for (let i = 0; i < 8; i++) {
+    const m = data.c1[i];
+    const yTop = C1_TOP_0 + i * C1_PITCH;
+    const yBot = yTop + C1_BOX_H;
+    const yCen = (yTop + yBot) / 2;
+    c1Centers.push(yCen);
+    line(X_C1_L - 5, yTop, X_C1_R, yTop);
+    line(X_C1_L - 5, yBot, X_C1_R, yBot);
+    line(X_C1_R, yTop, X_C1_R, yBot);
+    if (m.top) txt(X_C1_L, yTop + R1_TEXT_T, m.top);
+    if (m.bot) txt(X_C1_L, yTop + R1_TEXT_B, m.bot);
+    txt(X_C1_R - 6, yCen + 6, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // 251 pre-match
+  {
+    const p = data.consPre;
+    const targetCen = c1Centers[4];
+    const yUpper = targetCen - 22;
+    const yLower = targetCen + 22;
+    const xL = X_C_PRE;
+    const xR = X_C1_L - 5;
+    line(xL, yUpper, xR, yUpper);
+    line(xL, yLower, xR, yLower);
+    line(xR, yUpper, xR, yLower);
+    txt(xL + 5, yUpper - 4, p.topA || "Loser of 1", "t-sm");
+    txt(xL + 5, yUpper + 14, p.topB || "", "t-sm");
+    txt(xL + 5, yLower - 4, p.botA || "", "t-sm");
+    txt(xL + 5, yLower + 14, p.botB || "Loser of 19", "t-sm");
+    txt(xR - 6, (yUpper + yLower)/2 + 4, String(p.no ?? 251), "num", ` text-anchor="end"`);
+  }
+
+  // C-R2 pairings
+  const C2_PAIR_GAP = 30;
+  const c2MidYs = [];
+  for (let i = 0; i < 8; i++) {
+    const m = data.c2[i];
+    const yUpper = c1Centers[i];
+    const yLower = yUpper + C2_PAIR_GAP;
+    const yMid = (yUpper + yLower) / 2;
+    c2MidYs.push(yMid);
+    line(X_C1_R, yUpper, X_C2_R, yUpper);
+    line(X_C1_R, yLower, X_C2_R, yLower);
+    line(X_C2_R, yUpper, X_C2_R, yLower);
+    if (m.top) txt(X_C1_R + 8, yUpper - 4, m.top, "t-sm");
+    if (m.bot) txt(X_C1_R + 8, yLower - 4, m.bot, "t-sm");
+    txt(X_C2_R - 6, yMid + 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // C-R3 pairings
+  const c3MidYs = [];
+  for (let i = 0; i < 4; i++) {
+    const m = data.c3[i];
+    const yUpper = c2MidYs[i*2];
+    const yLower = c2MidYs[i*2 + 1];
+    const yMid = (yUpper + yLower) / 2;
+    c3MidYs.push(yMid);
+    line(X_C2_R, yUpper, X_C3_R, yUpper);
+    line(X_C2_R, yLower, X_C3_R, yLower);
+    line(X_C3_R, yUpper, X_C3_R, yLower);
+    if (m.top) txt(X_C2_R + 8, yUpper - 4, m.top, "t-sm");
+    if (m.bot) txt(X_C2_R + 8, yLower - 4, m.bot, "t-sm");
+    txt(X_C3_R - 6, yMid + 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // C-R4 pairings
+  const C4_PAIR_GAP = 65;
+  const c4MidYs = [];
+  for (let i = 0; i < 4; i++) {
+    const m = data.c4[i];
+    const yUpper = c3MidYs[i];
+    const yLower = yUpper + C4_PAIR_GAP;
+    const yMid = (yUpper + yLower) / 2;
+    c4MidYs.push(yMid);
+    line(X_C3_R, yUpper, X_C4_R, yUpper);
+    line(X_C3_R, yLower, X_C4_R, yLower);
+    line(X_C4_R, yUpper, X_C4_R, yLower);
+    if (m.top) txt(X_C3_R + 8, yUpper - 4, m.top, "t-sm");
+    if (m.bot) txt(X_C3_R + 8, yLower - 4, m.bot, "t-sm");
+    txt(X_C4_R - 6, yMid + 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // C-R5 pairings
+  const c5MidYs = [];
+  for (let i = 0; i < 2; i++) {
+    const m = data.c5[i];
+    const yUpper = c4MidYs[i*2];
+    const yLower = c4MidYs[i*2 + 1];
+    const yMid = (yUpper + yLower) / 2;
+    c5MidYs.push(yMid);
+    line(X_C4_R, yUpper, X_C5_R, yUpper);
+    line(X_C4_R, yLower, X_C5_R, yLower);
+    line(X_C5_R, yUpper, X_C5_R, yLower);
+    if (m.top) txt(X_C4_R + 8, yUpper - 4, m.top, "t-sm");
+    if (m.bot) txt(X_C4_R + 8, yLower - 4, m.bot, "t-sm");
+    txt(X_C5_R - 6, yMid + 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // C-R6 pairings
+  const C6_PAIR_GAP = 130;
+  const c6MidYs = [];
+  for (let i = 0; i < 2; i++) {
+    const m = data.c6[i];
+    const yUpper = c5MidYs[i];
+    const yLower = yUpper + C6_PAIR_GAP;
+    const yMid = (yUpper + yLower) / 2;
+    c6MidYs.push(yMid);
+    line(X_C5_R, yUpper, X_C6_R, yUpper);
+    line(X_C5_R, yLower, X_C6_R, yLower);
+    line(X_C6_R, yUpper, X_C6_R, yLower);
+    if (m.top) txt(X_C5_R + 8, yUpper - 4, m.top, "t-sm");
+    if (m.bot) txt(X_C5_R + 8, yLower - 4, m.bot, "t-sm");
+    txt(X_C6_R - 6, yMid + 4, String(m.no), "num", ` text-anchor="end"`);
+  }
+
+  // 3rd Place box
+  {
+    const t = data.third;
+    const yUpper = c6MidYs[0];
+    const yLower = c6MidYs[1];
+    const yMid = (yUpper + yLower) / 2;
+    line(X_C6_R, yUpper, X_C_END, yUpper);
+    line(X_C6_R, yLower, X_C_END, yLower);
+    line(X_C_END, yUpper, X_C_END, yLower);
+
+    // C-R6 (Con. Semis) winners inline on feeder lines flowing into 3rd Place
+    if (data.c6[0] && data.c6[0].win) {
+      txt(X_C6_R + 8, yUpper - 4, data.c6[0].win, "t-sm");
+    }
+    if (data.c6[1] && data.c6[1].win) {
+      txt(X_C6_R + 8, yLower - 4, data.c6[1].win, "t-sm");
+    }
+
+    const boxW = 100, boxH = 46;
+    const boxR = X_C_END;
+    const boxL = boxR - boxW;
+    const bTop = yMid - boxH/2;
+    const bBot = yMid + boxH/2;
+    const cxBox = (boxL + boxR) / 2;
+    if (t.winLine1) txt(cxBox, bTop - 18, t.winLine1, "t-sm", ` text-anchor="middle"`);
+    line(boxL, bTop, boxR, bTop, "ln-th");
+    line(boxL, bBot, boxR, bBot, "ln-th");
+    line(boxL, bTop, boxL, bBot, "ln-th");
+    line(boxR, bTop, boxR, bBot, "ln-th");
+    txt(cxBox, yMid - 2, "Third Place", "place", ` text-anchor="middle"`);
+    txt(cxBox, yMid + 18, String(t.no), "place", ` text-anchor="middle"`);
+  }
+
+  // 5th + 7th place boxes
+  {
+    const f5 = data.fifth;
+    const f7 = data.seventh;
+    const blockL = X_C5_R - 10;
+    const blockR = X_C_END;
+    const xVert = blockL + 130;
+    const pairH = 36;
+    const blockGap = 22;
+    const renderPlace = (d, label, yTopLine) => {
+      const yBotLine = yTopLine + pairH;
+      const yMid = (yTopLine + yBotLine) / 2;
+      line(blockL, yTopLine, xVert, yTopLine);
+      line(blockL, yBotLine, xVert, yBotLine);
+      line(xVert, yTopLine, xVert, yBotLine);
+      // Wrestler names INSIDE the pairing, above each H-line
+      if (d.top) txt(blockL + 5, yTopLine - 4, d.top, "t-sm");
+      if (d.bot) txt(blockL + 5, yBotLine - 4, d.bot, "t-sm");
+      // Match #
+      txt(xVert - 6, yMid + 4, String(d.no), "num", ` text-anchor="end"`);
+      // Outgoing H-line from midpoint
+      line(xVert, yMid, blockR, yMid);
+      if (d.winLine1) {
+        txt(xVert + 8, yMid - 4, d.winLine1, "t-sm");
+      }
+      txt(xVert + 8, yMid + 16, label, "place");
+    };
+    const y5Top = 1340;
+    const y7Top = y5Top + pairH + 8 + 22;
+    renderPlace(f5, "Fifth Place", y5Top);
+    renderPlace(f7, "Seventh Place", y7Top);
+  }
+
+  // WB bottom rule + column footer labels
+  line(60, WB_BOT_RULE, W - 60, WB_BOT_RULE, "ln-th");
+  const wbFooterY = WB_BOT_RULE + 28;
+  const wbCols = [
+    { c: (X_C1_L + X_C1_R) / 2, label: "Thursday Evening" },
+    { c: (X_C1_R + X_C2_R) / 2 + 50, label: "Friday Morning" },
+    { c: (X_C3_R + X_C4_R) / 2, label: "Friday Evening" },
+    { c: (X_C5_R + X_C6_R) / 2 + 30, label: "Saturday Morning" }
+  ];
+  wbCols.forEach(({c,label}) => txt(c, wbFooterY, label, "col", ` text-anchor="middle"`));
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${out.join("")}</svg>`;
+}
+
+
+  /* === Public API: show / close the bracket preview === */
+  window.showBracketPreview = function(docs) {
+    if (!Array.isArray(docs) || docs.length === 0) {
+      console.warn('showBracketPreview: no docs provided');
+      return;
+    }
+
+    UNKNOWN_SCHOOLS.clear();
+    const weights = [...new Set(docs.map(d => d.weight))].sort((a, b) => a - b);
+    const subs = [...new Set(docs.map(d => d.submissionId))];
+
+    // Render each weight as its own bracket-page, stacked vertically
+    const pagesHtml = [];
+    for (const wt of weights) {
+      try {
+        const w = transformWeight(docs, wt);
+        if (w) {
+          pagesHtml.push('<div class="bracket-page">' + renderChampPage(w) + '</div>');
+        } else {
+          pagesHtml.push('<div style="padding:20px;color:#dc2626">Failed to render weight ' + wt + '</div>');
+        }
+      } catch (e) {
+        console.error('Weight ' + wt + ':', e);
+        pagesHtml.push('<div style="padding:20px;color:#dc2626">Error rendering weight ' + wt + ': ' + e.message + '</div>');
+      }
+    }
+
+    const info = document.getElementById('bp-info');
+    if (info) {
+      info.textContent = 'Submission: ' + (subs[0] || '—') + ' • ' + weights.length + ' weight class' + (weights.length === 1 ? '' : 'es');
+    }
+
+    const pagesDiv = document.getElementById('bp-pages');
+    if (pagesDiv) pagesDiv.innerHTML = pagesHtml.join('');
+
+    const modal = document.getElementById('bracket-preview-modal');
+    if (modal) {
+      modal.classList.add('open');
+      modal.scrollTop = 0;
+    }
+
+    if (UNKNOWN_SCHOOLS.size > 0) {
+      console.warn('Unknown schools (fell back to generic abbrev):', [...UNKNOWN_SCHOOLS].join(', '));
+    }
+  };
+
+  window.closeBracketPreview = function() {
+    const modal = document.getElementById('bracket-preview-modal');
+    if (modal) modal.classList.remove('open');
+  };
+
+  // ESC closes the modal
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('bracket-preview-modal');
+      if (modal && modal.classList.contains('open')) {
+        window.closeBracketPreview();
+      }
+    }
+  });
+})();
+</script>
+
+<script type="module">
+// ── CHANGE 1: FIELDS now includes r:"(W-L)" for every wrestler ──
+const FIELDS = {
+  125: [
+    {n:"Luke Lilledahl ",s:"Penn State",r:"(20-0)"},
+    {n:"Eddie Ventresca ",s:"Virginia Tech",r:"(19-2)"},
+    {n:"Nic Bouzakis ",s:"Ohio State",r:"(16-2)"},
+    {n:"Sheldon Seymour ",s:"Lehigh",r:"(19-0)"},
+    {n:"Troy Spratley ",s:"Oklahoma State",r:"(16-3)"},
+    {n:"Jore Volk ",s:"Minnesota",r:"(22-5)"},
+    {n:"Nico Provo ",s:"Stanford",r:"(13-5)"},
+    {n:"Dean Peterson ",s:"Iowa",r:"(14-6)"},
+    {n:"Maximo Renteria ",s:"Oregon State",r:"(20-3)"},
+    {n:"Marc-Anthony McGowan ",s:"Princeton",r:"(15-6)"},
+    {n:"Tyler Klinsky ",s:"Rider",r:"(26-3)"},
+    {n:"Vincent Robinson ",s:"NC State",r:"(15-4)"},
+    {n:"Stevo Poulin ",s:"Iowa State",r:"(15-7)"},
+    {n:"Jacob Moran ",s:"Indiana",r:"(17-5)"},
+    {n:"Koda Holeman ",s:"Cal Poly",r:"(19-5)"},
+    {n:"Ezekiel Witt ",s:"ND State",r:"(23-11)"},
+    {n:"Jett Strickenberger ",s:"West Virginia",r:"(19-7)"},
+    {n:"Spencer Moore ",s:"Illinois",r:"(17-8)"},
+    {n:"Kysen Terukina ",s:"North Carolina",r:"(15-6)"},
+    {n:"Diego Sotelo ",s:"Michigan",r:"(13-12)"},
+    {n:"Conrad Hendriksen ",s:"Oklahoma",r:"(15-12)"},
+    {n:"Davis Motyka ",s:"Penn",r:"(17-5)"},
+    {n:"Nicolar Rivera ",s:"Wisconsin",r:"(18-7)"},
+    {n:"Ayden Smith ",s:"Rutgers",r:"(16-11)"},
+    {n:"Kael Lauridsen ",s:"Nebraska",r:"(16-11)"},
+    {n:"Cooper Flynn ",s:"Chattanooga",r:"(18-4)"},
+    {n:"Brady Roark ",s:"SD State",r:"(21-7)"},
+    {n:"Andrew Binni ",s:"Navy",r:"(17-9)"},
+    {n:"Tyler Chappell ",s:"Pittsburgh",r:"(13-13)"},
+    {n:"Sulayman Bah ",s:"Columbia",r:"(23-12)"},
+    {n:"Desmond Pleasant ",s:"Drexel",r:"(23-8)"},
+    {n:"Mack Mauger ",s:"Missouri",r:"(22-14)"},
+    {n:"Jace Schafer ",s:"Bloomsburg",r:"(23-8)"}
+  ],
+  133: [
+    {n:"Jax Forrest ",s:"Oklahoma State",r:"(13-0)"},
+    {n:"Ben Davino ",s:"Ohio State",r:"(27-1)"},
+    {n:"Marcus Blaze ",s:"Penn State",r:"(21-1)"},
+    {n:"Aaron Seidel ",s:"Virginia Tech",r:"(18-1)"},
+    {n:"Kyler Larkin ",s:"Arizona State",r:"(18-2)"},
+    {n:"Drake Ayala ",s:"Iowa",r:"(13-8)"},
+    {n:"Lucas Byrd ",s:"Illinois",r:"(20-2)"},
+    {n:"Markel Baker ",s:"N. Illinois",r:"(26-4)"},
+    {n:"Dominick Serrano ",s:"N. Colorado",r:"(15-3)"},
+    {n:"Maximilian Leete ",s:"American",r:"(16-5)"},
+    {n:"Tyler Ferrara ",s:"Cornell",r:"(23-7)"},
+    {n:"Evan Mougalian ",s:"Penn",r:"(21-5)"},
+    {n:"Jacob Van Dee ",s:"Nebraska",r:"(17-6)"},
+    {n:"Ethan Berginc ",s:"Army",r:"(16-6)"},
+    {n:"Tyler Knox ",s:"Stanford",r:"(14-5)"},
+    {n:"Zan Fugitt ",s:"Wisconsin",r:"(20-6)"},
+    {n:"T.K. Davis ",s:"Gardner-Webb",r:"(24-1)"},
+    {n:"Gunner Andrick ",s:"West Virginia",r:"(24-8)"},
+    {n:"Gage Walker ",s:"Missouri",r:"(17-7)"},
+    {n:"Julian Farber ",s:"Northern Iowa",r:"(18-9)"},
+    {n:"Sean Spidle ",s:"Northwestern",r:"(15-8)"},
+    {n:"Zach Redding ",s:"NC State",r:"(12-8)"},
+    {n:"Braxton Brown ",s:"Maryland",r:"(17-9)"},
+    {n:"Blake Boarman ",s:"Purdue",r:"(12-15)"},
+    {n:"Will Betancourt ",s:"Rider",r:"(23-8)"},
+    {n:"Dylan Shawver ",s:"Rutgers",r:"(20-11)"},
+    {n:"Marcel Lopez ",s:"SIUE",r:"(26-9)"},
+    {n:"Garrett Grice ",s:"Iowa State",r:"(6-3)"},
+    {n:"Luke Willochell ",s:"Wyoming",r:"(15-10)"},
+    {n:"Gabe Whisenhunt ",s:"Oregon State",r:"(9-8)"},
+    {n:"Gable Strickland ",s:"Lock Haven",r:"(26-9)"},
+    {n:"Andrew Austin ",s:"Central Michigan",r:"(20-13)"},
+    {n:"Carter Schmidt ",s:"Oklahoma",r:"(7-14)"}
+  ],
+  141: [
+    {n:"Jesse Mendez ",s:"Ohio State",r:"(22-0)"},
+    {n:"Sergio Vega ",s:"Oklahoma State",r:"(19-0)"},
+    {n:"Brock Hardy ",s:"Nebraska",r:"(20-5)"},
+    {n:"Anthony Echemendia ",s:"Iowa State",r:"(19-3)"},
+    {n:"Luke Stanich ",s:"Lehigh",r:"(13-0)"},
+    {n:"Vince Cornella ",s:"Cornell",r:"(19-1)"},
+    {n:"Nasir Bailey ",s:"Iowa",r:"(14-7)"},
+    {n:"Vance VomBaur ",s:"Minnesota",r:"(21-6)"},
+    {n:"Joey Olivieri ",s:"Rutgers",r:"(19-2)"},
+    {n:"Jack Consiglio ",s:"Stanford",r:"(14-5)"},
+    {n:"CJ Composto ",s:"Penn",r:"(16-4)"},
+    {n:"Luke Simcox ",s:"North Carolina",r:"(16-6)"},
+    {n:"Wyatt Henson ",s:"Lock Haven",r:"(24-5)"},
+    {n:"Braeden Davis ",s:"Penn State",r:"(12-5)"},
+    {n:"Elijah Griffin ",s:"Rider",r:"(26-7)"},
+    {n:"Ryan Jack ",s:"NC State",r:"(15-7)"},
+    {n:"Caedyn Ricciardi ",s:"Navy",r:"(18-8)"},
+    {n:"Carter Nogle ",s:"Air Force",r:"(25-8)"},
+    {n:"Haiden Drury ",s:"Utah Valley",r:"(21-9)"},
+    {n:"Julian Tagg ",s:"SD State",r:"(18-6)"},
+    {n:"Tyler Wells ",s:"Oklahoma",r:"(16-9)"},
+    {n:"Lorenzo Frezza ",s:"Columbia",r:"(23-10)"},
+    {n:"Dylan Chappell ",s:"Bucknell",r:"(21-10)"},
+    {n:"Nash Singleton ",s:"Oregon State",r:"(15-7)"},
+    {n:"Tom Crook ",s:"Virginia Tech",r:"(20-12)"},
+    {n:"Braden Basile ",s:"Army",r:"(17-6)"},
+    {n:"Gable Porter ",s:"Virginia",r:"(20-8)"},
+    {n:"Pierson Manville ",s:"Arizona State",r:"(17-9)"},
+    {n:"Jordan Titus ",s:"West Virginia",r:"(16-14)"},
+    {n:"Dario Lemus ",s:"Maryland",r:"(17-13)"},
+    {n:"Billy DeKraker ",s:"Northwestern",r:"(15-12)"},
+    {n:"Matthew Martino ",s:"Princeton",r:"(15-15)"},
+    {n:"Aldo Hernandez ",s:"App State",r:"(18-14)"}
+  ],
+  149: [
+    {n:"Shayne Van Ness ",s:"Penn State",r:"(21-0)"},
+    {n:"Jaxon Joy ",s:"Cornell",r:"(24-1)"},
+    {n:"Cross Wasilewski ",s:"Penn",r:"(24-3)"},
+    {n:"Collin Gaj ",s:"Virginia Tech",r:"(20-8)"},
+    {n:"Koy Buesgens ",s:"NC State",r:"(21-3)"},
+    {n:"Caleb Tyus ",s:"SIUE",r:"(22-2)"},
+    {n:"Ethan Stiles ",s:"Ohio State",r:"(15-5)"},
+    {n:"Casey Swiderski ",s:"Oklahoma State",r:"(14-5)"},
+    {n:"David Evans ",s:"Utah Valley",r:"(20-5)"},
+    {n:"Aden Valencia ",s:"Stanford",r:"(16-7)"},
+    {n:"Lachlan McNeil ",s:"Michigan",r:"(17-6)"},
+    {n:"Carter Young ",s:"Maryland",r:"(15-4)"},
+    {n:"Joseph Zargo ",s:"Wisconsin",r:"(18-6)"},
+    {n:"Caleb Rathjen ",s:"Northern Iowa",r:"(9-6)"},
+    {n:"Ryder Block ",s:"Iowa",r:"(13-8)"},
+    {n:"Jacob Frost ",s:"Iowa State",r:"(17-7)"},
+    {n:"Lucas Kapusta ",s:"Lock Haven",r:"(25-4)"},
+    {n:"Eugene Harney ",s:"Morgan State",r:"(28-4)"},
+    {n:"Brock Herman ",s:"Little Rock",r:"(13-3)"},
+    {n:"Chance Lamer ",s:"Nebraska",r:"(17-8)"},
+    {n:"Gabe Willochell ",s:"Wyoming",r:"(17-8)"},
+    {n:"Eligh Rivera ",s:"Princeton",r:"(13-9)"},
+    {n:"Max Petersen ",s:"ND State",r:"(15-8)"},
+    {n:"Andrew Clark ",s:"Rutgers",r:"(16-10)"},
+    {n:"Michael Gioffre ",s:"Illinois",r:"(16-10)"},
+    {n:"Anderson Heap ",s:"Davidson",r:"(20-9)"},
+    {n:"Andre Gonzales ",s:"Cal Poly",r:"(17-11)"},
+    {n:"Kade Brown ",s:"Pittsburgh",r:"(14-8)"},
+    {n:"Kaden Cassidy ",s:"George Mason",r:"(15-4)"},
+    {n:"Dylan Layton ",s:"Rider",r:"(25-9)"},
+    {n:"Ryan Michaels ",s:"Edinboro",r:"(24-9)"},
+    {n:"Clayton Jones ",s:"Michigan State",r:"(11-15)"},
+    {n:"Austin McBurney ",s:"Brown",r:"(21-13)"}
+  ],
+  157: [
+    {n:"PJ Duke ",s:"Penn State",r:"(19-1)"},
+    {n:"Antrell Taylor ",s:"Nebraska",r:"(22-3)"},
+    {n:"Meyer Shapiro ",s:"Cornell",r:"(15-1)"},
+    {n:"Kaleb Larkin ",s:"Arizona State",r:"(24-2)"},
+    {n:"Landon Robideau ",s:"Oklahoma State",r:"(16-2)"},
+    {n:"Jude Swisher ",s:"Penn",r:"(20-3)"},
+    {n:"Kannon Webster ",s:"Illinois",r:"(20-4)"},
+    {n:"Brandon Cannon ",s:"Ohio State",r:"(18-2)"},
+    {n:"Daniel Cardenas ",s:"Stanford",r:"(17-3)"},
+    {n:"Logan Rozynski ",s:"Lehigh",r:"(13-3)"},
+    {n:"Ty Watters ",s:"West Virginia",r:"(22-3)"},
+    {n:"Vinny Zerban ",s:"Iowa State",r:"(15-4)"},
+    {n:"Derek Raike ",s:"Ohio",r:"(21-5)"},
+    {n:"Ethen Miller ",s:"Virginia Tech",r:"(16-6)"},
+    {n:"Cameron Catrabone ",s:"Michigan",r:"(18-8)"},
+    {n:"Cael Swensen ",s:"SD State",r:"(24-7)"},
+    {n:"Luke Mechler ",s:"Wisconsin",r:"(18-8)"},
+    {n:"DJ McGee ",s:"George Mason",r:"(24-4)"},
+    {n:"Kai Owen ",s:"Columbia",r:"(18-7)"},
+    {n:"Jimmy Harrington ",s:"Harvard",r:"(21-8)"},
+    {n:"Charlie Millard ",s:"Minnesota",r:"(18-9)"},
+    {n:"Colton Washleski ",s:"Virginia",r:"(20-10)"},
+    {n:"Kaleb Burgess ",s:"Buffalo",r:"(18-7)"},
+    {n:"Jaivon Jones ",s:"Little Rock",r:"(19-9)"},
+    {n:"Mason Shrader ",s:"Central Michigan",r:"(24-10)"},
+    {n:"Jonathan Ley ",s:"Navy",r:"(26-12)"},
+    {n:"Dylan Evans ",s:"Pittsburgh",r:"(21-8)"},
+    {n:"Gavin Drexler ",s:"ND State",r:"(16-10)"},
+    {n:"Bryce Lowery ",s:"Indiana",r:"(12-11)"},
+    {n:"Laird Root ",s:"North Carolina",r:"(16-11)"},
+    {n:"Garrett McChesney ",s:"Edinboro",r:"(12-14)"},
+    {n:"Jeb Prechtel ",s:"Bellarmine",r:"(18-14)"},
+    {n:"Yannis Charles ",s:"Morgan State",r:"(5-8)"}
+  ],
+  165: [
+    {n:"Mitchell Mesenbrink ",s:"Penn State",r:"(22-0)"},
+    {n:"Joey Blaze ",s:"Purdue",r:"(22-1)"},
+    {n:"Mikey Caliendo ",s:"Iowa",r:"(18-4)"},
+    {n:"Nicco Ruiz ",s:"Arizona State",r:"(23-5)"},
+    {n:"LaDarion Lockett ",s:"Oklahoma State",r:"(16-2)"},
+    {n:"LJ Araujo ",s:"Nebraska",r:"(18-8)"},
+    {n:"Max Brignola ",s:"Lehigh",r:"(17-4)"},
+    {n:"Matty Bianchi ",s:"Little Rock",r:"(19-2)"},
+    {n:"Bryce Hepner ",s:"North Carolina",r:"(15-4)"},
+    {n:"Will Denny ",s:"NC State",r:"(16-4)"},
+    {n:"Ryder Downey ",s:"Northern Iowa",r:"(21-5)"},
+    {n:"Cesar Alvan ",s:"Columbia",r:"(27-8)"},
+    {n:"Andrew Sparks ",s:"Minnesota",r:"(19-6)"},
+    {n:"Andrew Barbosa ",s:"Rutgers",r:"(18-8)"},
+    {n:"Connor Euton ",s:"Iowa State",r:"(17-7)"},
+    {n:"Paddy Gallagher ",s:"Ohio State",r:"(15-8)"},
+    {n:"Braeden Scoles ",s:"Illinois",r:"(16-9)"},
+    {n:"Gunner Filipowicz ",s:"Army",r:"(19-6)"},
+    {n:"Noah Mulvaney ",s:"Bucknell",r:"(25-7)"},
+    {n:"Ty Whalen ",s:"Princeton",r:"(20-7)"},
+    {n:"Brock Woodcock ",s:"SIUE",r:"(28-9)"},
+    {n:"Matthew Olguin ",s:"Oregon State",r:"(17-5)"},
+    {n:"Chris Earnest ",s:"Kent State",r:"(18-6)"},
+    {n:"Sean Seefeldt ",s:"Penn",r:"(20-7)"},
+    {n:"Mac Church ",s:"Virginia Tech",r:"(24-10)"},
+    {n:"Tyler Lillard ",s:"Indiana",r:"(12-9)"},
+    {n:"EJ Parco ",s:"Stanford",r:"(12-7)"},
+    {n:"Cody Goebel ",s:"Wisconsin",r:"(12-11)"},
+    {n:"Ryan Burgos ",s:"Edinboro",r:"(20-7)"},
+    {n:"Thomas Snipes ",s:"The Citadel",r:"(22-7)"},
+    {n:"Jared Keslar ",s:"Pittsburgh",r:"(15-13)"},
+    {n:"Cody Walsh ",s:"Drexel",r:"(27-13)"},
+    {n:"Ryan Vigil ",s:"VMI",r:"(14-9)"}
+  ],
+  174: [
+    {n:"Levi Haines ",s:"Penn State",r:"(21-0)"},
+    {n:"Simon Ruiz ",s:"Cornell",r:"(16-0)"},
+    {n:"Christopher Minto ",s:"Nebraska",r:"(20-5)"},
+    {n:"Carson Kharchla ",s:"Ohio State",r:"(18-4)"},
+    {n:"Patrick Kennedy ",s:"Iowa",r:"(18-4)"},
+    {n:"Matty Singleton ",s:"NC State",r:"(16-3)"},
+    {n:"Cam Steed ",s:"Missouri",r:"(15-5)"},
+    {n:"Alex Facundo ",s:"Oklahoma State",r:"(16-6)"},
+    {n:"Beau Mantanona ",s:"Michigan",r:"(21-7)"},
+    {n:"Myles Takats ",s:"Bucknell",r:"(22-6)"},
+    {n:"MJ Gaitan ",s:"Iowa State",r:"(16-6)"},
+    {n:"Carter Schubert ",s:"Oklahoma",r:"(19-6)"},
+    {n:"Carter Baer ",s:"Binghamton",r:"(18-4)"},
+    {n:"Moses Espinoza-Owens ",s:"SD State",r:"(27-8)"},
+    {n:"Danny Wask ",s:"Navy",r:"(22-4)"},
+    {n:"Nick Fine ",s:"Columbia",r:"(24-8)"},
+    {n:"Jared Simma ",s:"Northern Iowa",r:"(14-9)"},
+    {n:"Colin Kelly ",s:"Illinois",r:"(18-8)"},
+    {n:"Logan Messer ",s:"George Mason",r:"(26-6)"},
+    {n:"Daschle Lamer ",s:"Oregon State",r:"(19-3)"},
+    {n:"Lenny Pinto ",s:"Rutgers",r:"(13-10)"},
+    {n:"Brody Baumann ",s:"Purdue",r:"(16-8)"},
+    {n:"Luca Augustine ",s:"Pittsburgh",r:"(12-6)"},
+    {n:"Garrett Thompson ",s:"Ohio",r:"(16-3)"},
+    {n:"Sergio Desiante ",s:"Virginia Tech",r:"(20-13)"},
+    {n:"Derek Gilcher ",s:"Indiana",r:"(14-10)"},
+    {n:"Collin Carrigan ",s:"North Carolina",r:"(13-10)"},
+    {n:"Holden Garcia ",s:"Princeton",r:"(21-10)"},
+    {n:"Avery Bassett ",s:"Lock Haven",r:"(22-7)"},
+    {n:"Riley Davis ",s:"Wyoming",r:"(11-10)"},
+    {n:"Cael Valencia ",s:"Arizona State",r:"(16-10)"},
+    {n:"Luke Condon ",s:"Wisconsin",r:"(13-13)"},
+    {n:"Grant O'Dell ",s:"Bellarmine",r:"(24-8)"}
+  ],
+  184: [
+    {n:"Rocco Welsh ",s:"Penn State",r:"(20-0)"},
+    {n:"Aeoden Sinclair ",s:"Missouri",r:"(30-1)"},
+    {n:"Max McEnelly ",s:"Minnesota",r:"(19-2)"},
+    {n:"James Conway ",s:"Franklin & Marshall",r:"(32-2)"},
+    {n:"Brock Mantanona ",s:"Michigan",r:"(19-6)"},
+    {n:"Eddie Neitenbach ",s:"Wyoming",r:"(20-6)"},
+    {n:"Angelo Ferrari ",s:"Iowa",r:"(11-3)"},
+    {n:"Silas Allred ",s:"Nebraska",r:"(17-7)"},
+    {n:"Chris Moore ",s:"Illinois",r:"(18-10)"},
+    {n:"Caleb Campos ",s:"American",r:"(25-6)"},
+    {n:"Shane Cartagena-Walsh ",s:"Rutgers",r:"(24-8)"},
+    {n:"Dylan Fishback ",s:"Ohio State",r:"(18-8)"},
+    {n:"Isaac Dean ",s:"Iowa State",r:"(17-7)"},
+    {n:"Jaden Bullock ",s:"Virginia Tech",r:"(20-10)"},
+    {n:"Sal Perrine ",s:"Ohio",r:"(19-4)"},
+    {n:"Rylan Rogers ",s:"Lehigh",r:"(18-6)"},
+    {n:"Ian Bush ",s:"West Virginia",r:"(19-10)"},
+    {n:"Jake Dailey ",s:"North Carolina",r:"(18-4)"},
+    {n:"Jared McGill ",s:"Edinboro",r:"(17-3)"},
+    {n:"Brian Soldano ",s:"Oklahoma",r:"(13-8)"},
+    {n:"Tomas Brooker ",s:"App State",r:"(26-8)"},
+    {n:"Zack Ryder ",s:"Oklahoma State",r:"(12-8)"},
+    {n:"Ceasar Garza ",s:"Cal Poly",r:"(18-2)"},
+    {n:"Joe Curtis ",s:"Columbia",r:"(26-2)"},
+    {n:"Malachi DuVall ",s:"George Mason",r:"(24-5)"},
+    {n:"Chase Kranitz ",s:"Pittsburgh",r:"(15-9)"},
+    {n:"Aiden Brenot ",s:"ND State",r:"(16-9)"},
+    {n:"Abraham Wojcikiewicz ",s:"Stanford",r:"(17-11)"},
+    {n:"Nick Fox ",s:"Northern Iowa",r:"(12-5)"},
+    {n:"Tyler Bienus ",s:"Bucknell",r:"(19-14)"},
+    {n:"Mahonri Rushton ",s:"N. Colorado",r:"(17-14)"},
+    {n:"Caleb Uhlenhopp ",s:"Utah Valley",r:"(16-14)"},
+    {n:"Sam Goin ",s:"Indiana",r:"(12-8)"}
+  ],
+  197: [
+    {n:"Josh Barr ",s:"Penn State",r:"(19-0)"},
+    {n:"Rocky Elam ",s:"Iowa State",r:"(18-0)"},
+    {n:"Stephen Little ",s:"Little Rock",r:"(15-2)"},
+    {n:"Sonny Sasso ",s:"Virginia Tech",r:"(25-5)"},
+    {n:"Joey Novak ",s:"Wyoming",r:"(17-3)"},
+    {n:"Justin Rademacher ",s:"Oregon State",r:"(23-3)"},
+    {n:"Cody Merrill ",s:"Oklahoma State",r:"(17-4)"},
+    {n:"DJ Parker ",s:"Oklahoma",r:"(19-8)"},
+    {n:"Angelo Posada ",s:"Stanford",r:"(16-5)"},
+    {n:"Mac Stout ",s:"Pittsburgh",r:"(19-4)"},
+    {n:"Camden McDanel ",s:"Nebraska",r:"(20-6)"},
+    {n:"Luke Geog ",s:"Ohio State",r:"(16-7)"},
+    {n:"Bennett Berge ",s:"SD State",r:"(16-5)"},
+    {n:"Gabe Sollars ",s:"Indiana",r:"(15-10)"},
+    {n:"Remy Cotton ",s:"Rutgers",r:"(18-7)"},
+    {n:"Branson John ",s:"Maryland",r:"(25-7)"},
+    {n:"Dillon Bechtold ",s:"Bucknell",r:"(15-4)"},
+    {n:"Andrew Reall ",s:"Brown",r:"(34-4)"},
+    {n:"Zayne Lehman ",s:"Ohio",r:"(19-2)"},
+    {n:"Wyatt Ingham ",s:"Wisconsin",r:"(17-8)"},
+    {n:"Rune Lawrence ",s:"West Virginia",r:"(17-11)"},
+    {n:"Devin Wasley ",s:"ND State",r:"(21-10)"},
+    {n:"Mikey Squires ",s:"Binghamton",r:"(19-3)"},
+    {n:"Brock Zurawski ",s:"Rider",r:"(22-5)"},
+    {n:"Evan Bates ",s:"Missouri",r:"(21-9)"},
+    {n:"Ben Vanadia ",s:"Purdue",r:"(15-10)"},
+    {n:"Gabe Arnold ",s:"Iowa",r:"(18-7)"},
+    {n:"Kael Wisler ",s:"Michigan State",r:"(25-10)"},
+    {n:"Colton Hawks ",s:"Arizona State",r:"(7-9)"},
+    {n:"Kade Rule ",s:"Chattanooga",r:"(18-5)"},
+    {n:"Kael Bennie ",s:"Utah Valley",r:"(15-16)"},
+    {n:"Blake Schaffer ",s:"Kent State",r:"(22-9)"},
+    {n:"Karson Tompkins ",s:"Air Force",r:"(21-12)"}
+  ],
+  285: [
+    {n:"Yonger Bastida ",s:"Iowa State",r:"(25-0)"},
+    {n:"Isaac Trumble ",s:"NC State",r:"(16-0)"},
+    {n:"Taye Ghadiali ",s:"Michigan",r:"(23-2)"},
+    {n:"AJ Ferrari ",s:"Nebraska",r:"(15-3)"},
+    {n:"Nick Feldman ",s:"Ohio State",r:"(23-5)"},
+    {n:"Nathan Taylor ",s:"Lehigh",r:"(16-3)"},
+    {n:"Konner Doucet ",s:"Oklahoma State",r:"(17-3)"},
+    {n:"Ben Kueter ",s:"Iowa",r:"(9-7)"},
+    {n:"Cole Mirasola ",s:"Penn State",r:"(17-6)"},
+    {n:"David Szuba ",s:"Arizona State",r:"(22-9)"},
+    {n:"Devon Dawson ",s:"N. Illinois",r:"(31-4)"},
+    {n:"Braxton Amos ",s:"Wisconsin",r:"(20-7)"},
+    {n:"Spencer Lanosga ",s:"Navy",r:"(20-8)"},
+    {n:"Koy Hopke ",s:"Minnesota",r:"(20-9)"},
+    {n:"Brady Colbert ",s:"Army",r:"(18-6)"},
+    {n:"Jimmy Mullen ",s:"Virginia Tech",r:"(22-7)"},
+    {n:"Vincent Mueller ",s:"Columbia",r:"(25-6)"},
+    {n:"Christian Carroll ",s:"Wyoming",r:"(19-6)"},
+    {n:"Nate Schon ",s:"Drexel",r:"(18-5)"},
+    {n:"Dayton Pitzer ",s:"Pittsburgh",r:"(16-6)"},
+    {n:"Juan Mora ",s:"Oklahoma",r:"(19-7)"},
+    {n:"Trevor Tinker ",s:"Cal Poly",r:"(11-4)"},
+    {n:"Stephan Monchery ",s:"App State",r:"(23-7)"},
+    {n:"Connor Barket ",s:"Duke",r:"(23-7)"},
+    {n:"Alex Semenenko ",s:"Brown",r:"(25-7)"},
+    {n:"Luke Luffman ",s:"Illinois",r:"(14-7)"},
+    {n:"Hunter Catka ",s:"Rutgers",r:"(20-9)"},
+    {n:"Jarrett Stoner ",s:"Missouri",r:"(23-14)"},
+    {n:"Luke Rasmussen ",s:"SD State",r:"(11-11)"},
+    {n:"Jack Forbes ",s:"Utah Valley",r:"(19-12)"},
+    {n:"Brenan Morgan ",s:"Virginia",r:"(13-10)"},
+    {n:"Emmanuel Ulrich ",s:"American",r:"(21-14)"},
+    {n:"Mason Rebuck ",s:"Bloomsburg",r:"(22-8)"}
+  ],
+};
+
+const PAIRS = [
+  [0, null],[15,16],[8,23],[7,24],[4,27],[11,20],[12,19],[3,28],
+  [2,29],[13,18],[10,21],[5,26],[6,25],[9,22],[14,17],[30,1],
+];
+
+const states = {};
+const pickLog = {};
+
+// ── CHANGE 2: mkW() now passes r (record) through ──
+function mkW(field, idx0) {
+  const f = field[idx0];
+  return f ? {n:f.n, s:f.s, r:f.r||"", seed:idx0+1} : null;
+}
+function mkMatch(a, b) { return {a, b, w:null}; }
+
+function seedsFromPair(pair){
+  const [ai, bi] = pair;
+  return [ai==null?null:ai+1, bi==null?null:bi+1];
+}
+function isMatch(pair, s1, s2){
+  const [a,b] = seedsFromPair(pair);
+  return (a===s1&&b===s2)||(a===s2&&b===s1);
+}
+function findMatchIndexBySeeds(s1, s2){
+  return PAIRS.findIndex(p => isMatch(p,s1,s2));
+}
+
+function initBracket(wt) {
+  const F = FIELDS[wt];
+  const pigtail = mkMatch(mkW(F,31), mkW(F,32));
+  const r1 = PAIRS.map(([ai, bi]) => {
+    const a = mkW(F, ai);
+    const b = (bi===null) ? null : mkW(F, bi);
+    return mkMatch(a, b);
+  });
+  const r2 = Array.from({length:8},  ()=>mkMatch(null,null));
+  const r3 = Array.from({length:4},  ()=>mkMatch(null,null));
+  const r4 = Array.from({length:2},  ()=>mkMatch(null,null));
+  const r5 = [mkMatch(null,null)];
+  const con = [
+    Array.from({length:8}, ()=>mkMatch(null,null)),
+    Array.from({length:8}, ()=>mkMatch(null,null)),
+    Array.from({length:4}, ()=>mkMatch(null,null)),
+    Array.from({length:4}, ()=>mkMatch(null,null)),
+    Array.from({length:2}, ()=>mkMatch(null,null)),
+    Array.from({length:2}, ()=>mkMatch(null,null)),
+  ];
+  states[wt] = {
+    pigtail, conPigtail: mkMatch(null,null),
+    champ: [r1,r2,r3,r4,r5], con,
+    place3: mkMatch(null,null), place5: mkMatch(null,null), place7: mkMatch(null,null),
+    champion: null
+  };
+}
+
+function getS(wt) {
+  if (!states[wt]) initBracket(wt);
+  return states[wt];
+}
+
+function pick(wt, bracket, ri, mi, slot) {
+  const st = getS(wt);
+  let match;
+  if      (bracket==='pigtail')    match = st.pigtail;
+  else if (bracket==='conPigtail') match = st.conPigtail;
+  else if (bracket==='champ')      match = st.champ[ri][mi];
+  else if (bracket==='con')        match = st.con[ri][mi];
+  else if (bracket==='p3')         match = st.place3;
+  else if (bracket==='p5')         match = st.place5;
+  else if (bracket==='p7')         match = st.place7;
+  if (!match || !match.a || !match.b) return;
+  if (match.w) return;
+  if (!pickLog[wt]) pickLog[wt] = [];
+  pickLog[wt].push({bracket, ri, mi, slot});
+  applyPick(st, bracket, ri, mi, slot);
+  render();
+  if (showScores) renderScores();
+  if (showAA) renderAllAmericans();
+}
+
+function swap(wt, bracket, ri, mi, newWinnerSlot) {
+  const log = pickLog[wt] || [];
+  const idx = log.findIndex(p => p.bracket===bracket && p.ri===ri && p.mi===mi);
+  if (idx===-1) return;
+  const newLog = [...log.slice(0,idx), {bracket,ri,mi,slot:newWinnerSlot}];
+  delete states[wt];
+  pickLog[wt] = [];
+  newLog.forEach(p => pick(wt, p.bracket, p.ri, p.mi, p.slot));
+}
+
+function applyPick(st, bracket, ri, mi, slot) {
+  let match;
+  if      (bracket==='pigtail')    match = st.pigtail;
+  else if (bracket==='conPigtail') match = st.conPigtail;
+  else if (bracket==='champ')      match = st.champ[ri][mi];
+  else if (bracket==='con')        match = st.con[ri][mi];
+  else if (bracket==='p3')         match = st.place3;
+  else if (bracket==='p5')         match = st.place5;
+  else if (bracket==='p7')         match = st.place7;
+  if (!match || !match.a || !match.b || match.w) return;
+  const winner = slot==='a' ? match.a : match.b;
+  const loser  = slot==='a' ? match.b : match.a;
+  match.w = slot;
+  if (bracket==='pigtail') {
+    st.champ[0][0].b = winner;
+    st.conPigtail.a = loser;
+  } else if (bracket==='conPigtail') {
+    st.con[0][4].a = winner;
+  } else if (bracket==='champ') advanceChamp(st, ri, mi, winner, loser);
+  else if (bracket==='con')   advanceCon(st, ri, mi, winner, loser);
+}
+
+function advanceChamp(st, ri, mi, winner, loser) {
+  if (ri < 4) {
+    const nm = st.champ[ri+1][Math.floor(mi/2)];
+    if (mi%2===0) nm.a = winner; else nm.b = winner;
+  } else {
+    st.champion = winner;
+  }
+  if (ri===0) {
+    if (mi===0){st.con[0][0].a=loser;return}
+    if (mi===1){st.con[0][0].b=loser;return}
+    if (mi===2){st.con[0][1].a=loser;return}
+    if (mi===3){st.con[0][1].b=loser;return}
+    if (mi===4){st.con[0][2].a=loser;return}
+    if (mi===5){st.con[0][2].b=loser;return}
+    if (mi===6){st.con[0][3].a=loser;return}
+    if (mi===7){st.con[0][3].b=loser;return}
+    if (mi===8){st.conPigtail.b=loser;return}
+    if (mi===9){st.con[0][4].b=loser;return}
+    if (mi===10){st.con[0][5].a=loser;return}
+    if (mi===11){st.con[0][5].b=loser;return}
+    if (mi===12){st.con[0][6].a=loser;return}
+    if (mi===13){st.con[0][6].b=loser;return}
+    if (mi===14){st.con[0][7].a=loser;return}
+    if (mi===15){st.con[0][7].b=loser;return}
+  } else if (ri===1) {
+    const dropMap={0:{m:7,slot:'a'},1:{m:6,slot:'a'},2:{m:5,slot:'a'},3:{m:4,slot:'a'},4:{m:3,slot:'a'},5:{m:2,slot:'a'},6:{m:1,slot:'a'},7:{m:0,slot:'a'}};
+    const d=dropMap[mi];
+    if(d) st.con[1][d.m][d.slot]=loser;
+  } else if (ri===2) {
+    const qfToCon4=[1,0,3,2];
+    st.con[3][qfToCon4[mi]].a=loser;
+  } else if (ri===3) {
+    const sfToConSemi=[1,0];
+    st.con[5][sfToConSemi[mi]].a=loser;
+  }
+}
+
+function advanceCon(st, ri, mi, winner, loser) {
+  if (ri===0) {
+    st.con[1][mi].b=winner;
+  } else if (ri===1) {
+    const nm=st.con[2][Math.floor(mi/2)];
+    if(mi%2===0) nm.b=winner; else nm.a=winner;
+  } else if (ri===2) {
+    st.con[3][mi].b=winner;
+  } else if (ri===3) {
+    const nm=st.con[4][Math.floor(mi/2)];
+    if(mi%2===0) nm.a=winner; else nm.b=winner;
+  } else if (ri===4) {
+    st.con[5][mi].b=winner;
+    if (!st.place7.a) st.place7.a=loser; else st.place7.b=loser;
+  } else if (ri===5) {
+    if (!st.place3.a) st.place3.a=winner; else st.place3.b=winner;
+    if (!st.place5.a) st.place5.a=loser;  else st.place5.b=loser;
+  }
+}
+
+let CW = 125;
+const WLIST = [125,133,141,149,157,165,174,184,197,285];
+const CHAMP_RND_NAMES = ['Round 1','Rd of 16','Quarterfinals','Semifinals','Finals'];
+const CON_RND_NAMES   = ['Con. Rd 1','Con. Rd 2','Con. Rd 3','Con. Rd 4','Con. Qtrs','Con. Semis'];
+
+function renderWeightTabs() {
+  const weightBtns = WLIST.map(w=>
+    `<button class="wtab ${w===CW && !showScores && !showAA?'on':''}" onclick="switchW(${w})">${w}</button>`
+  ).join('');
+  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 Team Scores</button>`;
+  const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ All-Americans</button>`;
+  document.getElementById('wtabs').innerHTML = weightBtns + scoreBtn + aaBtn;
+}
+
+let showScores = false;
+let showAA = false;
+let showLeaderboard = false;
+
+function hideMainPanels() {
+  document.getElementById('area').style.display='none';
+  document.getElementById('scores-view').classList.remove('active');
+  document.getElementById('aa-view').classList.remove('active');
+  const lbv=document.getElementById('leaderboard-view');
+  if (lbv) lbv.style.display='none';
+}
+function switchW(w) {
+  CW=w; showScores=false; showAA=false; showLeaderboard=false;
+  hideMainPanels();
+  document.getElementById('area').style.display='flex';
+  renderWeightTabs(); render();
+}
+function switchScores() {
+  showScores=true; showAA=false; showLeaderboard=false;
+  hideMainPanels();
+  document.getElementById('scores-view').classList.add('active');
+  renderWeightTabs(); renderScores();
+}
+function switchAA() {
+  showAA=true; showScores=false; showLeaderboard=false;
+  hideMainPanels();
+  document.getElementById('aa-view').classList.add('active');
+  renderWeightTabs(); renderAllAmericans();
+}
+function openLeaderboard() {
+  showLeaderboard=true; showScores=false; showAA=false;
+  hideMainPanels();
+  document.getElementById('leaderboard-view').style.display='flex';
+  renderWeightTabs();
+  refreshLeaderboard();
+}
+
+function resetBracket() {
+  delete states[CW]; delete pickLog[CW];
+  renderWeightTabs(); render();
+  if (showScores) renderScores();
+  if (showAA) renderAllAmericans();
+  if (showLeaderboard) refreshLeaderboard();
+}
+
+function slotHTML(m, which, bkt, ri, mi) {
+  const wr=m[which];
+  const other=which==='a'?'b':'a';
+  const isWin=m.w===which;
+  const isLos=m.w&&m.w!==which;
+  const hasOther=!!m[other];
+  if (!wr) return `<div class="sl empty"><span class="sl-tbd">TBD</span></div>`;
+  const canPick=!m.w&&wr&&hasOther;
+  const canSwap=isLos;
+  const cls=`sl ${isWin?'w':''} ${isLos?'l':''}`.trim();
+  const nameParts=wr.n.split(' ');
+  const fn=nameParts[0];
+  const ln=nameParts.slice(1).join(' ');
+  const seedStr=wr.seed<=16?wr.seed:'';
+  let onclick='',title='';
+  if(canPick){onclick=`onclick="pick(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Advance ${wr.n}"`;}
+  else if(canSwap){onclick=`onclick="swap(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Switch winner to ${wr.n}"`;}
+  const swapHint=canSwap?`<span class="swap-hint">↺ change</span>`:'';
+  return `<div class="${cls}" ${onclick} ${title}>
+    <span class="sl-sd">${seedStr}</span>
+    <span class="sl-nm"><span class="fn">${fn}</span> <strong>${ln||fn}</strong></span>
+    <span class="sl-sc">${wr.s||''}</span>
+    ${swapHint}
+  </div>`;
+}
+
+function matchHTML(m, bkt, ri, mi, extra='') {
+  if (!m) return '';
+  return `<div class="mc ${extra}">${slotHTML(m,'a',bkt,ri,mi)}<div class="md"></div>${slotHTML(m,'b',bkt,ri,mi)}</div>`;
+}
+
+function getWinner(m){return m&&m.w?m[m.w]:null;}
+function getLoser(m){return m&&m.w?m[m.w==='a'?'b':'a']:null;}
+
+function getAllAmericans(st) {
+  const champFinal=st.champ[4][0];
+  return [
+    {place:1,medal:'🥇',wr:st.champion},
+    {place:2,medal:'🥈',wr:getLoser(champFinal)},
+    {place:3,medal:'🥉',wr:getWinner(st.place3)},
+    {place:4,medal:'4', wr:getLoser(st.place3)},
+    {place:5,medal:'5', wr:getWinner(st.place5)},
+    {place:6,medal:'6', wr:getLoser(st.place5)},
+    {place:7,medal:'7', wr:getWinner(st.place7)},
+    {place:8,medal:'8', wr:getLoser(st.place7)},
+  ];
+}
+
+const MEDALS = ['','🥇','🥈','🥉','','','','',''];
+
+function buildAACard(wt) {
+  const st = getS(wt);
+  const aa = getAllAmericans(st);
+  const rows = aa.map(({place, wr}) => {
+    const medal = place <= 3 ? MEDALS[place] : '';
+    const nameHtml = wr
+      ? `<div class="aa-wcard-name">${wr.n.trim()}</div><div class="aa-wcard-school">${wr.s}</div>`
+      : `<div class="aa-wcard-tbd">TBD</div>`;
+    return `<div class="aa-wcard-row place-${place}">
+      <div class="aa-wcard-place">${place}</div>
+      <div class="aa-wcard-medal">${medal}</div>
+      <div class="aa-wcard-info">${nameHtml}</div>
+    </div>`;
+  }).join('');
+  return `<div class="aa-wcard">
+    <div class="aa-wcard-hdr">
+      <span class="aa-wcard-wt">${wt}</span>
+      <span class="aa-wcard-lbs">lbs</span>
+    </div>
+    ${rows}
+  </div>`;
+}
+
+function renderAllAmericans() {
+  const row1 = [125,133,141,149,157];
+  const row2 = [165,174,184,197,285];
+  document.getElementById('aa-grid-125-157').innerHTML =
+    `<div class="aa-row-grid">${row1.map(buildAACard).join('')}</div>`;
+  document.getElementById('aa-grid-165-285').innerHTML =
+    `<div class="aa-row-grid">${row2.map(buildAACard).join('')}</div>`;
+}
+
+function champBox(st) {
+  const champion=st.champion;
+  const aa=getAllAmericans(st);
+  const anyAA=aa.some(r=>r.wr);
+  const champCard=champion
+    ?`<div class="ccard"><div class="crn">🏆</div><div class="clbl">Champion</div><div class="cnm">${champion.n}</div><div class="csc">${champion.s}</div></div>`
+    :`<div class="ccard empty"><div class="crn">🏆</div><div class="clbl">Champion</div><div class="cnm">Undecided</div></div>`;
+  if(!anyAA) return `<div class="cbox"><div>${champCard}</div></div>`;
+  const rows=aa.map(({place,medal,wr})=>{
+    const isMedal=place<=3;
+    const medalDisplay=isMedal?medal:`<span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--t3)">${place}</span>`;
+    const nameHtml=wr?`<div class="aa-name">${wr.n}</div><div class="aa-school">${wr.s}</div>`:`<div class="aa-tbd">TBD</div>`;
+    return `<div class="aa-row place-${place}"><div class="aa-medal">${medalDisplay}</div><div class="aa-info">${nameHtml}</div></div>`;
+  }).join('');
+  const aaPanel=`<div class="aa-panel"><div class="aa-hdr"><div class="aa-hdr-t">All-Americans</div><div class="aa-hdr-s">Top 8 Finishers</div></div>${rows}</div>`;
+  return `<div class="cbox"><div>${champCard}</div>${aaPanel}</div>`;
+}
+
+function render() {
+  const st=getS(CW);
+  const MH=68, GAP=6;
+  let html=`<div class="sec-hd sec-champ"><div class="line"></div><div class="lbl">Championship Bracket</div><div class="line"></div></div>`;
+  html+=`<div class="bgrid">`;
+  html+=`<div class="rcol"><div class="rhdr gc" style="color:var(--gold);opacity:.7">Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-bottom:${GAP}px;">${matchHTML(st.pigtail,'pigtail',0,0,'pt')}</div></div></div>`;
+  html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${MH/2-6}px;"><div style="font-size:10px;color:var(--gold);opacity:.5;">→</div></div>`;
+  st.champ.forEach((round,ri)=>{
+    const sp=Math.pow(2,ri);
+    html+=`<div class="rcol"><div class="rhdr gc">${CHAMP_RND_NAMES[ri]}</div><div>`;
+    round.forEach((m,mi)=>{
+      const mt=mi===0?(sp-1)*(MH+GAP)/2:(sp-1)*(MH+GAP);
+      const isOne=ri===0&&mi===0;
+      const extraCls=ri===4?'cm':(isOne&&!st.pigtail.w?'pt-pending':'');
+      html+=`<div style="margin-top:${mt}px;margin-bottom:${GAP}px">${matchHTML(m,'champ',ri,mi,extraCls)}</div>`;
+    });
+    html+=`</div></div><div class="rconn"></div>`;
+  });
+  html+=champBox(st);
+  html+=`</div>`;
+  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">⬇ Consolation Bracket — Losers Drop Here</div><div class="line"></div></div>`;
+  html+=`<div class="bgrid" style="align-items:flex-start">`;
+  const cpHasData=st.conPigtail.a||st.conPigtail.b;
+  html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-top:${(MH + GAP) * 4}px;margin-bottom:${GAP}px;">${cpHasData?matchHTML(st.conPigtail,'conPigtail',0,0,'con pt'):`<div style="min-width:168px;padding:8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting pigtail & 3v30…</div>`}</div></div></div>`;
+html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${((MH + GAP) * 4) + (MH/2 - 6)}px;"><div style="font-size:10px;color:var(--orange);opacity:.4;">→</div></div>`;  st.con.forEach((round,ri)=>{
+    html+=`<div class="rcol"><div class="rhdr cc">${CON_RND_NAMES[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
+    const hasData=round.some(m=>m.a||m.b);
+    if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting results…</div>`;}
+    else{round.forEach((m,mi)=>{html+=`<div>${matchHTML(m,'con',ri,mi,'con')}</div>`;});}
+    html+=`</div></div><div class="rconn"></div>`;
+  });
+  html+=`<div class="rcol"><div class="rhdr" style="color:#cd7f32">Place Matches</div><div style="display:flex;flex-direction:column;gap:10px">`;
+  [{m:st.place3,bkt:'p3',lbl:'🥉 3rd Place',cls:'pm'},{m:st.place5,bkt:'p5',lbl:'5th Place',cls:'con'},{m:st.place7,bkt:'p7',lbl:'7th Place',cls:'con'}]
+    .forEach(({m,bkt,lbl,cls})=>{
+      if(m.a||m.b){html+=`<div><div class="pl-lbl">${lbl}</div>${matchHTML(m,bkt,0,0,cls)}</div>`;}
+    });
+  html+=`</div></div></div>`;
+  document.getElementById('bkt').innerHTML=html;
+}
+
+// ══════ SCORING ══════
+const PLACE_PTS={1:16,2:12,3:10,4:9,5:7,6:6,7:4,8:3};
+
+function calcTeamScores() {
+  const teams={};
+  function addTeam(school){if(!teams[school])teams[school]={advPts:0,placePts:0,total:0,aaCount:0,placements:[]};return teams[school];}
+  function champWin(wr){if(!wr)return;addTeam(wr.s).advPts+=1;}
+  function conWin(wr){if(!wr)return;addTeam(wr.s).advPts+=0.5;}
+  function placePts(wr,place){if(!wr)return;const t=addTeam(wr.s);const pts=PLACE_PTS[place]||0;t.placePts+=pts;t.aaCount++;t.placements.push({place,pts});}
+  WLIST.forEach(wt=>{
+    if(!states[wt])return;
+    const st=states[wt];
+    if(st.pigtail.w)champWin(st.pigtail[st.pigtail.w]);
+    st.champ.forEach((round,ri)=>{if(ri===4)return;round.forEach(m=>{if(m.w)champWin(m[m.w]);});});
+    if(st.conPigtail.w)conWin(st.conPigtail[st.conPigtail.w]);
+    st.con.forEach(round=>{round.forEach(m=>{if(m.w)conWin(m[m.w]);});});
+    getAllAmericans(st).forEach(({place,wr})=>{if(wr)placePts(wr,place);});
+  });
+  Object.values(teams).forEach(t=>{t.total=t.advPts+t.placePts;});
+  return Object.entries(teams).map(([school,d])=>({school,...d})).sort((a,b)=>b.total-a.total||b.placePts-a.placePts||b.aaCount-a.aaCount);
+}
+
+function renderScores() {
+  const data=calcTeamScores();
+  const top15=data.slice(0,15);
+  const maxPts=top15.length?top15[0].total:1;
+  let matchCount=0;
+  WLIST.forEach(wt=>{
+    if(!states[wt])return;
+    const st=states[wt];
+    const allM=[st.pigtail,st.conPigtail,...st.champ.flat(),...st.con.flat(),st.place3,st.place5,st.place7];
+    allM.forEach(m=>{if(m&&m.w)matchCount++;});
+  });
+  const body=document.getElementById('lb-body');
+  if(!top15.length){
+    body.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">No results yet — advance wrestlers in the bracket to see team scores</td></tr>`;
+    document.getElementById('scores-note').textContent='';
+    return;
+  }
+  body.innerHTML=top15.map((t,i)=>{
+    const rank=i+1;
+    const barPct=maxPts>0?(t.total/maxPts*100).toFixed(1):0;
+    const advStr=t.advPts>0?`+${fmt(t.advPts)}`:'—';
+    const placeStr=t.placePts>0?fmt(t.placePts):'—';
+    const aaStr=t.aaCount>0?`${t.aaCount} AA`:'—';
+    return `<tr class="rank-${rank}">
+      <td class="lb-td-rank">${rank}</td>
+      <td class="lb-td-school">${t.school}</td>
+      <td class="lb-td-pts">${fmt(t.total)}</td>
+      <td class="lb-td-adv">${advStr}</td>
+      <td class="lb-td-place">${placeStr}</td>
+      <td class="lb-td-aa">${aaStr}</td>
+      <td class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:${barPct}%"></div></div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('scores-note').textContent=`${matchCount} match${matchCount===1?'':'es'} decided across ${WLIST.filter(w=>states[w]).length} weight class${WLIST.filter(w=>states[w]).length===1?'':'es'} · Scores update live as you advance wrestlers`;
+}
+
+function fmt(n){return n%1===0?n.toString():n.toFixed(1);}
+
+// ══════ INIT ══════
+renderWeightTabs();
+render();
+
+// ══════ FIREBASE INTEGRATION ══════
+// All data — submissions, matches, officialResults, leaderboard — lives in Firestore.
+// Scoring runs client-side; see recomputeLeaderboard() below.
+
+// Firebase SDK (ESM via CDN)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs, query, where, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const _fbApp = initializeApp({
+  apiKey           : "AIzaSyCPcMkc3z6OZeHgUDLk32iRJHkxP9cQGhc",
+  authDomain       : "ncaa-wrestling-52fa3.firebaseapp.com",
+  projectId        : "ncaa-wrestling-52fa3",
+  storageBucket    : "ncaa-wrestling-52fa3.firebasestorage.app",
+  messagingSenderId: "338738139578",
+  appId            : "1:338738139578:web:b3f061e03d985b7530cd83"
+});
+const db = getFirestore(_fbApp);
+
+let currentSubmissionContext = null;
+
+(function initEntryModals(){
+  ['pm-checks','results-checks'].forEach(id=>{
+    const grid=document.getElementById(id);
+    if (grid && !grid.children.length) {
+      WLIST.forEach(w=>{
+        const lbl=document.createElement('label');
+        lbl.className='pm-wchk';
+        lbl.innerHTML=`<input type="checkbox" value="${w}" checked><span>${w}</span>`;
+        grid.appendChild(lbl);
+      });
+    }
+  });
+})();
+
+function pmSelectAll(){document.querySelectorAll('#pm-checks input').forEach(c=>c.checked=true);}
+function pmSelectNone(){document.querySelectorAll('#pm-checks input').forEach(c=>c.checked=false);}
+function printBracket(){document.getElementById('print-modal').classList.add('open');}
+function closePrintModal(){document.getElementById('print-modal').classList.remove('open');}
+function openLoadModal(){
+  const pinInput = document.getElementById('load-pin-input');
+  if (pinInput) pinInput.value = '';
+  document.getElementById('load-modal').classList.add('open');
+  refreshSubmissionList();
+}
+function closeLoadModal(){document.getElementById('load-modal').classList.remove('open');}
+function openResultsModal(){document.getElementById('results-modal').classList.add('open');}
+function closeResultsModal(){document.getElementById('results-modal').classList.remove('open');}
+function resultsSelectAll(){document.querySelectorAll('#results-checks input').forEach(c=>c.checked=true);}
+function resultsSelectNone(){document.querySelectorAll('#results-checks input').forEach(c=>c.checked=false);}
+
+function safeName(wr)  { return wr?.n?.trim?.() || ""; }
+function safeSchool(wr){ return wr?.s?.trim?.() || ""; }
+function safeSeed(wr)  { return wr?.seed ?? ""; }
+// ── CHANGE 3: safeRecord helper ──
+function safeRecord(wr){ return wr?.r?.trim?.() || ""; }
+
+function makeSubmissionId() {
+  const ts = new Date();
+  const y = ts.getFullYear();
+  const m = String(ts.getMonth() + 1).padStart(2, '0');
+  const d = String(ts.getDate()).padStart(2, '0');
+  const hh = String(ts.getHours()).padStart(2, '0');
+  const mm = String(ts.getMinutes()).padStart(2, '0');
+  const ss = String(ts.getSeconds()).padStart(2, '0');
+  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+  return `SUB-${y}${m}${d}-${hh}${mm}${ss}-${rand}`;
+}
+
+function normalizePin(pin) {
+  return String(pin || '').trim();
+}
+
+function promptForNewEntryMeta() {
+  const entryName = prompt("Enter a name for this bracket submission:", "My Bracket");
+  if (!entryName || !entryName.trim()) return null;
+  const userName = prompt("Enter your name:", "") || "";
+  const userEmail = prompt("Enter your email (optional):", "") || "";
+  const pin = normalizePin(prompt("Create a 4-8 digit PIN for this entry:", ""));
+  if (!/^\d{4,8}$/.test(pin)) {
+    alert('PIN must be 4 to 8 digits.');
+    return null;
+  }
+  const pinConfirm = normalizePin(prompt("Re-enter your PIN:", ""));
+  if (pin !== pinConfirm) {
+    alert('PIN entries did not match.');
+    return null;
+  }
+  return {
+    submissionId: makeSubmissionId(),
+    entryName: entryName.trim(),
+    userName: userName.trim(),
+    userEmail: userEmail.trim(),
+    pin,
+    isUpdate: false
+  };
+}
+
+function promptForExistingEntryMeta(existing) {
+  const entryName = prompt("Update entry name:", existing?.entryName || "") || existing?.entryName || "";
+  if (!entryName.trim()) return null;
+  const userName = prompt("Update your name:", existing?.userName || "") || existing?.userName || "";
+  const userEmail = prompt("Update your email (optional):", existing?.userEmail || "") || existing?.userEmail || "";
+  const pin = normalizePin(existing?.pin);
+  if (!/^\d{4,8}$/.test(pin)) {
+    alert('The loaded entry PIN is missing. Load the entry again.');
+    return null;
+  }
+  return {
+    submissionId: existing.submissionId,
+    entryName: entryName.trim(),
+    userName: userName.trim(),
+    userEmail: userEmail.trim(),
+    pin,
+    isUpdate: true,
+    lockDeadline: existing.lockDeadline || ''
+  };
+}
+
+function getEntryMetaForSubmit() {
+  if (currentSubmissionContext && currentSubmissionContext.submissionId) {
+    if (currentSubmissionContext.isLocked) {
+      alert(`The loaded entry "${currentSubmissionContext.entryName || currentSubmissionContext.submissionId}" is locked and cannot be updated.`);
+      return null;
+    }
+    const updateExisting = confirm(
+      `Update the loaded entry "${currentSubmissionContext.entryName || currentSubmissionContext.submissionId}"?\n\n` +
+      `Press OK to update this entry.\nPress Cancel to create a brand new entry.`
+    );
+    if (updateExisting) {
+      return promptForExistingEntryMeta(currentSubmissionContext);
+    }
+  }
+  return promptForNewEntryMeta();
+}
+
+// ── CHANGE 4: collectMatchRows now includes recordA, recordB, winnerRecord, loserRecord ──
+function collectMatchRows(weight, bracketLabel, roundLabel, roundIndex, matches){
+  const rows = [];
+  (matches || []).forEach((m, matchIndex) => {
+    if (!m) return;
+
+    const winner = m.w ? m[m.w] : null;
+    const loser  = m.w ? m[m.w === 'a' ? 'b' : 'a'] : null;
+
+    rows.push({
+      weight,
+      bracket: bracketLabel,
+      round: roundLabel,
+      roundIndex,
+      matchIndex,
+      wrestlerA: safeName(m.a),
+      schoolA: safeSchool(m.a),
+      seedA: safeSeed(m.a),
+      recordA: safeRecord(m.a),
+      wrestlerB: safeName(m.b),
+      schoolB: safeSchool(m.b),
+      seedB: safeSeed(m.b),
+      recordB: safeRecord(m.b),
+      winnerSlot: m.w || "",
+      winnerName: safeName(winner),
+      winnerSchool: safeSchool(winner),
+      winnerRecord: safeRecord(winner),
+      loserName: safeName(loser),
+      loserSchool: safeSchool(loser),
+      loserRecord: safeRecord(loser)
+    });
+  });
+  return rows;
+}
+
+function buildWeightPayload(wt){
+  const st = getS(wt);
+  const rows = [];
+
+  rows.push(...collectMatchRows(wt, 'Pigtail', 'Pigtail', 0, [st.pigtail]));
+
+  if (st.champ && Array.isArray(st.champ)) {
+    st.champ.forEach((roundMatches, ri) => {
+      const roundLabel = CHAMP_RND_NAMES?.[ri] || `Champ Round ${ri+1}`;
+      rows.push(...collectMatchRows(wt, 'Championship', roundLabel, ri, roundMatches));
+    });
+  }
+
+  rows.push(...collectMatchRows(wt, 'Consolation', 'Con Pigtail', -1, [st.conPigtail]));
+
+  if (st.con && Array.isArray(st.con)) {
+    st.con.forEach((roundMatches, ri) => {
+      const roundLabel = CON_RND_NAMES?.[ri] || `Con Round ${ri+1}`;
+      rows.push(...collectMatchRows(wt, 'Consolation', roundLabel, ri, roundMatches));
+    });
+  }
+
+  rows.push(...collectMatchRows(wt, 'Placement', '3rd Place', 0, [st.place3]));
+  rows.push(...collectMatchRows(wt, 'Placement', '5th Place', 1, [st.place5]));
+  rows.push(...collectMatchRows(wt, 'Placement', '7th Place', 2, [st.place7]));
+
+  return { weight: wt, rows };
+}
+
+let isSubmittingEntry = false;
+
+async function doPrint(){
+  if (isSubmittingEntry) return;
+  isSubmittingEntry = true;
+
+  const submitBtn = document.getElementById('submit-entry-btn');
+  const originalSubmitText = submitBtn ? submitBtn.textContent : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+  }
+
+  // Prevent Enter/OK from the browser prompt flow from re-triggering the focused modal button.
+  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+    document.activeElement.blur();
+  }
+
+  const selected=[...document.querySelectorAll('#pm-checks input:checked')].map(c=>+c.value);
+  if(!selected.length){
+    alert('Select at least one weight class.');
+    isSubmittingEntry = false;
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalSubmitText; }
+    return;
+  }
+
+  const meta = getEntryMetaForSubmit();
+  if (!meta) {
+    isSubmittingEntry = false;
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalSubmitText; }
+    return;
+  }
+
+  const submittedAt = new Date().toISOString();
+  const weights     = selected.map(wt => buildWeightPayload(wt));
+
+  try {
+    // ── Write submission doc to Firestore ──────────────────
+    const subRef = doc(db, "submissions", meta.submissionId);
+
+    // Check if exists and verify PIN on update
+    if (meta.isUpdate) {
+      const existing = await getDoc(subRef);
+      if (existing.exists()) {
+        const saved = existing.data();
+        if (saved.pin !== meta.pin) {
+          alert('Incorrect PIN.');
+          return;
+        }
+        if (saved.isLocked) {
+          alert('This submission is locked and cannot be updated.');
+          return;
+        }
+      }
+    }
+
+    // Write submission metadata
+    await setDoc(subRef, {
+      submissionId   : meta.submissionId,
+      entryName      : meta.entryName,
+      userName       : meta.userName,
+      userEmail      : meta.userEmail,
+      pin            : meta.pin,
+      submittedAt    : meta.isUpdate ? (await getDoc(subRef)).data()?.submittedAt || submittedAt : submittedAt,
+      updatedAt      : submittedAt,
+      source         : "NCAA Click-to-Advance Bracket",
+      selectedWeights: selected.join(","),
+      weightCount    : selected.length,
+      isLocked       : false,
+      status         : meta.isUpdate ? "UPDATED" : "SUBMITTED"
+    }, { merge: false });
+
+    // ── Write match rows to Firestore ──────────────────────
+    // Each match is a doc in /matches collection
+    // Only write rows where a winner was picked (fast + lean)
+    const matchWrites = [];
+    weights.forEach(weightBlock => {
+      const wt = weightBlock.weight;
+      (weightBlock.rows || []).forEach(row => {
+       // Write the match if it has wrestlers OR a winner — not just winners.
+// This ensures consolation matches that have been seeded with losers
+// (but not yet decided) still get persisted, so the PDF can render them.
+if (!row.winnerSlot && !row.wrestlerA && !row.wrestlerB) return;
+        const matchId = `${meta.submissionId}_${wt}_${row.bracket}_${row.roundIndex}_${row.matchIndex}`;
+        matchWrites.push(setDoc(doc(db, "matches", matchId), {
+          submissionId : meta.submissionId,
+          entryName    : meta.entryName,
+          userName     : meta.userName,
+          userEmail    : meta.userEmail,
+          submittedAt,
+          weight       : wt,
+          bracket      : row.bracket,
+          round        : row.round,
+          roundIndex   : row.roundIndex,
+          matchIndex   : row.matchIndex,
+          wrestlerA    : row.wrestlerA,
+          schoolA      : row.schoolA,
+          seedA        : row.seedA,
+          recordA      : row.recordA,
+          wrestlerB    : row.wrestlerB,
+          schoolB      : row.schoolB,
+          seedB        : row.seedB,
+          recordB      : row.recordB,
+          winnerSlot   : row.winnerSlot,
+          winnerName   : row.winnerName,
+          winnerSchool : row.winnerSchool,
+          winnerRecord : row.winnerRecord,
+          loserName    : row.loserName,
+          loserSchool  : row.loserSchool,
+          loserRecord  : row.loserRecord
+        }));
+      });
+    });
+
+    // Run all match writes in parallel — blazing fast
+    await Promise.all(matchWrites);
+
+    // ── Update leaderboard after entry submit ────────────────
+    // Recompute scores so the new/updated entry appears on the leaderboard immediately.
+    // (Only meaningful if official results have been entered; otherwise it just writes
+    // a 0-score row for the new entry, which is correct.)
+    try {
+      await recomputeLeaderboard();
+      if (showLeaderboard) await refreshLeaderboard();
+    } catch (lbErr) {
+      console.warn('Leaderboard update skipped:', lbErr);
+    }
+
+    closePrintModal();
+
+    currentSubmissionContext = {
+      submissionId : meta.submissionId,
+      entryName    : meta.entryName,
+      userName     : meta.userName,
+      userEmail    : meta.userEmail,
+      pin          : meta.pin,
+      isLocked     : false,
+      lockDeadline : meta.lockDeadline || ''
+    };
+
+    const actionWord = meta.isUpdate ? 'Updated' : 'Submitted';
+    console.log(`${actionWord} successfully. Submission ID: ${meta.submissionId}`);
+
+    // ── Show inline bracket preview (replaces email/PDF) ──
+    try {
+      // Build flat docs array — same shape as Firestore docs the renderer expects
+      const previewDocs = [];
+      weights.forEach(wb => {
+        (wb.rows || []).forEach(row => {
+          if (!row.winnerSlot) return;
+          previewDocs.push(Object.assign({}, row, {
+            weight: wb.weight,
+            submissionId: meta.submissionId,
+            entryName: meta.entryName
+          }));
+        });
+      });
+      if (window.showBracketPreview) {
+        window.showBracketPreview(previewDocs);
+      }
+    } catch (previewErr) {
+      console.warn('Bracket preview failed (non-critical):', previewErr);
+    }
+
+
+  } catch (err) {
+    console.error(err);
+    alert("Submit failed: " + err.message);
+  } finally {
+    isSubmittingEntry = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalSubmitText;
+    }
+  }
+}
+
+async function submitOfficialResults(){
+  const selected = [...document.querySelectorAll('#results-checks input:checked')].map(c => +c.value);
+  if(!selected.length){ alert('Select at least one weight class.'); return; }
+
+  const adminPin = (prompt('Enter Admin PIN to submit official results:') || '').trim();
+  if(!adminPin){ alert('Results submission cancelled.'); return; }
+
+  if(adminPin !== '4330381'){ alert('Incorrect admin PIN.'); return; }
+
+  const submittedAt = new Date().toISOString();
+  const weights     = selected.map(wt => buildWeightPayload(wt));
+
+  try {
+    // ── Write official results to Firestore ───────────────
+    const resultWrites = [];
+    weights.forEach(weightBlock => {
+      const wt = weightBlock.weight;
+      (weightBlock.rows || []).forEach(row => {
+        if (!row.winnerSlot) return;
+        const matchId = `${wt}_${row.bracket}_${row.roundIndex}_${row.matchIndex}`;
+        resultWrites.push(setDoc(doc(db, "officialResults", matchId), {
+          weight      : wt,
+          bracket     : row.bracket,
+          round       : row.round,
+          roundIndex  : row.roundIndex,
+          matchIndex  : row.matchIndex,
+          winnerSlot  : row.winnerSlot,
+          winnerName  : row.winnerName,
+          winnerSchool: row.winnerSchool,
+          submittedAt
+        }));
+      });
+    });
+
+    await Promise.all(resultWrites);
+    closeResultsModal();
+    alert(`Official results saved for ${selected.join(', ')}.\n\nRecomputing leaderboard...`);
+
+    // ── Recompute leaderboard scores client-side ──────────
+    try {
+      await recomputeLeaderboard();
+      refreshLeaderboard();
+    } catch (scoreErr) {
+      console.error('Scoring failed:', scoreErr);
+      alert('Results saved, but scoring failed: ' + scoreErr.message + '\nYou can retry via Admin → Recompute Leaderboard.');
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert('Results submit failed: ' + err.message);
+  }
+}
+
+/* =========================================================================
+   LEADERBOARD SCORING ENGINE (client-side, replaces Apps Script)
+   ========================================================================= */
+async function adminRecomputeLeaderboard() {
+  const adminPin = (prompt('Enter Admin PIN to recompute leaderboard:') || '').trim();
+  if (!adminPin) return;
+  if (adminPin !== '4330381') { alert('Incorrect admin PIN.'); return; }
+
+  const btn = event && event.target;
+  if (btn) { btn.disabled = true; btn.textContent = 'Computing…'; }
+  try {
+    const count = await recomputeLeaderboard();
+    refreshLeaderboard();
+    alert(`Leaderboard recomputed: ${count} entries scored.`);
+  } catch (err) {
+    console.error('Recompute failed:', err);
+    alert('Recompute failed: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Recompute'; }
+  }
+}
+
+async function recomputeLeaderboard() {
+  // Read all official results — they're the truth we score against
+  const officialSnap = await getDocs(collection(db, "officialResults"));
+  const officialResults = {};   // keyed by ${wt}_${bracket}_${roundIndex}_${matchIndex}
+  officialSnap.forEach(d => {
+    const r = d.data();
+    const key = `${r.weight}_${r.bracket}_${r.roundIndex}_${r.matchIndex}`;
+    officialResults[key] = r;
+  });
+
+  // Read all submissions metadata
+  const subsSnap = await getDocs(collection(db, "submissions"));
+  const submissions = [];
+  subsSnap.forEach(d => submissions.push(d.data()));
+
+  // Read ALL matches across all submissions (single collection query)
+  const matchesSnap = await getDocs(collection(db, "matches"));
+  // Group matches by submissionId for fast scoring
+  const matchesBySubmission = {};
+  matchesSnap.forEach(d => {
+    const m = d.data();
+    if (!matchesBySubmission[m.submissionId]) matchesBySubmission[m.submissionId] = [];
+    matchesBySubmission[m.submissionId].push(m);
+  });
+
+  // Score each submission: count matches where their winnerSlot matches officialResults
+  const scored = submissions.map(sub => {
+    const subMatches = matchesBySubmission[sub.submissionId] || [];
+    let correctPicks = 0;
+    let totalPicks = 0;
+    subMatches.forEach(m => {
+      if (!m.winnerSlot) return;
+      totalPicks++;
+      const key = `${m.weight}_${m.bracket}_${m.roundIndex}_${m.matchIndex}`;
+      const official = officialResults[key];
+      if (official && official.winnerSlot === m.winnerSlot) {
+        correctPicks++;
+      }
+    });
+    return {
+      submissionId : sub.submissionId,
+      entryName    : sub.entryName || '—',
+      userName     : sub.userName || '—',
+      userEmail    : sub.userEmail || '',
+      correctPicks,
+      totalScore   : correctPicks,    // 1 pt per correct pick = same number
+      totalPicks,
+      status       : sub.status || 'SUBMITTED',
+      lastScoredAt : new Date().toISOString()
+    };
+  });
+
+  // Rank: highest correctPicks first; ties broken by earliest submittedAt
+  scored.sort((a, b) => b.correctPicks - a.correctPicks);
+  scored.forEach((row, i) => { row.rank = i + 1; });
+
+  // Write all leaderboard docs in parallel
+  const writes = scored.map(row =>
+    setDoc(doc(db, "leaderboard", row.submissionId), row)
+  );
+  await Promise.all(writes);
+
+  console.log(`Leaderboard recomputed: ${scored.length} entries scored against ${Object.keys(officialResults).length} official results`);
+  return scored.length;
+}
+
+async function refreshLeaderboard(){
+  const body=document.getElementById('leaderboard-body');
+  const note=document.getElementById('leaderboard-note');
+  if (!body) return;
+  body.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">Loading leaderboard...</td></tr>`;
+  if (note) note.textContent='';
+  try {
+    // ── Read leaderboard from Firestore — no orderBy (avoids index requirement) ──
+    const snap = await getDocs(collection(db, "leaderboard"));
+    const rows = [];
+    snap.forEach(d => rows.push(d.data()));
+    
+    if (!rows.length) {
+      body.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">No scores yet.</td></tr>`;
+      if (note) note.textContent='';
+      return;
+    }
+
+    // Sort client-side by rank ascending
+    rows.sort((a, b) => (Number(a.rank) || 999) - (Number(b.rank) || 999));
+
+    body.innerHTML = rows.map((r,i)=>`<tr class="rank-${i<3?i+1:0}">
+      <td class="lb-td-rank">${r.rank || i+1}</td>
+      <td class="lb-td-school">${r.entryName || '—'}</td>
+      <td class="lb-td-school">${r.userName || '—'}</td>
+      <td class="lb-td-pts">${r.correctPicks ?? 0}</td>
+      <td class="lb-td-pts">${r.totalScore ?? 0}</td>
+      <td class="lb-td-aa">${r.status || ''}</td>
+    </tr>`).join('');
+
+    const scoredAt = rows[0]?.lastScoredAt ? new Date(rows[0].lastScoredAt).toLocaleString() : '';
+    if (note) note.textContent = `${rows.length} entr${rows.length===1?'y':'ies'} ranked${scoredAt ? ` · Last scored ${scoredAt}` : ''}`;
+
+  } catch(err) {
+    console.error("Leaderboard error:", err);
+    body.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">Could not load leaderboard: ${err.message}</td></tr>`;
+    if (note) note.textContent='Firestore error — check console for details.';
+  }
+}
+
+function getMatchCodeFromSavedRow(row){
+  if (row.bracket === 'Pigtail') return { bracket:'pigtail', ri:0, mi:0 };
+  if (row.bracket === 'Championship') return { bracket:'champ', ri:Number(row.roundIndex), mi:Number(row.matchIndex) };
+  if (row.bracket === 'Consolation') {
+    if (row.round === 'Con Pigtail') return { bracket:'conPigtail', ri:0, mi:0 };
+    return { bracket:'con', ri:Number(row.roundIndex), mi:Number(row.matchIndex) };
+  }
+  if (row.bracket === 'Placement') {
+    if (row.round === '3rd Place') return { bracket:'p3', ri:0, mi:0 };
+    if (row.round === '5th Place') return { bracket:'p5', ri:0, mi:0 };
+    if (row.round === '7th Place') return { bracket:'p7', ri:0, mi:0 };
+  }
+  return null;
+}
+
+function rowSortKey(row){
+  const wt = Number(row.weight) || 0;
+  const code = getMatchCodeFromSavedRow(row);
+  const orderMap = { pigtail:0, champ:1, conPigtail:2, con:3, p3:4, p5:5, p7:6 };
+  const stage = code ? (orderMap[code.bracket] ?? 99) : 99;
+  const ri = code ? Number(code.ri||0) : 0;
+  const mi = code ? Number(code.mi||0) : 0;
+  return wt * 100000 + stage * 10000 + (ri + 10) * 100 + mi;
+}
+
+async function refreshSubmissionList(){
+  const sel  = document.getElementById('load-submission-select');
+  const meta = document.getElementById('load-meta');
+  if (!sel) return;
+  sel.innerHTML    = '<option value="">Loading saved entries...</option>';
+  meta.textContent = '';
+  try {
+    // ── List submissions from Firestore ───────────────────
+    const snap = await getDocs(collection(db, "submissions"));
+    const submissions = [];
+    snap.forEach(d => submissions.push(d.data()));
+    submissions.sort((a,b) => String(b.updatedAt || b.submittedAt || '').localeCompare(String(a.updatedAt || a.submittedAt || '')));
+
+    if (!submissions.length) {
+      sel.innerHTML = '<option value="">No saved entries found</option>';
+      return;
+    }
+
+    sel.innerHTML = '<option value="">Select a saved entry</option>' + submissions.map(s => {
+      const stamp        = s.updatedAt || s.submittedAt;
+      const displayStamp = stamp ? new Date(stamp).toLocaleString() : '';
+      const status       = s.isLocked ? 'LOCKED' : (s.status || 'SAVED');
+      const label        = `${s.entryName || s.submissionId} · ${s.userName || 'Unknown'} · ${displayStamp} · ${status}`;
+      return `<option value="${String(s.submissionId).replace(/"/g,'&quot;')}" data-entry="${(s.entryName||'').replace(/"/g,'&quot;')}" data-user="${(s.userName||'').replace(/"/g,'&quot;')}" data-weights="${(s.selectedWeights||'').replace(/"/g,'&quot;')}" data-stamp="${displayStamp.replace(/"/g,'&quot;')}" data-status="${status.replace(/"/g,'&quot;')}" data-locked="${s.isLocked ? 'true' : 'false'}">${label}</option>`;
+    }).join('');
+
+    sel.onchange = function(){
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt || !opt.value) { meta.textContent = ''; return; }
+      const locked = opt.dataset.locked === 'true' ? 'Locked' : 'Editable before deadline';
+      meta.textContent = `${opt.dataset.entry || ''} · ${opt.dataset.user || ''} · Weights: ${opt.dataset.weights || ''} · ${locked}`;
+    };
+  } catch (err) {
+    console.error(err);
+    sel.innerHTML    = '<option value="">Could not load submissions</option>';
+    meta.textContent = 'Firestore connection error — check console.';
+  }
+}
+
+async function loadSubmission(submissionId, pin) {
+  try {
+    // ── Load submission from Firestore ────────────────────
+    const subSnap = await getDoc(doc(db, "submissions", submissionId));
+    if (!subSnap.exists()) {
+      alert('Submission not found.');
+      return;
+    }
+
+    const submission = subSnap.data();
+    if (submission.pin !== pin) {
+      alert('Incorrect PIN.');
+      return;
+    }
+
+    // ── Load match rows from Firestore ────────────────────
+    const matchQ  = query(collection(db, "matches"), where("submissionId", "==", submissionId));
+    const matchSnap = await getDocs(matchQ);
+    const rows = [];
+    matchSnap.forEach(d => rows.push(d.data()));
+
+    if (!rows.length) {
+      alert('No picks found for this submission.');
+      return;
+    }
+
+    rows.sort((a,b) => rowSortKey(a) - rowSortKey(b));
+
+    WLIST.forEach(w => { delete states[w]; delete pickLog[w]; });
+
+    rows.forEach(row => {
+      const wt   = Number(row.weight);
+      const code = getMatchCodeFromSavedRow(row);
+      if (!wt || !code || !row.winnerSlot) return;
+      pick(wt, code.bracket, code.ri, code.mi, row.winnerSlot);
+    });
+
+    currentSubmissionContext = {
+      submissionId : submission.submissionId || submissionId,
+      entryName    : submission.entryName    || '',
+      userName     : submission.userName     || '',
+      userEmail    : submission.userEmail    || '',
+      pin,
+      isLocked     : !!submission.isLocked,
+      lockDeadline : submission.lockDeadline || ''
+    };
+
+    CW = Number(rows[0]?.weight || submission.selectedWeights?.split?.(',')?.[0] || CW);
+    showScores = false;
+    showAA     = false;
+    document.getElementById('area').style.display = 'flex';
+    document.getElementById('scores-view').classList.remove('active');
+    document.getElementById('aa-view').classList.remove('active');
+    renderWeightTabs();
+    render();
+    closeLoadModal();
+    const entryName  = submission.entryName ? `\nEntry: ${submission.entryName}` : '';
+    const statusLine = submission.isLocked  ? '\nStatus: Locked' : '\nStatus: Editable before deadline';
+    alert(`Loaded submission ${submissionId}.${entryName}${statusLine}`);
+  } catch (err) {
+    console.error(err);
+    alert('Load failed: ' + err.message);
+  }
+}
+
+async function loadSelectedSubmission(){
+  const sel = document.getElementById('load-submission-select');
+  const pinInput = document.getElementById('load-pin-input');
+  const pin = normalizePin(pinInput?.value);
+  if (!sel || !sel.value) {
+    alert('Select a saved entry first.');
+    return;
+  }
+  if (!/^\d{4,8}$/.test(pin)) {
+    alert('Enter the 4-8 digit PIN for this entry.');
+    return;
+  }
+  await loadSubmission(sel.value, pin);
+}
+
+// ── Expose all functions to global scope ──────────────────
+// Required because type="module" scopes functions locally
+// and HTML onclick handlers need global access
+Object.assign(window, {
+  resetBracket, switchW, switchScores, switchAA, openLeaderboard,
+  doPrint, closePrintModal, printBracket,
+  pmSelectAll, pmSelectNone,
+  openLoadModal, closeLoadModal,
+  openResultsModal, closeResultsModal,
+  resultsSelectAll, resultsSelectNone,
+  submitOfficialResults,
+  recomputeLeaderboard,
+  adminRecomputeLeaderboard,
+  refreshLeaderboard,
+  refreshSubmissionList, loadSelectedSubmission,
+  pick, swap
+});
+</script>
+
+<!-- ============================================
+     BRACKET PREVIEW MODAL (added by integration)
+     ============================================ -->
+<div id="bracket-preview-modal" role="dialog" aria-label="Bracket preview">
+  <div class="bp-shell">
+    <div class="bp-toolbar">
+      <h2>Your Bracket Entry</h2>
+      <div class="bp-info" id="bp-info"></div>
+      <div class="bp-actions">
+        <button class="bp-btn primary" onclick="window.print()">🖨️ Print</button>
+        <button class="bp-btn" onclick="closeBracketPreview()">Close</button>
+      </div>
+    </div>
+    <div class="bp-pages" id="bp-pages"></div>
+  </div>
+</div>
+
+</body>
+</html>
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- MOBILE ENHANCEMENTS — Purely additive, remove this block to revert -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<style id="mobile-enhancements">
+@media (max-width: 700px) {
+  /* Header — hide the button row, show hamburger instead */
+  .hdr .rst-btn { display: none !important; }
+  .hdr-mobile-menu { display: flex !important; }
+  .hdr-t { font-size: 14px !important; letter-spacing: 1.5px !important; }
+  .hdr-s { font-size: 8px !important; letter-spacing: 1px !important; }
+  .hdr { padding: 0 12px !important; gap: 8px !important; }
+
+  /* Round paginator visibility */
+  .mobile-round-nav { display: flex !important; }
+
+  /* Hide champ rounds 1-4 by default, show only the active one */
+  .bgrid > .rcol.champ-round { display: none !important; }
+  .bgrid > .rcol.champ-round.active-round { display: flex !important; }
+  .bgrid > .rconn.champ-conn { display: none !important; }
+
+  /* Hide consolation rounds same way */
+  .bgrid > .rcol.con-round { display: none !important; }
+  .bgrid > .rcol.con-round.active-round { display: flex !important; }
+  .bgrid > .rconn.con-conn { display: none !important; }
+
+  /* The pigtail column should stay visible only on round 1 */
+  .bgrid > .rcol.pigtail-col { display: none !important; }
+  .bgrid > .rcol.pigtail-col.active-round { display: flex !important; }
+
+  /* Make match cards a bit wider on mobile for readability */
+  .mc { width: calc(100vw - 40px) !important; max-width: 340px; }
+
+  /* Sticky champion pill */
+  .mobile-champ-pill { display: flex !important; }
+
+  /* Larger tap targets */
+  .sl { min-height: 40px !important; padding: 6px 10px !important; }
+  .sl-nm { font-size: 12px !important; }
+  .sl-sc { font-size: 9px !important; max-width: 70px !important; }
+
+  /* Ensure modals are usable on mobile */
+  #print-modal-box, #load-modal-box {
+    padding: 20px 18px !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* Hamburger button — desktop hidden, mobile shown */
+.hdr-mobile-menu {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.8);
+  font-size: 18px;
+  width: 36px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 3px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hdr-mobile-menu:hover { border-color: var(--gold2); color: var(--gold2); }
+
+/* Mobile drawer */
+#mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 52px;
+  right: 8px;
+  background: #1a1f2e;
+  border: 1px solid var(--gold);
+  border-radius: 5px;
+  padding: 6px;
+  z-index: 9000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  flex-direction: column;
+  gap: 2px;
+  min-width: 180px;
+}
+#mobile-drawer.open { display: flex; }
+#mobile-drawer button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+#mobile-drawer button:hover { background: rgba(184,134,11,0.2); color: var(--gold2); }
+
+/* Mobile round navigator */
+.mobile-round-nav {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--s1);
+  border: 1px solid var(--b1);
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  flex-shrink: 0;
+}
+.mobile-round-nav button {
+  background: none;
+  border: 1px solid var(--b2);
+  color: var(--t2);
+  width: 36px;
+  height: 32px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.mobile-round-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+.mobile-round-nav button:not(:disabled):hover { border-color: var(--gold); color: var(--gold); }
+.mobile-round-nav .mrn-label {
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--t1);
+  flex: 1;
+  text-align: center;
+}
+.mobile-round-nav .mrn-counter {
+  font-size: 10px;
+  color: var(--t3);
+  letter-spacing: 1px;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+/* Sticky champion pill */
+.mobile-champ-pill {
+  display: none;
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1a1f2e, #2c2408);
+  border: 1px solid var(--gold);
+  border-radius: 18px;
+  padding: 6px 14px;
+  font-size: 11px;
+  color: var(--gold2);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mobile-champ-pill .mcp-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 9px;
+  margin-right: 6px;
+  letter-spacing: 1.5px;
+}
+.mobile-champ-pill.empty { opacity: 0.5; }
+</style>
+
+<!-- Hamburger button injected into header -->
+<button class="hdr-mobile-menu" id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+
+<!-- Mobile drawer with all the action buttons -->
+<div id="mobile-drawer">
+  <button onclick="resetBracket(); closeMobileMenu();">↺ Reset Bracket</button>
+  <button onclick="openLoadModal(); closeMobileMenu();">📂 Load Entry</button>
+  <button onclick="openResultsModal(); closeMobileMenu();">🏁 Submit Results</button>
+  <button onclick="openLeaderboard(); closeMobileMenu();">🏆 Leaderboard</button>
+  <button onclick="printBracket(); closeMobileMenu();" style="color: var(--gold2); border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4px; padding-top: 12px;">📤 Submit Entry</button>
+</div>
+
+<!-- Round paginator (mobile only) -->
+<div class="mobile-round-nav" id="mobile-round-nav">
+  <button onclick="mobilePrevRound()" id="mrn-prev">◀</button>
+  <div>
+    <div class="mrn-label" id="mrn-label">Round 1</div>
+    <div class="mrn-counter" id="mrn-counter">1 of 6</div>
+  </div>
+  <button onclick="mobileNextRound()" id="mrn-next">▶</button>
+</div>
+
+<!-- Sticky champion pill -->
+<div class="mobile-champ-pill empty" id="mobile-champ-pill">
+  <span class="mcp-label">CHAMP</span>
+  <span id="mcp-name">Undecided</span>
+</div>
+
+<script>
+(function() {
+  // Move hamburger button into the header (after the spacer)
+  const hdr = document.querySelector('.hdr');
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  if (hdr && menuBtn) hdr.appendChild(menuBtn);
+
+  // Move round nav into the area, before the bracket div
+  const area = document.getElementById('area');
+  const bkt = document.getElementById('bkt');
+  const roundNav = document.getElementById('mobile-round-nav');
+  if (area && bkt && roundNav) area.insertBefore(roundNav, bkt);
+})();
+
+// ─── Mobile menu drawer ───────────────────────────────────
+window.toggleMobileMenu = function() {
+  document.getElementById('mobile-drawer').classList.toggle('open');
+};
+window.closeMobileMenu = function() {
+  document.getElementById('mobile-drawer').classList.remove('open');
+};
+// Close drawer on outside click
+document.addEventListener('click', function(e) {
+  const drawer = document.getElementById('mobile-drawer');
+  const btn = document.getElementById('mobile-menu-btn');
+  if (drawer && !drawer.contains(e.target) && e.target !== btn) {
+    drawer.classList.remove('open');
+  }
+});
+
+// ─── Mobile round navigator ───────────────────────────────
+// Round indices 0-5 map to: 0=Pigtail+R1, 1=R2, 2=Quarters, 3=Semis, 4=Finals, 5=Consolation
+let mobileRoundIdx = 0;
+const MOBILE_ROUND_LABELS = [
+  { label: 'Round 1', counter: '1 of 6' },
+  { label: 'Round of 16', counter: '2 of 6' },
+  { label: 'Quarterfinals', counter: '3 of 6' },
+  { label: 'Semifinals', counter: '4 of 6' },
+  { label: 'Finals', counter: '5 of 6' },
+  { label: 'Consolation', counter: '6 of 6' }
+];
+
+window.mobilePrevRound = function() {
+  if (mobileRoundIdx > 0) {
+    mobileRoundIdx--;
+    applyMobileRoundView();
+  }
+};
+window.mobileNextRound = function() {
+  if (mobileRoundIdx < 5) {
+    mobileRoundIdx++;
+    applyMobileRoundView();
+  }
+};
+
+function applyMobileRoundView() {
+  const lbl = MOBILE_ROUND_LABELS[mobileRoundIdx];
+  const labelEl = document.getElementById('mrn-label');
+  const counterEl = document.getElementById('mrn-counter');
+  const prevBtn = document.getElementById('mrn-prev');
+  const nextBtn = document.getElementById('mrn-next');
+  if (labelEl) labelEl.textContent = lbl.label;
+  if (counterEl) counterEl.textContent = lbl.counter;
+  if (prevBtn) prevBtn.disabled = mobileRoundIdx === 0;
+  if (nextBtn) nextBtn.disabled = mobileRoundIdx === 5;
+
+  // Tag the round columns so CSS can show only the active one
+  // The bracket re-renders on every pick, so we re-tag every time
+  const grids = document.querySelectorAll('#bkt .bgrid');
+  if (grids.length === 0) return;
+
+  // First grid = championship, second = consolation
+  const champGrid = grids[0];
+  const conGrid = grids[1];
+
+  if (champGrid) {
+    const cols = champGrid.querySelectorAll('.rcol');
+    const conns = champGrid.querySelectorAll('.rconn');
+    cols.forEach((c, i) => {
+      c.classList.remove('active-round', 'champ-round', 'pigtail-col');
+      // i=0 is pigtail, i=1..5 are champ rounds 0..4
+      if (i === 0) {
+        c.classList.add('pigtail-col');
+        if (mobileRoundIdx === 0) c.classList.add('active-round');
+      } else if (i >= 1 && i <= 5) {
+        c.classList.add('champ-round');
+        if (i - 1 === mobileRoundIdx) c.classList.add('active-round');
+      }
+    });
+    conns.forEach(c => c.classList.add('champ-conn'));
+  }
+
+  if (conGrid) {
+    const cols = conGrid.querySelectorAll('.rcol');
+    const conns = conGrid.querySelectorAll('.rconn');
+    cols.forEach((c) => {
+      c.classList.add('con-round');
+      if (mobileRoundIdx === 5) c.classList.add('active-round');
+      else c.classList.remove('active-round');
+    });
+    conns.forEach(c => c.classList.add('con-conn'));
+  }
+}
+
+// Re-apply the round view after every render (since render() rebuilds the DOM)
+const origRender = window.render;
+if (typeof origRender === 'function') {
+  window.render = function() {
+    origRender.apply(this, arguments);
+    applyMobileRoundView();
+    updateChampPill();
+  };
+} else {
+  // render isn't on window because of module scoping — use MutationObserver instead
+  const observer = new MutationObserver(() => {
+    applyMobileRoundView();
+    updateChampPill();
+  });
+  const bkt = document.getElementById('bkt');
+  if (bkt) observer.observe(bkt, { childList: true, subtree: false });
+}
+
+// ─── Sticky champion pill ─────────────────────────────────
+function updateChampPill() {
+  const pill = document.getElementById('mobile-champ-pill');
+  const nameEl = document.getElementById('mcp-name');
+  if (!pill || !nameEl) return;
+  // Try to find current champion from the page
+  const champCard = document.querySelector('.ccard:not(.empty) .cnm');
+  if (champCard && champCard.textContent && champCard.textContent !== 'Undecided') {
+    nameEl.textContent = champCard.textContent.trim();
+    pill.classList.remove('empty');
+  } else {
+    nameEl.textContent = 'Undecided';
+    pill.classList.add('empty');
+  }
+}
+
+// Initial application
+setTimeout(applyMobileRoundView, 100);
+setTimeout(updateChampPill, 100);
+</script>
+<!-- ════════════════════════════════════════════════════════════ -->
