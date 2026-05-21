@@ -821,13 +821,13 @@ function wrestlerFromDoc(doc, slot) {
   };
 }
 
-// Format winner line: "(1) LastName (SCHOOL)"
+// Format winner line: "(1) Full Name (SCHOOL)"
+// Use the full name so compound surnames like "Shayne Van Ness" do not become only "Ness".
 function formatWinnerLine(doc) {
   if (!doc || !doc.winnerName) return "";
   const seed = doc.winnerSlot === "a" ? doc.seedA : doc.seedB;
   const school = abbrev(doc.winnerSchool);
-  const lastName = doc.winnerName.split(" ").slice(-1)[0];
-  return `(${seed}) ${lastName} (${school})`;
+  return `(${seed}) ${doc.winnerName} (${school})`;
 }
 
 // Group docs by (weight, bracket, roundIndex, matchIndex) for fast lookup
@@ -1013,7 +1013,7 @@ function transformWeight(docs, weight) {
   const placeWrestler = (doc, slot) => {
     if (!doc) return "";
     const u = slot.toUpperCase();
-    return `(${doc[`seed${u}`]}) ${doc[`wrestler${u}`].split(" ").slice(-1)[0]} (${abbrev(doc[`school${u}`])})`;
+    return `(${doc[`seed${u}`]}) ${doc[`wrestler${u}`]} (${abbrev(doc[`school${u}`])})`;
   };
 
   const placementObj = (d, no) => ({
