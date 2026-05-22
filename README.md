@@ -1,9 +1,9 @@
-# NCAA Click-to-Advance Wrestling Bracket (2026)
+# NCAA Click-to-Advance Wrestling Bracket
 
 Interactive NCAA Wrestling Championship bracket that allows users to:
 
 • Click wrestlers to advance them through the bracket  
-• Save bracket submissions to Google Sheets  
+• Save bracket submissions to Firestore  
 • Load previously submitted brackets  
 • Lock entries after the deadline  
 • Enter official match results  
@@ -39,9 +39,7 @@ index.html
 
 ## Backend
 
-Google Apps Script is used to store and score brackets.
-
-Data stored in Google Sheets:
+:
 
 Submissions  
 Matches  
@@ -54,7 +52,7 @@ Scores
 
 The frontend is hosted on GitHub Pages.
 
-The backend runs on Google Apps Script Web App.
+The backend runs on Firestore/Firebase
 
 ---
 
