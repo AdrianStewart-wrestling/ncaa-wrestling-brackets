@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=imp">
+<link rel="stylesheet" href="tournament-central.css?v=path">
 </head>
 <body>
 
@@ -2066,6 +2066,7 @@ let recordSaving = false;
 function viewState(wt) { return (viewMode === 'official' && officialBook) ? officialBook.states[wt] : getS(wt); }
 
 function setViewMode(mode) {
+  if (mode === 'picks' && window.PathPanel) window.PathPanel.close();          // Path to the Finals belongs to OFFICIAL only
   if (mode === 'official' && !officialCore) mode = 'picks';       // official store unavailable => picks only
   viewMode = mode;
   document.body.classList.toggle('mode-official', !!officialCore && mode === 'official');
@@ -2323,6 +2324,7 @@ async function explainChangeFailure(plan, err) {
 
 function officialChanged() {
   renderModeBanner();
+  if (window.PathPanel && window.PathPanel.isOpen()) window.PathPanel.refresh();      // an open path follows the live results
   if (viewMode !== 'official') return;
   if (showCentral) { if (window.TournamentCentral && window.TournamentCentral.onOfficialChanged) window.TournamentCentral.onOfficialChanged(); }
   else if (showOfficialScores) renderOfficialScores();
@@ -2429,7 +2431,8 @@ function slotHTML(m, which, bkt, ri, mi) {
   if(canPick){onclick=`onclick="pick(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Advance ${wr.n}"`;}
   else if(canSwap){onclick=`onclick="swap(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Switch winner to ${wr.n}"`;}
   const swapHint=canSwap?`<span class="swap-hint">↺ change</span>`:'';
-  return `<div class="${cls}" ${onclick} ${title}>
+  const pathAttrs=(viewMode==='official'&&window.TournamentCore)?` data-wid="${window.TournamentCore.wrestlerId(CW,wr)}" role="button" tabindex="0" aria-label="Path to the Finals: ${String(wr.n).trim().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"`:'';
+  return `<div class="${cls}" ${onclick} ${title}${pathAttrs}>
     <span class="sl-sd">${seedStr}</span>
     <span class="sl-nm"><span class="fn">${fn}</span> <strong>${ln||fn}</strong></span>
     <span class="sl-sc">${wr.s||''}</span>
@@ -2745,6 +2748,15 @@ async function importRun(ack, onProgress) {
     return { ok: r.ok, code: r.code, message: r.message, written: r.written, total: r.total, batches: r.batches, error: r.error, errorCode: r.errorCode, verify: r.verify, summary: r.plan && r.plan.summary };
   } catch (err) { return { ok: false, code: 'error', message: String((err && err.message) || err) }; }
   finally { importState.busy = false; }
+}
+
+// ══════ PATH TO THE FINALS ══════
+// Read-only. official-path.js walks the OFFICIAL book along the core's own routes (no routing logic of its own); this only hands it the
+// book plus the scoring model's events / floors (optional extras: team points and the All-American badge). Nothing here writes anything.
+function pathFor(wrestlerId) {
+  if (!officialCore || !officialBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available in this session.' };
+  let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }
+  return window.OfficialPath.compute(officialCore, officialBook, wrestlerId, sc ? { events: sc.events, floors: sc.floors } : {});
 }
 
 // ══════ INIT ══════
@@ -3508,7 +3520,9 @@ window.TCEngine = Object.freeze({
   importAvailable() { return importAvailable(); },
   importAnalyze() { return importAnalyze(); },
   importBackup() { return importBackup(); },
-  importRun(ack, onProgress) { return importRun(ack, onProgress); }
+  importRun(ack, onProgress) { return importRun(ack, onProgress); },
+  // ── Path to the Finals (read-only) ──
+  pathFor(wrestlerId) { return pathFor(wrestlerId); }
 });
 document.dispatchEvent(new CustomEvent('tc-engine-ready'));
 
@@ -3537,12 +3551,14 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
   </div>
 </div>
 
-<script src="tournament-core.js?v=imp"></script>
-<script src="official-store.js?v=imp"></script>
-<script src="official-scoring.js?v=imp"></script>
-<script src="official-import.js?v=imp"></script>
-<script src="official-writer.js?v=imp"></script>
-<script src="tournament-central.js?v=imp"></script>
+<script src="tournament-core.js?v=path"></script>
+<script src="official-store.js?v=path"></script>
+<script src="official-scoring.js?v=path"></script>
+<script src="official-import.js?v=path"></script>
+<script src="official-path.js?v=path"></script>
+<script src="official-writer.js?v=path"></script>
+<script src="tournament-central.js?v=path"></script>
+<script src="path-panel.js?v=path"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->
