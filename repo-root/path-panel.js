@@ -86,15 +86,17 @@
   }
   function refresh() { if (st.open) render(); }
 
+  // names on an OFFICIAL bracket or in the OFFICIAL All-Americans view are clickable (MY PICKS elements never carry data-wid)
+  function inScope(t) { var a = document.getElementById('area'), b = document.getElementById('off-aa-view'); return !!((a && a.contains(t)) || (b && b.contains(t))); }
   document.addEventListener('click', function (ev) {
-    var t = ev.target && ev.target.closest ? ev.target.closest('[data-wid]') : null, area = document.getElementById('area');
-    if (!t || !area || !area.contains(t)) return; ev.preventDefault(); openPanel(t.getAttribute('data-wid'));
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-wid]') : null;
+    if (!t || !inScope(t)) return; ev.preventDefault(); openPanel(t.getAttribute('data-wid'));
   });
   document.addEventListener('keydown', function (ev) {
     if (st.open && ev.key === 'Escape') { ev.preventDefault(); closePanel(); return; }
     if (ev.key !== 'Enter' && ev.key !== ' ') return;
-    var t = ev.target && ev.target.getAttribute && ev.target.getAttribute('data-wid') ? ev.target : null, area = document.getElementById('area');
-    if (t && area && area.contains(t)) { ev.preventDefault(); openPanel(t.getAttribute('data-wid')); }
+    var t = ev.target && ev.target.getAttribute && ev.target.getAttribute('data-wid') ? ev.target : null;
+    if (t && inScope(t)) { ev.preventDefault(); openPanel(t.getAttribute('data-wid')); }
   });
   window.PathPanel = { open: openPanel, close: closePanel, back: goBack, refresh: refresh, isOpen: function () { return st.open; } };
 })();

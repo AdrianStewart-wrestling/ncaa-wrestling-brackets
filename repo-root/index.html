@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=path">
+<link rel="stylesheet" href="tournament-central.css?v=aa">
 </head>
 <body>
 
@@ -563,10 +563,15 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
   </div>
 </div>
 
+<!-- OFFICIAL All-Americans (filled in by official-aa-view.js; reads ONLY the OFFICIAL book) -->
+<div id="off-aa-view" data-oaa-state="loading"><div id="oaa-root"></div></div>
+
 <!-- All-Americans View -->
 <div id="aa-view">
-  <div class="aa-view-title">All-Americans</div>
-  <div class="aa-view-sub">Top 8 Finishers Per Weight · 2026 NCAA Division I Wrestling</div>
+  <div class="picks-badge">MY PICKS</div>
+  <div class="aa-view-title">My Picks — Projected All-Americans</div>
+  <div class="aa-view-sub">Top 8 per weight projected from YOUR picks · not actual results</div>
+  <div class="picks-callout">These places come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialAA()">⭐ OFFICIAL All-Americans</button>.</div>
   <div id="aa-grid-125-157"></div>
   <div id="aa-grid-165-285"></div>
 </div>
@@ -2035,12 +2040,13 @@ const CON_RND_NAMES   = ['Con. Rd 1','Con. Rd 2','Con. Rd 3','Con. Rd 4','Con. Q
 function renderWeightTabs() {
   const centralBtn = `<button class="wtab tc-tab ${showCentral?'on':''}" onclick="switchCentral()">🏠 Central</button>`;
   const weightBtns = WLIST.map(w=>
-    `<button class="wtab ${w===CW && !showScores && !showAA && !showCentral && !showOfficialScores?'on':''}" onclick="switchW(${w})">${w}</button>`
+    `<button class="wtab ${w===CW && !showScores && !showAA && !showCentral && !showOfficialScores && !showOfficialAA?'on':''}" onclick="switchW(${w})">${w}</button>`
   ).join('');
   const officialScoreBtn = `<button class="wtab scores-tab official-tab ${showOfficialScores?'on':''}" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>`;
   const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 My Picks Scores</button>`;
-  const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ All-Americans</button>`;
-  document.getElementById('wtabs').innerHTML = centralBtn + weightBtns + officialScoreBtn + scoreBtn + aaBtn;
+  const officialAaBtn = `<button class="wtab aa-tab official-tab ${showOfficialAA?'on':''}" onclick="switchOfficialAA()">⭐ OFFICIAL All-Americans</button>`;
+  const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ My Picks All-Americans</button>`;
+  document.getElementById('wtabs').innerHTML = centralBtn + weightBtns + officialScoreBtn + scoreBtn + officialAaBtn + aaBtn;
 }
 
 let showScores = false;
@@ -2048,6 +2054,7 @@ let showAA = false;
 let showLeaderboard = false;
 let showCentral = false;   // Tournament Central view (Phase 2)
 let showOfficialScores = false;   // OFFICIAL Team Scores view (reads the OFFICIAL book only)
+let showOfficialAA = false;       // OFFICIAL All-Americans view (reads the OFFICIAL book only)
 // ── OFFICIAL vs MY PICKS (Phase 3B). `states` above remains the PICKS store and is never touched by the official code. ──
 let viewMode = 'picks';      // 'picks' | 'official'  — which bracket render() shows
 let officialCore = null;     // TournamentCore instance (null => official mode unavailable)
@@ -2328,6 +2335,7 @@ function officialChanged() {
   if (viewMode !== 'official') return;
   if (showCentral) { if (window.TournamentCentral && window.TournamentCentral.onOfficialChanged) window.TournamentCentral.onOfficialChanged(); }
   else if (showOfficialScores) renderOfficialScores();
+  else if (showOfficialAA) renderOfficialAA();
   else if (!showScores && !showAA && !showLeaderboard && document.getElementById('area').style.display !== 'none') render();
 }
 function initOfficial() {
@@ -2360,6 +2368,8 @@ function hideMainPanels() {
   hideCentral();
   showOfficialScores=false;
   const osv=document.getElementById('off-scores-view'); if (osv) osv.classList.remove('active');
+  showOfficialAA=false;
+  const oaa=document.getElementById('off-aa-view'); if (oaa) oaa.classList.remove('active');
   document.getElementById('area').style.display='none';
   document.getElementById('scores-view').classList.remove('active');
   document.getElementById('aa-view').classList.remove('active');
@@ -2640,22 +2650,10 @@ function renderOfficialScores() {
   const clear = el => { while (el.firstChild) el.removeChild(el.firstChild); };
   const st = $('os-status'), tb = $('os-body'), more = $('os-more'), notes = $('os-notes'), wrap = $('os-table-wrap'), key = $('os-key');
   [st, tb, notes, key].forEach(clear); more.hidden = true; wrap.hidden = true;
-  const i = officialInfo, online = !(typeof navigator !== 'undefined' && navigator.onLine === false);
-  const t = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  const hasData = !!(officialCore && officialBook && i.loadedAt);          // loadedAt is only ever set when a SERVER-confirmed snapshot was applied
-  let mode, text, res = null;
-  if (!officialCore || !window.OfficialScoring || i.state === 'disabled') { mode = 'unavailable'; text = 'OFFICIAL scoring is not available in this session.'; }
-  else if (!hasData) {
-    if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · OFFICIAL SCORES UNAVAILABLE — no official results have been loaded on this device yet.'; }
-    else { mode = 'loading'; text = 'Loading official results…'; }
-  } else {
-    try { res = officialScoresModel(); } catch (e) { console.error('Official scores could not be calculated:', e); res = null; }
-    if (!res) { mode = 'unavailable'; text = 'OFFICIAL scores could not be calculated.'; }
-    else if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · LAST KNOWN OFFICIAL SCORES · last refreshed ' + t(i.loadedAt); }
-    else if (i.state === 'loading') { mode = 'loading'; text = 'Refreshing… showing last known official scores · last refreshed ' + t(i.loadedAt); }
-    else { mode = 'live'; text = '● LIVE · ' + res.stats.records + ' official result' + (res.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(i.loadedAt); }
-  }
-  st.className = 'os-status os-status--' + mode; st.textContent = text; v.setAttribute('data-os-state', mode);
+  const S = officialViewStatus({ upper: 'SCORES', lower: 'scores', moduleOk: !!window.OfficialScoring, unavailable: 'OFFICIAL scoring is not available in this session.', failed: 'OFFICIAL scores could not be calculated.', calc: officialScoresModel,
+    live: (r, t, inf) => '● LIVE · ' + r.stats.records + ' official result' + (r.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(inf.loadedAt) });
+  const i = officialInfo, res = S.res;
+  st.className = 'os-status os-status--' + S.mode; st.textContent = S.text; v.setAttribute('data-os-state', S.mode);
   if (!res) return;
 
   if (i.legacyIgnored > 0) notes.appendChild(mk('div', 'os-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? ' is' : 's are') + ' not included in OFFICIAL scores.'));
@@ -2748,6 +2746,45 @@ async function importRun(ack, onProgress) {
     return { ok: r.ok, code: r.code, message: r.message, written: r.written, total: r.total, batches: r.batches, error: r.error, errorCode: r.errorCode, verify: r.verify, summary: r.plan && r.plan.summary };
   } catch (err) { return { ok: false, code: 'error', message: String((err && err.message) || err) }; }
   finally { importState.busy = false; }
+}
+
+// ══════ SHARED LIVE / OFFLINE STATUS for the OFFICIAL views (Scores, All-Americans) ══════
+// One place for the rules: LIVE only when the last server-confirmed load is in hand and nothing has failed; OFFLINE keeps the last known data and
+// shows "last refreshed" (the device time of the last server-confirmed snapshot, only if one exists); never-loaded + offline shows no time.
+function officialViewStatus(c) {
+  const i = officialInfo, online = !(typeof navigator !== 'undefined' && navigator.onLine === false);
+  const t = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const hasData = !!(officialCore && officialBook && i.loadedAt);          // loadedAt is only ever set when a SERVER-confirmed snapshot was applied
+  let mode, text, res = null;
+  if (!officialCore || !c.moduleOk || i.state === 'disabled') { mode = 'unavailable'; text = c.unavailable; }
+  else if (!hasData) {
+    if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · OFFICIAL ' + c.upper + ' UNAVAILABLE — no official results have been loaded on this device yet.'; }
+    else { mode = 'loading'; text = 'Loading official results…'; }
+  } else {
+    try { res = c.calc(); } catch (e) { console.error('Official ' + c.lower + ' could not be calculated:', e); res = null; }
+    if (!res) { mode = 'unavailable'; text = c.failed; }
+    else if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · LAST KNOWN OFFICIAL ' + c.upper + ' · last refreshed ' + t(i.loadedAt); }
+    else if (i.state === 'loading') { mode = 'loading'; text = 'Refreshing… showing last known official ' + c.lower + ' · last refreshed ' + t(i.loadedAt); }
+    else { mode = 'live'; text = c.live(res, t, i); }
+  }
+  return { mode: mode, text: text, res: res };
+}
+// ══════ OFFICIAL ALL-AMERICANS ══════
+// Read-only. official-aa.js decides who has CLINCHED top 8 (scoring floors) and whose place is final (Path model); official-aa-view.js draws it.
+function switchOfficialAA() {
+  hideMainPanels();
+  showScores = false; showAA = false; showLeaderboard = false; showOfficialAA = true;
+  setViewMode('official');                 // OFFICIAL All-Americans always read the OFFICIAL store
+  const v = document.getElementById('off-aa-view'); if (v) v.classList.add('active');
+  renderWeightTabs(); renderOfficialAA();
+}
+function renderOfficialAA() { if (window.OfficialAAView) window.OfficialAAView.render(); }
+function aaFor() {
+  const S = officialViewStatus({ upper: 'ALL-AMERICANS', lower: 'All-Americans', moduleOk: !!(window.OfficialAA && window.OfficialPath && window.OfficialScoring),
+    unavailable: 'OFFICIAL All-Americans are not available in this session.', failed: 'OFFICIAL All-Americans could not be calculated.',
+    calc: () => { const sc = officialScoresModel(); return sc ? window.OfficialAA.compute(officialCore, officialBook, { weights: WLIST.slice(), floors: sc.floors, path: window.OfficialPath }) : null; },
+    live: (r, t, inf) => '● LIVE · ' + r.totals.clinched + ' of ' + r.totals.of + ' All-Americans clinched · last refreshed ' + t(inf.loadedAt) });
+  return { mode: S.mode, text: S.text, model: S.res };
 }
 
 // ══════ PATH TO THE FINALS ══════
@@ -3470,7 +3507,7 @@ async function loadSelectedSubmission(){
 // Required because type="module" scopes functions locally
 // and HTML onclick handlers need global access
 Object.assign(window, {
-  resetBracket, switchW, switchScores, switchAA, switchCentral, switchOfficialScores, openLeaderboard, chooseMode,
+  resetBracket, switchW, switchScores, switchAA, switchCentral, switchOfficialScores, switchOfficialAA, openLeaderboard, chooseMode,
   doPrint, closePrintModal, printBracket,
   pmSelectAll, pmSelectNone,
   openLoadModal, closeLoadModal,
@@ -3522,7 +3559,9 @@ window.TCEngine = Object.freeze({
   importBackup() { return importBackup(); },
   importRun(ack, onProgress) { return importRun(ack, onProgress); },
   // ── Path to the Finals (read-only) ──
-  pathFor(wrestlerId) { return pathFor(wrestlerId); }
+  pathFor(wrestlerId) { return pathFor(wrestlerId); },
+  // ── OFFICIAL All-Americans (read-only) ──
+  aaFor() { return aaFor(); }
 });
 document.dispatchEvent(new CustomEvent('tc-engine-ready'));
 
@@ -3551,14 +3590,16 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
   </div>
 </div>
 
-<script src="tournament-core.js?v=path"></script>
-<script src="official-store.js?v=path"></script>
-<script src="official-scoring.js?v=path"></script>
-<script src="official-import.js?v=path"></script>
-<script src="official-path.js?v=path"></script>
-<script src="official-writer.js?v=path"></script>
-<script src="tournament-central.js?v=path"></script>
-<script src="path-panel.js?v=path"></script>
+<script src="tournament-core.js?v=aa"></script>
+<script src="official-store.js?v=aa"></script>
+<script src="official-scoring.js?v=aa"></script>
+<script src="official-import.js?v=aa"></script>
+<script src="official-path.js?v=aa"></script>
+<script src="official-aa.js?v=aa"></script>
+<script src="official-writer.js?v=aa"></script>
+<script src="tournament-central.js?v=aa"></script>
+<script src="path-panel.js?v=aa"></script>
+<script src="official-aa-view.js?v=aa"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->
