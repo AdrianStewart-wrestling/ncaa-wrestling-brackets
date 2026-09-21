@@ -9,7 +9,11 @@
    • OFFICIAL, not picks. Every lookup describes the OFFICIAL tournament state.
    • RECORDING (3C): the "Record official result" panel appears ONLY for a signed-in authorized operator, ONLY on a
      Pending bout (both wrestlers known, no result). It calls TCEngine.recordOfficial(), which validates, writes one
-     result + one audit-log entry atomically, and only then changes anything. There are NO correct / clear controls yet.
+     result + one audit-log entry atomically, and only then changes anything.
+   • CORRECT / CLEAR (3D): the "Correct or clear this result" panel appears ONLY for a signed-in authorized operator, ONLY on
+     an already-Decided bout. It first shows a PREVIEW of the exact bout and every downstream result that would be cleared
+     (computed by the approved core through TCEngine.previewChange), then needs an explicit confirmation before calling
+     TCEngine.correctOfficial / clearOfficial (one atomic transaction + audit entry).
    • ONE bout-number mapping, owned by tournament-core.js. TCEngine.selfCheck() says whether it is healthy.
    • CLEAR is UI-only: it empties this view's own input/message/card/draft and nothing else.
    • Weight tiles open the OFFICIAL bracket through TCEngine.openWeight(), which uses the existing switchW(weight).
@@ -76,7 +80,8 @@
       b: fmtWrestler(d.b),
       status: d.status,
       winner: winnerSlot ? fmtWrestler(d[winnerSlot]) : null,
-      winnerSlot: winnerSlot
+      winnerSlot: winnerSlot,
+      result: d.result ? { resultType: d.result.resultType, score: d.result.score || '', time: d.result.time || '', revision: d.result.revision } : null
     };
   }
 
@@ -182,8 +187,9 @@
     var back = el('button', 'tc-btn tc-btn--clear tc-rec-back', 'BACK'); back.type = 'button';
     confRow.appendChild(yes); confRow.appendChild(back); conf.appendChild(confRow); root.appendChild(conf);
     var status = el('div', 'tc-rec-status'); status.setAttribute('role', 'status'); status.hidden = true;
+    var diag = el('div', 'tc-rec-diag'); diag.hidden = true;
     var retry = el('button', 'tc-btn tc-btn--clear tc-rec-retry', 'TRY AGAIN'); retry.type = 'button'; retry.hidden = true;
-    root.appendChild(status); root.appendChild(retry);
+    root.appendChild(status); root.appendChild(diag); root.appendChild(retry);
 
     function summary() {
       var w = d[draft.winner], l = d[draft.winner === 'a' ? 'b' : 'a'], t = typeInfo(draft.type);
@@ -207,12 +213,13 @@
       if (!conf.hidden && ready) confText.textContent = summary().text;
       yes.disabled = busy; back.disabled = busy; yes.hidden = busy; back.hidden = busy;
       status.hidden = !draft.note; status.textContent = draft.note || '';
+      diag.hidden = !draft.diag; diag.textContent = draft.diag || '';
       status.className = 'tc-rec-status' + (busy ? ' tc-rec-status--saving' : '') + (draft.step === 'failed' ? ' tc-rec-status--failed' : '');
       retry.hidden = draft.step !== 'failed';
     }
-    go.addEventListener('click', function () { if (go.disabled) return; draft.step = 'confirm'; draft.note = ''; update(); });
-    back.addEventListener('click', function () { draft.step = 'edit'; draft.note = ''; update(); });
-    retry.addEventListener('click', function () { draft.step = 'edit'; draft.note = ''; update(); });
+    go.addEventListener('click', function () { if (go.disabled) return; draft.step = 'confirm'; draft.note = ''; draft.diag = ''; update(); });
+    back.addEventListener('click', function () { draft.step = 'edit'; draft.note = ''; draft.diag = ''; update(); });
+    retry.addEventListener('click', function () { draft.step = 'edit'; draft.note = ''; draft.diag = ''; update(); });
     yes.addEventListener('click', function () {
       if (draft.step !== 'confirm') return;
       var sm = summary(), winnerId = d[draft.winner].id, req = { boutId: draft.boutId, winnerId: winnerId, resultType: draft.type, score: draft.score, time: draft.time };
@@ -227,12 +234,13 @@
           setMessage('SAVED ✓  ' + sm.text.replace(/^Bout \d+ · \d+ lbs — /, 'Bout ' + bout + ': '), 'info');
           if (state.dom.input) { state.dom.input.value = ''; try { state.dom.input.focus(); } catch (e) { /* ignore */ } }
         } else {
-          draft.step = 'failed';
+          if (!draft) { setMessage('NOT SAVED — ' + ((res && res.message) || 'unknown problem'), 'warn'); return; }   // a live update already replaced this panel: still tell the operator
+          draft.step = 'failed'; draft.diag = (res && res.diagnostics) || '';
           draft.note = 'NOT SAVED — ' + ((res && res.message) || 'unknown problem') + (res && res.errors && res.errors.length ? ' ' + res.errors.map(function (e) { return e.message; }).join(' ') : '');
           update();
         }
       }, function (err) {
-        stopSlowTimer(); draft.step = 'failed'; draft.note = 'NOT SAVED — ' + String((err && err.message) || err); update();
+        stopSlowTimer(); if (!draft) { setMessage('NOT SAVED — ' + String((err && err.message) || err), 'warn'); return; } draft.step = 'failed'; draft.note = 'NOT SAVED — ' + String((err && err.message) || err); update();
       });
     });
     panelRef = root; update();
@@ -240,11 +248,134 @@
   }
   var panelRef = null;
 
+  /* ------------------------------------------------------------ correct / clear panel (Phase 3D) */
+  var chg = null;          // { boutId, mode: 'idle'|'edit'|'preview'|'saving'|'failed', action, winner, type, score, time, preview, fingerprint, revision, ack, note, diag }
+  var chgPanel = null;
+
+  function resultLine(x, verb) {
+    return x.winnerName + (x.winnerSchool ? ' (' + x.winnerSchool + ')' : '') + ' def. ' + x.loserName + (x.loserSchool ? ' (' + x.loserSchool + ')' : '') + ' — ' + (typeInfo(x.resultType) ? typeInfo(x.resultType).label : x.resultType) + (x.score ? ' · ' + x.score : '') + (x.time ? ' · ' + x.time : '');
+  }
+
+  function buildChangePanel(d) {
+    var eng = window.TCEngine;
+    if (d.status !== 'decided' || !state.lookupOK || !operatorNow() || !d.result) { chg = null; return null; }
+    if (!chg || chg.boutId !== d.bout) { stopSlowTimer(); chg = { boutId: d.bout, mode: 'idle', action: null, winner: null, type: '', score: '', time: '', preview: null, fingerprint: null, revision: d.result.revision, ack: false, note: '', diag: '' }; }
+    var root = el('div', 'tc-chg'); root.setAttribute('data-bout', String(d.bout));
+    chgPanel = root;
+    function btn(cls, text, fn) { var b = el('button', 'tc-btn ' + cls, text); b.type = 'button'; b.addEventListener('click', fn); return b; }
+
+    function draw() {
+      clear(root);
+      root.appendChild(el('h3', 'tc-chg-h', 'Correct or clear this result'));
+      if (chg.note) root.appendChild(el('div', 'tc-chg-status' + (chg.mode === 'failed' ? ' tc-chg-status--failed' : (chg.mode === 'saving' ? ' tc-chg-status--saving' : '')), chg.note));
+      if (chg.diag) root.appendChild(el('div', 'tc-rec-diag', chg.diag));
+      if (chg.mode === 'edit') drawEdit(); else if (chg.mode === 'preview' || chg.mode === 'saving') drawPreview(); else drawIdle();
+    }
+    function drawIdle() {
+      var cur = d.winner ? d.winner.name + (d.winner.school ? ' (' + d.winner.school + ')' : '') : '';
+      root.appendChild(el('div', 'tc-chg-now', 'Now: ' + cur + ' won — ' + (typeInfo(d.result.resultType) ? typeInfo(d.result.resultType).label : d.result.resultType) + (d.result.score ? ' · ' + d.result.score : '') + (d.result.time ? ' · ' + d.result.time : '')));
+      var row = el('div', 'tc-rec-actions');
+      row.appendChild(btn('tc-btn--go tc-chg-correct', 'CORRECT RESULT', function () {
+        chg.mode = 'edit'; chg.action = 'correct'; chg.note = ''; chg.diag = ''; chg.winner = d.winnerSlot; chg.type = d.result.resultType; chg.score = d.result.score; chg.time = d.result.time; draw(); }));
+      row.appendChild(btn('tc-btn--clear tc-chg-clear', 'CLEAR RESULT (return to Pending)', function () { review('clear'); }));
+      root.appendChild(row);
+    }
+    function drawEdit() {
+      var g1 = el('div', 'tc-rec-group'); g1.appendChild(el('div', 'tc-fact-k', 'Winner')); var wins = el('div', 'tc-rec-wins'), wb = {};
+      ['a', 'b'].forEach(function (slot) {
+        var w = d[slot], b = el('button', 'tc-rec-win tc-chg-win'); b.type = 'button'; b.setAttribute('data-slot', slot);
+        b.appendChild(el('span', 'tc-rec-win-k', slot === 'a' ? 'Wrestler A' : 'Wrestler B')); b.appendChild(el('span', 'tc-rec-win-n', w.name)); if (w.school) b.appendChild(el('span', 'tc-rec-win-s', w.school));
+        b.addEventListener('click', function () { chg.winner = slot; upd(); }); wins.appendChild(b); wb[slot] = b;
+      });
+      g1.appendChild(wins); root.appendChild(g1);
+      var g2 = el('div', 'tc-rec-group'); var l2 = el('label', 'tc-fact-k', 'Result type'); l2.setAttribute('for', 'tc-chg-type'); g2.appendChild(l2);
+      var sel = el('select', 'tc-rec-type tc-chg-type'); sel.id = 'tc-chg-type'; var o0 = el('option', null, 'Choose result type…'); o0.value = ''; sel.appendChild(o0);
+      eng.resultTypes().forEach(function (t) { var o = el('option', null, t.label); o.value = t.code; sel.appendChild(o); });
+      sel.addEventListener('change', function () { chg.type = sel.value; var m = typeInfo(chg.type); if (m && m.score === 'none') chg.score = ''; if (m && m.time === 'none') chg.time = ''; upd(); });
+      g2.appendChild(sel); root.appendChild(g2);
+      var g3 = el('div', 'tc-rec-fields');
+      function field(label, cls, ph, key) { var wrap = el('div', 'tc-rec-field'); var lab = el('label', 'tc-fact-k', label); var id = 'tc-chg-' + key; lab.setAttribute('for', id);
+        var inp = el('input', 'tc-input ' + cls); inp.type = 'text'; inp.id = id; inp.setAttribute('autocomplete', 'off'); inp.setAttribute('maxlength', '40'); inp.setAttribute('placeholder', ph);
+        inp.addEventListener('input', function () { chg[key] = inp.value; upd(); }); wrap.appendChild(lab); wrap.appendChild(inp); g3.appendChild(wrap); return inp; }
+      var inS = field('Score (optional)', 'tc-chg-score', 'e.g. 9-1', 'score'), inT = field('Time (optional)', 'tc-chg-time', 'e.g. 3:31', 'time'); root.appendChild(g3);
+      var msgs = el('div', 'tc-rec-msgs'); root.appendChild(msgs);
+      var row = el('div', 'tc-rec-actions'); var rv = btn('tc-btn--go tc-chg-review', 'REVIEW CHANGE', function () { if (!rv.disabled) review('correct'); });
+      row.appendChild(rv); row.appendChild(btn('tc-btn--clear tc-chg-cancel', 'CANCEL', function () { chg.mode = 'idle'; chg.note = ''; chg.diag = ''; draw(); })); root.appendChild(row);
+      function upd() {
+        ['a', 'b'].forEach(function (s) { var on = chg.winner === s; wb[s].classList.toggle('on', on); wb[s].setAttribute('aria-pressed', on ? 'true' : 'false'); });
+        sel.value = chg.type; var m = typeInfo(chg.type); inS.disabled = !m || m.score === 'none'; inT.disabled = !m || m.time === 'none'; inS.value = chg.score; inT.value = chg.time;
+        var v = eng.validateResult({ resultType: chg.type, score: chg.score, time: chg.time }); clear(msgs);
+        v.errors.forEach(function (e) { if (e.code !== 'required') msgs.appendChild(el('div', 'tc-rec-err', e.message)); });
+        v.warnings.forEach(function (w) { msgs.appendChild(el('div', 'tc-rec-warnmsg', w.message)); });
+        var same = chg.winner === d.winnerSlot && chg.type === d.result.resultType && (chg.score || '') === (d.result.score || '') && (chg.time || '') === (d.result.time || '');
+        if (same && chg.type) msgs.appendChild(el('div', 'tc-rec-warnmsg', 'Nothing has been changed yet.'));
+        rv.disabled = !(chg.winner && chg.type && v.ok && !same);
+      }
+      upd();
+    }
+    function review(action) {
+      var req = action === 'clear' ? { action: 'clear', boutId: d.bout } : { action: 'correct', boutId: d.bout, winnerId: d[chg.winner].id, resultType: chg.type, score: chg.score, time: chg.time };
+      var r = eng.previewChange(req);
+      if (!r.ok) { chg.mode = action === 'correct' ? 'edit' : 'idle'; chg.note = 'Cannot review this change — ' + r.message + (r.errors ? ' ' + r.errors.map(function (e) { return e.message; }).join(' ') : ''); draw(); return; }
+      chg.action = action; chg.preview = r.preview; chg.fingerprint = r.fingerprint; chg.ack = false; chg.mode = 'preview'; chg.note = ''; chg.diag = ''; draw();
+    }
+    function drawPreview() {
+      var p = chg.preview, busy = chg.mode === 'saving', n = p.downstream.length;
+      var box = el('div', 'tc-chg-preview');
+      box.appendChild(el('div', 'tc-chg-title', p.action === 'clear' ? 'CLEAR — Bout ' + p.boutId + ' returns to Pending' : (p.detailsOnly ? 'CORRECT DETAILS — no other bout changes' : 'CORRECT WINNER — Bout ' + p.boutId)));
+      box.appendChild(el('div', 'tc-chg-line', 'Bout ' + p.boutId + ' · ' + p.weight + ' lbs · ' + p.round));
+      box.appendChild(el('div', 'tc-chg-line', 'Now:  ' + resultLine(p.current)));
+      box.appendChild(el('div', 'tc-chg-line tc-chg-line--new', 'Will become:  ' + (p.action === 'clear' ? 'Pending (no result)' : resultLine(p.newResult))));
+      if (n > 0) {
+        box.appendChild(el('div', 'tc-chg-warn', n + ' later result' + (n === 1 ? '' : 's') + ' depend' + (n === 1 ? 's' : '') + ' on this bout and will ALSO be cleared (they must be entered again):'));
+        var ul = el('ul', 'tc-chg-list'); p.downstream.forEach(function (x) { var li = el('li', null, 'Bout ' + x.boutId + ' · ' + x.round + ' — ' + resultLine(x)); li.setAttribute('data-bout', String(x.boutId)); ul.appendChild(li); }); box.appendChild(ul);
+      } else box.appendChild(el('div', 'tc-chg-line', p.detailsOnly ? 'Only the result details change. No other bout is affected.' : 'No later result depends on this bout. Nothing else will be cleared.'));
+      box.appendChild(el('div', 'tc-chg-scope', 'Only weight class ' + p.weight + ' is affected. Other weight classes, MY PICKS and the older (2026) records are not touched.'));
+      var ack = null;
+      if (n > 0) { var lab = el('label', 'tc-chg-ackrow'); ack = el('input', 'tc-chg-ack'); ack.type = 'checkbox'; ack.checked = chg.ack; ack.disabled = busy; lab.appendChild(ack); lab.appendChild(document.createTextNode(' I understand these ' + n + ' later result' + (n === 1 ? '' : 's') + ' will be cleared and must be re-entered.')); box.appendChild(lab); }
+      root.appendChild(box);
+      var row = el('div', 'tc-rec-actions');
+      var go = btn('tc-btn--go tc-chg-confirm', p.action === 'clear' ? 'CONFIRM CLEAR' + (n ? ' (' + (n + 1) + ' results)' : '') : 'CONFIRM CORRECTION' + (n ? ' (' + (n + 1) + ' results)' : ''), confirm);
+      go.disabled = busy || (n > 0 && !chg.ack); row.appendChild(go);
+      var back = btn('tc-btn--clear tc-chg-back', 'BACK', function () { chg.mode = p.action === 'correct' ? 'edit' : 'idle'; chg.note = ''; chg.diag = ''; draw(); }); back.disabled = busy; row.appendChild(back); root.appendChild(row);
+      if (ack) ack.addEventListener('change', function () { chg.ack = ack.checked; go.disabled = !(chg.ack); });
+    }
+    function confirm() {
+      var p = chg.preview; if (chg.mode !== 'preview' || (p.downstream.length > 0 && !chg.ack)) return;
+      var base = { boutId: d.bout, fingerprint: chg.fingerprint, expectedRevision: p.current.revision }, bout = d.bout, act = chg.action, sum = { n: p.downstream.length, w: p.weight };
+      var req = act === 'clear' ? base : Object.assign(base, { winnerId: d[chg.winner].id, resultType: chg.type, score: chg.score, time: chg.time });
+      chg.mode = 'saving'; chg.note = 'SAVING…'; chg.diag = ''; draw(); stopSlowTimer();
+      slowTimer = setTimeout(function () { if (chg && chg.mode === 'saving') { chg.note = 'SAVING… still waiting for the server. Do not repeat this change.'; draw(); } }, 12000);
+      (act === 'clear' ? window.TCEngine.clearOfficial(req) : window.TCEngine.correctOfficial(req)).then(function (res) {
+        stopSlowTimer();
+        if (res && res.ok) {
+          chg = null; state.lastId = bout; renderCard(describeBout(bout));
+          setMessage('SAVED ✓  Bout ' + bout + (act === 'clear' ? ' cleared — back to Pending' : (res.detailsOnly ? ': result details corrected' : ': winner corrected')) + (res.downstream ? ' · ' + res.downstream + ' later result' + (res.downstream === 1 ? '' : 's') + ' cleared' : '') + '.', 'info');
+          if (state.dom.input) { state.dom.input.value = ''; try { state.dom.input.focus(); } catch (e) { /* ignore */ } }
+        } else {
+          var why = 'NOT CHANGED — ' + ((res && res.message) || 'unknown problem');
+          if (!chg) { setMessage(why, 'warn'); return; }             // a live update already replaced the panel (e.g. another device changed this bout): still tell the operator
+          chg.mode = 'failed'; chg.note = why; chg.diag = (res && res.diagnostics) || ''; draw();
+        }
+      }, function (err) { stopSlowTimer(); var why = 'NOT CHANGED — ' + String((err && err.message) || err); if (!chg) { setMessage(why, 'warn'); return; } chg.mode = 'failed'; chg.note = why; draw(); });
+    }
+    draw();
+    return root;
+  }
+  // A live update arrived while the panel is open: keep what the operator is doing unless the result it is about has changed.
+  function refreshChangePanel(d) {
+    if (!chg || chg.mode === 'saving') return true;
+    var cur = window.TCEngine.changeFingerprint(chg.boutId);
+    if (chg.mode === 'preview' && cur !== chg.fingerprint) { chg.mode = 'idle'; chg.note = 'This result (or a later one) changed on another device while you were reviewing. The change was NOT made. Please review again.'; chg.preview = null; return false; }
+    if ((chg.mode === 'edit') && d.result && d.result.revision !== chg.revision) { chg.mode = 'idle'; chg.revision = d.result.revision; chg.note = 'This result was changed on another device. Please review again.'; return false; }
+    return true;
+  }
+
   function renderCard(d) {
     var card = state.dom.card;
     clear(card);
-    panelRef = null;
-    if (!d) { card.hidden = true; draft = null; stopSlowTimer(); return; }
+    panelRef = null; chgPanel = null;
+    if (!d) { card.hidden = true; draft = null; chg = null; stopSlowTimer(); return; }
     card.hidden = false;
     card.className = 'tc-card tc-card--' + d.status;
 
@@ -281,6 +412,8 @@
     if (STATUS_NOTE[d.status]) card.appendChild(el('div', 'tc-note', STATUS_NOTE[d.status]));
     var rec = buildRecordPanel(d);                  // Phase 3C: only for a signed-in authorized operator
     if (rec) card.appendChild(rec);
+    var chp = buildChangePanel(d);                  // Phase 3D: only for a signed-in authorized operator, only on a Decided bout
+    if (chp) card.appendChild(chp);
 
     var foot = el('div', 'tc-card-foot');
     var open = el('button', 'tc-link', 'Open ' + d.weight + ' bracket →');
@@ -373,6 +506,8 @@
     renderOfficialStatus();
     if (state.lookupOK && state.lastId != null) {
       var d = describeBout(state.lastId);
+      // Phase 3D: an open correct/clear panel on a still-Decided bout stays put unless the result it is about changed
+      if (d && d.status === 'decided' && chgPanel && chgPanel.isConnected && chg && chg.boutId === d.bout && refreshChangePanel(d)) return;
       // a live update elsewhere must not rebuild the panel under someone who is typing: keep it while the bout is still Pending
       if (d && d.status === 'pending' && panelRef && panelRef.isConnected && draft && draft.boutId === d.bout) return;
       if (d) renderCard(d);
@@ -380,7 +515,7 @@
   }
   // Called when sign-in state changes (operator appears / disappears).
   function onOperatorChanged() {
-    if (!operatorNow()) { draft = null; stopSlowTimer(); }
+    if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); }
     if (state.lookupOK && state.lastId != null) { var d = describeBout(state.lastId); if (d) renderCard(d); }
   }
 

@@ -270,6 +270,27 @@ body.mode-official .sl:hover:not(.empty):not(.w):not(.l) { background: transpare
 .tc-rec-status--saving { background: #eff6ff; color: #1d4ed8; }
 .tc-rec-status--failed { background: #fef2f2; color: #b91c1c; }
 .tc-rec-retry { margin-top: 8px; }
+.tc-chg { margin-top: 16px; padding: 14px 14px 12px; border: 2px solid var(--tc-navy); border-radius: 6px; background: #f8fafc; }
+.tc-chg-h { margin: 0 0 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; color: var(--tc-navy); }
+.tc-chg-now { font-size: 13.5px; color: var(--tc-navy); margin-bottom: 8px; }
+.tc-chg-preview { padding: 10px 12px; border-radius: 5px; background: #fff; border: 1px solid #cbd5e1; }
+.tc-chg-title { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; letter-spacing: 1.6px; font-weight: 700; color: #b91c1c; margin-bottom: 6px; }
+.tc-chg-line { font-size: 13.5px; margin: 3px 0; color: var(--tc-navy); }
+.tc-chg-line--new { font-weight: 700; }
+.tc-chg-warn { margin: 10px 0 4px; padding: 6px 9px; border-radius: 4px; background: #fef3c7; color: #92400e; font-size: 13px; font-weight: 700; }
+.tc-chg-list { margin: 4px 0 6px 18px; padding: 0; font-size: 12.5px; color: var(--tc-navy); max-height: 220px; overflow-y: auto; }
+.tc-chg-list li { margin: 2px 0; }
+.tc-chg-scope { margin-top: 8px; font-size: 12px; font-style: italic; color: var(--tc-grey); }
+.tc-chg-ackrow { display: block; margin-top: 10px; font-size: 13px; font-weight: 700; color: #b91c1c; cursor: pointer; }
+.tc-chg-status { margin-bottom: 8px; padding: 8px 10px; border-radius: 5px; font-size: 13px; font-weight: 700; background: #fef3c7; color: #92400e; }
+.tc-chg-status--saving { background: #eff6ff; color: #1d4ed8; }
+.tc-chg-status--failed { background: #fef2f2; color: #b91c1c; }
+.tc-chg .tc-btn:disabled { opacity: .45; cursor: not-allowed; }
+.tc-rec-diag { margin-top: 6px; padding: 6px 8px; border-radius: 4px; background: #f3f4f6; color: #374151; font: 11.5px/1.35 ui-monospace, Menlo, Consolas, monospace; word-break: break-word; user-select: all; }
+
+/* 3D: the long button labels ("CLEAR RESULT (return to Pending)", "CONFIRM CORRECTION (20 results)") wrap and grow instead of overflowing the card on phones */
+.tc-chg .tc-rec-actions { flex-wrap: wrap; }
+.tc-chg .tc-btn { flex: 0 1 auto; max-width: 100%; height: auto; min-height: 42px; padding: 9px 18px; line-height: 1.25; white-space: normal; text-align: center; }
 
 /* ---- small screens ------------------------------------------------------------------- */
 @media (max-width: 700px) {

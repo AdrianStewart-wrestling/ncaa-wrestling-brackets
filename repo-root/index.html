@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=3c">
+<link rel="stylesheet" href="tournament-central.css?v=3d">
 </head>
 <body>
 
@@ -2193,6 +2193,21 @@ async function operatorSignOut() {
   if (authApi && authObj) { try { await authApi.signOut(authObj); } catch (err) { console.error('Sign-out failed:', err); } }
 }
 
+// A refused save is diagnosed with READ-ONLY probes, so the message is truthful and the facts can be reported.
+// (Only a result that really carries a winnerId counts as "already has a result"; an older slot-based record is replaceable.)
+async function explainDenial(built, err) {
+  const id = built.record.boutId, docId = built.docId, facts = { existing: 'unknown', operatorEntry: 'unknown' };
+  try { const s = await getDoc(doc(db, 'officialResults', docId)); const d = s.exists() ? s.data() : null;
+        facts.existing = !d ? 'none' : (typeof d.winnerId === 'string' && d.winnerId.trim() ? 'result' : 'older-record'); } catch (e) { /* probe failed */ }
+  try { facts.operatorEntry = (await getDoc(doc(db, 'operators', operator.email))).exists() ? 'present' : 'MISSING'; } catch (e) { /* probe failed */ }
+  console.error('Firestore refused an operator save', { docId, signedInAs: operator.email, existing: facts.existing, operatorEntry: facts.operatorEntry }, err);
+  const diagnostics = 'Diagnostics — document ' + docId + ': ' + ({ none: 'no document', 'older-record': 'older record', result: 'has a result', unknown: 'unknown' })[facts.existing] + ' · operator entry: ' + facts.operatorEntry + ' · signed in as ' + operator.email;
+  const base = { ok: false, diagnostics };
+  if (facts.existing === 'result') return Object.assign(base, { code: 'conflict', message: 'Bout ' + id + ' already has a result (recorded on another device). Nothing was overwritten. Press Refresh and check.' });
+  if (facts.operatorEntry === 'MISSING') return Object.assign(base, { code: 'access_changed', message: 'The server refused this save because your operator entry (operators/' + operator.email + ') is no longer present. Ask an administrator.' });
+  return Object.assign(base, { code: 'denied', message: 'The server refused this save although bout ' + id + (facts.existing === 'older-record' ? ' only has an older record' : ' has no result') + ' and your operator entry is present, so this is not a conflict: the Firestore rules are refusing a write that should be allowed. Nothing was saved. Please send the Diagnostics line.' });
+}
+
 // ── RECORD one official result. The ONLY write path in the app for official results. ──
 // The result is validated on a CLONE of the official book, written as ONE atomic batch (result document + audit-log entry),
 // and the live book is updated only after the server confirms. A failed save leaves everything exactly as it was.
@@ -2213,7 +2228,7 @@ async function recordOfficial(req) {
   } catch (err) {
     recordSaving = false;
     const c = err && err.code;
-    if (c === 'permission-denied') return fail('denied', 'The server refused this save. Either bout ' + built.record.boutId + ' already has a result (recorded on another device) or your operator access has changed. Press Refresh and check.');
+    if (c === 'permission-denied') return explainDenial(built, err);
     if (c === 'unavailable' || c === 'deadline-exceeded' || c === 'failed-precondition') return fail('network', 'Could not reach the server, so nothing was saved. Check the connection and try again.');
     console.error('Recording failed:', err);
     return fail('error', 'Nothing was saved. ' + String((err && err.message) || err));
@@ -2223,6 +2238,59 @@ async function recordOfficial(req) {
   officialInfo = Object.assign({}, officialInfo, { applied: officialBook.decisions.size });
   officialChanged();
   return { ok: true, record: built.record, docId: built.docId, warnings: built.warnings };
+}
+
+// ── CORRECT or CLEAR one official result (Phase 3D). ONE Firestore transaction: every involved document is read fresh from the
+// server, each is verified to be EXACTLY what the operator was shown, and only then are the affected documents replaced/deleted and the
+// audit entry written — all or nothing. Anything else on the server (another operator's newer result) aborts the whole change.
+async function changeOfficial(action, req) {
+  const fail = (code, message, extra) => Object.assign({ ok: false, code, message }, extra);
+  if (!officialCore || !window.OfficialWriter || !window.OfficialWriter.planChange) return fail('unavailable', 'Changing results is not available in this session.');
+  if (operator.state !== 'operator') return fail('not_operator', 'Sign in as an authorized operator to change results.');
+  if (officialInfo.state !== 'loaded') return fail('not_loaded', 'The official results are not up to date (no live connection). Press Refresh before changing anything.');
+  if (recordSaving) return fail('busy', 'Another save is still in progress. Please wait.');
+  const plan = window.OfficialWriter.planChange(officialCore, officialBook, Object.assign({}, req, { action }), { email: operator.email, stamp: serverTimestamp() });
+  if (!plan.ok) return plan;
+  recordSaving = true;
+  try {
+    await runTransaction(db, async tx => {
+      const snaps = {};
+      for (const id of plan.readIds) snaps[id] = await tx.get(doc(db, 'officialResults', id));            // all reads first
+      for (const id of plan.readIds) {                                                                      // verify against what the operator was shown
+        const exp = plan.expected[id], s = snaps[id], d = s.exists() ? s.data() : null;
+        const modern = !!d && typeof d.winnerId === 'string' && d.winnerId.trim() !== '';
+        const same = exp.kind === 'modern' ? (modern && d.revision === exp.revision && d.winnerId === exp.winnerId) : !modern;
+        if (!same) { const e = new Error('stale'); e.code = 'tc/stale'; e.docId = id; throw e; }
+      }
+      plan.ops.forEach(op => { const ref = doc(db, 'officialResults', op.docId); if (op.type === 'delete') tx.delete(ref); else tx.set(ref, op.data); });
+      tx.set(doc(collection(db, 'officialLog')), plan.logDoc);
+    });
+  } catch (err) { recordSaving = false; return explainChangeFailure(plan, err); }
+  recordSaving = false;
+  try {
+    if (action === 'clear') officialCore.clear(officialBook, req.boutId, { cascade: true });
+    else officialCore.correct(officialBook, req.boutId, { winnerId: req.winnerId, resultType: req.resultType, score: req.score, time: req.time, recordedBy: operator.email, source: 'central', cascade: true });
+  } catch (e) { /* the live listener delivers it */ }
+  officialInfo = Object.assign({}, officialInfo, { applied: officialBook.decisions.size });
+  officialChanged();
+  const down = plan.preview.downstream.length;
+  return { ok: true, action, boutId: req.boutId, weight: plan.weight, downstream: down, cleared: (action === 'clear' ? 1 : 0) + down, detailsOnly: plan.preview.detailsOnly };
+}
+async function explainChangeFailure(plan, err) {
+  const c = err && err.code, fail = (code, message, extra) => Object.assign({ ok: false, code, message }, extra);
+  if (c === 'tc/stale' || c === 'aborted') {
+    loadOfficial(true);                                                                                     // show what actually changed
+    return fail('stale', 'This result (or a later one) was changed on another device after you opened it. NOTHING was changed. The screen has been refreshed: review the current state and try again.', { diagnostics: 'Changed document: ' + ((err && err.docId) || plan.docId) });
+  }
+  if (c === 'permission-denied') {
+    let entry = 'unknown'; try { entry = (await getDoc(doc(db, 'operators', operator.email))).exists() ? 'present' : 'MISSING'; } catch (e) { /* probe failed */ }
+    console.error('Firestore refused an operator change', { docId: plan.docId, action: plan.action, documents: plan.ops.length, operatorEntry: entry }, err);
+    const diagnostics = 'Diagnostics — ' + plan.action + ' of ' + plan.docId + ' (' + plan.ops.length + ' document' + (plan.ops.length === 1 ? '' : 's') + ' + audit entry) · operator entry: ' + entry + ' · signed in as ' + operator.email;
+    if (entry === 'MISSING') return fail('access_changed', 'The server refused this change because your operator entry (operators/' + operator.email + ') is no longer present. NOTHING was changed.', { diagnostics });
+    return fail('denied', 'The server refused this change, so NOTHING was changed. Most likely the published Firestore rules are older than this version (they must include the Phase 3D rules) or an audit-log rule is refusing. Please send the Diagnostics line.', { diagnostics });
+  }
+  if (c === 'unavailable' || c === 'deadline-exceeded' || c === 'failed-precondition') return fail('network', 'Could not reach the server, so NOTHING was changed. Check the connection and try again.');
+  console.error('Change failed:', err); return fail('error', 'NOTHING was changed. ' + String((err && err.message) || err));
 }
 
 function officialChanged() {
@@ -2522,7 +2590,7 @@ render();
 
 // Firebase SDK (ESM via CDN)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs, query, where, orderBy, writeBatch, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs, query, where, orderBy, writeBatch, serverTimestamp, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const _fbApp = initializeApp({
   apiKey           : "AIzaSyCPcMkc3z6OZeHgUDLk32iRJHkxP9cQGhc",
@@ -3258,6 +3326,16 @@ window.TCEngine = Object.freeze({
   signOut() { return operatorSignOut(); },
   legacyRecordExists(boutId) { const loc = officialCore && officialCore.locate(boutId); return !!(loc && (officialInfo.legacyIds || []).indexOf(officialCore.legacyDocId(loc.weight, loc.key)) >= 0); },
   recordOfficial(req) { return recordOfficial(req); },
+  // ── Phase 3D ──
+  previewChange(req) {                                   // read-only: exactly what a correct/clear would touch (no writes)
+    if (operator.state !== 'operator') return { ok: false, code: 'not_operator', message: 'Sign in as an authorized operator to change results.' };
+    if (!officialCore || !window.OfficialWriter || !window.OfficialWriter.planChange) return { ok: false, code: 'unavailable', message: 'Changing results is not available in this session.' };
+    const p = window.OfficialWriter.planChange(officialCore, officialBook, req, { email: operator.email, stamp: null });
+    return p.ok ? { ok: true, preview: p.preview, fingerprint: p.fingerprint } : p;
+  },
+  changeFingerprint(boutId) { return officialCore && window.OfficialWriter ? window.OfficialWriter.fingerprintOf(officialCore, officialBook, boutId) : null; },
+  correctOfficial(req) { return changeOfficial('correct', req); },
+  clearOfficial(req) { return changeOfficial('clear', req); },
   openWeight(weight) { setViewMode('official'); switchW(weight); }        // Central tiles: the OFFICIAL bracket, via the existing switchW
 });
 document.dispatchEvent(new CustomEvent('tc-engine-ready'));
@@ -3287,10 +3365,10 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
   </div>
 </div>
 
-<script src="tournament-core.js?v=3c"></script>
-<script src="official-store.js?v=3c"></script>
-<script src="official-writer.js?v=3c"></script>
-<script src="tournament-central.js?v=3c"></script>
+<script src="tournament-core.js?v=3d"></script>
+<script src="official-store.js?v=3d"></script>
+<script src="official-writer.js?v=3d"></script>
+<script src="tournament-central.js?v=3d"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->
