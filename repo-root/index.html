@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=ots">
+<link rel="stylesheet" href="tournament-central.css?v=imp">
 </head>
 <body>
 
@@ -2683,6 +2683,70 @@ function renderOfficialScores() {
 window.addEventListener('offline', () => { if (showOfficialScores) renderOfficialScores(); });
 window.addEventListener('online', () => { if (showOfficialScores) { renderOfficialScores(); if (officialCore) loadOfficial(true); } });     // read-only refresh
 
+// ══════ ONE-TIME IMPORT OF THE WORKBOOK RESULTS (Import phase) ══════
+// Operator-only. official-import.js only ORCHESTRATES: every result document and audit-log entry is built by official-writer.js (the same
+// builders Record / Correct use) and every tournament rule comes from tournament-core.js. The only write in this section is one
+// atomic batch of at most 16 writes (importCommitBatch); results are written in ascending bout order so any stop leaves a valid state.
+let importState = { docs: null, sig: '', backedUp: false, busy: false };
+function importAvailable() { return !!(officialCore && operator.state === 'operator' && window.OfficialImport && window.OfficialImportData && window.OfficialWriter && window.OfficialStore); }
+function importPlain(v) {                                                   // Firestore Timestamps -> ISO text, so the backup file is readable
+  if (v && typeof v.toDate === 'function') { try { return v.toDate().toISOString(); } catch (e) { return String(v); } }
+  if (Array.isArray(v)) return v.map(importPlain);
+  if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach(k => { o[k] = importPlain(v[k]); }); return o; }
+  return v;
+}
+function importSig(docs) { return docs.map(d => d.id + ':' + (d.data.revision || '') + ':' + (d.data.winnerId || d.data.winnerName || '')).sort().join('|'); }
+async function importReadServerDocs() {
+  const snap = await getDocs(collection(db, 'officialResults'));
+  if (!isServerSnapshot(snap)) throw new Error('offline: no server-confirmed data');
+  const out = []; snap.forEach(d => out.push({ id: d.id, data: d.data() })); return out;
+}
+async function importCommitBatch(ops) {
+  const batch = writeBatch(db);
+  ops.forEach(op => { if (op.kind === 'result') batch.set(doc(db, 'officialResults', op.docId), op.data); else batch.set(doc(collection(db, 'officialLog')), op.data); });
+  await batch.commit();                                                     // resolves only when the SERVER has accepted every write in the batch
+}
+function importInput(extra) {
+  const D = window.OfficialImportData;
+  return Object.assign({
+    decisions: D.decisions, expected: D.expected,
+    nameOf: id => { const p = String(id).split('-'), f = FIELDS[Number(p[0])], w = f && f[Number(p[1]) - 1]; return w ? String(w.n).trim() : ''; },
+    schoolOf: schoolOfId, bonusOf: bonusOfResult, email: operator.email,
+    stamp: () => serverTimestamp(), commitBatch: importCommitBatch, readServerDocs: importReadServerDocs
+  }, extra);
+}
+function importEngine() { return window.OfficialImport.create({ core: officialCore, store: window.OfficialStore, writer: window.OfficialWriter, scoring: window.OfficialScoring }); }
+async function importAnalyze() {                                            // read-only
+  if (!importAvailable()) return { ok: false, code: 'unavailable', message: 'The import is not available (sign in as an operator and upload official-import-data.js).' };
+  try {
+    const docs = await importReadServerDocs(); importState.docs = docs; importState.sig = importSig(docs); importState.backedUp = false;
+    const p = importEngine().analyze(importInput({ docs }));
+    return { ok: true, summary: p.summary, blocking: p.blocking, needsAck: p.needsAck, problems: p.problems.slice(0, 10), disagreements: p.disagreements.slice(0, 100), extras: p.extras.slice(0, 20), source: window.OfficialImportData.source, fingerprint: window.OfficialImportData.fingerprint };
+  } catch (err) { return { ok: false, code: 'read_failed', message: 'Could not read the stored results: ' + String((err && err.message) || err) }; }
+}
+function importBackup() {                                                   // the results exactly as they are right now, as a file
+  if (!importState.docs) return { ok: false, code: 'no_check', message: 'Run the check first.' };
+  const now = new Date().toISOString();
+  const text = JSON.stringify({ kind: 'officialResults-backup', takenAt: now, by: operator.email, count: importState.docs.length, docs: importState.docs.map(d => ({ id: d.id, data: importPlain(d.data) })) }, null, 1);
+  importState.backedUp = true;
+  return { ok: true, filename: 'officialResults-backup-' + now.slice(0, 19).replace(/[:T]/g, '-') + '.json', text: text, count: importState.docs.length };
+}
+async function importRun(ack, onProgress) {
+  if (!importAvailable()) return { ok: false, code: 'unavailable', message: 'The import is not available right now.' };
+  if (importState.busy) return { ok: false, code: 'busy', message: 'An import is already running.' };
+  if (!importState.docs) return { ok: false, code: 'no_check', message: 'Run the check first.' };
+  importState.busy = true;
+  try {
+    const docs = await importReadServerDocs();
+    if (importSig(docs) !== importState.sig) return { ok: false, code: 'changed', message: 'The stored results changed since the check. Run the check again (and download a new backup).' };
+    const r = await importEngine().run(importInput({ docs, ack: { backup: importState.backedUp, disagreements: !!(ack && ack.disagreements) }, onProgress: onProgress }));
+    importState.docs = null; importState.backedUp = false;                 // a further import needs a fresh check and backup
+    try { await loadOfficial(true); } catch (e) { /* the page refreshes on the next snapshot */ }
+    return { ok: r.ok, code: r.code, message: r.message, written: r.written, total: r.total, batches: r.batches, error: r.error, errorCode: r.errorCode, verify: r.verify, summary: r.plan && r.plan.summary };
+  } catch (err) { return { ok: false, code: 'error', message: String((err && err.message) || err) }; }
+  finally { importState.busy = false; }
+}
+
 // ══════ INIT ══════
 renderWeightTabs();
 render();
@@ -3439,7 +3503,12 @@ window.TCEngine = Object.freeze({
   changeFingerprint(boutId) { return officialCore && window.OfficialWriter ? window.OfficialWriter.fingerprintOf(officialCore, officialBook, boutId) : null; },
   correctOfficial(req) { return changeOfficial('correct', req); },
   clearOfficial(req) { return changeOfficial('clear', req); },
-  openWeight(weight) { setViewMode('official'); switchW(weight); }        // Central tiles: the OFFICIAL bracket, via the existing switchW
+  openWeight(weight) { setViewMode('official'); switchW(weight); },       // Central tiles: the OFFICIAL bracket, via the existing switchW
+  // ── Import phase (operator-only, one-time) ──
+  importAvailable() { return importAvailable(); },
+  importAnalyze() { return importAnalyze(); },
+  importBackup() { return importBackup(); },
+  importRun(ack, onProgress) { return importRun(ack, onProgress); }
 });
 document.dispatchEvent(new CustomEvent('tc-engine-ready'));
 
@@ -3468,11 +3537,12 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
   </div>
 </div>
 
-<script src="tournament-core.js?v=ots"></script>
-<script src="official-store.js?v=ots"></script>
-<script src="official-scoring.js?v=ots"></script>
-<script src="official-writer.js?v=ots"></script>
-<script src="tournament-central.js?v=ots"></script>
+<script src="tournament-core.js?v=imp"></script>
+<script src="official-store.js?v=imp"></script>
+<script src="official-scoring.js?v=imp"></script>
+<script src="official-import.js?v=imp"></script>
+<script src="official-writer.js?v=imp"></script>
+<script src="tournament-central.js?v=imp"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->

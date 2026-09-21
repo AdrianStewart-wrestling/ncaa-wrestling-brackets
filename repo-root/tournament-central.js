@@ -494,6 +494,7 @@
   // Called by index.html each time the view is shown: refresh the card from the OFFICIAL store.
   function onShow() {
     renderOfficialStatus();
+    renderImportPanel();
     if (state.lookupOK && state.lastId != null) {
       var d = describeBout(state.lastId);
       if (d) renderCard(d);
@@ -504,6 +505,7 @@
   // Called by index.html when a (re)load of the official results finishes.
   function onOfficialChanged() {
     renderOfficialStatus();
+    if (!imp.busy) renderImportPanel();
     if (state.lookupOK && state.lastId != null) {
       var d = describeBout(state.lastId);
       // Phase 3D: an open correct/clear panel on a still-Decided bout stays put unless the result it is about changed
@@ -515,8 +517,105 @@
   }
   // Called when sign-in state changes (operator appears / disappears).
   function onOperatorChanged() {
-    if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); }
+    if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); imp.plan = null; imp.result = null; imp.backedUp = false; imp.ack = false; imp.note = ''; }
+    renderImportPanel();
     if (state.lookupOK && state.lastId != null) { var d = describeBout(state.lastId); if (d) renderCard(d); }
+  }
+
+  /* ---------------------------------------------------------------- one-time import (operator only, Import phase) */
+  // 1 · CHECK (read-only)   2 · DOWNLOAD BACKUP   3 · IMPORT. All logic lives in TCEngine (index.html) / official-import.js; this is only the screen.
+  var imp = { plan: null, busy: false, backedUp: false, ack: false, progress: null, result: null, note: '', loadTried: false };
+  function fmtN(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
+  function loadImportData() {                                   // the data file is fetched only for a signed-in operator; if it is not on the site, nothing appears
+    if (imp.loadTried || window.OfficialImportData || !operatorNow()) return;
+    imp.loadTried = true;
+    try {
+      var s = document.createElement('script'); s.src = 'official-import-data.js?v=imp';
+      s.onload = function () { renderImportPanel(); }; s.onerror = function () { /* not uploaded: no import panel */ };
+      document.head.appendChild(s);
+    } catch (e) { /* ignore */ }
+  }
+  function downloadText(name, text) {
+    var a = document.createElement('a');
+    try { a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' })); } catch (e) { a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(text); }
+    a.download = name; a.style.display = 'none'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+  function impCheck() {
+    if (imp.busy) return; imp.busy = true; imp.result = null; imp.note = 'Reading the stored results…'; imp.plan = null; imp.backedUp = false; imp.ack = false; renderImportPanel();
+    window.TCEngine.importAnalyze().then(function (p) {
+      imp.busy = false;
+      if (!p.ok) { imp.note = p.message || 'The check failed.'; } else { imp.plan = p; imp.note = ''; }
+      renderImportPanel();
+    });
+  }
+  function impBackup() {
+    var b = window.TCEngine.importBackup();
+    if (!b.ok) { imp.note = b.message; renderImportPanel(); return; }
+    try { downloadText(b.filename, b.text); imp.backedUp = true; imp.note = 'Backup of ' + b.count + ' stored documents downloaded (' + b.filename + ').'; } catch (e) { imp.note = 'The backup could not be downloaded: ' + e.message; }
+    renderImportPanel();
+  }
+  function impRun() {
+    if (imp.busy) return; imp.busy = true; imp.result = null; imp.progress = { done: 0, total: 640, batch: 0, batches: 80 }; imp.note = ''; renderImportPanel();
+    window.TCEngine.importRun({ disagreements: imp.ack }, function (p) { imp.progress = p; renderImportPanel(); }).then(function (r) {
+      imp.busy = false; imp.progress = null; imp.result = r; imp.plan = null; imp.backedUp = false; imp.ack = false; renderImportPanel();
+    });
+  }
+  function renderImportPanel() {
+    var slot = state.dom && state.dom.imp; if (!slot) return;
+    clear(slot);
+    if (!operatorNow()) return;
+    if (!window.OfficialImportData) { loadImportData(); return; }
+    if (!window.TCEngine.importAvailable || !window.TCEngine.importAvailable()) return;
+    var D = window.OfficialImportData, box = el('div', 'tc-imp');
+    box.appendChild(el('h3', 'tc-imp-h', 'One-time import of the tournament results'));
+    box.appendChild(el('p', 'tc-imp-p', 'Source: ' + D.source + ' — ' + D.expected.bouts + ' results (fingerprint ' + D.fingerprint + '). Older records are replaced by results stored by wrestler. Nothing else is touched. When you are done, delete official-import-data.js from the site.'));
+    var p = imp.plan, sm = p && p.summary;
+
+    var b1 = el('button', 'tc-btn tc-btn--go', imp.plan ? '1 · CHECK AGAIN' : '1 · CHECK (READ-ONLY)'); b1.type = 'button'; b1.id = 'tc-imp-check'; b1.disabled = imp.busy; b1.addEventListener('click', impCheck);
+    box.appendChild(b1);
+    if (imp.note) box.appendChild(el('div', 'tc-imp-note', imp.note));
+
+    if (p) {
+      var lines = el('div', 'tc-imp-sum');
+      lines.appendChild(el('div', '', 'Read ' + sm.existingDocs + ' stored documents.'));
+      lines.appendChild(el('div', '', 'To do: convert ' + sm.replace + ' older records · correct ' + sm.correct + ' · write ' + sm.create + ' new · already correct ' + sm.skip + '.'));
+      if (sm.replace) lines.appendChild(el('div', sm.disagree ? 'tc-imp-bad' : 'tc-imp-good', 'Older records vs the workbook winner: ' + sm.agree + ' agree · ' + sm.disagree + ' DIFFER · ' + sm.unverifiable + ' cannot be checked.'));
+      if (sm.extras) lines.appendChild(el('div', '', sm.extras + ' other document(s) are not one of the 640 bouts and will be left alone.'));
+      if (p.blocking) lines.appendChild(el('div', 'tc-imp-bad', 'BLOCKED: ' + (p.problems[0] ? p.problems[0].message : sm.blocked + ' bout(s) already have a result with a different winner.') + ' Nothing can be imported until this is resolved.'));
+      box.appendChild(lines);
+      if (p.disagreements.length) {
+        var t = el('div', 'tc-imp-dis'); t.appendChild(el('div', 'tc-imp-dish', 'Older records that name a different winner (the workbook would replace them):'));
+        p.disagreements.slice(0, 25).forEach(function (x) { t.appendChild(el('div', 'tc-imp-disr', 'Bout ' + x.boutId + ' (' + x.weight + ' lbs' + (x.round ? ', ' + x.round : '') + '): stored ' + x.existing.name + ' (' + x.existing.school + ')  →  workbook ' + x.workbook.name + ' (' + x.workbook.school + ')')); });
+        if (p.disagreements.length > 25) t.appendChild(el('div', 'tc-imp-disr', '… and ' + (p.disagreements.length - 25) + ' more.'));
+        box.appendChild(t);
+      }
+      if (!p.blocking) {
+        var b2 = el('button', 'tc-btn tc-btn--clear', imp.backedUp ? '2 · BACKUP DOWNLOADED ✓ (again)' : '2 · DOWNLOAD BACKUP'); b2.type = 'button'; b2.id = 'tc-imp-backup'; b2.disabled = imp.busy; b2.addEventListener('click', impBackup);
+        box.appendChild(b2);
+        if (p.needsAck) {
+          var lab = el('label', 'tc-imp-ack'); var cb = el('input'); cb.type = 'checkbox'; cb.id = 'tc-imp-ack'; cb.checked = imp.ack;
+          cb.addEventListener('change', function () { imp.ack = cb.checked; renderImportPanel(); });
+          lab.appendChild(cb); lab.appendChild(document.createTextNode(' I have reviewed the ' + sm.disagree + ' older record(s) above. Replace them with the workbook winner.'));
+          box.appendChild(lab);
+        }
+        var need = sm.replace + sm.correct + sm.create;
+        var go = el('button', 'tc-btn tc-btn--go', need ? '3 · IMPORT ' + need + ' RESULTS' : '3 · NOTHING TO IMPORT'); go.type = 'button'; go.id = 'tc-imp-run';
+        go.disabled = imp.busy || !imp.backedUp || (p.needsAck && !imp.ack) || need === 0;
+        go.addEventListener('click', impRun); box.appendChild(go);
+        if (!imp.backedUp) box.appendChild(el('div', 'tc-imp-note', 'The import stays locked until you have downloaded the backup.'));
+      }
+    }
+    if (imp.progress) box.appendChild(el('div', 'tc-imp-prog', 'Writing… ' + imp.progress.done + ' of ' + imp.progress.total + ' results (batch ' + imp.progress.batch + ' of ' + imp.progress.batches + '). Keep this page open.'));
+    var r = imp.result;
+    if (r) {
+      if (r.ok) {
+        var v = r.verify || {}, tt = v.totals || {};
+        box.appendChild(el('div', 'tc-imp-done', '✓ Imported and verified: ' + (v.applied != null ? v.applied : r.total) + ' results stored by wrestler' + (tt.teams ? ' · ' + tt.teams + ' teams · ' + fmtN(tt.total) + ' team points · ' + tt.aa + ' All-Americans' : '') + '. Open 🏆 OFFICIAL Scores to see the standings. You can now delete official-import-data.js.'));
+      } else {
+        box.appendChild(el('div', 'tc-imp-bad', 'NOT COMPLETE — ' + (r.message || 'the import stopped.') + (r.errorCode ? ' (' + r.errorCode + ')' : '') + (r.verify && r.verify.issues && r.verify.issues.length ? ' Verification: ' + r.verify.issues.join(' ') : '')));
+      }
+    }
+    slot.appendChild(box);
   }
 
   /* ------------------------------------------------------------------------ build */
@@ -592,10 +691,12 @@
     sec2.appendChild(card);
     wrap.appendChild(sec2);
 
+    var impSlot = el('div', 'tc-imp-slot'); wrap.appendChild(impSlot);       // operator-only one-time import (empty for everyone else)
     root.appendChild(wrap);
 
-    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat };
+    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat, imp: impSlot };
     renderOfficialStatus();
+    renderImportPanel();
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
