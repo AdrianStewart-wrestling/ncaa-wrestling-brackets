@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=3d">
+<link rel="stylesheet" href="tournament-central.css?v=ots">
 </head>
 <body>
 
@@ -500,8 +500,10 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 <div id="scores-view">
   <div class="scores-wrap">
     <div class="scores-main">
-      <div class="scores-title">Team Standings</div>
-      <div class="scores-sub">Live · Top 15 Teams · 2026 NCAA Division I Wrestling</div>
+      <div class="picks-badge">MY PICKS</div>
+      <div class="scores-title">My Picks — Projected Team Scores</div>
+      <div class="scores-sub">Top 15 teams projected from YOUR picks · not actual tournament results</div>
+      <div class="picks-callout">These totals come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>.</div>
       <table class="lb-table" id="lb-table">
         <thead>
           <tr>
@@ -534,6 +536,30 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
         <div class="key-row"><span class="key-lbl">Con Win</span><span class="key-val">+0.5 pt</span></div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- OFFICIAL Team Scores (Official Team Scores phase) — filled in by renderOfficialScores(); reads ONLY the OFFICIAL book -->
+<div id="off-scores-view" data-os-state="loading">
+  <div class="os-wrap">
+    <div class="os-main">
+      <div class="os-head">
+        <span class="os-badge">🔒 OFFICIAL</span>
+        <div class="os-title">OFFICIAL TEAM SCORES</div>
+        <div class="os-sub">Actual NCAA tournament results — not picks · placement points count the moment a finish is clinched</div>
+      </div>
+      <div class="os-status os-status--loading" id="os-status" role="status" aria-live="polite">Loading official results…</div>
+      <div id="os-notes"></div>
+      <div class="os-table-wrap" id="os-table-wrap" hidden>
+        <table class="os-table" id="os-table">
+          <caption>OFFICIAL TEAM SCORES · actual tournament</caption>
+          <thead><tr><th>Rank</th><th>Team</th><th>Total</th><th>Adv</th><th>Bonus</th><th>Place</th><th>AA</th></tr></thead>
+          <tbody id="os-body"></tbody>
+        </table>
+      </div>
+      <button type="button" class="os-more" id="os-more" hidden></button>
+    </div>
+    <div class="os-key" id="os-key"></div>
   </div>
 </div>
 
@@ -2009,17 +2035,19 @@ const CON_RND_NAMES   = ['Con. Rd 1','Con. Rd 2','Con. Rd 3','Con. Rd 4','Con. Q
 function renderWeightTabs() {
   const centralBtn = `<button class="wtab tc-tab ${showCentral?'on':''}" onclick="switchCentral()">🏠 Central</button>`;
   const weightBtns = WLIST.map(w=>
-    `<button class="wtab ${w===CW && !showScores && !showAA && !showCentral?'on':''}" onclick="switchW(${w})">${w}</button>`
+    `<button class="wtab ${w===CW && !showScores && !showAA && !showCentral && !showOfficialScores?'on':''}" onclick="switchW(${w})">${w}</button>`
   ).join('');
-  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 Team Scores</button>`;
+  const officialScoreBtn = `<button class="wtab scores-tab official-tab ${showOfficialScores?'on':''}" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>`;
+  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 My Picks Scores</button>`;
   const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ All-Americans</button>`;
-  document.getElementById('wtabs').innerHTML = centralBtn + weightBtns + scoreBtn + aaBtn;
+  document.getElementById('wtabs').innerHTML = centralBtn + weightBtns + officialScoreBtn + scoreBtn + aaBtn;
 }
 
 let showScores = false;
 let showAA = false;
 let showLeaderboard = false;
 let showCentral = false;   // Tournament Central view (Phase 2)
+let showOfficialScores = false;   // OFFICIAL Team Scores view (reads the OFFICIAL book only)
 // ── OFFICIAL vs MY PICKS (Phase 3B). `states` above remains the PICKS store and is never touched by the official code. ──
 let viewMode = 'picks';      // 'picks' | 'official'  — which bracket render() shows
 let officialCore = null;     // TournamentCore instance (null => official mode unavailable)
@@ -2297,6 +2325,7 @@ function officialChanged() {
   renderModeBanner();
   if (viewMode !== 'official') return;
   if (showCentral) { if (window.TournamentCentral && window.TournamentCentral.onOfficialChanged) window.TournamentCentral.onOfficialChanged(); }
+  else if (showOfficialScores) renderOfficialScores();
   else if (!showScores && !showAA && !showLeaderboard && document.getElementById('area').style.display !== 'none') render();
 }
 function initOfficial() {
@@ -2327,6 +2356,8 @@ function hideCentral() {
 }
 function hideMainPanels() {
   hideCentral();
+  showOfficialScores=false;
+  const osv=document.getElementById('off-scores-view'); if (osv) osv.classList.remove('active');
   document.getElementById('area').style.display='none';
   document.getElementById('scores-view').classList.remove('active');
   document.getElementById('aa-view').classList.remove('active');
@@ -2555,7 +2586,7 @@ function renderScores() {
   });
   const body=document.getElementById('lb-body');
   if(!top15.length){
-    body.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">No results yet — advance wrestlers in the bracket to see team scores</td></tr>`;
+    body.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">No picks yet — advance wrestlers in your bracket to see your projected team scores</td></tr>`;
     document.getElementById('scores-note').textContent='';
     return;
   }
@@ -2575,10 +2606,82 @@ function renderScores() {
       <td class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:${barPct}%"></div></div></td>
     </tr>`;
   }).join('');
-  document.getElementById('scores-note').textContent=`${matchCount} match${matchCount===1?'':'es'} decided across ${WLIST.filter(w=>states[w]).length} weight class${WLIST.filter(w=>states[w]).length===1?'':'es'} · Scores update live as you advance wrestlers`;
+  document.getElementById('scores-note').textContent=`${matchCount} match${matchCount===1?'':'es'} picked across ${WLIST.filter(w=>states[w]).length} weight class${WLIST.filter(w=>states[w]).length===1?'':'es'} · Projected from your picks — not actual results`;
 }
 
 function fmt(n){return n%1===0?n.toString():n.toFixed(1);}
+
+// ══════ OFFICIAL TEAM SCORES ══════
+// Reads ONLY the OFFICIAL book, through the pure model in official-scoring.js (the Phase 6b OG scoring model: normal advancement,
+// bonus, and placement points credited the moment a finish is CLINCHED). MY PICKS scoring above is untouched.
+// Nothing in this section writes anything anywhere: it recomputes from officialBook on every render, so Correct / Clear and
+// live updates from other devices are reflected immediately, with nothing cached.
+let officialScoresShowAll = false;
+function schoolOfId(id) { const p = String(id).split('-'), f = FIELDS[Number(p[0])], w = f && f[Number(p[1]) - 1]; return w ? String(w.s).trim() : ''; }
+function bonusOfResult(code) { const ts = (window.TournamentCore && window.TournamentCore.RESULT_TYPES) || [], t = ts.find(x => x.code === code); return t ? t.bonus : undefined; }
+function officialScoresModel() {
+  if (!officialCore || !officialBook || !window.OfficialScoring) return null;
+  return window.OfficialScoring.compute(officialCore.toRecords(officialBook), { bonusOf: bonusOfResult, schoolOf: schoolOfId });
+}
+function switchOfficialScores() {
+  hideMainPanels();
+  showScores = false; showAA = false; showLeaderboard = false; showOfficialScores = true;
+  setViewMode('official');                 // OFFICIAL Team Scores always read the OFFICIAL store
+  const v = document.getElementById('off-scores-view'); if (v) v.classList.add('active');
+  renderWeightTabs(); renderOfficialScores();
+}
+function renderOfficialScores() {
+  const v = document.getElementById('off-scores-view'); if (!v) return;
+  const $ = id => document.getElementById(id);
+  const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const clear = el => { while (el.firstChild) el.removeChild(el.firstChild); };
+  const st = $('os-status'), tb = $('os-body'), more = $('os-more'), notes = $('os-notes'), wrap = $('os-table-wrap'), key = $('os-key');
+  [st, tb, notes, key].forEach(clear); more.hidden = true; wrap.hidden = true;
+  const i = officialInfo, online = !(typeof navigator !== 'undefined' && navigator.onLine === false);
+  const t = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const hasData = !!(officialCore && officialBook && i.loadedAt);          // loadedAt is only ever set when a SERVER-confirmed snapshot was applied
+  let mode, text, res = null;
+  if (!officialCore || !window.OfficialScoring || i.state === 'disabled') { mode = 'unavailable'; text = 'OFFICIAL scoring is not available in this session.'; }
+  else if (!hasData) {
+    if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · OFFICIAL SCORES UNAVAILABLE — no official results have been loaded on this device yet.'; }
+    else { mode = 'loading'; text = 'Loading official results…'; }
+  } else {
+    try { res = officialScoresModel(); } catch (e) { console.error('Official scores could not be calculated:', e); res = null; }
+    if (!res) { mode = 'unavailable'; text = 'OFFICIAL scores could not be calculated.'; }
+    else if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · LAST KNOWN OFFICIAL SCORES · last refreshed ' + t(i.loadedAt); }
+    else if (i.state === 'loading') { mode = 'loading'; text = 'Refreshing… showing last known official scores · last refreshed ' + t(i.loadedAt); }
+    else { mode = 'live'; text = '● LIVE · ' + res.stats.records + ' official result' + (res.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(i.loadedAt); }
+  }
+  st.className = 'os-status os-status--' + mode; st.textContent = text; v.setAttribute('data-os-state', mode);
+  if (!res) return;
+
+  if (i.legacyIgnored > 0) notes.appendChild(mk('div', 'os-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? ' is' : 's are') + ' not included in OFFICIAL scores.'));
+  const bad = (res.problems ? res.problems.length : 0) + ((i.problems && i.problems.length) || 0);
+  if (bad) notes.appendChild(mk('div', 'os-note os-note--warn', bad + ' record' + (bad === 1 ? '' : 's') + ' could not be scored.'));
+  if (!res.teams.length) { notes.appendChild(mk('div', 'os-empty', 'No official results yet — scores appear as soon as the first result is recorded.')); }
+  else {
+    const OS = window.OfficialScoring, shown = officialScoresShowAll ? res.teams : OS.topRows(res.teams, 15);
+    wrap.hidden = false;
+    shown.forEach(tm => {
+      const tr = mk('tr', 'os-row' + (tm.rank <= 3 ? ' os-rank-' + tm.rank : ''));
+      [['os-rank', tm.rankLabel], ['os-team', tm.school], ['os-total', fmt(tm.total)], ['os-adv', fmt(tm.adv)], ['os-bonus', fmt(tm.bonus)], ['os-place', fmt(tm.place)], ['os-aa', String(tm.aa)]]
+        .forEach(([c, x]) => tr.appendChild(mk('td', c, x)));
+      tb.appendChild(tr);
+    });
+    if (res.teams.length > shown.length) { more.hidden = false; more.textContent = 'Show all ' + res.teams.length + ' teams'; }
+    else if (officialScoresShowAll && res.teams.length > 15) { more.hidden = false; more.textContent = 'Show top 15'; }
+    more.onclick = () => { officialScoresShowAll = !officialScoresShowAll; renderOfficialScores(); };
+  }
+  // the key is generated from the model's own tables, so it can never drift from the scoring
+  const OS2 = window.OfficialScoring, names = { QF: 'Quarterfinal win', SF: 'Semifinal win', Final: 'Final win', BloodRound: 'Blood-round win', ConsQF: 'Con. quarterfinal win', ConsSF: 'Con. semifinal win', '3rd': '3rd-place win', '5th': '5th-place win', '7th': '7th-place win' };
+  key.appendChild(mk('div', 'os-key-hdr', 'How OFFICIAL scores work'));
+  key.appendChild(mk('div', 'os-key-line', 'Adv: 1 per championship win, ½ per consolation win. Bonus: Major Decision 1 · Tech Fall 1.5 · Fall / Forfeit / DQ 2.'));
+  key.appendChild(mk('div', 'os-key-line', 'Place: counted the moment a finish is CLINCHED, not when the placement bout is wrestled. The Final adds only the step from 2nd to 1st.'));
+  Object.keys(OS2.SCHEDULE).forEach(r => { const s = OS2.SCHEDULE[r]; const row = mk('div', 'os-key-row'); row.appendChild(mk('span', 'os-key-lbl', names[r] || r)); row.appendChild(mk('span', 'os-key-val', 'clinches ' + OS2.label(s[1]) + ' = ' + (OS2.PLACE_POINTS[s[1]] || 0))); key.appendChild(row); });
+  key.appendChild(mk('div', 'os-key-line', 'AA: wrestlers who have clinched All-American (top 8).'));
+}
+window.addEventListener('offline', () => { if (showOfficialScores) renderOfficialScores(); });
+window.addEventListener('online', () => { if (showOfficialScores) { renderOfficialScores(); if (officialCore) loadOfficial(true); } });     // read-only refresh
 
 // ══════ INIT ══════
 renderWeightTabs();
@@ -3291,7 +3394,7 @@ async function loadSelectedSubmission(){
 // Required because type="module" scopes functions locally
 // and HTML onclick handlers need global access
 Object.assign(window, {
-  resetBracket, switchW, switchScores, switchAA, switchCentral, openLeaderboard, chooseMode,
+  resetBracket, switchW, switchScores, switchAA, switchCentral, switchOfficialScores, openLeaderboard, chooseMode,
   doPrint, closePrintModal, printBracket,
   pmSelectAll, pmSelectNone,
   openLoadModal, closeLoadModal,
@@ -3365,10 +3468,11 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
   </div>
 </div>
 
-<script src="tournament-core.js?v=3d"></script>
-<script src="official-store.js?v=3d"></script>
-<script src="official-writer.js?v=3d"></script>
-<script src="tournament-central.js?v=3d"></script>
+<script src="tournament-core.js?v=ots"></script>
+<script src="official-store.js?v=ots"></script>
+<script src="official-scoring.js?v=ots"></script>
+<script src="official-writer.js?v=ots"></script>
+<script src="tournament-central.js?v=ots"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->

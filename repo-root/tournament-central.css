@@ -312,3 +312,66 @@ body.mode-official .sl:hover:not(.empty):not(.w):not(.l) { background: transpare
 }
 
 @media print { #tc-view { display: none !important; } }
+
+/* ============================================================================
+   OFFICIAL TEAM SCORES (Official Team Scores phase) + the MY PICKS labels that keep the two worlds apart.
+   Everything is scoped under #off-scores-view / .os-* / .picks-*; the MY PICKS scoring styles are untouched.
+   ============================================================================ */
+.wtab.official-tab { background: var(--tc-navy); color: #f0c15a; border-radius: 4px 4px 0 0; }
+.wtab.official-tab.on { color: #fff; border-bottom-color: var(--tc-gold); }
+
+#off-scores-view { flex: 1; overflow: auto; padding: 14px 18px 24px; display: none; flex-direction: column; gap: 0; }
+#off-scores-view.active { display: flex; }
+.os-wrap { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.os-main { flex: 1 1 560px; min-width: 0; }
+.os-badge { display: inline-block; background: var(--tc-navy); color: #f0c15a; border: 1px solid var(--tc-gold); border-radius: 3px; padding: 4px 11px; font: 700 12px/1 'Barlow Condensed', sans-serif; letter-spacing: 2.6px; }
+.os-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; color: var(--tc-navy); margin: 6px 0 2px; }
+.os-sub { font-size: 12px; color: var(--tc-grey); letter-spacing: .3px; margin-bottom: 10px; }
+.os-status { margin: 10px 0; padding: 8px 12px; border-radius: 5px; font-weight: 700; font-size: 13px; }
+.os-status--live { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+.os-status--loading { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.os-status--unavailable { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+.os-status--offline { background: #b91c1c; color: #fff; border: 2px solid #7f1d1d; font-size: 14px; letter-spacing: .6px; }
+#off-scores-view[data-os-state="offline"] .os-table-wrap { border-left-color: #b91c1c; }
+#off-scores-view[data-os-state="offline"] .os-table caption { background: #7f1d1d; color: #fee2e2; }
+.os-note { font-size: 12.5px; font-style: italic; color: #92400e; margin: 4px 0; }
+.os-note--warn { color: #b91c1c; font-style: normal; font-weight: 700; }
+.os-empty { padding: 18px; text-align: center; font-size: 13px; font-style: italic; color: var(--tc-grey); background: #fff; border: 1px dashed #cbd5e1; border-radius: 5px; }
+.os-table-wrap { border-left: 5px solid var(--tc-gold); background: #fff; border-radius: 0 5px 5px 0; box-shadow: 0 1px 4px rgba(0,0,0,.09); overflow-x: auto; }
+.os-table-wrap[hidden] { display: none; }
+.os-table { width: 100%; border-collapse: collapse; }
+.os-table caption { caption-side: top; text-align: left; padding: 8px 12px; background: var(--tc-navy); color: #f0c15a; font: 700 13px 'Barlow Condensed', sans-serif; letter-spacing: 2.6px; }
+.os-table th { background: #111827; color: rgba(255,255,255,.8); font: 700 11px 'Barlow Condensed', sans-serif; letter-spacing: 1.8px; text-transform: uppercase; padding: 7px 10px; text-align: right; white-space: nowrap; }
+.os-table th:nth-child(1), .os-table th:nth-child(2) { text-align: left; }
+.os-table td { padding: 7px 10px; text-align: right; border-bottom: 1px solid #e5e7eb; font-variant-numeric: tabular-nums; }
+.os-table td.os-rank { text-align: left; font-weight: 700; width: 56px; color: var(--tc-navy); }
+.os-table td.os-team { text-align: left; }
+.os-table td.os-total { font-weight: 800; color: var(--tc-navy); }
+.os-table tr.os-rank-1 { background: rgba(201,147,46,.10); }
+.os-more { margin: 10px 0 0; padding: 8px 16px; line-height: 1.3; border: 1px solid var(--tc-navy); background: #fff; color: var(--tc-navy); border-radius: 4px; font: 700 13px 'Barlow Condensed', sans-serif; letter-spacing: 1.5px; cursor: pointer; }
+.os-more[hidden] { display: none; }
+.os-key { flex: 0 1 300px; background: #fff; border: 1px solid #e5e7eb; border-top: 3px solid var(--tc-gold); border-radius: 5px; padding: 10px 12px; font-size: 12.5px; color: #374151; }
+.os-key-hdr { font: 700 13px 'Barlow Condensed', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: var(--tc-navy); margin-bottom: 6px; }
+.os-key-line { margin: 6px 0; line-height: 1.35; }
+.os-key-row { display: flex; justify-content: space-between; gap: 10px; padding: 2px 0; border-bottom: 1px dotted #e5e7eb; }
+.os-key-val { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+/* the MY PICKS page: unmistakably NOT the real tournament */
+.picks-badge { display: inline-block; background: #fff7ed; color: #9a3412; border: 1px solid #fdba74; border-radius: 3px; padding: 3px 10px; font: 700 12px/1 'Barlow Condensed', sans-serif; letter-spacing: 2.4px; margin-bottom: 4px; }
+.picks-callout { margin: 0 0 12px; padding: 8px 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 5px; font-size: 12.5px; color: #7c2d12; }
+.picks-callout-btn { margin-left: 4px; padding: 3px 10px; line-height: 1.3; background: var(--tc-navy); color: #f0c15a; border: 1px solid var(--tc-gold); border-radius: 3px; font: 700 12px 'Barlow Condensed', sans-serif; letter-spacing: 1.2px; cursor: pointer; }
+@media (max-width: 700px) {
+  /* phones: plain block layout (no dependence on flex-wrap shrinking) so the table always fits the screen width and the key sits BELOW it */
+  #off-scores-view { padding: 10px 10px 20px; }
+  #off-scores-view.active { display: block; }
+  .os-wrap { display: block; width: 100%; max-width: 100%; box-sizing: border-box; }
+  .os-main { width: 100%; max-width: 100%; min-width: 0; }
+  .os-key { width: 100%; max-width: 100%; margin-top: 14px; box-sizing: border-box; }
+  .os-title { font-size: 23px; letter-spacing: 2px; }
+  /* fixed layout + percentage columns: the 7 columns always fit the screen, whatever font the device uses */
+  .os-table { table-layout: fixed; width: 100%; }
+  .os-table th { font-size: 10px; letter-spacing: 0; padding: 6px 2px; }
+  .os-table td { padding: 6px 3px; font-size: 12px; }
+  .os-table th:nth-child(1) { width: 11%; } .os-table th:nth-child(2) { width: 27%; } .os-table th:nth-child(3) { width: 15%; }
+  .os-table th:nth-child(4) { width: 12%; } .os-table th:nth-child(5) { width: 13%; } .os-table th:nth-child(6) { width: 13%; } .os-table th:nth-child(7) { width: 9%; }
+  .os-table td.os-team { word-break: break-word; }
+}
