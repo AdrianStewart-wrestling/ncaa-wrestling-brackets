@@ -464,6 +464,8 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 }
 
 </style>
+<!-- Tournament Central (Phase 2, read-only) -->
+<link rel="stylesheet" href="tournament-central.css?v=adj">
 </head>
 <body>
 
@@ -483,6 +485,12 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 <div class="wtabs" id="wtabs"></div>
 
+<!-- OFFICIAL / MY PICKS banner (Phase 3B) — filled in by renderModeBanner() -->
+<div class="mode-banner" id="mode-banner" hidden></div>
+
+<!-- Tournament Central (Phase 2, read-only) — filled in by tournament-central.js -->
+<div id="tc-view"><div class="tc-loading">Tournament Central is loading…</div></div>
+
 <div class="area" id="area">
   <div class="tip"><div class="tip-dot"></div>Click a wrestler's name to advance them — their opponent automatically drops to the consolation bracket below</div>
   <div id="bkt"></div>
@@ -492,8 +500,10 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 <div id="scores-view">
   <div class="scores-wrap">
     <div class="scores-main">
-      <div class="scores-title">Team Standings</div>
-      <div class="scores-sub">Live · Top 15 Teams · 2026 NCAA Division I Wrestling</div>
+      <div class="picks-badge">MY PICKS</div>
+      <div class="scores-title">My Picks — Projected Team Scores</div>
+      <div class="scores-sub">Top 15 teams projected from YOUR picks · not actual tournament results</div>
+      <div class="picks-callout">These totals come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>.</div>
       <table class="lb-table" id="lb-table">
         <thead>
           <tr>
@@ -529,10 +539,39 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
   </div>
 </div>
 
+<!-- OFFICIAL Team Scores (Official Team Scores phase) — filled in by renderOfficialScores(); reads ONLY the OFFICIAL book -->
+<div id="off-scores-view" data-os-state="loading">
+  <div class="os-wrap">
+    <div class="os-main">
+      <div class="os-head">
+        <span class="os-badge">🔒 OFFICIAL</span>
+        <div class="os-title">OFFICIAL TEAM SCORES</div>
+        <div class="os-sub">Actual NCAA tournament results — not picks · placement points count the moment a finish is clinched</div>
+      </div>
+      <div class="os-status os-status--loading" id="os-status" role="status" aria-live="polite">Loading official results…</div>
+      <div id="os-notes"></div>
+      <div class="os-table-wrap" id="os-table-wrap" hidden>
+        <table class="os-table" id="os-table">
+          <caption>OFFICIAL TEAM SCORES · actual tournament</caption>
+          <thead><tr><th>Rank</th><th>Team</th><th>Total</th><th>Adv</th><th>Bonus</th><th>Place</th><th>Adj</th><th>AA</th></tr></thead>
+          <tbody id="os-body"></tbody>
+        </table>
+      </div>
+      <button type="button" class="os-more" id="os-more" hidden></button>
+    </div>
+    <div class="os-key" id="os-key"></div>
+  </div>
+</div>
+
+<!-- OFFICIAL All-Americans (filled in by official-aa-view.js; reads ONLY the OFFICIAL book) -->
+<div id="off-aa-view" data-oaa-state="loading"><div id="oaa-root"></div></div>
+
 <!-- All-Americans View -->
 <div id="aa-view">
-  <div class="aa-view-title">All-Americans</div>
-  <div class="aa-view-sub">Top 8 Finishers Per Weight · 2026 NCAA Division I Wrestling</div>
+  <div class="picks-badge">MY PICKS</div>
+  <div class="aa-view-title">My Picks — Projected All-Americans</div>
+  <div class="aa-view-sub">Top 8 per weight projected from YOUR picks · not actual results</div>
+  <div class="picks-callout">These places come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialAA()">⭐ OFFICIAL All-Americans</button>.</div>
   <div id="aa-grid-125-157"></div>
   <div id="aa-grid-165-285"></div>
 </div>
@@ -776,6 +815,14 @@ function boutNumbers(weight) {
     final:     631 + w,
   };
 }
+
+// Tournament Central (Phase 2): expose the SAME bout-number mapping, read-only.
+// (boutNumbers() itself is unchanged; this only makes it reachable from outside the closure.)
+window.BoutModel = Object.freeze({
+  WEIGHT_ORDER: Object.freeze(WEIGHT_ORDER.slice()),
+  weightIndex,
+  boutNumbers
+});
 
 // Round mapping (matches the click UI's CHAMP_RND_NAMES / CON_RND_NAMES)
 const ROUND_INDEX = {
@@ -1991,19 +2038,340 @@ const CHAMP_RND_NAMES = ['Round 1','Rd of 16','Quarterfinals','Semifinals','Fina
 const CON_RND_NAMES   = ['Con. Rd 1','Con. Rd 2','Con. Rd 3','Con. Rd 4','Con. Qtrs','Con. Semis'];
 
 function renderWeightTabs() {
+  const centralBtn = `<button class="wtab tc-tab ${showCentral?'on':''}" onclick="switchCentral()">🏠 Central</button>`;
   const weightBtns = WLIST.map(w=>
-    `<button class="wtab ${w===CW && !showScores && !showAA?'on':''}" onclick="switchW(${w})">${w}</button>`
+    `<button class="wtab ${w===CW && !showScores && !showAA && !showCentral && !showOfficialScores && !showOfficialAA?'on':''}" onclick="switchW(${w})">${w}</button>`
   ).join('');
-  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 Team Scores</button>`;
-  const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ All-Americans</button>`;
-  document.getElementById('wtabs').innerHTML = weightBtns + scoreBtn + aaBtn;
+  const officialScoreBtn = `<button class="wtab scores-tab official-tab ${showOfficialScores?'on':''}" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>`;
+  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 My Picks Scores</button>`;
+  const officialAaBtn = `<button class="wtab aa-tab official-tab ${showOfficialAA?'on':''}" onclick="switchOfficialAA()">⭐ OFFICIAL All-Americans</button>`;
+  const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ My Picks All-Americans</button>`;
+  document.getElementById('wtabs').innerHTML = centralBtn + weightBtns + officialScoreBtn + scoreBtn + officialAaBtn + aaBtn;
 }
 
 let showScores = false;
 let showAA = false;
 let showLeaderboard = false;
+let showCentral = false;   // Tournament Central view (Phase 2)
+let showOfficialScores = false;   // OFFICIAL Team Scores view (reads the OFFICIAL book only)
+let showOfficialAA = false;       // OFFICIAL All-Americans view (reads the OFFICIAL book only)
+// ── OFFICIAL vs MY PICKS (Phase 3B). `states` above remains the PICKS store and is never touched by the official code. ──
+let viewMode = 'picks';      // 'picks' | 'official'  — which bracket render() shows
+let officialCore = null;     // TournamentCore instance (null => official mode unavailable)
+let officialBook = null;     // the OFFICIAL book (read-only in 3B)
+let officialInfo = { state: 'idle' };
+// ── Operator (Phase 3C): who may record official results. The Firestore RULES are the lock; this is the UI's view of it. ──
+let operator = { state: 'signedOut', email: null };   // signedOut | checking | operator | notOperator | error | unavailable
+let officialUnsub = null;                               // live listener on officialResults (started lazily, when OFFICIAL is first shown)
+let officialListenerBroken = false;                     // set if a live listener cannot be created: fall back to a one-off read, NEVER loop
+let authApi = null, authObj = null, authInit = null;
+let recordSaving = false;
 
+// ══════ OFFICIAL vs MY PICKS — mode, banner, read-only official load (Phase 3B) ══════
+// viewState(): what render() shows. `getS()` is deliberately NOT mode-aware: pick()/swap()/Load Entry/Submit Entry/
+// Team Scores keep seeing ONLY the picks store, so they can never read or change official data.
+function viewState(wt) { return (viewMode === 'official' && officialBook) ? officialBook.states[wt] : getS(wt); }
+
+function setViewMode(mode) {
+  if (mode === 'picks' && window.PathPanel) window.PathPanel.close();          // Path to the Finals belongs to OFFICIAL only
+  if (mode === 'official' && !officialCore) mode = 'picks';       // official store unavailable => picks only
+  viewMode = mode;
+  document.body.classList.toggle('mode-official', !!officialCore && mode === 'official');
+  document.body.classList.toggle('mode-picks', !!officialCore && mode === 'picks');
+  renderModeBanner();
+  if (mode === 'official') loadOfficial(false);                    // lazy: first time OFFICIAL is shown
+}
+function chooseMode(mode) { setViewMode(mode); switchW(CW); }     // banner buttons: switch source, show that bracket
+
+function renderModeBanner() {
+  const b = document.getElementById('mode-banner'); if (!b) return;
+  if (!officialCore) { b.hidden = true; return; }
+  b.hidden = false; b.className = 'mode-banner mb-' + viewMode;
+  while (b.firstChild) b.removeChild(b.firstChild);
+  const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const t = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const left = mk('div', 'mb-left');
+  const i = officialInfo;
+  if (viewMode === 'official') {
+    left.appendChild(mk('span', 'mb-tag', 'OFFICIAL TOURNAMENT'));
+    left.appendChild(mk('span', 'mb-lock', operator.state === 'operator' ? '✎ Operator — recording enabled' : '🔒 Read-only'));
+    if (operator.state === 'operator') left.appendChild(mk('span', 'mb-op', 'OPERATOR'));
+    let status = '';
+    if (i.state === 'loading' && !i.loadedAt) status = 'Loading official results…';
+    else if (i.state === 'error') status = i.loadedAt ? 'Could not refresh — showing results from ' + t(i.loadedAt) : 'Official results are unavailable right now';
+    else if (i.loadedAt) status = i.applied + ' result' + (i.applied === 1 ? '' : 's') + ' · updated ' + t(i.loadedAt);
+    if (status) left.appendChild(mk('span', 'mb-status', status));
+    if (i.loadedAt && i.legacyIgnored > 0) left.appendChild(mk('span', 'mb-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? '' : 's') + ' not shown'));
+    if (i.loadedAt && i.problems && i.problems.length) left.appendChild(mk('span', 'mb-note', i.problems.length + ' record' + (i.problems.length === 1 ? '' : 's') + ' could not be applied'));
+  } else {
+    left.appendChild(mk('span', 'mb-tag', 'MY PICKS'));
+    left.appendChild(mk('span', 'mb-status', 'Your own predictions — not official results'));
+  }
+  b.appendChild(left);
+  const right = mk('div', 'mb-right');
+  if (viewMode === 'official') {
+    const o = operator, btn = (cls, text, fn) => { const x = mk('button', cls, text); x.type = 'button'; x.addEventListener('click', fn); return x; };
+    if (o.state === 'operator') { right.appendChild(mk('span', 'mb-user', o.email)); right.appendChild(btn('mb-refresh', 'Sign out', operatorSignOut)); }
+    else if (o.state === 'notOperator') { right.appendChild(mk('span', 'mb-user mb-user--no', 'Not an authorized operator: ' + o.email)); right.appendChild(btn('mb-refresh', 'Sign out', operatorSignOut)); }
+    else if (o.state === 'checking') right.appendChild(mk('span', 'mb-user', 'Checking access…'));
+    else if (o.state === 'error') right.appendChild(btn('mb-refresh mb-refresh--warn', 'Sign-in problem — try again', operatorSignIn));
+    else if (o.state === 'signedOut' && officialCore && window.OfficialWriter) right.appendChild(btn('mb-refresh', 'Operator sign-in', operatorSignIn));
+    right.appendChild(btn('mb-refresh', '↻ Refresh', () => loadOfficial(true)));
+  }
+  const sw = mk('span', 'mode-sw'); sw.setAttribute('role', 'group'); sw.setAttribute('aria-label', 'Bracket source');
+  [['official', 'OFFICIAL'], ['picks', 'MY PICKS']].forEach(([m, label]) => {
+    const btn = mk('button', 'mode-btn' + (viewMode === m ? ' on' : ''), label); btn.type = 'button';
+    btn.addEventListener('click', () => chooseMode(m)); sw.appendChild(btn);
+  });
+  right.appendChild(sw); b.appendChild(right);
+}
+
+// Firestore may hand back a snapshot built from the local cache (offline / not yet confirmed by the server). Such a snapshot is
+// NOT authoritative: an empty cache would look like "0 results". Only server-confirmed snapshots are ever applied.
+const isServerSnapshot = snap => !(snap && snap.metadata && snap.metadata.fromCache);
+function applyOfficialDocs(snap) {
+  const docs = []; snap.forEach(d => docs.push(Object.assign({ __id: d.id }, d.data())));
+  const built = window.OfficialStore.build(officialCore, docs);   // only documents with an explicit winnerId are applied; legacy ones are reported, never guessed
+  officialBook = built.book;
+  officialInfo = Object.assign({}, built.info, { state: 'loaded', loadedAt: new Date(), loadedAtMs: Date.now() });
+}
+function officialLoadFailed(err) {
+  console.error('Official results could not be loaded:', err);
+  officialInfo = Object.assign({}, officialInfo, { state: 'error', error: String((err && err.message) || err) });
+  officialChanged();
+}
+// Live updates: one listener (initial load, then only what changed). Started lazily the first time OFFICIAL is shown,
+// so a pick'em visitor never reads officialResults.
+function startOfficialListener() {
+  startAdjustmentsListener();                                            // always try alongside the results listener (its own guard prevents double-subscribing)
+  if (!officialCore || officialUnsub || officialListenerBroken) return;
+  if (officialInfo.state !== 'loaded') { officialInfo = Object.assign({}, officialInfo, { state: 'loading' }); renderModeBanner(); }
+  try {
+    officialUnsub = onSnapshot(collection(db, 'officialResults'),
+      snap => {
+        if (snap.metadata && snap.metadata.hasPendingWrites) return;       // our own not-yet-confirmed write: wait for the server
+        if (!isServerSnapshot(snap)) { if (officialInfo.state !== 'loaded') officialLoadFailed(new Error('offline: no server-confirmed data yet')); return; }
+        applyOfficialDocs(snap); officialChanged();
+      },
+      err => { officialUnsub = null; officialLoadFailed(err); });
+  } catch (err) {                                                          // no live listener available: one-off read (once), no looping
+    officialUnsub = null; officialListenerBroken = true; console.error('Live updates are unavailable:', err);
+    if (officialInfo.state !== 'loaded') loadOfficial(true);
+  }
+}
+async function loadOfficial(force) {
+  if (!officialCore) return;
+  try { if (localStorage.getItem('tcOperatorHint')) initOperatorAuth(); } catch (e) { /* storage unavailable */ }
+  if (!force) { startOfficialListener(); return; }
+  // explicit Refresh: re-read from the server, and make sure the live listener is running
+  officialInfo = Object.assign({}, officialInfo, { state: 'loading' });
+  renderModeBanner();
+  try {
+    const snap = await getDocs(collection(db, 'officialResults'));
+    if (!isServerSnapshot(snap)) throw new Error('offline: no server-confirmed data');
+    applyOfficialDocs(snap);
+  } catch (err) { officialLoadFailed(err); return; }
+  officialChanged();
+  startOfficialListener();
+}
+
+// ── Operator sign-in (Firebase Auth, loaded ONLY when needed so it can never break pick'em or viewing) ──
+function operatorChanged() {
+  renderModeBanner();
+  if (window.TournamentCentral && window.TournamentCentral.onOperatorChanged) window.TournamentCentral.onOperatorChanged();
+}
+function initOperatorAuth() {
+  if (authInit) return authInit;
+  authInit = (async () => {
+    try {
+      const loader = window.__AUTH_SDK_LOADER || (() => import('https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js'));   // loader hook is for tests
+      authApi = await loader(); authObj = authApi.getAuth(_fbApp);
+      authApi.onAuthStateChanged(authObj, refreshOperator);
+      return true;
+    } catch (err) {
+      console.error('Operator sign-in is unavailable:', err);
+      authApi = null; authInit = null; operator = { state: 'unavailable', email: null }; operatorChanged(); return false;
+    }
+  })();
+  return authInit;
+}
+// An operator = a signed-in, e-mail-verified Google account that has a document at operators/<lower-case e-mail>.
+// (Purely for the UI; the security rules re-check this on the server for every write.)
+async function refreshOperator(user) {
+  if (!user) {
+    if (operator.state === 'error' && !operator.email) return;        // keep a failed sign-in visible (Firebase's initial "no user yet" callback must not erase it)
+    operator = { state: 'signedOut', email: null }; operatorChanged(); return;
+  }
+  const email = String(user.email || '').toLowerCase();
+  operator = { state: 'checking', email }; operatorChanged();
+  try {
+    let ok = false;
+    if (user.emailVerified) ok = (await getDoc(doc(db, 'operators', email))).exists();
+    operator = { state: ok ? 'operator' : 'notOperator', email };
+    try { if (ok) localStorage.setItem('tcOperatorHint', '1'); } catch (e) { /* ignore */ }
+  } catch (err) { operator = { state: 'error', email, error: String((err && err.message) || err) }; }
+  operatorChanged();
+}
+async function operatorSignIn() {
+  if (!(await initOperatorAuth())) return;
+  const provider = new authApi.GoogleAuthProvider();
+  try { await authApi.signInWithPopup(authObj, provider); }
+  catch (err) {
+    const code = err && err.code;
+    if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return;         // the person changed their mind
+    if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {   // some phone browsers: use the redirect flow
+      try { await authApi.signInWithRedirect(authObj, provider); return; } catch (e2) { /* fall through */ }
+    }
+    console.error('Sign-in failed:', err); operator = { state: 'error', email: null, error: String((err && err.message) || err) }; operatorChanged();
+  }
+}
+async function operatorSignOut() {
+  try { localStorage.removeItem('tcOperatorHint'); } catch (e) { /* ignore */ }
+  if (authApi && authObj) { try { await authApi.signOut(authObj); } catch (err) { console.error('Sign-out failed:', err); } }
+}
+
+// A refused save is diagnosed with READ-ONLY probes, so the message is truthful and the facts can be reported.
+// (Only a result that really carries a winnerId counts as "already has a result"; an older slot-based record is replaceable.)
+async function explainDenial(built, err) {
+  const id = built.record.boutId, docId = built.docId, facts = { existing: 'unknown', operatorEntry: 'unknown' };
+  try { const s = await getDoc(doc(db, 'officialResults', docId)); const d = s.exists() ? s.data() : null;
+        facts.existing = !d ? 'none' : (typeof d.winnerId === 'string' && d.winnerId.trim() ? 'result' : 'older-record'); } catch (e) { /* probe failed */ }
+  try { facts.operatorEntry = (await getDoc(doc(db, 'operators', operator.email))).exists() ? 'present' : 'MISSING'; } catch (e) { /* probe failed */ }
+  console.error('Firestore refused an operator save', { docId, signedInAs: operator.email, existing: facts.existing, operatorEntry: facts.operatorEntry }, err);
+  const diagnostics = 'Diagnostics — document ' + docId + ': ' + ({ none: 'no document', 'older-record': 'older record', result: 'has a result', unknown: 'unknown' })[facts.existing] + ' · operator entry: ' + facts.operatorEntry + ' · signed in as ' + operator.email;
+  const base = { ok: false, diagnostics };
+  if (facts.existing === 'result') return Object.assign(base, { code: 'conflict', message: 'Bout ' + id + ' already has a result (recorded on another device). Nothing was overwritten. Press Refresh and check.' });
+  if (facts.operatorEntry === 'MISSING') return Object.assign(base, { code: 'access_changed', message: 'The server refused this save because your operator entry (operators/' + operator.email + ') is no longer present. Ask an administrator.' });
+  return Object.assign(base, { code: 'denied', message: 'The server refused this save although bout ' + id + (facts.existing === 'older-record' ? ' only has an older record' : ' has no result') + ' and your operator entry is present, so this is not a conflict: the Firestore rules are refusing a write that should be allowed. Nothing was saved. Please send the Diagnostics line.' });
+}
+
+// ── RECORD one official result. The ONLY write path in the app for official results. ──
+// The result is validated on a CLONE of the official book, written as ONE atomic batch (result document + audit-log entry),
+// and the live book is updated only after the server confirms. A failed save leaves everything exactly as it was.
+async function recordOfficial(req) {
+  const fail = (code, message, extra) => Object.assign({ ok: false, code, message }, extra);
+  if (!officialCore || !window.OfficialWriter) return fail('unavailable', 'Recording is not available in this session.');
+  if (operator.state !== 'operator') return fail('not_operator', 'Sign in as an authorized operator to record results.');
+  if (officialInfo.state !== 'loaded') return fail('not_loaded', 'The official results are not up to date (no live connection). Press Refresh before recording.');
+  if (recordSaving) return fail('busy', 'Another result is still saving. Please wait.');
+  const built = window.OfficialWriter.buildRecordWrite(officialCore, officialBook, req, { email: operator.email, stamp: serverTimestamp() });
+  if (!built.ok) return built;
+  recordSaving = true;
+  try {
+    const batch = writeBatch(db);
+    batch.set(doc(db, 'officialResults', built.docId), built.resultDoc);
+    batch.set(doc(collection(db, 'officialLog')), built.logDoc);
+    await batch.commit();                                                     // resolves only when the SERVER has accepted both documents
+  } catch (err) {
+    recordSaving = false;
+    const c = err && err.code;
+    if (c === 'permission-denied') return explainDenial(built, err);
+    if (c === 'unavailable' || c === 'deadline-exceeded' || c === 'failed-precondition') return fail('network', 'Could not reach the server, so nothing was saved. Check the connection and try again.');
+    console.error('Recording failed:', err);
+    return fail('error', 'Nothing was saved. ' + String((err && err.message) || err));
+  }
+  recordSaving = false;
+  try { officialCore.record(officialBook, { boutId: built.record.boutId, winnerId: built.record.winnerId, resultType: built.record.resultType, score: built.record.score, time: built.record.time, recordedBy: operator.email, source: 'central' }); } catch (e) { /* the live listener will deliver it */ }
+  officialInfo = Object.assign({}, officialInfo, { applied: officialBook.decisions.size });
+  officialChanged();
+  return { ok: true, record: built.record, docId: built.docId, warnings: built.warnings };
+}
+
+// ── CORRECT or CLEAR one official result (Phase 3D). ONE Firestore transaction: every involved document is read fresh from the
+// server, each is verified to be EXACTLY what the operator was shown, and only then are the affected documents replaced/deleted and the
+// audit entry written — all or nothing. Anything else on the server (another operator's newer result) aborts the whole change.
+async function changeOfficial(action, req) {
+  const fail = (code, message, extra) => Object.assign({ ok: false, code, message }, extra);
+  if (!officialCore || !window.OfficialWriter || !window.OfficialWriter.planChange) return fail('unavailable', 'Changing results is not available in this session.');
+  if (operator.state !== 'operator') return fail('not_operator', 'Sign in as an authorized operator to change results.');
+  if (officialInfo.state !== 'loaded') return fail('not_loaded', 'The official results are not up to date (no live connection). Press Refresh before changing anything.');
+  if (recordSaving) return fail('busy', 'Another save is still in progress. Please wait.');
+  const plan = window.OfficialWriter.planChange(officialCore, officialBook, Object.assign({}, req, { action }), { email: operator.email, stamp: serverTimestamp() });
+  if (!plan.ok) return plan;
+  recordSaving = true;
+  try {
+    await runTransaction(db, async tx => {
+      const snaps = {};
+      for (const id of plan.readIds) snaps[id] = await tx.get(doc(db, 'officialResults', id));            // all reads first
+      for (const id of plan.readIds) {                                                                      // verify against what the operator was shown
+        const exp = plan.expected[id], s = snaps[id], d = s.exists() ? s.data() : null;
+        const modern = !!d && typeof d.winnerId === 'string' && d.winnerId.trim() !== '';
+        const same = exp.kind === 'modern' ? (modern && d.revision === exp.revision && d.winnerId === exp.winnerId) : !modern;
+        if (!same) { const e = new Error('stale'); e.code = 'tc/stale'; e.docId = id; throw e; }
+      }
+      plan.ops.forEach(op => { const ref = doc(db, 'officialResults', op.docId); if (op.type === 'delete') tx.delete(ref); else tx.set(ref, op.data); });
+      tx.set(doc(collection(db, 'officialLog')), plan.logDoc);
+    });
+  } catch (err) { recordSaving = false; return explainChangeFailure(plan, err); }
+  recordSaving = false;
+  try {
+    if (action === 'clear') officialCore.clear(officialBook, req.boutId, { cascade: true });
+    else officialCore.correct(officialBook, req.boutId, { winnerId: req.winnerId, resultType: req.resultType, score: req.score, time: req.time, recordedBy: operator.email, source: 'central', cascade: true });
+  } catch (e) { /* the live listener delivers it */ }
+  officialInfo = Object.assign({}, officialInfo, { applied: officialBook.decisions.size });
+  officialChanged();
+  const down = plan.preview.downstream.length;
+  return { ok: true, action, boutId: req.boutId, weight: plan.weight, downstream: down, cleared: (action === 'clear' ? 1 : 0) + down, detailsOnly: plan.preview.detailsOnly };
+}
+async function explainChangeFailure(plan, err) {
+  const c = err && err.code, fail = (code, message, extra) => Object.assign({ ok: false, code, message }, extra);
+  if (c === 'tc/stale' || c === 'aborted') {
+    loadOfficial(true);                                                                                     // show what actually changed
+    return fail('stale', 'This result (or a later one) was changed on another device after you opened it. NOTHING was changed. The screen has been refreshed: review the current state and try again.', { diagnostics: 'Changed document: ' + ((err && err.docId) || plan.docId) });
+  }
+  if (c === 'permission-denied') {
+    let entry = 'unknown'; try { entry = (await getDoc(doc(db, 'operators', operator.email))).exists() ? 'present' : 'MISSING'; } catch (e) { /* probe failed */ }
+    console.error('Firestore refused an operator change', { docId: plan.docId, action: plan.action, documents: plan.ops.length, operatorEntry: entry }, err);
+    const diagnostics = 'Diagnostics — ' + plan.action + ' of ' + plan.docId + ' (' + plan.ops.length + ' document' + (plan.ops.length === 1 ? '' : 's') + ' + audit entry) · operator entry: ' + entry + ' · signed in as ' + operator.email;
+    if (entry === 'MISSING') return fail('access_changed', 'The server refused this change because your operator entry (operators/' + operator.email + ') is no longer present. NOTHING was changed.', { diagnostics });
+    return fail('denied', 'The server refused this change, so NOTHING was changed. Most likely the published Firestore rules are older than this version (they must include the Phase 3D rules) or an audit-log rule is refusing. Please send the Diagnostics line.', { diagnostics });
+  }
+  if (c === 'unavailable' || c === 'deadline-exceeded' || c === 'failed-precondition') return fail('network', 'Could not reach the server, so NOTHING was changed. Check the connection and try again.');
+  console.error('Change failed:', err); return fail('error', 'NOTHING was changed. ' + String((err && err.message) || err));
+}
+
+function officialChanged() {
+  renderModeBanner();
+  if (window.PathPanel && window.PathPanel.isOpen()) window.PathPanel.refresh();      // an open path follows the live results
+  if (window.TeamPanel && window.TeamPanel.isOpen()) window.TeamPanel.refresh();        // an open team detail follows the live results
+  if (viewMode !== 'official') return;
+  if (showCentral) { if (window.TournamentCentral && window.TournamentCentral.onOfficialChanged) window.TournamentCentral.onOfficialChanged(); }
+  else if (showOfficialScores) renderOfficialScores();
+  else if (showOfficialAA) renderOfficialAA();
+  else if (!showScores && !showAA && !showLeaderboard && document.getElementById('area').style.display !== 'none') render();
+}
+function initOfficial() {
+  try {
+    if (!window.TournamentCore || !window.OfficialStore || !window.BoutModel) { officialInfo = { state: 'disabled', reason: 'official modules not loaded' }; return; }
+    const adapter = {
+      weights: WLIST.slice(),
+      boutNumbers: window.BoutModel.boutNumbers,
+      // a pristine bracket state that never disturbs the picks store (synchronous save / restore around initBracket)
+      newState: function (wt) { const had = states[wt]; initBracket(wt); const st = states[wt]; if (had) states[wt] = had; else delete states[wt]; return st; },
+      applyPick: applyPick,
+      roundNames: { champ: CHAMP_RND_NAMES, con: CON_RND_NAMES }
+    };
+    const core = window.TournamentCore.create(adapter);
+    const sc = core.selfCheck();
+    if (!sc.ok) { console.error('Official store disabled: core self-check failed', sc.problems); officialInfo = { state: 'disabled', reason: 'self-check failed', problems: sc.problems }; return; }
+    officialCore = core; officialBook = core.newBook(); officialInfo = { state: 'idle' };
+  } catch (err) {
+    console.error('Official store could not start:', err);
+    officialCore = null; officialBook = null; officialInfo = { state: 'disabled', reason: String((err && err.message) || err) };
+  }
+}
+
+function hideCentral() {
+  showCentral=false;
+  const v=document.getElementById('tc-view'); if (v) v.classList.remove('active');
+  document.body.classList.remove('tc-active');
+}
 function hideMainPanels() {
+  hideCentral();
+  showOfficialScores=false;
+  const osv=document.getElementById('off-scores-view'); if (osv) osv.classList.remove('active');
+  showOfficialAA=false;
+  const oaa=document.getElementById('off-aa-view'); if (oaa) oaa.classList.remove('active');
   document.getElementById('area').style.display='none';
   document.getElementById('scores-view').classList.remove('active');
   document.getElementById('aa-view').classList.remove('active');
@@ -2018,18 +2386,31 @@ function switchW(w) {
 }
 function switchScores() {
   showScores=true; showAA=false; showLeaderboard=false;
+  setViewMode('picks');                    // Team Scores are computed from MY PICKS
   hideMainPanels();
   document.getElementById('scores-view').classList.add('active');
   renderWeightTabs(); renderScores();
 }
 function switchAA() {
   showAA=true; showScores=false; showLeaderboard=false;
+  setViewMode('picks');                    // All-Americans are computed from MY PICKS
   hideMainPanels();
   document.getElementById('aa-view').classList.add('active');
   renderWeightTabs(); renderAllAmericans();
 }
+function switchCentral() {
+  showScores=false; showAA=false; showLeaderboard=false;
+  setViewMode('official');                 // Tournament Central always reads the OFFICIAL store
+  hideMainPanels();                       // also clears showCentral / hides #tc-view
+  showCentral=true;
+  document.getElementById('tc-view').classList.add('active');
+  document.body.classList.add('tc-active');
+  renderWeightTabs();
+  if (window.TournamentCentral && window.TournamentCentral.onShow) window.TournamentCentral.onShow();
+}
 function openLeaderboard() {
   showLeaderboard=true; showScores=false; showAA=false;
+  setViewMode('picks');                    // the pick'em leaderboard is about MY PICKS
   hideMainPanels();
   document.getElementById('leaderboard-view').style.display='flex';
   renderWeightTabs();
@@ -2051,8 +2432,8 @@ function slotHTML(m, which, bkt, ri, mi) {
   const isLos=m.w&&m.w!==which;
   const hasOther=!!m[other];
   if (!wr) return `<div class="sl empty"><span class="sl-tbd">TBD</span></div>`;
-  const canPick=!m.w&&wr&&hasOther;
-  const canSwap=isLos;
+  const canPick=!m.w&&wr&&hasOther&&viewMode==='picks';   // OFFICIAL brackets are read-only in 3B
+  const canSwap=isLos&&viewMode==='picks';
   const cls=`sl ${isWin?'w':''} ${isLos?'l':''}`.trim();
   const nameParts=wr.n.split(' ');
   const fn=nameParts[0];
@@ -2062,7 +2443,8 @@ function slotHTML(m, which, bkt, ri, mi) {
   if(canPick){onclick=`onclick="pick(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Advance ${wr.n}"`;}
   else if(canSwap){onclick=`onclick="swap(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Switch winner to ${wr.n}"`;}
   const swapHint=canSwap?`<span class="swap-hint">↺ change</span>`:'';
-  return `<div class="${cls}" ${onclick} ${title}>
+  const pathAttrs=(viewMode==='official'&&window.TournamentCore)?` data-wid="${window.TournamentCore.wrestlerId(CW,wr)}" role="button" tabindex="0" aria-label="Path to the Finals: ${String(wr.n).trim().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"`:'';
+  return `<div class="${cls}" ${onclick} ${title}${pathAttrs}>
     <span class="sl-sd">${seedStr}</span>
     <span class="sl-nm"><span class="fn">${fn}</span> <strong>${ln||fn}</strong></span>
     <span class="sl-sc">${wr.s||''}</span>
@@ -2145,7 +2527,7 @@ function champBox(st) {
 }
 
 function render() {
-  const st=getS(CW);
+  const st=viewState(CW);
   const MH=68, GAP=6;
   let html=`<div class="sec-hd sec-champ"><div class="line"></div><div class="lbl">Championship Bracket</div><div class="line"></div></div>`;
   html+=`<div class="bgrid">`;
@@ -2219,7 +2601,7 @@ function renderScores() {
   });
   const body=document.getElementById('lb-body');
   if(!top15.length){
-    body.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">No results yet — advance wrestlers in the bracket to see team scores</td></tr>`;
+    body.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;font-size:12px;color:var(--t3);font-style:italic">No picks yet — advance wrestlers in your bracket to see your projected team scores</td></tr>`;
     document.getElementById('scores-note').textContent='';
     return;
   }
@@ -2239,10 +2621,246 @@ function renderScores() {
       <td class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:${barPct}%"></div></div></td>
     </tr>`;
   }).join('');
-  document.getElementById('scores-note').textContent=`${matchCount} match${matchCount===1?'':'es'} decided across ${WLIST.filter(w=>states[w]).length} weight class${WLIST.filter(w=>states[w]).length===1?'':'es'} · Scores update live as you advance wrestlers`;
+  document.getElementById('scores-note').textContent=`${matchCount} match${matchCount===1?'':'es'} picked across ${WLIST.filter(w=>states[w]).length} weight class${WLIST.filter(w=>states[w]).length===1?'':'es'} · Projected from your picks — not actual results`;
 }
 
 function fmt(n){return n%1===0?n.toString():n.toFixed(1);}
+
+// ══════ OFFICIAL TEAM SCORES ══════
+// Reads ONLY the OFFICIAL book, through the pure model in official-scoring.js (the Phase 6b OG scoring model: normal advancement,
+// bonus, and placement points credited the moment a finish is CLINCHED). MY PICKS scoring above is untouched.
+// Nothing in this section writes anything anywhere: it recomputes from officialBook on every render, so Correct / Clear and
+// live updates from other devices are reflected immediately, with nothing cached.
+let officialScoresShowAll = false;
+function schoolOfId(id) { const p = String(id).split('-'), f = FIELDS[Number(p[0])], w = f && f[Number(p[1]) - 1]; return w ? String(w.s).trim() : ''; }
+function bonusOfResult(code) { const ts = (window.TournamentCore && window.TournamentCore.RESULT_TYPES) || [], t = ts.find(x => x.code === code); return t ? t.bonus : undefined; }
+function officialScoresModel() {
+  if (!officialCore || !officialBook || !window.OfficialScoring) return null;
+  return window.OfficialScoring.compute(officialCore.toRecords(officialBook), { bonusOf: bonusOfResult, schoolOf: schoolOfId, adjustments: officialAdjustments || undefined });
+}
+function switchOfficialScores() {
+  hideMainPanels();
+  showScores = false; showAA = false; showLeaderboard = false; showOfficialScores = true;
+  setViewMode('official');                 // OFFICIAL Team Scores always read the OFFICIAL store
+  const v = document.getElementById('off-scores-view'); if (v) v.classList.add('active');
+  renderWeightTabs(); renderOfficialScores();
+}
+function renderOfficialScores() {
+  const v = document.getElementById('off-scores-view'); if (!v) return;
+  const $ = id => document.getElementById(id);
+  const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const clear = el => { while (el.firstChild) el.removeChild(el.firstChild); };
+  const st = $('os-status'), tb = $('os-body'), more = $('os-more'), notes = $('os-notes'), wrap = $('os-table-wrap'), key = $('os-key');
+  [st, tb, notes, key].forEach(clear); more.hidden = true; wrap.hidden = true;
+  const S = officialViewStatus({ upper: 'SCORES', lower: 'scores', moduleOk: !!window.OfficialScoring, unavailable: 'OFFICIAL scoring is not available in this session.', failed: 'OFFICIAL scores could not be calculated.', calc: officialScoresModel,
+    live: (r, t, inf) => '● LIVE · ' + r.stats.records + ' official result' + (r.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(inf.loadedAt) });
+  const i = officialInfo, res = S.res;
+  st.className = 'os-status os-status--' + S.mode; st.textContent = S.text; v.setAttribute('data-os-state', S.mode);
+  if (!res) return;
+
+  if (i.legacyIgnored > 0) notes.appendChild(mk('div', 'os-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? ' is' : 's are') + ' not included in OFFICIAL scores.'));
+  const bad = (res.problems ? res.problems.length : 0) + ((i.problems && i.problems.length) || 0);
+  if (bad) notes.appendChild(mk('div', 'os-note os-note--warn', bad + ' record' + (bad === 1 ? '' : 's') + ' could not be scored.'));
+  if (!res.teams.length) { notes.appendChild(mk('div', 'os-empty', 'No official results yet — scores appear as soon as the first result is recorded.')); }
+  else {
+    const OS = window.OfficialScoring, shown = officialScoresShowAll ? res.teams : OS.topRows(res.teams, 15);
+    wrap.hidden = false;
+    shown.forEach(tm => {
+      const tr = mk('tr', 'os-row' + (tm.rank <= 3 ? ' os-rank-' + tm.rank : ''));
+      const hasAdj = 'adj' in tm && tm.adj !== 0;                       // blank for "no adjustment entered"; the value only for a nonzero one
+      [['os-rank', tm.rankLabel], ['os-team', tm.school, true], ['os-total', fmt(tm.total)], ['os-adv', fmt(tm.adv)], ['os-bonus', fmt(tm.bonus)], ['os-place', fmt(tm.place)], ['os-adj' + (hasAdj ? '' : ' os-adj-blank'), hasAdj ? fmt(tm.adj) : ''], ['os-aa', String(tm.aa)]]
+        .forEach(([c, x, clickable]) => {
+          const td = mk('td', c, clickable ? '' : x);
+          if (clickable) { const b = mk('button', 'os-team-btn', x); b.type = 'button'; b.setAttribute('data-team', x); td.appendChild(b); }
+          else if (hasAdj && c.startsWith('os-adj')) td.title = tm.adjReason || '';
+          tr.appendChild(td);
+        });
+      tb.appendChild(tr);
+    });
+    if (res.teams.length > shown.length) { more.hidden = false; more.textContent = 'Show all ' + res.teams.length + ' teams'; }
+    else if (officialScoresShowAll && res.teams.length > 15) { more.hidden = false; more.textContent = 'Show top 15'; }
+    more.onclick = () => { officialScoresShowAll = !officialScoresShowAll; renderOfficialScores(); };
+  }
+  // the key is generated from the model's own tables, so it can never drift from the scoring
+  const OS2 = window.OfficialScoring, names = { QF: 'Quarterfinal win', SF: 'Semifinal win', Final: 'Final win', BloodRound: 'Blood-round win', ConsQF: 'Con. quarterfinal win', ConsSF: 'Con. semifinal win', '3rd': '3rd-place win', '5th': '5th-place win', '7th': '7th-place win' };
+  key.appendChild(mk('div', 'os-key-hdr', 'How OFFICIAL scores work'));
+  key.appendChild(mk('div', 'os-key-line', 'Adv: 1 per championship win, ½ per consolation win. Bonus: Major Decision 1 · Tech Fall 1.5 · Fall / Forfeit / DQ 2.'));
+  key.appendChild(mk('div', 'os-key-line', 'Place: counted the moment a finish is CLINCHED, not when the placement bout is wrestled. The Final adds only the step from 2nd to 1st.'));
+  Object.keys(OS2.SCHEDULE).forEach(r => { const s = OS2.SCHEDULE[r]; const row = mk('div', 'os-key-row'); row.appendChild(mk('span', 'os-key-lbl', names[r] || r)); row.appendChild(mk('span', 'os-key-val', 'clinches ' + OS2.label(s[1]) + ' = ' + (OS2.PLACE_POINTS[s[1]] || 0))); key.appendChild(row); });
+  key.appendChild(mk('div', 'os-key-line', 'AA: wrestlers who have clinched All-American (top 8).'));
+  key.appendChild(mk('div', 'os-key-line', 'Adj: a manually recorded team-point adjustment (e.g. a deduction). Blank means none was entered; hover a value for the reason. Click a team name for its roster.'));
+}
+window.addEventListener('offline', () => { if (showOfficialScores) renderOfficialScores(); });
+window.addEventListener('online', () => { if (showOfficialScores) { renderOfficialScores(); if (officialCore) loadOfficial(true); } });     // read-only refresh
+
+// ══════ ONE-TIME IMPORT OF THE WORKBOOK RESULTS (Import phase) ══════
+// Operator-only. official-import.js only ORCHESTRATES: every result document and audit-log entry is built by official-writer.js (the same
+// builders Record / Correct use) and every tournament rule comes from tournament-core.js. The only write in this section is one
+// atomic batch of at most 16 writes (importCommitBatch); results are written in ascending bout order so any stop leaves a valid state.
+let importState = { docs: null, sig: '', backedUp: false, busy: false };
+function importAvailable() { return !!(officialCore && operator.state === 'operator' && window.OfficialImport && window.OfficialImportData && window.OfficialWriter && window.OfficialStore); }
+function importPlain(v) {                                                   // Firestore Timestamps -> ISO text, so the backup file is readable
+  if (v && typeof v.toDate === 'function') { try { return v.toDate().toISOString(); } catch (e) { return String(v); } }
+  if (Array.isArray(v)) return v.map(importPlain);
+  if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach(k => { o[k] = importPlain(v[k]); }); return o; }
+  return v;
+}
+function importSig(docs) { return docs.map(d => d.id + ':' + (d.data.revision || '') + ':' + (d.data.winnerId || d.data.winnerName || '')).sort().join('|'); }
+async function importReadServerDocs() {
+  const snap = await getDocs(collection(db, 'officialResults'));
+  if (!isServerSnapshot(snap)) throw new Error('offline: no server-confirmed data');
+  const out = []; snap.forEach(d => out.push({ id: d.id, data: d.data() })); return out;
+}
+async function importCommitBatch(ops) {
+  const batch = writeBatch(db);
+  ops.forEach(op => { if (op.kind === 'result') batch.set(doc(db, 'officialResults', op.docId), op.data); else batch.set(doc(collection(db, 'officialLog')), op.data); });
+  await batch.commit();                                                     // resolves only when the SERVER has accepted every write in the batch
+}
+function importInput(extra) {
+  const D = window.OfficialImportData;
+  return Object.assign({
+    decisions: D.decisions, expected: D.expected,
+    nameOf: id => { const p = String(id).split('-'), f = FIELDS[Number(p[0])], w = f && f[Number(p[1]) - 1]; return w ? String(w.n).trim() : ''; },
+    schoolOf: schoolOfId, bonusOf: bonusOfResult, email: operator.email,
+    stamp: () => serverTimestamp(), commitBatch: importCommitBatch, readServerDocs: importReadServerDocs
+  }, extra);
+}
+function importEngine() { return window.OfficialImport.create({ core: officialCore, store: window.OfficialStore, writer: window.OfficialWriter, scoring: window.OfficialScoring }); }
+async function importAnalyze() {                                            // read-only
+  if (!importAvailable()) return { ok: false, code: 'unavailable', message: 'The import is not available (sign in as an operator and upload official-import-data.js).' };
+  try {
+    const docs = await importReadServerDocs(); importState.docs = docs; importState.sig = importSig(docs); importState.backedUp = false;
+    const p = importEngine().analyze(importInput({ docs }));
+    return { ok: true, summary: p.summary, blocking: p.blocking, needsAck: p.needsAck, problems: p.problems.slice(0, 10), disagreements: p.disagreements.slice(0, 100), extras: p.extras.slice(0, 20), source: window.OfficialImportData.source, fingerprint: window.OfficialImportData.fingerprint };
+  } catch (err) { return { ok: false, code: 'read_failed', message: 'Could not read the stored results: ' + String((err && err.message) || err) }; }
+}
+function importBackup() {                                                   // the results exactly as they are right now, as a file
+  if (!importState.docs) return { ok: false, code: 'no_check', message: 'Run the check first.' };
+  const now = new Date().toISOString();
+  const text = JSON.stringify({ kind: 'officialResults-backup', takenAt: now, by: operator.email, count: importState.docs.length, docs: importState.docs.map(d => ({ id: d.id, data: importPlain(d.data) })) }, null, 1);
+  importState.backedUp = true;
+  return { ok: true, filename: 'officialResults-backup-' + now.slice(0, 19).replace(/[:T]/g, '-') + '.json', text: text, count: importState.docs.length };
+}
+async function importRun(ack, onProgress) {
+  if (!importAvailable()) return { ok: false, code: 'unavailable', message: 'The import is not available right now.' };
+  if (importState.busy) return { ok: false, code: 'busy', message: 'An import is already running.' };
+  if (!importState.docs) return { ok: false, code: 'no_check', message: 'Run the check first.' };
+  importState.busy = true;
+  try {
+    const docs = await importReadServerDocs();
+    if (importSig(docs) !== importState.sig) return { ok: false, code: 'changed', message: 'The stored results changed since the check. Run the check again (and download a new backup).' };
+    const r = await importEngine().run(importInput({ docs, ack: { backup: importState.backedUp, disagreements: !!(ack && ack.disagreements) }, onProgress: onProgress }));
+    importState.docs = null; importState.backedUp = false;                 // a further import needs a fresh check and backup
+    try { await loadOfficial(true); } catch (e) { /* the page refreshes on the next snapshot */ }
+    return { ok: r.ok, code: r.code, message: r.message, written: r.written, total: r.total, batches: r.batches, error: r.error, errorCode: r.errorCode, verify: r.verify, summary: r.plan && r.plan.summary };
+  } catch (err) { return { ok: false, code: 'error', message: String((err && err.message) || err) }; }
+  finally { importState.busy = false; }
+}
+
+// ══════ OFFICIAL TEAM ADJUSTMENTS ══════
+// Read-only sync of officialAdjustments (tiny collection; a simple listener is enough, no offline/backoff machinery like the
+// results listener needs). Applied ONLY as official-scoring.js's optional `adjustments` argument — the bout-scoring engine
+// itself never reads this collection, so a broken or missing adjustment can never affect Adv / Bonus / Place / AA.
+let officialAdjustments = null, officialAdjustmentsInfo = { applied: 0, invalid: [] }, officialAdjustmentsUnsub = null;
+function startAdjustmentsListener() {
+  if (!window.OfficialAdjustmentsStore || officialAdjustmentsUnsub) return;
+  try {
+    officialAdjustmentsUnsub = onSnapshot(collection(db, 'officialAdjustments'),
+      snap => { if (snap.metadata && snap.metadata.hasPendingWrites) return;
+        const docs = []; snap.forEach(d => docs.push(Object.assign({ __id: d.id }, d.data())));
+        const built = window.OfficialAdjustmentsStore.build(docs); officialAdjustments = built.adjustments; officialAdjustmentsInfo = built.info;
+        officialChanged(); },
+      err => { officialAdjustmentsUnsub = null; console.error('Team adjustments are unavailable:', err); });
+  } catch (err) { officialAdjustmentsUnsub = null; console.error('Team adjustments are unavailable:', err); }
+}
+function adjustmentsEngine() { return window.OfficialAdjustments || null; }
+async function saveAdjustment(school, points, reason) {
+  if (operator.state !== 'operator' || !adjustmentsEngine()) return { ok: false, code: 'not_operator', message: 'Sign in as an operator first.' };
+  const engine = adjustmentsEngine(), existing = officialAdjustments && officialAdjustments[school] || null;
+  const plan = engine.planSet({ school, points, reason }, existing, { email: operator.email, stamp: () => serverTimestamp() });
+  if (!plan.ok) return plan;
+  try {
+    const batch = writeBatch(db);                                   // one atomic write: the adjustment doc + its audit-log entry, or neither
+    batch.set(doc(db, 'officialAdjustments', plan.docId), plan.data);
+    batch.set(doc(collection(db, 'officialAdjustmentLog')), plan.logDoc);
+    await batch.commit();
+    return { ok: true };
+  } catch (err) { return { ok: false, code: err.code || 'error', message: 'Firestore refused the write: ' + String((err && err.message) || err) }; }
+}
+async function clearAdjustment(school) {
+  if (operator.state !== 'operator' || !adjustmentsEngine()) return { ok: false, code: 'not_operator', message: 'Sign in as an operator first.' };
+  const existing = officialAdjustments && officialAdjustments[school] || null;
+  const plan = adjustmentsEngine().planClear(school, existing, { email: operator.email, stamp: () => serverTimestamp() });
+  if (!plan.ok) return plan;
+  try {
+    const batch = writeBatch(db);
+    batch.delete(doc(db, 'officialAdjustments', plan.docId));
+    batch.set(doc(collection(db, 'officialAdjustmentLog')), plan.logDoc);
+    await batch.commit();
+    return { ok: true };
+  } catch (err) { return { ok: false, code: err.code || 'error', message: 'Firestore refused the write: ' + String((err && err.message) || err) }; }
+}
+// ══════ TEAM DETAIL (click a team name on OFFICIAL Scores / All-Americans) ══════
+// Pure read: every wrestler in the field whose school matches, with his path outcome and team points earned (via official-path.js
+// and official-scoring.js's event list — no new routing or scoring logic here). Writes nothing.
+function teamRoster(school) {
+  if (!officialCore || !officialBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Team detail is not available in this session.' };
+  let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }
+  const opts = sc ? { events: sc.events, floors: sc.floors } : {};
+  const ids = []; WLIST.forEach(w => { const f = FIELDS[w]; if (!f) return; f.forEach((entry, i) => { if (entry && String(entry.s).trim() === school) ids.push(w + '-' + String(i + 1).padStart(2, '0')); }); });
+  const wrestlers = ids.map(id => window.OfficialPath.compute(officialCore, officialBook, id, opts)).filter(p => p.ok);
+  const teamRow = sc ? sc.teams.find(t => t.school === school) : null;
+  wrestlers.sort((a, b) => a.wrestler.weight - b.wrestler.weight || a.wrestler.seed - b.wrestler.seed);
+  return { ok: true, school: school, wrestlers: wrestlers, team: teamRow || null };
+}
+
+// ══════ SHARED LIVE / OFFLINE STATUS for the OFFICIAL views (Scores, All-Americans) ══════
+// One place for the rules: LIVE only when the last server-confirmed load is in hand and nothing has failed; OFFLINE keeps the last known data and
+// shows "last refreshed" (the device time of the last server-confirmed snapshot, only if one exists); never-loaded + offline shows no time.
+function officialViewStatus(c) {
+  const i = officialInfo, online = !(typeof navigator !== 'undefined' && navigator.onLine === false);
+  const t = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const hasData = !!(officialCore && officialBook && i.loadedAt);          // loadedAt is only ever set when a SERVER-confirmed snapshot was applied
+  let mode, text, res = null;
+  if (!officialCore || !c.moduleOk || i.state === 'disabled') { mode = 'unavailable'; text = c.unavailable; }
+  else if (!hasData) {
+    if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · OFFICIAL ' + c.upper + ' UNAVAILABLE — no official results have been loaded on this device yet.'; }
+    else { mode = 'loading'; text = 'Loading official results…'; }
+  } else {
+    try { res = c.calc(); } catch (e) { console.error('Official ' + c.lower + ' could not be calculated:', e); res = null; }
+    if (!res) { mode = 'unavailable'; text = c.failed; }
+    else if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · LAST KNOWN OFFICIAL ' + c.upper + ' · last refreshed ' + t(i.loadedAt); }
+    else if (i.state === 'loading') { mode = 'loading'; text = 'Refreshing… showing last known official ' + c.lower + ' · last refreshed ' + t(i.loadedAt); }
+    else { mode = 'live'; text = c.live(res, t, i); }
+  }
+  return { mode: mode, text: text, res: res };
+}
+// ══════ OFFICIAL ALL-AMERICANS ══════
+// Read-only. official-aa.js decides who has CLINCHED top 8 (scoring floors) and whose place is final (Path model); official-aa-view.js draws it.
+function switchOfficialAA() {
+  hideMainPanels();
+  showScores = false; showAA = false; showLeaderboard = false; showOfficialAA = true;
+  setViewMode('official');                 // OFFICIAL All-Americans always read the OFFICIAL store
+  const v = document.getElementById('off-aa-view'); if (v) v.classList.add('active');
+  renderWeightTabs(); renderOfficialAA();
+}
+function renderOfficialAA() { if (window.OfficialAAView) window.OfficialAAView.render(); }
+function aaFor() {
+  const S = officialViewStatus({ upper: 'ALL-AMERICANS', lower: 'All-Americans', moduleOk: !!(window.OfficialAA && window.OfficialPath && window.OfficialScoring),
+    unavailable: 'OFFICIAL All-Americans are not available in this session.', failed: 'OFFICIAL All-Americans could not be calculated.',
+    calc: () => { const sc = officialScoresModel(); return sc ? window.OfficialAA.compute(officialCore, officialBook, { weights: WLIST.slice(), floors: sc.floors, path: window.OfficialPath }) : null; },
+    live: (r, t, inf) => '● LIVE · ' + r.totals.clinched + ' of ' + r.totals.of + ' All-Americans clinched · last refreshed ' + t(inf.loadedAt) });
+  return { mode: S.mode, text: S.text, model: S.res };
+}
+
+// ══════ PATH TO THE FINALS ══════
+// Read-only. official-path.js walks the OFFICIAL book along the core's own routes (no routing logic of its own); this only hands it the
+// book plus the scoring model's events / floors (optional extras: team points and the All-American badge). Nothing here writes anything.
+function pathFor(wrestlerId) {
+  if (!officialCore || !officialBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available in this session.' };
+  let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }
+  return window.OfficialPath.compute(officialCore, officialBook, wrestlerId, sc ? { events: sc.events, floors: sc.floors } : {});
+}
 
 // ══════ INIT ══════
 renderWeightTabs();
@@ -2254,7 +2872,7 @@ render();
 
 // Firebase SDK (ESM via CDN)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs, query, where, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs, query, where, orderBy, writeBatch, serverTimestamp, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const _fbApp = initializeApp({
   apiKey           : "AIzaSyCPcMkc3z6OZeHgUDLk32iRJHkxP9cQGhc",
@@ -2922,6 +3540,8 @@ async function loadSubmission(submissionId, pin) {
     document.getElementById('area').style.display = 'flex';
     document.getElementById('scores-view').classList.remove('active');
     document.getElementById('aa-view').classList.remove('active');
+    setViewMode('picks');                  // a loaded entry is MY PICKS
+    hideCentral();
     renderWeightTabs();
     render();
     closeLoadModal();
@@ -2953,7 +3573,7 @@ async function loadSelectedSubmission(){
 // Required because type="module" scopes functions locally
 // and HTML onclick handlers need global access
 Object.assign(window, {
-  resetBracket, switchW, switchScores, switchAA, openLeaderboard,
+  resetBracket, switchW, switchScores, switchAA, switchCentral, switchOfficialScores, switchOfficialAA, openLeaderboard, chooseMode,
   doPrint, closePrintModal, printBracket,
   pmSelectAll, pmSelectNone,
   openLoadModal, closeLoadModal,
@@ -2966,6 +3586,63 @@ Object.assign(window, {
   refreshSubmissionList, loadSelectedSubmission,
   pick, swap
 });
+
+// ══════ TOURNAMENT CENTRAL — READ-ONLY ENGINE FACADE (Phase 3B) ══════
+// Tournament Central reads the OFFICIAL store through copies. The ONLY way to change anything is recordOfficial(), which requires a
+// signed-in authorized operator and writes exactly one new result + one audit-log entry (no corrections or deletes in 3C).
+initOfficial();
+window.TCEngine = Object.freeze({
+  version: '3c-operator-recording',
+  weights: Object.freeze(WLIST.slice()),
+  officialAvailable() { return !!officialCore; },
+  selfCheck() { return officialCore ? officialCore.selfCheck() : { ok: false, problems: [officialInfo.reason || 'official store unavailable'], stats: null }; },
+  // a fresh descriptor of one bout in the OFFICIAL book (never a reference to live state)
+  describeOfficial(boutId) { return officialCore ? officialCore.describe(officialBook, boutId) : null; },
+  officialInfo() { return Object.assign({}, officialInfo, { problems: (officialInfo.problems || []).slice(), legacySample: (officialInfo.legacySample || []).slice() }); },
+  refreshOfficial() { return loadOfficial(true); },
+  // ── Phase 3C ──
+  resultTypes() { return window.TournamentCore ? window.TournamentCore.RESULT_TYPES.map(t => Object.assign({}, t)) : []; },
+  validateResult(input) { return window.TournamentCore.validateResult(input); },
+  operatorState() { return Object.assign({}, operator); },
+  signIn() { return operatorSignIn(); },
+  signOut() { return operatorSignOut(); },
+  legacyRecordExists(boutId) { const loc = officialCore && officialCore.locate(boutId); return !!(loc && (officialInfo.legacyIds || []).indexOf(officialCore.legacyDocId(loc.weight, loc.key)) >= 0); },
+  recordOfficial(req) { return recordOfficial(req); },
+  // ── Phase 3D ──
+  previewChange(req) {                                   // read-only: exactly what a correct/clear would touch (no writes)
+    if (operator.state !== 'operator') return { ok: false, code: 'not_operator', message: 'Sign in as an authorized operator to change results.' };
+    if (!officialCore || !window.OfficialWriter || !window.OfficialWriter.planChange) return { ok: false, code: 'unavailable', message: 'Changing results is not available in this session.' };
+    const p = window.OfficialWriter.planChange(officialCore, officialBook, req, { email: operator.email, stamp: null });
+    return p.ok ? { ok: true, preview: p.preview, fingerprint: p.fingerprint } : p;
+  },
+  changeFingerprint(boutId) { return officialCore && window.OfficialWriter ? window.OfficialWriter.fingerprintOf(officialCore, officialBook, boutId) : null; },
+  correctOfficial(req) { return changeOfficial('correct', req); },
+  clearOfficial(req) { return changeOfficial('clear', req); },
+  openWeight(weight) { setViewMode('official'); switchW(weight); },       // Central tiles: the OFFICIAL bracket, via the existing switchW
+  // ── Import phase (operator-only, one-time) ──
+  importAvailable() { return importAvailable(); },
+  importAnalyze() { return importAnalyze(); },
+  importBackup() { return importBackup(); },
+  importRun(ack, onProgress) { return importRun(ack, onProgress); },
+  // ── Path to the Finals (read-only) ──
+  pathFor(wrestlerId) { return pathFor(wrestlerId); },
+  // ── OFFICIAL All-Americans (read-only) ──
+  aaFor() { return aaFor(); },
+  // ── OFFICIAL Team Adjustments (operator write) ──
+  adjustmentsFor(school) { return officialAdjustments && officialAdjustments[school] || null; },
+  saveAdjustment(school, points, reason) { return saveAdjustment(school, points, reason); },
+  clearAdjustment(school) { return clearAdjustment(school); },
+  teamRoster(school) { return teamRoster(school); },
+  allSchools() { const out = {}; WLIST.forEach(w => { const f = FIELDS[w]; if (f) f.forEach(e => { if (e && e.s) out[String(e.s).trim()] = 1; }); }); return Object.keys(out).sort(); }
+});
+document.dispatchEvent(new CustomEvent('tc-engine-ready'));
+
+// Landing: Tournament Central (OFFICIAL). ?view=bracket opens the bracket directly in MY PICKS, exactly as before.
+setViewMode('picks');
+if (!/[?&]view=bracket(&|$)/.test(location.search)) {
+  if (window.TournamentCentral && window.TournamentCentral.ready) switchCentral();
+  else document.addEventListener('tc-ready', function () { switchCentral(); }, { once: true });
+}
 </script>
 
 <!-- ============================================
@@ -2985,6 +3662,19 @@ Object.assign(window, {
   </div>
 </div>
 
+<script src="tournament-core.js?v=adj"></script>
+<script src="official-store.js?v=adj"></script>
+<script src="official-adjustments-store.js?v=adj"></script>
+<script src="official-scoring.js?v=adj"></script>
+<script src="official-import.js?v=adj"></script>
+<script src="official-path.js?v=adj"></script>
+<script src="official-aa.js?v=adj"></script>
+<script src="official-adjustments.js?v=adj"></script>
+<script src="official-writer.js?v=adj"></script>
+<script src="tournament-central.js?v=adj"></script>
+<script src="path-panel.js?v=adj"></script>
+<script src="team-panel.js?v=adj"></script>
+<script src="official-aa-view.js?v=adj"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->
