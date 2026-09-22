@@ -2115,7 +2115,7 @@ function renderModeBanner() {
     else if (o.state === 'notOperator') { right.appendChild(mk('span', 'mb-user mb-user--no', 'Not an authorized operator: ' + o.email)); right.appendChild(btn('mb-refresh', 'Sign out', operatorSignOut)); }
     else if (o.state === 'checking') right.appendChild(mk('span', 'mb-user', 'Checking access…'));
     else if (o.state === 'error') right.appendChild(btn('mb-refresh mb-refresh--warn', 'Sign-in problem — try again', operatorSignIn));
-    else if (o.state === 'signedOut' && officialCore && window.OfficialWriter) right.appendChild(btn('mb-refresh', 'Operator sign-in', operatorSignIn));
+    else if (o.state === 'signedOut' && officialCore && window.OfficialWriter && /[?&]ops=1(&|$)/.test(location.search)) right.appendChild(btn('mb-refresh', 'Operator sign-in', operatorSignIn));   // the invite is only ever shown on the operator's own bookmarked link; anyone already mid-flow (checking/operator/notOperator/error) still sees their own state regardless of the URL
     right.appendChild(btn('mb-refresh', '↻ Refresh', () => loadOfficial(true)));
   }
   const sw = mk('span', 'mode-sw'); sw.setAttribute('role', 'group'); sw.setAttribute('aria-label', 'Bracket source');
