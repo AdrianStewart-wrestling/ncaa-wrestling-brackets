@@ -74,6 +74,7 @@
     opts = opts || {};
     var bonusFn = opts.bonusOf || function () { return undefined; };
     var schoolFn = opts.schoolOf || function () { return ''; };
+    var adjustments = opts.adjustments || null;    // OPTIONAL: { school: { points, reason } }. Omit it and the output is byte-identical to before this existed.
     // a failing lookup is a reported problem, never an exception in the middle of drawing a live scoreboard
     function bonusOf(t) { try { return bonusFn(t); } catch (e) { return undefined; } }
     function schoolOf(id) { try { return schoolFn(id) || ''; } catch (e) { return ''; } }
@@ -118,7 +119,11 @@
 
     var teams = Object.keys(byTeam).map(function (s) {
       var t = byTeam[s];
-      return { school: s, total: t.adv + t.bonus + t.place, adv: t.adv, bonus: t.bonus, place: t.place, aa: aaBy[s] || 0 };
+      var a = adjustments && adjustments[s] ? adjustments[s] : null, adj = a ? a.points : 0;
+      var row = { school: s, adv: t.adv, bonus: t.bonus, place: t.place, aa: aaBy[s] || 0 };
+      if (adjustments) { row.adj = adj; row.adjReason = a ? a.reason : ''; row.total = t.adv + t.bonus + t.place + adj; }   // the 'adj'/'adjReason' fields exist ONLY when adjustments were supplied
+      else row.total = t.adv + t.bonus + t.place;
+      return row;
     });
     teams.sort(function (a, b) { return (b.total - a.total) || cmp(a.school, b.school); });       // total, then alphabetical (ordering only)
     teams.forEach(function (t) {

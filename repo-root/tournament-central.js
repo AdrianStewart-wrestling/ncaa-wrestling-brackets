@@ -495,6 +495,7 @@
   function onShow() {
     renderOfficialStatus();
     renderImportPanel();
+    renderAdjPanel();
     if (state.lookupOK && state.lastId != null) {
       var d = describeBout(state.lastId);
       if (d) renderCard(d);
@@ -506,6 +507,7 @@
   function onOfficialChanged() {
     renderOfficialStatus();
     if (!imp.busy) renderImportPanel();
+    if (!adjForm.busy) renderAdjPanel();
     if (state.lookupOK && state.lastId != null) {
       var d = describeBout(state.lastId);
       // Phase 3D: an open correct/clear panel on a still-Decided bout stays put unless the result it is about changed
@@ -517,8 +519,9 @@
   }
   // Called when sign-in state changes (operator appears / disappears).
   function onOperatorChanged() {
-    if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); imp.plan = null; imp.result = null; imp.backedUp = false; imp.ack = false; imp.note = ''; }
+    if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); imp.plan = null; imp.result = null; imp.backedUp = false; imp.ack = false; imp.note = ''; adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' }; }
     renderImportPanel();
+    renderAdjPanel();
     if (state.lookupOK && state.lastId != null) { var d = describeBout(state.lastId); if (d) renderCard(d); }
   }
 
@@ -530,7 +533,7 @@
     if (imp.loadTried || window.OfficialImportData || !operatorNow()) return;
     imp.loadTried = true;
     try {
-      var s = document.createElement('script'); s.src = 'official-import-data.js?v=imp';
+      var s = document.createElement('script'); s.src = 'official-import-data.js?v=adj';
       s.onload = function () { renderImportPanel(); }; s.onerror = function () { /* not uploaded: no import panel */ };
       document.head.appendChild(s);
     } catch (e) { /* ignore */ }
@@ -618,6 +621,74 @@
     slot.appendChild(box);
   }
 
+  /* ---------------------------------------------------------------- team adjustments (operator only) */
+  // A tiny operator form: pick a team, enter points (half-point steps) and a reason, Save. Existing adjustments list with an
+  // Edit / Remove action each. All logic lives in TCEngine.saveAdjustment / clearAdjustment / adjustmentsFor (index.html);
+  // this is only the screen. The bout-scoring engine (official-scoring.js) is never called from here.
+  var adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' };
+  function adjTeams() {                       // every distinct school on the roster, independent of who has scored yet (via TCEngine: FIELDS/WLIST are module-scoped, not on window)
+    return window.TCEngine && window.TCEngine.allSchools ? window.TCEngine.allSchools() : [];
+  }
+  function adjRows() {
+    var teams = adjTeams(), rows = [];
+    teams.forEach(function (school) { var a = window.TCEngine && window.TCEngine.adjustmentsFor ? window.TCEngine.adjustmentsFor(school) : null; if (a) rows.push({ school: school, points: a.points, reason: a.reason }); });
+    return rows.sort(function (a, b) { return a.school < b.school ? -1 : a.school > b.school ? 1 : 0; });
+  }
+  function adjStartEdit(school, points, reason) { adjForm = { school: school, points: String(points), reason: reason, editing: school, busy: false, note: '' }; renderAdjPanel(); }
+  function adjReset() { adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' }; renderAdjPanel(); }
+  function adjSave() {
+    var pts = parseFloat(adjForm.points);
+    if (adjForm.busy) return; adjForm.busy = true; adjForm.note = 'Saving…'; renderAdjPanel();
+    window.TCEngine.saveAdjustment(adjForm.school, pts, adjForm.reason).then(function (r) {
+      adjForm.busy = false;
+      if (r.ok) { adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' }; }
+      else adjForm.note = r.message || 'Could not save.';
+      renderAdjPanel();
+    });
+  }
+  function adjClear(school) {
+    if (adjForm.busy) return; adjForm.busy = true; adjForm.note = 'Removing…'; renderAdjPanel();
+    window.TCEngine.clearAdjustment(school).then(function (r) {
+      adjForm.busy = false; if (!r.ok) adjForm.note = r.message || 'Could not remove.'; else if (adjForm.editing === school) adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' };
+      renderAdjPanel();
+    });
+  }
+  function renderAdjPanel() {
+    var slot = state.dom && state.dom.adj; if (!slot) return; clear(slot);
+    if (!operatorNow()) return;
+    var box = el('div', 'tc-imp tc-adj');
+    box.appendChild(el('h3', 'tc-imp-h', 'Team score adjustments'));
+    box.appendChild(el('p', 'tc-imp-p', 'A manually recorded team-point adjustment (e.g. a deduction), shown as a separate Adj column on OFFICIAL Team Scores. It never changes Adv / Bonus / Place — only Total.'));
+    var sel = el('select', 'tc-adj-select'); var blank = el('option', '', 'Choose a team…'); blank.value = ''; sel.appendChild(blank);
+    adjTeams().forEach(function (s) { var o = el('option', '', s); o.value = s; sel.appendChild(o); });
+    sel.value = adjForm.school || '';                                // set AFTER the options exist: .selected on a detached <option> is not reliably honoured
+    sel.addEventListener('change', function () { adjForm.school = sel.value; renderAdjPanel(); });
+    var pts = el('input', 'tc-adj-points'); pts.type = 'text'; pts.placeholder = 'points (e.g. -2 or 1.5)'; pts.value = adjForm.points;
+    var reason = el('input', 'tc-adj-reason'); reason.type = 'text'; reason.placeholder = 'reason (required)'; reason.value = adjForm.reason;
+    // the Save button's disabled state depends on both fields, so typing must re-render; keep focus + caret position across the re-render
+    function liveInput(input, key) { input.addEventListener('input', function () { adjForm[key] = input.value; var pos = input.selectionStart; renderAdjPanel(); var again = slot.querySelector('.' + input.className.split(' ')[0]); if (again) { again.focus(); try { again.setSelectionRange(pos, pos); } catch (e) { /* not all input types support this */ } } }); }
+    liveInput(pts, 'points'); liveInput(reason, 'reason');
+    var row = el('div', 'tc-adj-row'); row.appendChild(sel); row.appendChild(pts); row.appendChild(reason); box.appendChild(row);
+    var save = el('button', 'tc-btn tc-btn--go', adjForm.editing ? 'SAVE CHANGE' : 'ADD ADJUSTMENT'); save.type = 'button'; save.disabled = adjForm.busy || !adjForm.school || !adjForm.points.trim() || !adjForm.reason.trim();
+    save.addEventListener('click', adjSave); box.appendChild(save);
+    if (adjForm.editing || adjForm.school || adjForm.points || adjForm.reason) { var cancel = el('button', 'tc-btn tc-btn--clear', 'Cancel'); cancel.type = 'button'; cancel.addEventListener('click', adjReset); box.appendChild(cancel); }
+    if (adjForm.note) box.appendChild(el('div', 'tc-imp-note', adjForm.note));
+    var rows = adjRows();
+    if (rows.length) {
+      var list = el('div', 'tc-adj-list');
+      rows.forEach(function (r) {
+        var line = el('div', 'tc-adj-line');
+        line.appendChild(el('span', 'tc-adj-team', r.school)); line.appendChild(el('span', 'tc-adj-pts', (r.points >= 0 ? '+' : '') + r.points));
+        line.appendChild(el('span', 'tc-adj-reason', r.reason));
+        var eb = el('button', 'tc-adj-mini', 'Edit'); eb.type = 'button'; eb.addEventListener('click', function () { adjStartEdit(r.school, r.points, r.reason); });
+        var rb = el('button', 'tc-adj-mini', 'Remove'); rb.type = 'button'; rb.addEventListener('click', function () { adjClear(r.school); });
+        line.appendChild(eb); line.appendChild(rb); list.appendChild(line);
+      });
+      box.appendChild(list);
+    } else box.appendChild(el('div', 'tc-imp-note', 'No adjustments recorded.'));
+    slot.appendChild(box);
+  }
+
   /* ------------------------------------------------------------------------ build */
   function build() {
     clear(root);
@@ -692,11 +763,13 @@
     wrap.appendChild(sec2);
 
     var impSlot = el('div', 'tc-imp-slot'); wrap.appendChild(impSlot);       // operator-only one-time import (empty for everyone else)
+    var adjSlot = el('div', 'tc-adj-slot'); wrap.appendChild(adjSlot);       // operator-only team adjustments (empty for everyone else)
     root.appendChild(wrap);
 
-    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat, imp: impSlot };
+    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat, imp: impSlot, adj: adjSlot };
     renderOfficialStatus();
     renderImportPanel();
+    renderAdjPanel();
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();

@@ -45,7 +45,10 @@
     if (m.teams.length) {
       var wrap = el('div', 'os-table-wrap oaa-teams'), tb = el('table', 'os-table'); tb.appendChild(el('caption', '', 'ALL-AMERICANS BY TEAM'));
       var hr = el('tr'); ['Rank', 'Team', 'AA'].forEach(function (h) { hr.appendChild(el('th', '', h)); }); var th = el('thead'); th.appendChild(hr); tb.appendChild(th);
-      var body = el('tbody'); m.teams.forEach(function (t) { var tr = el('tr', 'os-row' + (t.rank === 1 ? ' os-rank-1' : '')); [['os-rank', t.rankLabel], ['os-team', t.school], ['os-total', String(t.aa)]].forEach(function (p) { tr.appendChild(el('td', p[0], p[1])); }); body.appendChild(tr); });
+      var body = el('tbody'); m.teams.forEach(function (t) { var tr = el('tr', 'os-row' + (t.rank === 1 ? ' os-rank-1' : ''));
+        tr.appendChild(el('td', 'os-rank', t.rankLabel));
+        var td = el('td', 'os-team'), b = el('button', 'os-team-btn', t.school); b.type = 'button'; b.setAttribute('data-team', t.school); td.appendChild(b); tr.appendChild(td);
+        tr.appendChild(el('td', 'os-total', String(t.aa))); body.appendChild(tr); });
       tb.appendChild(body); wrap.appendChild(tb); root.appendChild(wrap);
     }
   }

@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=aa">
+<link rel="stylesheet" href="tournament-central.css?v=adj">
 </head>
 <body>
 
@@ -553,7 +553,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
       <div class="os-table-wrap" id="os-table-wrap" hidden>
         <table class="os-table" id="os-table">
           <caption>OFFICIAL TEAM SCORES · actual tournament</caption>
-          <thead><tr><th>Rank</th><th>Team</th><th>Total</th><th>Adv</th><th>Bonus</th><th>Place</th><th>AA</th></tr></thead>
+          <thead><tr><th>Rank</th><th>Team</th><th>Total</th><th>Adv</th><th>Bonus</th><th>Place</th><th>Adj</th><th>AA</th></tr></thead>
           <tbody id="os-body"></tbody>
         </table>
       </div>
@@ -2143,6 +2143,7 @@ function officialLoadFailed(err) {
 // Live updates: one listener (initial load, then only what changed). Started lazily the first time OFFICIAL is shown,
 // so a pick'em visitor never reads officialResults.
 function startOfficialListener() {
+  startAdjustmentsListener();                                            // always try alongside the results listener (its own guard prevents double-subscribing)
   if (!officialCore || officialUnsub || officialListenerBroken) return;
   if (officialInfo.state !== 'loaded') { officialInfo = Object.assign({}, officialInfo, { state: 'loading' }); renderModeBanner(); }
   try {
@@ -2332,6 +2333,7 @@ async function explainChangeFailure(plan, err) {
 function officialChanged() {
   renderModeBanner();
   if (window.PathPanel && window.PathPanel.isOpen()) window.PathPanel.refresh();      // an open path follows the live results
+  if (window.TeamPanel && window.TeamPanel.isOpen()) window.TeamPanel.refresh();        // an open team detail follows the live results
   if (viewMode !== 'official') return;
   if (showCentral) { if (window.TournamentCentral && window.TournamentCentral.onOfficialChanged) window.TournamentCentral.onOfficialChanged(); }
   else if (showOfficialScores) renderOfficialScores();
@@ -2634,7 +2636,7 @@ function schoolOfId(id) { const p = String(id).split('-'), f = FIELDS[Number(p[0
 function bonusOfResult(code) { const ts = (window.TournamentCore && window.TournamentCore.RESULT_TYPES) || [], t = ts.find(x => x.code === code); return t ? t.bonus : undefined; }
 function officialScoresModel() {
   if (!officialCore || !officialBook || !window.OfficialScoring) return null;
-  return window.OfficialScoring.compute(officialCore.toRecords(officialBook), { bonusOf: bonusOfResult, schoolOf: schoolOfId });
+  return window.OfficialScoring.compute(officialCore.toRecords(officialBook), { bonusOf: bonusOfResult, schoolOf: schoolOfId, adjustments: officialAdjustments || undefined });
 }
 function switchOfficialScores() {
   hideMainPanels();
@@ -2665,8 +2667,14 @@ function renderOfficialScores() {
     wrap.hidden = false;
     shown.forEach(tm => {
       const tr = mk('tr', 'os-row' + (tm.rank <= 3 ? ' os-rank-' + tm.rank : ''));
-      [['os-rank', tm.rankLabel], ['os-team', tm.school], ['os-total', fmt(tm.total)], ['os-adv', fmt(tm.adv)], ['os-bonus', fmt(tm.bonus)], ['os-place', fmt(tm.place)], ['os-aa', String(tm.aa)]]
-        .forEach(([c, x]) => tr.appendChild(mk('td', c, x)));
+      const hasAdj = 'adj' in tm && tm.adj !== 0;                       // blank for "no adjustment entered"; the value only for a nonzero one
+      [['os-rank', tm.rankLabel], ['os-team', tm.school, true], ['os-total', fmt(tm.total)], ['os-adv', fmt(tm.adv)], ['os-bonus', fmt(tm.bonus)], ['os-place', fmt(tm.place)], ['os-adj' + (hasAdj ? '' : ' os-adj-blank'), hasAdj ? fmt(tm.adj) : ''], ['os-aa', String(tm.aa)]]
+        .forEach(([c, x, clickable]) => {
+          const td = mk('td', c, clickable ? '' : x);
+          if (clickable) { const b = mk('button', 'os-team-btn', x); b.type = 'button'; b.setAttribute('data-team', x); td.appendChild(b); }
+          else if (hasAdj && c.startsWith('os-adj')) td.title = tm.adjReason || '';
+          tr.appendChild(td);
+        });
       tb.appendChild(tr);
     });
     if (res.teams.length > shown.length) { more.hidden = false; more.textContent = 'Show all ' + res.teams.length + ' teams'; }
@@ -2680,6 +2688,7 @@ function renderOfficialScores() {
   key.appendChild(mk('div', 'os-key-line', 'Place: counted the moment a finish is CLINCHED, not when the placement bout is wrestled. The Final adds only the step from 2nd to 1st.'));
   Object.keys(OS2.SCHEDULE).forEach(r => { const s = OS2.SCHEDULE[r]; const row = mk('div', 'os-key-row'); row.appendChild(mk('span', 'os-key-lbl', names[r] || r)); row.appendChild(mk('span', 'os-key-val', 'clinches ' + OS2.label(s[1]) + ' = ' + (OS2.PLACE_POINTS[s[1]] || 0))); key.appendChild(row); });
   key.appendChild(mk('div', 'os-key-line', 'AA: wrestlers who have clinched All-American (top 8).'));
+  key.appendChild(mk('div', 'os-key-line', 'Adj: a manually recorded team-point adjustment (e.g. a deduction). Blank means none was entered; hover a value for the reason. Click a team name for its roster.'));
 }
 window.addEventListener('offline', () => { if (showOfficialScores) renderOfficialScores(); });
 window.addEventListener('online', () => { if (showOfficialScores) { renderOfficialScores(); if (officialCore) loadOfficial(true); } });     // read-only refresh
@@ -2746,6 +2755,63 @@ async function importRun(ack, onProgress) {
     return { ok: r.ok, code: r.code, message: r.message, written: r.written, total: r.total, batches: r.batches, error: r.error, errorCode: r.errorCode, verify: r.verify, summary: r.plan && r.plan.summary };
   } catch (err) { return { ok: false, code: 'error', message: String((err && err.message) || err) }; }
   finally { importState.busy = false; }
+}
+
+// ══════ OFFICIAL TEAM ADJUSTMENTS ══════
+// Read-only sync of officialAdjustments (tiny collection; a simple listener is enough, no offline/backoff machinery like the
+// results listener needs). Applied ONLY as official-scoring.js's optional `adjustments` argument — the bout-scoring engine
+// itself never reads this collection, so a broken or missing adjustment can never affect Adv / Bonus / Place / AA.
+let officialAdjustments = null, officialAdjustmentsInfo = { applied: 0, invalid: [] }, officialAdjustmentsUnsub = null;
+function startAdjustmentsListener() {
+  if (!window.OfficialAdjustmentsStore || officialAdjustmentsUnsub) return;
+  try {
+    officialAdjustmentsUnsub = onSnapshot(collection(db, 'officialAdjustments'),
+      snap => { if (snap.metadata && snap.metadata.hasPendingWrites) return;
+        const docs = []; snap.forEach(d => docs.push(Object.assign({ __id: d.id }, d.data())));
+        const built = window.OfficialAdjustmentsStore.build(docs); officialAdjustments = built.adjustments; officialAdjustmentsInfo = built.info;
+        officialChanged(); },
+      err => { officialAdjustmentsUnsub = null; console.error('Team adjustments are unavailable:', err); });
+  } catch (err) { officialAdjustmentsUnsub = null; console.error('Team adjustments are unavailable:', err); }
+}
+function adjustmentsEngine() { return window.OfficialAdjustments || null; }
+async function saveAdjustment(school, points, reason) {
+  if (operator.state !== 'operator' || !adjustmentsEngine()) return { ok: false, code: 'not_operator', message: 'Sign in as an operator first.' };
+  const engine = adjustmentsEngine(), existing = officialAdjustments && officialAdjustments[school] || null;
+  const plan = engine.planSet({ school, points, reason }, existing, { email: operator.email, stamp: () => serverTimestamp() });
+  if (!plan.ok) return plan;
+  try {
+    const batch = writeBatch(db);                                   // one atomic write: the adjustment doc + its audit-log entry, or neither
+    batch.set(doc(db, 'officialAdjustments', plan.docId), plan.data);
+    batch.set(doc(collection(db, 'officialAdjustmentLog')), plan.logDoc);
+    await batch.commit();
+    return { ok: true };
+  } catch (err) { return { ok: false, code: err.code || 'error', message: 'Firestore refused the write: ' + String((err && err.message) || err) }; }
+}
+async function clearAdjustment(school) {
+  if (operator.state !== 'operator' || !adjustmentsEngine()) return { ok: false, code: 'not_operator', message: 'Sign in as an operator first.' };
+  const existing = officialAdjustments && officialAdjustments[school] || null;
+  const plan = adjustmentsEngine().planClear(school, existing, { email: operator.email, stamp: () => serverTimestamp() });
+  if (!plan.ok) return plan;
+  try {
+    const batch = writeBatch(db);
+    batch.delete(doc(db, 'officialAdjustments', plan.docId));
+    batch.set(doc(collection(db, 'officialAdjustmentLog')), plan.logDoc);
+    await batch.commit();
+    return { ok: true };
+  } catch (err) { return { ok: false, code: err.code || 'error', message: 'Firestore refused the write: ' + String((err && err.message) || err) }; }
+}
+// ══════ TEAM DETAIL (click a team name on OFFICIAL Scores / All-Americans) ══════
+// Pure read: every wrestler in the field whose school matches, with his path outcome and team points earned (via official-path.js
+// and official-scoring.js's event list — no new routing or scoring logic here). Writes nothing.
+function teamRoster(school) {
+  if (!officialCore || !officialBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Team detail is not available in this session.' };
+  let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }
+  const opts = sc ? { events: sc.events, floors: sc.floors } : {};
+  const ids = []; WLIST.forEach(w => { const f = FIELDS[w]; if (!f) return; f.forEach((entry, i) => { if (entry && String(entry.s).trim() === school) ids.push(w + '-' + String(i + 1).padStart(2, '0')); }); });
+  const wrestlers = ids.map(id => window.OfficialPath.compute(officialCore, officialBook, id, opts)).filter(p => p.ok);
+  const teamRow = sc ? sc.teams.find(t => t.school === school) : null;
+  wrestlers.sort((a, b) => a.wrestler.weight - b.wrestler.weight || a.wrestler.seed - b.wrestler.seed);
+  return { ok: true, school: school, wrestlers: wrestlers, team: teamRow || null };
 }
 
 // ══════ SHARED LIVE / OFFLINE STATUS for the OFFICIAL views (Scores, All-Americans) ══════
@@ -3561,7 +3627,13 @@ window.TCEngine = Object.freeze({
   // ── Path to the Finals (read-only) ──
   pathFor(wrestlerId) { return pathFor(wrestlerId); },
   // ── OFFICIAL All-Americans (read-only) ──
-  aaFor() { return aaFor(); }
+  aaFor() { return aaFor(); },
+  // ── OFFICIAL Team Adjustments (operator write) ──
+  adjustmentsFor(school) { return officialAdjustments && officialAdjustments[school] || null; },
+  saveAdjustment(school, points, reason) { return saveAdjustment(school, points, reason); },
+  clearAdjustment(school) { return clearAdjustment(school); },
+  teamRoster(school) { return teamRoster(school); },
+  allSchools() { const out = {}; WLIST.forEach(w => { const f = FIELDS[w]; if (f) f.forEach(e => { if (e && e.s) out[String(e.s).trim()] = 1; }); }); return Object.keys(out).sort(); }
 });
 document.dispatchEvent(new CustomEvent('tc-engine-ready'));
 
@@ -3590,16 +3662,19 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
   </div>
 </div>
 
-<script src="tournament-core.js?v=aa"></script>
-<script src="official-store.js?v=aa"></script>
-<script src="official-scoring.js?v=aa"></script>
-<script src="official-import.js?v=aa"></script>
-<script src="official-path.js?v=aa"></script>
-<script src="official-aa.js?v=aa"></script>
-<script src="official-writer.js?v=aa"></script>
-<script src="tournament-central.js?v=aa"></script>
-<script src="path-panel.js?v=aa"></script>
-<script src="official-aa-view.js?v=aa"></script>
+<script src="tournament-core.js?v=adj"></script>
+<script src="official-store.js?v=adj"></script>
+<script src="official-adjustments-store.js?v=adj"></script>
+<script src="official-scoring.js?v=adj"></script>
+<script src="official-import.js?v=adj"></script>
+<script src="official-path.js?v=adj"></script>
+<script src="official-aa.js?v=adj"></script>
+<script src="official-adjustments.js?v=adj"></script>
+<script src="official-writer.js?v=adj"></script>
+<script src="tournament-central.js?v=adj"></script>
+<script src="path-panel.js?v=adj"></script>
+<script src="team-panel.js?v=adj"></script>
+<script src="official-aa-view.js?v=adj"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->

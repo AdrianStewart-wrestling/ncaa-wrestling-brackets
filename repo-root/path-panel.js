@@ -75,7 +75,8 @@
   }
 
   function openPanel(id) {
-    ensure(); if (!st.open) { st.lastFocus = document.activeElement; st.stack = []; }
+    ensure(); if (window.TeamPanel && window.TeamPanel.isOpen()) window.TeamPanel.close();
+    if (!st.open) { st.lastFocus = document.activeElement; st.stack = []; }
     st.stack.push(String(id)); st.open = true; st.root.hidden = false; document.body.classList.add('pp-open'); render();
     try { st.close.focus(); } catch (e) { /* ignore */ }
   }
