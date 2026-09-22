@@ -496,6 +496,7 @@
     renderOfficialStatus();
     renderImportPanel();
     renderAdjPanel();
+    renderCkptPanel();
     if (state.lookupOK && state.lastId != null) {
       var d = describeBout(state.lastId);
       if (d) renderCard(d);
@@ -508,6 +509,7 @@
     renderOfficialStatus();
     if (!imp.busy) renderImportPanel();
     if (!adjForm.busy) renderAdjPanel();
+    if (!ckpt.busy) renderCkptPanel();
     if (state.lookupOK && state.lastId != null) {
       var d = describeBout(state.lastId);
       // Phase 3D: an open correct/clear panel on a still-Decided bout stays put unless the result it is about changed
@@ -519,9 +521,10 @@
   }
   // Called when sign-in state changes (operator appears / disappears).
   function onOperatorChanged() {
-    if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); imp.plan = null; imp.result = null; imp.backedUp = false; imp.ack = false; imp.note = ''; adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' }; }
+    if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); imp.plan = null; imp.result = null; imp.backedUp = false; imp.ack = false; imp.note = ''; adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' }; ckpt = { plan: null, busy: false, backedUp: false, note: '', progress: null, result: null }; }
     renderImportPanel();
     renderAdjPanel();
+    renderCkptPanel();
     if (state.lookupOK && state.lastId != null) { var d = describeBout(state.lastId); if (d) renderCard(d); }
   }
 
@@ -533,7 +536,7 @@
     if (imp.loadTried || window.OfficialImportData || !operatorNow()) return;
     imp.loadTried = true;
     try {
-      var s = document.createElement('script'); s.src = 'official-import-data.js?v=adj';
+      var s = document.createElement('script'); s.src = 'official-import-data.js?v=ckpt';
       s.onload = function () { renderImportPanel(); }; s.onerror = function () { /* not uploaded: no import panel */ };
       document.head.appendChild(s);
     } catch (e) { /* ignore */ }
@@ -689,6 +692,63 @@
     slot.appendChild(box);
   }
 
+  /* ---------------------------------------------------------------- historical checkpoint (operator only) */
+  // "Saturday morning, before wrestling began": remove exactly the Saturday-round results, keep Thursday + Friday intact.
+  // Restore reuses the EXISTING one-time import Check/Import buttons unchanged (no separate restore engine is written).
+  var ckpt = { plan: null, busy: false, backedUp: false, note: '', progress: null, result: null };
+  function ckptCheck() {
+    if (ckpt.busy) return; ckpt.busy = true; ckpt.result = null; ckpt.note = 'Reading the stored results…'; ckpt.plan = null; ckpt.backedUp = false; renderCkptPanel();
+    window.TCEngine.checkpointAnalyze().then(function (p) { ckpt.busy = false; if (!p.ok) ckpt.note = p.message || 'The check failed.'; else { ckpt.plan = p; ckpt.note = ''; } renderCkptPanel(); });
+  }
+  function ckptBackup() {
+    var b = window.TCEngine.checkpointBackup(); if (!b.ok) { ckpt.note = b.message; renderCkptPanel(); return; }
+    try { downloadText(b.filename, b.text); ckpt.backedUp = true; ckpt.note = 'Backup downloaded (' + b.filename + ').'; } catch (e) { ckpt.note = 'The backup could not be downloaded: ' + e.message; }
+    renderCkptPanel();
+  }
+  function ckptApply() {
+    if (ckpt.busy) return; ckpt.busy = true; ckpt.result = null; ckpt.note = ''; renderCkptPanel();
+    window.TCEngine.checkpointApply().then(function (r) { ckpt.busy = false; ckpt.result = Object.assign({ kind: 'apply' }, r); ckpt.plan = null; ckpt.backedUp = false; renderCkptPanel(); });
+  }
+  function ckptRestore() {
+    if (ckpt.busy) return; ckpt.busy = true; ckpt.result = null; ckpt.progress = { done: 0, total: 0 }; renderCkptPanel();
+    window.TCEngine.checkpointRestore(function (p) { ckpt.progress = p; renderCkptPanel(); }).then(function (r) {
+      ckpt.busy = false; ckpt.progress = null; ckpt.result = { kind: 'restore', ok: r.ok, message: r.message, restored: r.restored }; renderCkptPanel();
+    });
+  }
+  function renderCkptPanel() {
+    var slot = state.dom && state.dom.ckpt; if (!slot) return; clear(slot);
+    if (!operatorNow()) return;
+    var box = el('div', 'tc-imp tc-ckpt');
+    box.appendChild(el('h3', 'tc-imp-h', 'Historical checkpoint: Saturday morning'));
+    box.appendChild(el('p', 'tc-imp-p', 'Temporarily remove the 100 Saturday-round results (Semifinals, Con QF, Con SF, 7th/5th/3rd place, Final), keeping every Thursday and Friday result exactly as recorded. Fully reversible: restoring uses the one-time import data above.'));
+    var b1 = el('button', 'tc-btn tc-btn--go', ckpt.plan ? '1 · CHECK AGAIN' : '1 · CHECK (READ-ONLY)'); b1.type = 'button'; b1.disabled = ckpt.busy; b1.addEventListener('click', ckptCheck);
+    box.appendChild(b1);
+    if (ckpt.note) box.appendChild(el('div', 'tc-imp-note', ckpt.note));
+    var p = ckpt.plan;
+    if (p) {
+      var lines = el('div', 'tc-imp-sum');
+      lines.appendChild(el('div', '', 'Read ' + p.storedDocs + ' stored results.'));
+      lines.appendChild(el('div', '', 'Removing ' + p.removeCount + ' Saturday results (' + Object.keys(p.byRound).map(function (r) { return p.byRound[r] + ' ' + r; }).join(', ') + ') — keeping ' + p.keepCount + ' from Thursday and Friday.'));
+      if (p.alreadyAbsent) lines.appendChild(el('div', '', p.alreadyAbsent + ' of those are already absent.'));
+      box.appendChild(lines);
+      var b2 = el('button', 'tc-btn tc-btn--clear', ckpt.backedUp ? 'BACKUP DOWNLOADED ✓ (again)' : 'DOWNLOAD BACKUP'); b2.type = 'button'; b2.disabled = ckpt.busy; b2.addEventListener('click', ckptBackup);
+      box.appendChild(b2);
+      var go = el('button', 'tc-btn tc-btn--go', 'APPLY SATURDAY-MORNING CHECKPOINT'); go.type = 'button'; go.disabled = ckpt.busy || !ckpt.backedUp || p.removeCount - p.alreadyAbsent === 0;
+      go.addEventListener('click', ckptApply); box.appendChild(go);
+      if (!ckpt.backedUp) box.appendChild(el('div', 'tc-imp-note', 'Locked until you download the backup.'));
+    }
+    var restore = el('button', 'tc-btn tc-btn--clear', 'RESTORE COMPLETE TOURNAMENT (640 RESULTS)'); restore.type = 'button'; restore.disabled = ckpt.busy;
+    restore.addEventListener('click', ckptRestore); box.appendChild(restore);
+    if (ckpt.progress) box.appendChild(el('div', 'tc-imp-prog', 'Restoring…' + (ckpt.progress.total ? ' ' + ckpt.progress.done + ' of ' + ckpt.progress.total : '') + '. Keep this page open.'));
+    var r = ckpt.result;
+    if (r) {
+      if (!r.ok) box.appendChild(el('div', 'tc-imp-bad', 'NOT COMPLETE -- ' + (r.message || 'the operation stopped.')));
+      else if (r.kind === 'restore') box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Restored ' + r.restored + ' results -- back to the complete 640-result tournament.'))));
+      else box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Checkpoint applied: removed ' + r.removed + ' Saturday results. OFFICIAL Scores, Team Detail, All-Americans and Path to the Finals now reflect Friday night.'))));
+    }
+    slot.appendChild(box);
+  }
+
   /* ------------------------------------------------------------------------ build */
   function build() {
     clear(root);
@@ -764,12 +824,14 @@
 
     var impSlot = el('div', 'tc-imp-slot'); wrap.appendChild(impSlot);       // operator-only one-time import (empty for everyone else)
     var adjSlot = el('div', 'tc-adj-slot'); wrap.appendChild(adjSlot);       // operator-only team adjustments (empty for everyone else)
+    var ckptSlot = el('div', 'tc-ckpt-slot'); wrap.appendChild(ckptSlot);     // operator-only historical checkpoint (empty for everyone else)
     root.appendChild(wrap);
 
-    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat, imp: impSlot, adj: adjSlot };
+    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat, imp: impSlot, adj: adjSlot, ckpt: ckptSlot };
     renderOfficialStatus();
     renderImportPanel();
     renderAdjPanel();
+    renderCkptPanel();
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();

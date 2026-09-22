@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=adj">
+<link rel="stylesheet" href="tournament-central.css?v=ckpt">
 </head>
 <body>
 
@@ -2814,6 +2814,79 @@ function teamRoster(school) {
   return { ok: true, school: school, wrestlers: wrestlers, team: teamRow || null };
 }
 
+// ══════ OFFICIAL CHECKPOINT (historical snapshot: "Saturday morning, before wrestling began") ══════
+// Read-only classification (official-checkpoint.js) + one atomic batch delete of exactly the planned bout IDs. Restoring
+// to the complete tournament reuses the EXISTING one-time import engine unchanged: it already detects "N missing, rest
+// already correct" and writes back only what is missing — no separate restore engine is written for this feature.
+let checkpointState = { docs: null, sig: '', backedUp: false, busy: false };
+function checkpointEngine() { return window.OfficialCheckpoint || null; }
+function checkpointPlan() {
+  if (!checkpointEngine() || !officialCore) return null;
+  return checkpointEngine().plan(officialCore, WLIST.slice());
+}
+async function checkpointAnalyze() {                                        // read-only
+  if (operator.state !== 'operator' || !checkpointEngine()) return { ok: false, code: 'not_operator', message: 'Sign in as an operator first.' };
+  try {
+    const snap = await getDocs(collection(db, 'officialResults'));
+    if (!isServerSnapshot(snap)) throw new Error('offline: no server-confirmed data');
+    const docs = []; snap.forEach(d => docs.push({ id: d.id, data: d.data() }));
+    checkpointState.docs = docs; checkpointState.sig = importSig(docs); checkpointState.backedUp = false;
+    const plan = checkpointPlan(), ids = new Set(plan.checkpoints.sat.ids);
+    const byId = {}; docs.forEach(d => { if (typeof d.data.boutId === 'number') byId[d.data.boutId] = d; });
+    const present = plan.checkpoints.sat.ids.filter(id => byId[id]);
+    return { ok: true, total: plan.total, removeCount: plan.checkpoints.sat.ids.length, keepCount: plan.checkpoints.sat.keepCount, byRound: plan.checkpoints.sat.byRound, alreadyAbsent: plan.checkpoints.sat.ids.length - present.length, storedDocs: docs.length };
+  } catch (err) { return { ok: false, code: 'read_failed', message: 'Could not read the stored results: ' + String((err && err.message) || err) }; }
+}
+function checkpointBackup() {                                               // identical pattern to importBackup(): everything, exactly as it is now, as a file
+  if (!checkpointState.docs) return { ok: false, code: 'no_check', message: 'Run the check first.' };
+  const now = new Date().toISOString();
+  const text = JSON.stringify({ kind: 'checkpoint-backup', takenAt: now, by: operator.email, resultsCount: checkpointState.docs.length, results: checkpointState.docs.map(d => ({ id: d.id, data: importPlain(d.data) })), adjustments: officialAdjustments || {} }, null, 1);
+  checkpointState.backedUp = true;
+  return { ok: true, filename: 'checkpoint-backup-' + now.slice(0, 19).replace(/[:T]/g, '-') + '.json', text: text };
+}
+async function checkpointApply() {
+  if (operator.state !== 'operator' || !checkpointEngine()) return { ok: false, code: 'not_operator', message: 'Sign in as an operator first.' };
+  if (checkpointState.busy) return { ok: false, code: 'busy', message: 'A checkpoint operation is already running.' };
+  if (!checkpointState.docs) return { ok: false, code: 'no_check', message: 'Run the check first.' };
+  if (!checkpointState.backedUp) return { ok: false, code: 'no_backup', message: 'Download the backup first.' };
+  checkpointState.busy = true;
+  try {
+    const docs = await (async () => { const snap = await getDocs(collection(db, 'officialResults')); if (!isServerSnapshot(snap)) throw new Error('offline'); const out = []; snap.forEach(d => out.push({ id: d.id, data: d.data() })); return out; })();
+    if (importSig(docs) !== checkpointState.sig) return { ok: false, code: 'changed', message: 'The stored results changed since the check. Run the check again (and download a new backup).' };
+    const plan = checkpointPlan(), ids = new Set(plan.checkpoints.sat.ids);
+    const byId = {}; docs.forEach(d => { if (typeof d.data.boutId === 'number' && ids.has(d.data.boutId)) byId[d.data.boutId] = d; });
+    const toRemove = plan.checkpoints.sat.ids.filter(id => byId[id]);
+    if (!toRemove.length) return { ok: true, removed: 0, message: 'Already at the Saturday-morning checkpoint (nothing to remove).' };
+    const CHUNK = 8;                                                        // 8 bouts = 16 writes (delete + audit log each), same batch size discipline as the one-time import
+    for (let i = 0; i < toRemove.length; i += CHUNK) {
+      const slice = toRemove.slice(i, i + CHUNK), batch = writeBatch(db);
+      slice.forEach(id => {
+        const prior = byId[id].data;
+        batch.delete(doc(db, 'officialResults', byId[id].id));
+        batch.set(doc(collection(db, 'officialLog')), {
+          boutId: id, action: 'clear', by: operator.email, at: serverTimestamp(), source: 'checkpoint-saturday-removed',
+          old: { boutId: id, docId: byId[id].id, winnerId: prior.winnerId, loserId: prior.loserId, resultType: prior.resultType, revision: prior.revision },
+          affected: []                                                        // Saturday rounds are terminal: clearing one never cascades to another
+        });
+      });
+      await batch.commit();
+    }
+    try { await loadOfficial(true); } catch (e) { /* the page refreshes on the next snapshot */ }
+    checkpointState = { docs: null, sig: '', backedUp: false, busy: false };
+    return { ok: true, removed: toRemove.length };
+  } catch (err) { return { ok: false, code: err.code || 'error', message: 'Firestore refused the write: ' + String((err && err.message) || err) }; }
+  finally { checkpointState.busy = false; }
+}
+async function checkpointRestore(onProgress) {                              // simply re-runs the EXISTING import engine (analyze -> run): it already writes back only what is missing
+  if (!importAvailable()) return { ok: false, code: 'unavailable', message: 'The workbook data file (official-import-data.js) is not on the site — it is needed to restore the missing results.' };
+  const check = await importAnalyze();
+  if (!check.ok) return check;
+if (check.summary.create + check.summary.replace + check.summary.correct === 0) return { ok: true, restored: 0, message: 'Already at the complete 640-result tournament (nothing to restore).' };
+  const backup = importBackup(); if (!backup.ok) return backup;             // the existing import flow requires its own backup step before writing
+  const r = await importRun({ disagreements: true }, onProgress);
+  return Object.assign({}, r, { restored: r.written });                    // normalize to 'restored' so the UI never needs to know about importRun's own field names
+}
+
 // ══════ SHARED LIVE / OFFLINE STATUS for the OFFICIAL views (Scores, All-Americans) ══════
 // One place for the rules: LIVE only when the last server-confirmed load is in hand and nothing has failed; OFFLINE keeps the last known data and
 // shows "last refreshed" (the device time of the last server-confirmed snapshot, only if one exists); never-loaded + offline shows no time.
@@ -3633,6 +3706,12 @@ window.TCEngine = Object.freeze({
   saveAdjustment(school, points, reason) { return saveAdjustment(school, points, reason); },
   clearAdjustment(school) { return clearAdjustment(school); },
   teamRoster(school) { return teamRoster(school); },
+  // -- OFFICIAL Checkpoint (operator write, restore reuses the existing import engine) --
+  checkpointPlan() { return checkpointPlan(); },
+  checkpointAnalyze() { return checkpointAnalyze(); },
+  checkpointBackup() { return checkpointBackup(); },
+  checkpointApply() { return checkpointApply(); },
+  checkpointRestore(onProgress) { return checkpointRestore(onProgress); },
   allSchools() { const out = {}; WLIST.forEach(w => { const f = FIELDS[w]; if (f) f.forEach(e => { if (e && e.s) out[String(e.s).trim()] = 1; }); }); return Object.keys(out).sort(); }
 });
 document.dispatchEvent(new CustomEvent('tc-engine-ready'));
@@ -3662,19 +3741,20 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
   </div>
 </div>
 
-<script src="tournament-core.js?v=adj"></script>
-<script src="official-store.js?v=adj"></script>
-<script src="official-adjustments-store.js?v=adj"></script>
-<script src="official-scoring.js?v=adj"></script>
-<script src="official-import.js?v=adj"></script>
-<script src="official-path.js?v=adj"></script>
-<script src="official-aa.js?v=adj"></script>
-<script src="official-adjustments.js?v=adj"></script>
-<script src="official-writer.js?v=adj"></script>
-<script src="tournament-central.js?v=adj"></script>
-<script src="path-panel.js?v=adj"></script>
-<script src="team-panel.js?v=adj"></script>
-<script src="official-aa-view.js?v=adj"></script>
+<script src="tournament-core.js?v=ckpt"></script>
+<script src="official-store.js?v=ckpt"></script>
+<script src="official-adjustments-store.js?v=ckpt"></script>
+<script src="official-scoring.js?v=ckpt"></script>
+<script src="official-import.js?v=ckpt"></script>
+<script src="official-path.js?v=ckpt"></script>
+<script src="official-aa.js?v=ckpt"></script>
+<script src="official-adjustments.js?v=ckpt"></script>
+<script src="official-checkpoint.js?v=ckpt"></script>
+<script src="official-writer.js?v=ckpt"></script>
+<script src="tournament-central.js?v=ckpt"></script>
+<script src="path-panel.js?v=ckpt"></script>
+<script src="team-panel.js?v=ckpt"></script>
+<script src="official-aa-view.js?v=ckpt"></script>
 </body>
 </html>
 <!-- ════════════════════════════════════════════════════════════ -->

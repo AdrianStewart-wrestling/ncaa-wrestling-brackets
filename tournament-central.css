@@ -506,3 +506,8 @@ body.pp-open { overflow: hidden; }
 @media (max-width: 700px) {
   .tc-adj-row select, .tc-adj-row input.tc-adj-points, .tc-adj-row input.tc-adj-reason { width: 100%; min-width: 0; }
 }
+
+/* ============================================================================
+   HISTORICAL CHECKPOINT (operator only): shares .tc-imp styling with Import / Adjustments.
+   ============================================================================ */
+.tc-ckpt { margin-top: 18px; }
