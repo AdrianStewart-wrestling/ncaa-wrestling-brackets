@@ -10,6 +10,18 @@
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
   function fmtN(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
   function who(p) { return p.name + ', ' + p.school + ' (#' + p.seed + ')'; }
+  // Live record: the roster carries only the wrestler's SEASON record at seeding time (e.g. "21-0"), never updated.
+  // This adds his DECIDED tournament bouts on top of it, purely for display -- it reads only m.wrestler.record and
+  // m.journey (already computed by official-path.js for every row in the panel). No data is written; no other feature
+  // is touched. If the season record is not in the expected W-L shape, the original text is shown unchanged.
+  function liveRecord(w, journey) {
+    var m = /^\s*(\d+)\s*-\s*(\d+)\s*$/.exec(w.record || '');
+    if (!m) return w.record || '';
+    var wins = parseInt(m[1], 10), losses = parseInt(m[2], 10);
+    (journey || []).forEach(function (row) { if (row.result === 'W') wins++; else if (row.result === 'L') losses++; });
+    return wins + '-' + losses;
+  }
+
   function res(r) { return (r.method || '') + (r.score ? ' ' + r.score : '') + (r.time ? ' ' + r.time : ''); }
 
   function ensure() {
@@ -31,7 +43,8 @@
     if (!m.ok) { st.body.appendChild(el('div', 'pp-empty', 'This path is not available' + (m.message ? ': ' + m.message : '.'))); return; }
     var w = m.wrestler, o = m.outcome, b = st.body;
     var h = el('h2', 'pp-name', w.name); h.id = 'pp-title'; b.appendChild(h);
-    b.appendChild(el('div', 'pp-sub', w.weight + ' lbs · #' + w.seed + ' seed · ' + w.school + (w.record ? ' · ' + w.record : '')));
+    var lr = liveRecord(w, m.journey);
+    b.appendChild(el('div', 'pp-sub', w.weight + ' lbs · #' + w.seed + ' seed · ' + w.school + (lr ? ' · ' + lr : '')));
     var chips = el('div', 'pp-chips'); chips.appendChild(el('span', 'pp-chip pp-chip--' + o.code, o.code === 'champion' ? '🏆 ' + o.label : o.label));
     if (m.aa === true) chips.appendChild(el('span', 'pp-chip pp-chip--aa', '★ All-American')); b.appendChild(chips);
 
