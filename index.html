@@ -465,7 +465,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
-<link rel="stylesheet" href="tournament-central.css?v=lr">
+<link rel="stylesheet" href="tournament-central.css?v=road1">
 </head>
 <body>
 
@@ -2934,6 +2934,10 @@ function pathFor(wrestlerId) {
   let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }
   return window.OfficialPath.compute(officialCore, officialBook, wrestlerId, sc ? { events: sc.events, floors: sc.floors } : {});
 }
+function roadFor(wrestlerId) {
+  if (!officialCore || !officialBook || !window.OfficialPath || !window.OfficialPath.project) return { ok: false, code: 'unavailable', message: 'Road Ahead is not available in this session.' };
+  return window.OfficialPath.project(officialCore, officialBook, wrestlerId);
+}
 
 // ══════ INIT ══════
 renderWeightTabs();
@@ -3699,6 +3703,7 @@ window.TCEngine = Object.freeze({
   importRun(ack, onProgress) { return importRun(ack, onProgress); },
   // ── Path to the Finals (read-only) ──
   pathFor(wrestlerId) { return pathFor(wrestlerId); },
+  roadFor(wrestlerId) { return roadFor(wrestlerId); },
   // ── OFFICIAL All-Americans (read-only) ──
   aaFor() { return aaFor(); },
   // ── OFFICIAL Team Adjustments (operator write) ──
@@ -3746,13 +3751,13 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
 <script src="official-adjustments-store.js?v=lr"></script>
 <script src="official-scoring.js?v=lr"></script>
 <script src="official-import.js?v=lr"></script>
-<script src="official-path.js?v=lr"></script>
+<script src="official-path.js?v=road1"></script>
 <script src="official-aa.js?v=lr"></script>
 <script src="official-adjustments.js?v=lr"></script>
 <script src="official-checkpoint.js?v=lr"></script>
 <script src="official-writer.js?v=lr"></script>
 <script src="tournament-central.js?v=lr"></script>
-<script src="path-panel.js?v=lr"></script>
+<script src="path-panel.js?v=road1"></script>
 <script src="team-panel.js?v=lr"></script>
 <script src="official-aa-view.js?v=lr"></script>
 </body>

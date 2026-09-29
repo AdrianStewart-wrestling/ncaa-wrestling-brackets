@@ -127,5 +127,102 @@
     };
   }
 
-  return { compute: compute, roundLabel: roundLabel, ordinal: ordinal, FINISH: FINISH };
+
+
+  // ---- forward-looking championship road ---------------------------------
+  // Pure/read-only. For each championship bout on this wrestler's winner path,
+  // show the wrestlers who can still emerge from the OPPOSITE branch. This is
+  // deliberately derived from core.describe() + core.routes(); there is no
+  // second NCAA routing table here. As OFFICIAL results arrive, decided feeder
+  // bouts collapse to their winner automatically, so the list narrows live.
+  function project(core, book, wrestlerId) {
+    var base = compute(core, book, wrestlerId, {});
+    if (!base.ok) return base;
+    var weight = base.wrestler.weight, ids = [], descs = {}, incoming = {};
+    core.keys.forEach(function (k) { var id = core.boutIdOf(weight, k); if (id) ids.push(id); });
+    ids.forEach(function (id) { descs[id] = core.describe(book, id); incoming[id] = []; });
+    ids.forEach(function (id) {
+      var r = core.routes(id);
+      if (r && r.winnerTo !== null && r.winnerTo !== undefined && incoming[r.winnerTo]) incoming[r.winnerTo].push(id);
+    });
+
+    function champLike(id) {
+      var d = descs[id], b = d && String(d.key || '').split(':')[0];
+      return b === 'champ' || b === 'pigtail';
+    }
+    function uniqPeople(list) {
+      var seen = {}, out = [];
+      (list || []).forEach(function (p) { if (p && p.id && !seen[p.id]) { seen[p.id] = true; out.push(person(p)); } });
+      out.sort(function (a, b) { return (+a.seed || 99) - (+b.seed || 99); });
+      return out;
+    }
+    var memo = {};
+    function possibleWinners(id, guard) {
+      guard = guard || 0; if (guard > 12 || !descs[id]) return [];
+      if (memo[id]) return memo[id].slice();
+      var d = descs[id];
+      if (d.status === 'decided' && d.winnerId) {
+        var w = d.a && d.a.id === d.winnerId ? d.a : d.b && d.b.id === d.winnerId ? d.b : null;
+        memo[id] = uniqPeople([w]); return memo[id].slice();
+      }
+      var all = [];
+      if (d.a) all.push(d.a); if (d.b) all.push(d.b);
+      (incoming[id] || []).forEach(function (f) { if (champLike(f)) all = all.concat(possibleWinners(f, guard + 1)); });
+      memo[id] = uniqPeople(all); return memo[id].slice();
+    }
+    function sameSet(a, b) {
+      var aa = a.map(function (x) { return x.id; }).sort().join('|');
+      var bb = b.map(function (x) { return x.id; }).sort().join('|');
+      return aa === bb;
+    }
+    function branches(id) {
+      var d = descs[id], out = [];
+      // Feeder winners are the natural branches for later rounds.
+      (incoming[id] || []).forEach(function (f) { if (champLike(f)) { var q = possibleWinners(f); if (q.length) out.push(q); } });
+      // R32/direct seeded slots (and the direct side opposite a pigtail feeder).
+      [d.a, d.b].forEach(function (p) {
+        if (!p) return;
+        var already = out.some(function (q) { return q.some(function (x) { return x.id === p.id; }); });
+        if (!already) out.push([person(p)]);
+      });
+      // Avoid duplicate branches after a feeder has already resolved into a slot.
+      return out.filter(function (q, i) { return !out.slice(0, i).some(function (z) { return sameSet(q, z); }); });
+    }
+
+    // Once he loses on the championship side, there is no longer a road to the final.
+    var champRows = base.journey.filter(function (r) { return r.bracket === 'championship'; });
+    var champLoss = champRows.some(function (r) { return r.status === 'decided' && r.result === 'L'; });
+    if (champLoss) return { ok: true, wrestler: base.wrestler, active: false, reason: 'Dropped to the consolation bracket', rounds: [] };
+    if (base.outcome && base.outcome.code === 'champion') return { ok: true, wrestler: base.wrestler, active: false, complete: true, reason: 'NCAA Champion', rounds: [] };
+
+    // Start with his current/last championship bout, then follow winnerTo to the title.
+    var start = champRows.length ? champRows[champRows.length - 1].boutId : null;
+    if (start === null) return { ok: true, wrestler: base.wrestler, active: false, reason: 'No championship path available', rounds: [] };
+    var sd = descs[start];
+    if (sd && sd.status === 'decided' && sd.winnerId === wrestlerId) {
+      var sr = core.routes(start); if (sr && sr.winnerTo !== null && sr.winnerTo !== undefined) start = sr.winnerTo;
+      else return { ok: true, wrestler: base.wrestler, active: false, complete: true, reason: 'NCAA Champion', rounds: [] };
+    }
+
+    var rounds = [], cur = start, guard = 0;
+    while (cur !== null && cur !== undefined && guard++ < 8 && descs[cur] && champLike(cur)) {
+      var d = descs[cur], bs = branches(cur), mine = -1;
+      bs.forEach(function (q, i) { if (mine < 0 && q.some(function (x) { return x.id === wrestlerId; })) mine = i; });
+      // For a future round, his feeder branch contains him among several possible winners.
+      // If the current state has not propagated him there yet, find that branch recursively.
+      if (mine < 0) {
+        bs.forEach(function (q, i) { if (mine < 0 && q.some(function (x) { return x.id === wrestlerId; })) mine = i; });
+      }
+      var opp = [];
+      bs.forEach(function (q, i) { if (i !== mine) opp = opp.concat(q); });
+      opp = uniqPeople(opp).filter(function (x) { return x.id !== wrestlerId; });
+      rounds.push({ boutId: cur, key: d.key, round: roundLabel(d.key), status: d.status, opponents: opp });
+      var rt = core.routes(cur);
+      if (!rt || rt.winnerIsChampion || rt.winnerTo === null || rt.winnerTo === undefined) break;
+      cur = rt.winnerTo;
+    }
+    return { ok: true, wrestler: base.wrestler, active: true, rounds: rounds };
+  }
+
+  return { compute: compute, project: project, roundLabel: roundLabel, ordinal: ordinal, FINISH: FINISH };
 });

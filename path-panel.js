@@ -63,6 +63,30 @@
     });
     b.appendChild(ol);
 
+    // Forward-looking championship projection. This is separate from the journey above:
+    // it shows who can still emerge from the opposite branch in each future round.
+    var road = eng && eng.roadFor ? eng.roadFor(id) : null;
+    if (road && road.ok) {
+      var rh = el('div', 'pp-road-h', 'ROAD AHEAD'); b.appendChild(rh);
+      if (road.active && road.rounds && road.rounds.length) {
+        var rl = el('div', 'pp-road');
+        road.rounds.forEach(function (rr) {
+          var row = el('div', 'pp-road-row');
+          row.appendChild(el('div', 'pp-road-rd', rr.round));
+          var people = el('div', 'pp-road-people');
+          if (!rr.opponents || !rr.opponents.length) people.appendChild(el('span', 'pp-tbd', 'Opponent branch not decided yet'));
+          else rr.opponents.forEach(function (op, oi) {
+            if (oi) people.appendChild(el('span', 'pp-road-or', 'OR'));
+            var ob = el('button', 'pp-opp pp-road-opp', op.name); ob.type = 'button'; ob.addEventListener('click', function () { openPanel(op.id); }); people.appendChild(ob);
+            people.appendChild(el('span', 'pp-osc', op.school + ' · #' + op.seed));
+          });
+          row.appendChild(people); rl.appendChild(row);
+        });
+        b.appendChild(rl);
+        b.appendChild(el('div', 'pp-road-note', 'Possible opponents narrow automatically as OFFICIAL results are recorded.'));
+      } else b.appendChild(el('div', 'pp-road-off', road.reason || 'Championship road complete.'));
+    }
+
     var last = m.journey[m.journey.length - 1];
     if (m.next) {
       var nx = el('div', 'pp-next'); nx.appendChild(el('div', 'pp-next-h', 'WHAT\'S NEXT'));
