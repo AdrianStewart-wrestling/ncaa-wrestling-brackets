@@ -495,6 +495,7 @@
   function onShow() {
     renderOfficialStatus();
     renderImportPanel();
+    renderFloPanel();
     renderAdjPanel();
     renderCkptPanel();
     if (state.lookupOK && state.lastId != null) {
@@ -508,6 +509,7 @@
   function onOfficialChanged() {
     renderOfficialStatus();
     if (!imp.busy) renderImportPanel();
+    renderFloPanel();
     if (!adjForm.busy) renderAdjPanel();
     if (!ckpt.busy) renderCkptPanel();
     if (state.lookupOK && state.lastId != null) {
@@ -523,6 +525,7 @@
   function onOperatorChanged() {
     if (!operatorNow()) { draft = null; chg = null; stopSlowTimer(); imp.plan = null; imp.result = null; imp.backedUp = false; imp.ack = false; imp.note = ''; adjForm = { school: '', points: '', reason: '', editing: null, busy: false, note: '' }; ckpt = { plan: null, busy: false, backedUp: false, note: '', progress: null, result: null }; }
     renderImportPanel();
+    renderFloPanel();
     renderAdjPanel();
     renderCkptPanel();
     if (state.lookupOK && state.lastId != null) { var d = describeBout(state.lastId); if (d) renderCard(d); }
@@ -656,6 +659,190 @@
       renderAdjPanel();
     });
   }
+  /* ---------------------------------------------------------------- Flo Results Replay (operator only, DRY RUN ONLY) */
+  // Same slot + render-function pattern as Import/Adjustments/Checkpoint above/below: a persistent empty <div> is
+  // always appended to wrap (see build()), and this function decides on every call whether to fill it or leave it
+  // empty. This is the fix for the panel not rendering — previously this whole block was built ONCE, inline, directly
+  // into wrap at initial construction, so if the operator sign-in or window.TCEngine were not yet ready at that exact
+  // moment, the section was permanently omitted and never got a second chance. Calling this from onShow/
+  // onOfficialChanged/onOperatorChanged (see below) gives it the same re-check-every-state-change behavior the other
+  // three panels already have. Never writes to Firebase; window.TCEngine.floDryRun() only ever touches an isolated
+  // in-memory simulation (see index.html / tournament-core.js) and CSV analysis is entirely client-side.
+  function renderFloPanel() {
+    var slot = state.dom && state.dom.flo; if (!slot) return; clear(slot);
+    if (!(operatorNow() && window.TCEngine && window.TCEngine.floDryRun)) return;
+    var flo = el('section', 'tc-section');
+    var fh = el('h2', 'tc-h', 'Flo Results Replay'); fh.appendChild(el('span', 'tc-src', 'DRY RUN')); flo.appendChild(fh);
+    flo.appendChild(el('p', 'tc-muted', 'Select a Flo results CSV. This analyzes a fresh simulated tournament only — Firebase is NOT changed.'));
+    var fi = document.createElement('input'); fi.type = 'file'; fi.accept = '.csv,text/csv'; fi.id = 'tc-flo-csv'; fi.style.maxWidth = '100%'; flo.appendChild(fi);
+    var fb = el('button', 'tc-btn tc-btn--go', 'ANALYZE CSV'); fb.type = 'button'; fb.style.marginTop = '10px'; flo.appendChild(fb);
+    var fr = el('div', 'tc-msg'); fr.hidden = true; fr.style.whiteSpace = 'pre-wrap'; fr.style.marginTop = '10px'; flo.appendChild(fr);
+    var fov = el('div', 'tc-flo-overrides'); fov.style.marginTop = '10px'; flo.appendChild(fov);
+
+    // Session/import-scoped only -- never sent anywhere, never written back to the CSV or the roster. Reset
+    // every time a fresh file is analyzed (see the analyzeCsv() call below).
+    var session = { rawText: null, baseline: null, overrides: { nameMap: [], corrections: [] } };
+
+    function show(kind, text) {
+      fr.hidden = false;
+      fr.className = 'tc-msg tc-msg--' + kind;
+      fr.textContent = text;
+    }
+
+    // Shared by both the first analyze and every re-analyze, so the summary/override-review UI is always
+    // built the same way regardless of which one produced the result.
+    function renderResult(r, isReanalysis) {
+      if (!r) { show('error', 'Dry run failed: floDryRun returned nothing.\nFirebase writes: 0'); return; }
+      if (r.code) {
+        var hardMsg = 'Dry run failed: ' + (r.message || r.code) + '\nFirebase writes: 0';
+        if (r.stack) hardMsg += '\n\n' + r.stack;
+        show('error', hardMsg);
+        if (window.console) console.error('Flo dry run failed:', r.code, r.message, r.error || r, r.stack || '(no stack)');
+        return;
+      }
+      var matched = r.matched || 0, unmatched = (r.unmatched || []).length,
+          ambiguous = (r.ambiguous || []).length, invalid = (r.invalid || []).length;
+      var out = 'CSV rows: ' + (r.rows || 0) + '\nMatched: ' + matched + '\nUnmatched: ' + unmatched +
+              '\nAmbiguous: ' + ambiguous + '\nInvalid: ' + invalid + '\nFirebase writes: 0';
+      if (isReanalysis && window.FloImport && window.FloImport.compareAnalysisResults) {
+        var labeled = window.FloImport.compareAnalysisResults(session.baseline, r, session.overrides);
+        var direct = labeled.filter(function (x) { return x.status === 'direct'; }).length;
+        var cascade = labeled.filter(function (x) { return x.status === 'cascade'; }).length;
+        out += '\n\nOf the matched rows: ' + direct + ' directly affected by an override, ' +
+               cascade + ' unlocked as a downstream result (their own data was untouched).';
+      }
+      var probs = [].concat(r.unmatched || [], r.ambiguous || [], r.invalid || []).slice(0, 8);
+      if (probs.length) out += '\n\nFirst issues:\n' + probs.map(function (x) {
+        return 'Row ' + x.row + ': ' + (x.weight || '') + ' · ' + (x.winner || '') + ' vs ' + (x.loser || '') +
+               (x.reason ? ' · ' + x.reason : '');
+      }).join('\n');
+      show((unmatched || ambiguous || invalid) ? 'warn' : 'info', out);
+      if (window.console) console.log('FLO DRY RUN RESULT: matched='+r.matched+' rows='+r.rows);
+      renderOverrideReview(r);
+    }
+
+    // Builds the "Unrecognized names" and "Needs correction" review sections from the CURRENT result, and a
+    // "Re-analyze with overrides" button. Rebuilt after every analyze/re-analyze so it always reflects the
+    // latest data.
+    function renderOverrideReview(r) {
+      clear(fov);
+      if (!window.FloImport || !window.FloImport.findUnrecognizedNames) return;
+      var unrecognized = window.FloImport.findUnrecognizedNames(r, function (wt) {
+        return (window.TCEngine.rosterFor ? window.TCEngine.rosterFor(wt) : []);
+      });
+      var needsCorrection = (r.invalid || []).filter(function (x) { return x.boutId != null; });
+      if (!unrecognized.length && !needsCorrection.length) return;
+
+      if (unrecognized.length) {
+        var nsec = el('div', 'tc-flo-review'); nsec.style.marginTop = '12px';
+        nsec.appendChild(el('h3', 'tc-h3', 'Unrecognized names'));
+        nsec.appendChild(el('p', 'tc-muted', 'These names do not match anyone in the roster at that weight. Map each to the correct wrestler, or leave unmapped.'));
+        unrecognized.forEach(function (u) {
+          var row = el('div', 'tc-flo-review-row'); row.style.margin = '6px 0';
+          row.appendChild(el('span', null, u.weight + ' lbs — "' + u.csvName + '": '));
+          var sel = document.createElement('select');
+          var blank = el('option', null, 'Choose a wrestler…'); blank.value = ''; sel.appendChild(blank);   // never pre-selected
+          (window.TCEngine.rosterFor(u.weight) || []).forEach(function (e) {
+            var o = el('option', null, e.name + ' (' + e.school + ')'); o.value = e.name; sel.appendChild(o);
+          });
+          var existing = session.overrides.nameMap.find(function (m) { return m.weight === u.weight && m.csvName === u.csvName; });
+          if (existing) sel.value = existing.resolvedName;
+          sel.addEventListener('change', function () {
+            session.overrides.nameMap = session.overrides.nameMap.filter(function (m) { return !(m.weight === u.weight && m.csvName === u.csvName); });
+            if (sel.value) session.overrides.nameMap.push({ weight: u.weight, csvName: u.csvName, resolvedName: sel.value });
+            renderReanalyzeButtonState();
+          });
+          row.appendChild(sel);
+          nsec.appendChild(row);
+        });
+        fov.appendChild(nsec);
+      }
+
+      if (needsCorrection.length) {
+        var csec = el('div', 'tc-flo-review'); csec.style.marginTop = '12px';
+        csec.appendChild(el('h3', 'tc-h3', 'Needs correction'));
+        csec.appendChild(el('p', 'tc-muted', 'The core rejected these — the original result is preserved below. Enter what the correct result should have been, or leave blank to keep it flagged.'));
+        needsCorrection.forEach(function (x) {
+          var row = el('div', 'tc-flo-review-row'); row.style.margin = '6px 0';
+          row.appendChild(el('div', null, 'Row ' + x.row + ' — ' + x.weight + ' lbs — ' + x.winner + ' def ' + x.loser));
+          row.appendChild(el('div', 'tc-muted', 'Original: "' + x.originalResult + '" — ' + x.reason));
+          var inp = document.createElement('input'); inp.type = 'text'; inp.placeholder = 'Corrected result, e.g. 3-2'; inp.style.marginTop = '4px';
+          var existing = session.overrides.corrections.find(function (c) { return c.row === x.row; });
+          if (existing) inp.value = existing.correctedResult;   // never pre-filled on first render -- only reflects what THIS operator already entered this session
+          inp.addEventListener('input', function () {
+            session.overrides.corrections = session.overrides.corrections.filter(function (c) { return c.row !== x.row; });
+            if (inp.value.trim()) {
+              session.overrides.corrections.push({
+                row: x.row, weight: x.weight, winner: x.winner, loser: x.loser,
+                originalResult: x.originalResult, winType: x.winType, correctedResult: inp.value.trim()
+              });
+            }
+            renderReanalyzeButtonState();
+          });
+          row.appendChild(inp);
+          csec.appendChild(row);
+        });
+        fov.appendChild(csec);
+      }
+
+      var reBtn = el('button', 'tc-btn tc-btn--go', 'RE-ANALYZE WITH OVERRIDES'); reBtn.type = 'button'; reBtn.style.marginTop = '10px';
+      reBtn.addEventListener('click', function () { reanalyze(); });
+      fov.appendChild(reBtn);
+      function renderReanalyzeButtonState() {
+        reBtn.disabled = session.overrides.nameMap.length === 0 && session.overrides.corrections.length === 0;
+      }
+      renderReanalyzeButtonState();
+    }
+
+    function reanalyze() {
+      if (!session.rawText) return;
+      var applied = window.FloImport.applyOverrides(session.rawText, session.overrides);
+      var r = window.TCEngine.floDryRun(applied.text);
+      renderResult(r, true);
+      if (applied.refusedCorrections.length && window.console) {
+        console.warn('Flo re-analyze: refused corrections (identifying data no longer matches):', applied.refusedCorrections);
+      }
+    }
+
+    function analyzeCsv(text) {
+      session.rawText = text;
+      session.overrides = { nameMap: [], corrections: [] };
+      var r = window.TCEngine.floDryRun(text);
+      session.baseline = r && !r.code ? r : null;
+      renderResult(r, false);
+    }
+
+    fb.addEventListener('click', function () {
+      var file = fi.files && fi.files[0];
+      if (!file) { show('warn', 'Choose a CSV first.'); return; }
+      if (!window.TCEngine || typeof window.TCEngine.floDryRun !== 'function') {
+        show('error', 'Flo dry-run is unavailable. Refresh the page and try again.');
+        return;
+      }
+      fb.disabled = true;
+      fb.textContent = 'ANALYZING…';
+      show('info', 'Reading ' + file.name + '…');
+      var rd = new FileReader();
+      rd.onerror = function () {
+        fb.disabled = false; fb.textContent = 'ANALYZE CSV';
+        show('error', 'Could not read the CSV.\nFirebase writes: 0');
+      };
+      rd.onload = function () {
+        try {
+          analyzeCsv(String(rd.result || ''));
+        } catch (e) {
+          var exMsg = 'Dry run failed: ' + String((e && e.message) || e) + '\nFirebase writes: 0';
+          if (e && e.stack) exMsg += '\n\n' + e.stack;
+          show('error', exMsg);
+          if (window.console) console.error('Flo dry run failed (uncaught by floDryRun):', e);
+        } finally {
+          fb.disabled = false; fb.textContent = 'ANALYZE CSV';
+        }
+      };
+      rd.readAsText(file);
+    });
+    slot.appendChild(flo);
+  }
   function renderAdjPanel() {
     var slot = state.dom && state.dom.adj; if (!slot) return; clear(slot);
     if (!operatorNow()) return;
@@ -692,13 +879,17 @@
     slot.appendChild(box);
   }
 
-  /* ---------------------------------------------------------------- historical checkpoint (operator only) */
-  // "Saturday morning, before wrestling began": remove exactly the Saturday-round results, keep Thursday + Friday intact.
-  // Restore reuses the EXISTING one-time import Check/Import buttons unchanged (no separate restore engine is written).
-  var ckpt = { plan: null, busy: false, backedUp: false, note: '', progress: null, result: null };
+  /* ---------------------------------------------------------------- historical checkpoints (operator only) */
+  // Two reversible test states: Saturday morning (keep 540) and Tournament Start (keep 0).
+  // Both require a fresh server check + downloaded backup. Restore always reuses the proven 640-result import engine.
+  var ckpt = { mode: 'sat', plan: null, busy: false, backedUp: false, note: '', progress: null, result: null };
+  function ckptSetMode(mode) {
+    if (ckpt.busy) return;
+    ckpt.mode = mode === 'start' ? 'start' : 'sat'; ckpt.plan = null; ckpt.backedUp = false; ckpt.note = ''; ckpt.result = null; renderCkptPanel();
+  }
   function ckptCheck() {
     if (ckpt.busy) return; ckpt.busy = true; ckpt.result = null; ckpt.note = 'Reading the stored results…'; ckpt.plan = null; ckpt.backedUp = false; renderCkptPanel();
-    window.TCEngine.checkpointAnalyze().then(function (p) { ckpt.busy = false; if (!p.ok) ckpt.note = p.message || 'The check failed.'; else { ckpt.plan = p; ckpt.note = ''; } renderCkptPanel(); });
+    window.TCEngine.checkpointAnalyze(ckpt.mode).then(function (p) { ckpt.busy = false; if (!p.ok) ckpt.note = p.message || 'The check failed.'; else { ckpt.plan = p; ckpt.note = ''; } renderCkptPanel(); });
   }
   function ckptBackup() {
     var b = window.TCEngine.checkpointBackup(); if (!b.ok) { ckpt.note = b.message; renderCkptPanel(); return; }
@@ -706,8 +897,10 @@
     renderCkptPanel();
   }
   function ckptApply() {
-    if (ckpt.busy) return; ckpt.busy = true; ckpt.result = null; ckpt.note = ''; renderCkptPanel();
-    window.TCEngine.checkpointApply().then(function (r) { ckpt.busy = false; ckpt.result = Object.assign({ kind: 'apply' }, r); ckpt.plan = null; ckpt.backedUp = false; renderCkptPanel(); });
+    if (ckpt.busy) return;
+    if (ckpt.mode === 'start' && !window.confirm('TOURNAMENT START TEST\n\nThis will remove ALL 640 official results from Firestore. Your downloaded backup and the 640-result restore remain available.\n\nContinue?')) return;
+    ckpt.busy = true; ckpt.result = null; ckpt.note = ''; renderCkptPanel();
+    window.TCEngine.checkpointApply(ckpt.mode).then(function (r) { ckpt.busy = false; ckpt.result = Object.assign({ kind: 'apply', mode: ckpt.mode }, r); ckpt.plan = null; ckpt.backedUp = false; renderCkptPanel(); });
   }
   function ckptRestore() {
     if (ckpt.busy) return; ckpt.busy = true; ckpt.result = null; ckpt.progress = { done: 0, total: 0 }; renderCkptPanel();
@@ -719,32 +912,35 @@
     var slot = state.dom && state.dom.ckpt; if (!slot) return; clear(slot);
     if (!operatorNow()) return;
     var box = el('div', 'tc-imp tc-ckpt');
-    box.appendChild(el('h3', 'tc-imp-h', 'Historical checkpoint: Saturday morning'));
-    box.appendChild(el('p', 'tc-imp-p', 'Temporarily remove the 100 Saturday-round results (Semifinals, Con QF, Con SF, 7th/5th/3rd place, Final), keeping every Thursday and Friday result exactly as recorded. Fully reversible: restoring uses the one-time import data above.'));
-    var b1 = el('button', 'tc-btn tc-btn--go', ckpt.plan ? '1 · CHECK AGAIN' : '1 · CHECK (READ-ONLY)'); b1.type = 'button'; b1.disabled = ckpt.busy; b1.addEventListener('click', ckptCheck);
-    box.appendChild(b1);
+    box.appendChild(el('h3', 'tc-imp-h', 'Historical checkpoint / test state'));
+    box.appendChild(el('p', 'tc-imp-p', ckpt.mode === 'start' ? 'Tournament Start removes all 640 OFFICIAL results so the site can be tested exactly as it will look before the first bout Thursday. Fully reversible with Restore Complete Tournament.' : 'Saturday Morning removes only the 100 Saturday-round results, keeping every Thursday and Friday result exactly as recorded.'));
+    var modes = el('div', 'tc-imp-actions');
+    var ms = el('button', 'tc-btn' + (ckpt.mode === 'sat' ? ' tc-btn--go' : ''), 'SATURDAY MORNING · KEEP 540'); ms.type = 'button'; ms.disabled = ckpt.busy; ms.addEventListener('click', function () { ckptSetMode('sat'); }); modes.appendChild(ms);
+    var mt = el('button', 'tc-btn' + (ckpt.mode === 'start' ? ' tc-btn--go' : ''), 'TOURNAMENT START · KEEP 0'); mt.type = 'button'; mt.disabled = ckpt.busy; mt.addEventListener('click', function () { ckptSetMode('start'); }); modes.appendChild(mt);
+    box.appendChild(modes);
+    var b1 = el('button', 'tc-btn tc-btn--go', ckpt.plan ? '1 · CHECK AGAIN' : '1 · CHECK (READ-ONLY)'); b1.type = 'button'; b1.disabled = ckpt.busy; b1.addEventListener('click', ckptCheck); box.appendChild(b1);
     if (ckpt.note) box.appendChild(el('div', 'tc-imp-note', ckpt.note));
     var p = ckpt.plan;
     if (p) {
       var lines = el('div', 'tc-imp-sum');
       lines.appendChild(el('div', '', 'Read ' + p.storedDocs + ' stored results.'));
-      lines.appendChild(el('div', '', 'Removing ' + p.removeCount + ' Saturday results (' + Object.keys(p.byRound).map(function (r) { return p.byRound[r] + ' ' + r; }).join(', ') + ') — keeping ' + p.keepCount + ' from Thursday and Friday.'));
+      lines.appendChild(el('div', '', 'Checkpoint: ' + p.label + '.'));
+      lines.appendChild(el('div', '', 'Removing ' + p.removeCount + ' results — keeping ' + p.keepCount + '.'));
       if (p.alreadyAbsent) lines.appendChild(el('div', '', p.alreadyAbsent + ' of those are already absent.'));
       box.appendChild(lines);
-      var b2 = el('button', 'tc-btn tc-btn--clear', ckpt.backedUp ? 'BACKUP DOWNLOADED ✓ (again)' : 'DOWNLOAD BACKUP'); b2.type = 'button'; b2.disabled = ckpt.busy; b2.addEventListener('click', ckptBackup);
-      box.appendChild(b2);
-      var go = el('button', 'tc-btn tc-btn--go', 'APPLY SATURDAY-MORNING CHECKPOINT'); go.type = 'button'; go.disabled = ckpt.busy || !ckpt.backedUp || p.removeCount - p.alreadyAbsent === 0;
-      go.addEventListener('click', ckptApply); box.appendChild(go);
+      var b2 = el('button', 'tc-btn tc-btn--clear', ckpt.backedUp ? '2 · BACKUP DOWNLOADED ✓ (again)' : '2 · DOWNLOAD BACKUP'); b2.type = 'button'; b2.disabled = ckpt.busy; b2.addEventListener('click', ckptBackup); box.appendChild(b2);
+      var label = ckpt.mode === 'start' ? '3 · APPLY TOURNAMENT-START CHECKPOINT (REMOVE ALL 640)' : '3 · APPLY SATURDAY-MORNING CHECKPOINT';
+      var go = el('button', 'tc-btn tc-btn--go', label); go.type = 'button'; go.disabled = ckpt.busy || !ckpt.backedUp || p.removeCount - p.alreadyAbsent === 0; go.addEventListener('click', ckptApply); box.appendChild(go);
       if (!ckpt.backedUp) box.appendChild(el('div', 'tc-imp-note', 'Locked until you download the backup.'));
     }
-    var restore = el('button', 'tc-btn tc-btn--clear', 'RESTORE COMPLETE TOURNAMENT (640 RESULTS)'); restore.type = 'button'; restore.disabled = ckpt.busy;
-    restore.addEventListener('click', ckptRestore); box.appendChild(restore);
+    var restore = el('button', 'tc-btn tc-btn--clear', 'RESTORE COMPLETE TOURNAMENT (640 RESULTS)'); restore.type = 'button'; restore.disabled = ckpt.busy; restore.addEventListener('click', ckptRestore); box.appendChild(restore);
     if (ckpt.progress) box.appendChild(el('div', 'tc-imp-prog', 'Restoring…' + (ckpt.progress.total ? ' ' + ckpt.progress.done + ' of ' + ckpt.progress.total : '') + '. Keep this page open.'));
     var r = ckpt.result;
     if (r) {
       if (!r.ok) box.appendChild(el('div', 'tc-imp-bad', 'NOT COMPLETE -- ' + (r.message || 'the operation stopped.')));
       else if (r.kind === 'restore') box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Restored ' + r.restored + ' results -- back to the complete 640-result tournament.'))));
-      else box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Checkpoint applied: removed ' + r.removed + ' Saturday results. OFFICIAL Scores, Team Detail, All-Americans and Path to the Finals now reflect Friday night.'))));
+      else if (r.mode === 'start') box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Tournament-start checkpoint applied: removed ' + r.removed + ' results. OFFICIAL now reflects the pre-tournament state.'))));
+      else box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Checkpoint applied: removed ' + r.removed + ' Saturday results. OFFICIAL now reflects Friday night.'))));
     }
     slot.appendChild(box);
   }
@@ -823,13 +1019,18 @@
     wrap.appendChild(sec2);
 
     var impSlot = el('div', 'tc-imp-slot'); wrap.appendChild(impSlot);       // operator-only one-time import (empty for everyone else)
+    // Flo CSV replay — DRY RUN ONLY. This creates an isolated simulation and never writes Firebase.
+    // Built via a persistent slot + renderFloPanel(), same pattern as Import/Adjustments/Checkpoint below, so it
+    // correctly appears once the operator sign-in / TCEngine become ready, instead of being fixed at first render.
+    var floSlot = el('div', 'tc-flo-slot'); wrap.appendChild(floSlot);
     var adjSlot = el('div', 'tc-adj-slot'); wrap.appendChild(adjSlot);       // operator-only team adjustments (empty for everyone else)
     var ckptSlot = el('div', 'tc-ckpt-slot'); wrap.appendChild(ckptSlot);     // operator-only historical checkpoint (empty for everyone else)
     root.appendChild(wrap);
 
-    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat, imp: impSlot, adj: adjSlot, ckpt: ckptSlot };
+    state.dom = { input: input, msg: msg, card: card, form: form, go: btnGo, clear: btnClear, stat: stat, imp: impSlot, flo: floSlot, adj: adjSlot, ckpt: ckptSlot };
     renderOfficialStatus();
     renderImportPanel();
+    renderFloPanel();
     renderAdjPanel();
     renderCkptPanel();
 

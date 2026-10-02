@@ -109,6 +109,10 @@
     }
     var vb = el('button', 'pp-btn pp-view', 'View the ' + w.weight + ' lb bracket'); vb.type = 'button';
     vb.addEventListener('click', function () { closePanel(); if (eng.openWeight) eng.openWeight(w.weight); }); b.appendChild(vb);
+    // NCAA Career (HISTORY only): careerFor() is ok only in History mode for a wrestler in the Career Registry, so OFFICIAL
+    // and MY PICKS never render this button.
+    var cf = eng.careerFor && window.CareerPanel ? eng.careerFor(id) : null;
+    if (cf && cf.ok) { var cb = el('button', 'pp-btn pp-career', 'NCAA Career'); cb.type = 'button'; cb.addEventListener('click', function () { window.CareerPanel.open(id); }); b.appendChild(cb); }
   }
 
   function openPanel(id) {

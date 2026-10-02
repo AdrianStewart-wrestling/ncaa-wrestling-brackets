@@ -20,7 +20,7 @@
 
   var CHAMP = ['R32', 'R16', 'QF', 'SF', 'FINAL'];
   var CON = ['Con R1', 'Con R2', 'Con R3', 'Blood Round', 'Con QF', 'Con SF'];
-  var METHOD = { Dec: 'Dec', MajDec: 'MD', TechFall: 'TF', Fall: 'Fall', MedFFT: 'Med FF', FFT: 'FF', DQ: 'DQ' };
+  var METHOD = { Dec: 'Dec', MajDec: 'MD', TechFall: 'TF', Fall: 'Fall', MedFFT: 'Med FF', FFT: 'FF', DQ: 'DQ', Default: 'Def' };
   // The four bouts that END a wrestler's tournament with a finish: [place if he wins, place if he loses]. (Everything else either continues or eliminates.)
   var FINISH = { 'champ:4:0': [1, 2], 'p3:0:0': [3, 4], 'p5:0:0': [5, 6], 'p7:0:0': [7, 8] };
 

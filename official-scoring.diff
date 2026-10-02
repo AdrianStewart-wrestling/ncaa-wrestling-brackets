@@ -1,0 +1,9 @@
+69c69
+<   // opts:    { bonusOf(resultType) -> number | undefined,  schoolOf(wrestlerId) -> string | '' }
+---
+>   // opts:    { bonusOf(resultType) -> number | undefined,  schoolOf(wrestlerId) -> string | '', adjustments?, schools? }
+83a84,87
+>     // OPTIONAL: opts.schools = every school in the field. Each is initialized at zero BEFORE scoring and adjustments, so a
+>     // team that scores no points still gets a row (and its adjustment, if any, is applied). Omit it and the output is
+>     // byte-identical to before this existed (OFFICIAL does not pass it).
+>     if (Array.isArray(opts.schools)) opts.schools.forEach(function (s) { s = String(s == null ? '' : s).trim(); if (s) team(s); });

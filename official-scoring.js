@@ -66,7 +66,7 @@
   function cmp(a, b) { return a < b ? -1 : a > b ? 1 : 0; }         // locale-independent, deterministic
 
   // records: [{ weight, key, boutId, winnerId, loserId, resultType }]  (exactly what TournamentCore.toRecords() returns)
-  // opts:    { bonusOf(resultType) -> number | undefined,  schoolOf(wrestlerId) -> string | '' }
+  // opts:    { bonusOf(resultType) -> number | undefined,  schoolOf(wrestlerId) -> string | '', adjustments?, schools? }
   // returns: { teams: [{ school, total, adv, bonus, place, aa, rank, tied, rankLabel }], events: [...], problems: [...],
 //            floors: { wrestlerId: best guaranteed place }, stats }
   //   total is ALWAYS adv + bonus + place.   aa = wrestlers who have CLINCHED a top-8 finish.
@@ -81,6 +81,10 @@
     var problems = [], events = [], byTeam = Object.create(null), floors = Object.create(null), schoolOfWrestler = Object.create(null);
 
     function team(s) { return byTeam[s] || (byTeam[s] = { school: s, adv: 0, bonus: 0, place: 0 }); }
+    // OPTIONAL: opts.schools = every school in the field. Each is initialized at zero BEFORE scoring and adjustments, so a
+    // team that scores no points still gets a row (and its adjustment, if any, is applied). Omit it and the output is
+    // byte-identical to before this existed (OFFICIAL does not pass it).
+    if (Array.isArray(opts.schools)) opts.schools.forEach(function (s) { s = String(s == null ? '' : s).trim(); if (s) team(s); });
     function add(s, cat, pts, src, r, round, who) {
       if (!pts) return;
       var t = team(s); if (cat === 'Advancement') t.adv += pts; else if (cat === 'Bonus') t.bonus += pts; else t.place += pts;

@@ -33,7 +33,8 @@
     { code: 'Fall',     label: 'Fall',              bonus: 2,   score: 'none',     time: 'optional' },
     { code: 'MedFFT',   label: 'Medical Forfeit',   bonus: 2,   score: 'none',     time: 'none' },
     { code: 'FFT',      label: 'Forfeit',           bonus: 2,   score: 'none',     time: 'none' },
-    { code: 'DQ',       label: 'Disqualification',  bonus: 2,   score: 'none',     time: 'none' }
+    { code: 'DQ',       label: 'Disqualification',  bonus: 2,   score: 'none',     time: 'none' },
+    { code: 'Default',  label: 'Default',           bonus: 2,   score: 'optional', time: 'optional' }
   ].map(Object.freeze));
   const TYPE_BY_CODE = {};
   RESULT_TYPES.forEach(function (t) { TYPE_BY_CODE[t.code] = t; });

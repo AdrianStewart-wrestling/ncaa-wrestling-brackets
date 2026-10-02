@@ -30,18 +30,26 @@
   }
 
   // core: the ONE tournament core (needs .keys and .boutIdOf). weights: the list of weight classes.
-  // Returns { checkpoints: { sat: { label, keepThrough, removeDays, ids: [...], byRound: {...} } } } — one entry today (Sat), structured so a future checkpoint (e.g. Friday-morning) is a one-line addition, not a new engine.
+  // Returns { checkpoints: { start: {...}, sat: { label, keepThrough, removeDays, ids: [...], byRound: {...} } } } — one entry today (Sat), structured so a future checkpoint (e.g. Friday-morning) is a one-line addition, not a new engine.
   function plan(core, weights) {
     var all = [];
     weights.forEach(function (w) { core.keys.forEach(function (k) { var b = core.boutIdOf(w, k); if (b) all.push({ id: b, round: roundOfKey(k) }); }); });
     var byId = {}; all.forEach(function (r) { byId[r.id] = r.round; });
     function idsFor(days) { return all.filter(function (r) { return days.indexOf(DAY[r.round]) >= 0; }).map(function (r) { return r.id; }).sort(function (a, b) { return a - b; }); }
-    var sat = idsFor(['Sat']), byRound = {};
-    sat.forEach(function (id) { var r = byId[id]; byRound[r] = (byRound[r] || 0) + 1; });
+    function summarize(ids) {
+      var out = {};
+      ids.forEach(function (id) { var r = byId[id]; out[r] = (out[r] || 0) + 1; });
+      return out;
+    }
+    var sat = idsFor(['Sat']);
+    var start = all.map(function (r) { return r.id; }).sort(function (a, b) { return a - b; });
     return {
       total: all.length,
       dayOf: function (id) { var r = byId[id]; return r ? DAY[r] : null; },
-      checkpoints: { sat: { label: 'Saturday morning (before wrestling began)', keepThrough: 'Friday night', removeLabel: 'Saturday', ids: sat, byRound: byRound, keepCount: all.length - sat.length } }
+      checkpoints: {
+        start: { label: 'Tournament start (before Thursday wrestling began)', keepThrough: 'Nothing', removeLabel: 'Entire tournament', ids: start, byRound: summarize(start), keepCount: 0 },
+        sat: { label: 'Saturday morning (before wrestling began)', keepThrough: 'Friday night', removeLabel: 'Saturday', ids: sat, byRound: summarize(sat), keepCount: all.length - sat.length }
+      }
     };
   }
 
