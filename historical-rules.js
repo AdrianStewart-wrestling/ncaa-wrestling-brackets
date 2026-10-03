@@ -14,7 +14,7 @@
    ============================================================================ */
 const HistoricalRules = (function () {
   const SRC = 'Printed bracket note ("For team score purposes, this is treated as a 64-wrestler bracket"); reconciled against the published NCAA team standings';
-  const RULES = { 2010: { byePoints64: true }, 2011: { byePoints64: true } };
+  const RULES = { 2010: { byePoints64: true }, 2011: { byePoints64: true }, 2012: { byePoints64: true } };   // 2012 brackets print the 64-wrestler note; reconciled below
   function byeCredits(records) {
     const pigLoser = new Set(), inPig = new Set(), inConPig = new Set(), firstChamp = {}, firstCon = {}, r1Loser = new Set();
     const rk = k => { const m = /^(champ|con):(\d+):(\d+)$/.exec(k); return m ? { b: m[1], r: +m[2] } : null; };
