@@ -117,7 +117,9 @@ const HistoricalStateBuilder = (function () {
       const printedSeed = {}; Object.keys(yS).forEach(k => { printedSeed[norm(k)] = yS[k]; });
       const lineOf = {}; Object.keys(facts.lines || {}).forEach(k => { lineOf[norm(k)] = facts.lines[k]; });
       const N = facts.seedCount;
-      const seedVals = Object.values(printedSeed).sort((x, y) => x - y);
+      // seedsNotPrinted: seeds the available sources do not print (declared per weight; never derived) complete the 1..N check
+      const notPrinted = (facts.seedsNotPrinted || []).map(x => x.seed);
+      const seedVals = Object.values(printedSeed).concat(notPrinted).sort((x, y) => x - y);
       if (!(N >= 1 && N <= 33) || seedVals.length !== N || seedVals.some((v, i) => v !== i + 1)) problems.push('printed seeds are not exactly 1..' + N + ' (found ' + seedVals.join(',') + ').');
       const used = new Array(32).fill(false);
       const lineOfP = person => lineOf[norm(person && person.name)];
