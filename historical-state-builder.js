@@ -71,8 +71,8 @@ const HistoricalStateBuilder = (function () {
       if (ds !== undefined) bySeed[seedNum - 1].ds = ds;          // printed-line years only: the PRINTED seed (0 = unseeded)
       nameToSeed[norm(person.name)] = seedNum;
     };
-    const loserOf = m => (norm(m.a.name) === norm(m.winner.name)) ? m.b : m.a;
-    const hasName = (m, name) => norm(m.a.name) === norm(name) || norm(m.b.name) === norm(name);
+    const loserOf = m => m.bye ? { name: '' } : ((norm(m.a.name) === norm(m.winner.name)) ? m.b : m.a);
+    const hasName = (m, name) => (m.a && norm(m.a.name) === norm(name)) || (m.b && norm(m.b.name) === norm(name));
 
     // Historical R1 slot the wrestle-in winner was drawn into (p).
     let p = 0, q = 8; // modern defaults (2019+ / OFFICIAL shape); overwritten from the data below
@@ -123,11 +123,13 @@ const HistoricalStateBuilder = (function () {
       const lineOfP = person => lineOf[norm(person && person.name)];
       const ptW = model.hasPigtail ? model.phases.pigtail.winner : null, ptL = model.hasPigtail ? loserOf(model.phases.pigtail) : null;
       const isPtW = person => ptW && norm(person.name) === norm(ptW.name);
-      r1.forEach((m, i) => [m.a, m.b].forEach(x => { const L = lineOfP(x);
+      const byeLines = new Set((facts.byes || []).filter(b => b.phase === 'r1').map(b => b.line));
+      r1.forEach((m, i) => [m.a, m.b].filter(Boolean).forEach(x => { const L = lineOfP(x);
         if (L === undefined) { problems.push('R1 slot ' + i + ': no printed line for ' + x.name + '.'); return; }
         if (L !== 2 * i && L !== 2 * i + 1) problems.push('R1 slot ' + i + ': ' + x.name + ' is on printed line ' + L + ', not in this bout (lines ' + (2 * i) + '/' + (2 * i + 1) + ').');
         if (used[L]) problems.push('printed line ' + L + ' is used twice.'); used[L] = true;
         const sd = printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO[L] !== sd) problems.push(x.name + ' (#' + sd + ') is printed on line ' + L + ', which is draw line #' + LINE_NO[L] + '.'); }));
+      byeLines.forEach(l => { if (used[l]) problems.push('printed BYE line ' + l + ' holds a wrestler.'); used[l] = true; });
       if (used.some(u => !u)) problems.push('printed lines not all used: ' + used.map((u, i) => u ? null : i).filter(v => v !== null).join(','));
       if (ptL && lineOfP(ptL) !== undefined) problems.push('wrestle-in loser ' + ptL.name + ' must not have a printed R1 line.');
       if (!problems.length) {
@@ -136,11 +138,12 @@ const HistoricalStateBuilder = (function () {
         if (model.hasPigtail) {
           const ordered = [ptW, ptL].slice().sort((x, y) => norm(x.name) < norm(y.name) ? -1 : norm(x.name) > norm(y.name) ? 1 : 0);
           setSeed(32, ordered[0], dsOf(ordered[0])); setSeed(33, ordered[1], dsOf(ordered[1]));
-          if (p !== 0) vacated = LINE_NO[lineOfP(ptW)];
+          vacated = LINE_NO[lineOfP(ptW)];   // the draw number the wrestle-in winner's printed line frees (he is engine #32/#33)
         }
         r1.forEach((m, i) => {
           const top = lineOfP(m.a) === 2 * i ? m.a : m.b, bot = top === m.a ? m.b : m.a;
-          const numOf = (x, L) => (i === 0 && L === 1 && vacated !== null) ? vacated : LINE_NO[L];
+          const numOf = (x, L) => ((LINE_NO[L] === 32 || LINE_NO[L] === 33) && vacated !== null && vacated !== LINE_NO[L]) ? vacated : LINE_NO[L];   // reserved #32/#33 -> freed number
+          if (m.bye) { const n = numOf(m.a, lineOfP(m.a)); setSeed(n, m.a, dsOf(m.a)); histPair[i] = [n, null]; return; }   // printed BYE: one wrestler, empty line
           if (model.hasPigtail && i === p) {
             const real = isPtW(m.a) ? m.b : m.a; const n = numOf(real, lineOfP(real));
             setSeed(n, real, dsOf(real)); histPair[i] = [n, null];
@@ -327,7 +330,13 @@ const HistoricalStateBuilder = (function () {
   }
   function mkMatch(a, b) { return { a, b, w: null }; }
 
-  function buildEngine(fields, weight, engineR1, pigtailSlot, conPigtailSlot) {
+  function buildEngine(fields, weight, engineR1, pigtailSlot, conPigtailSlot, drops, byes) {
+    // Printed R1-loser -> consolation R1 seat (facts drops.r1 = [[match, side] x16]); default = the 2013+ layout.
+    const DROP_R1 = (drops && drops.r1) || null;
+    const seatOf = mi => DROP_R1 ? DROP_R1[mi] : [mi >> 1, mi % 2 ? 'b' : 'a'];
+    const BYE_R1 = (byes || []).filter(b => b.phase === 'r1').map(b => b.slot);
+    // Printed consolation drop-in crossovers (facts[year][weight].drops), default = the 2013+ layout below.
+    const DROP_R2 = (drops && drops.r2) || [7, 6, 5, 4, 3, 2, 1, 0], DROP_QF = (drops && drops.qf) || [1, 0, 3, 2], DROP_SF = (drops && drops.sf) || [1, 0];
     const PT = pigtailSlot, CPT = conPigtailSlot; // R1 slot fed by the wrestle-in; R1 slot whose loser meets its loser
     const states = {};
     function initBracket(wt) {
@@ -357,6 +366,11 @@ const HistoricalStateBuilder = (function () {
         // actually feed. Absent on OFFICIAL / MY PICKS states, which keep the modern top layout.
         pigtailSlot: PT, conPigtailSlot: CPT
       };
+      // Printed BYEs (no phantom): the R1 match keeps its single wrestler, is decided at construction, and he advances;
+      // the consolation seat its loser would take is marked vacant, so whoever arrives in that match advances unopposed.
+      BYE_R1.forEach(i => { const st = states[wt], m = st.champ[0][i]; m.w = 'a'; m.bye = true;
+        const nm = st.champ[1][Math.floor(i / 2)]; if (i % 2 === 0) nm.a = m.a; else nm.b = m.a;
+        const [cm, side] = seatOf(i); st.con[0][cm].vacant = side; });
     }
     function applyPick(st, bracket, ri, mi, slot) {
       let match;
@@ -374,7 +388,7 @@ const HistoricalStateBuilder = (function () {
       // Wrestle-in feeds R1 slot PT (OFFICIAL: always 0); con pre-match winner takes the Con R1 seat that the
       // slot-CPT R1 loser would otherwise occupy (OFFICIAL: CPT=8 -> con[0][4].a). Identical when PT=0, CPT=8.
       if (bracket === 'pigtail') { if (PT !== null) { st.champ[0][PT].b = winner; st.conPigtail.a = loser; } }
-      else if (bracket === 'conPigtail') { if (CPT !== null) st.con[0][CPT >> 1][CPT % 2 ? 'b' : 'a'] = winner; }
+      else if (bracket === 'conPigtail') { if (CPT !== null) { const [cm, side] = seatOf(CPT); st.con[0][cm][side] = winner; resolveVacant(st, cm); } }
       else if (bracket === 'champ') advanceChamp(st, ri, mi, winner, loser);
       else if (bracket === 'con') advanceCon(st, ri, mi, winner, loser);
     }
@@ -384,14 +398,14 @@ const HistoricalStateBuilder = (function () {
       if (ri === 0) {
         // OFFICIAL's verbatim table is: R1 slot i loser -> con[0][i>>1] side a/b by parity, except slot 8 ->
         // conPigtail.b. Same rule here with the exception at CPT (== the verbatim table when CPT=8).
-        const d = (mi === CPT) ? ['conPigtail', null, null, 'b'] : ['con', 0, mi >> 1, mi % 2 ? 'b' : 'a'];
-        if (d[0] === 'conPigtail') st.conPigtail.b = loser; else st.con[d[1]][d[2]][d[3]] = loser;
+        if (mi === CPT) st.conPigtail.b = loser; else { const [cm, side] = seatOf(mi); st.con[0][cm][side] = loser; resolveVacant(st, cm); }
       } else if (ri === 1) {
-        const dropMap = { 0:{m:7,slot:'a'},1:{m:6,slot:'a'},2:{m:5,slot:'a'},3:{m:4,slot:'a'},4:{m:3,slot:'a'},5:{m:2,slot:'a'},6:{m:1,slot:'a'},7:{m:0,slot:'a'} };
-        const d = dropMap[mi]; if (d) st.con[1][d.m][d.slot] = loser;
-      } else if (ri === 2) { const qfToCon4 = [1,0,3,2]; st.con[3][qfToCon4[mi]].a = loser; }
-      else if (ri === 3) { const sfToConSemi = [1,0]; st.con[5][sfToConSemi[mi]].a = loser; }
+        if (DROP_R2[mi] !== undefined) st.con[1][DROP_R2[mi]].a = loser;
+      } else if (ri === 2) { st.con[3][DROP_QF[mi]].a = loser; }
+      else if (ri === 3) { st.con[5][DROP_SF[mi]].a = loser; }
     }
+    function resolveVacant(st, cm) { const m = st.con[0][cm]; if (!m.vacant || m.w) return; const present = m.vacant === 'a' ? 'b' : 'a';
+      if (m[present]) { m.w = present; m.bye = true; advanceCon(st, 0, cm, m[present], null); } }
     function advanceCon(st, ri, mi, winner, loser) {
       if (ri === 0) { st.con[1][mi].b = winner; }
       else if (ri === 1) { const nm = st.con[2][Math.floor(mi / 2)]; if (mi % 2 === 0) nm.b = winner; else nm.a = winner; }
@@ -435,6 +449,7 @@ const HistoricalStateBuilder = (function () {
     }
     phaseList.forEach(([label, matches]) => {
       matches.forEach(m => {
+        if (m.bye) return;   // printed BYE: decided at construction, no bout to replay
         const loserName = (norm(m.a.name) === norm(m.winner.name)) ? m.b.name : m.a.name;
         const pending = pendingForWeight(core, book, weight);
         const candidate = pending.find(d =>
@@ -463,7 +478,10 @@ const HistoricalStateBuilder = (function () {
     if (!window.TournamentCore || !window.BoutModel) return { ok: false, problems: ['TournamentCore / BoutModel are not available on this page.'] };
     const { fields, engineR1, pigtailSlot, conPigtailSlot, warnings: fieldWarnings, problems: fieldProblems } = buildHistoricalFields(model);
     if (fieldProblems.length) return { ok: false, problems: fieldProblems, fieldWarnings: fieldWarnings };
-    const core = buildEngine(fields, Number(weight), engineR1, pigtailSlot, conPigtailSlot);
+    const F_ = (typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts) || {};
+    const drops = ((F_[String(model.year)] || {})[String(model.weight)] || {}).drops || null;
+    const byes = ((F_[String(model.year)] || {})[String(model.weight)] || {}).byes || null;
+    const core = buildEngine(fields, Number(weight), engineR1, pigtailSlot, conPigtailSlot, drops, byes);
     const book = core.newBook();
     const problems = replayModel(core, book, model, Number(weight));
     return { ok: problems.length === 0, core: core, book: book, problems: problems, fieldWarnings: fieldWarnings, pigtailSlot: pigtailSlot, conPigtailSlot: conPigtailSlot };

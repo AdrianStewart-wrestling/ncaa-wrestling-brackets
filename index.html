@@ -2602,7 +2602,7 @@ function slotHTML(m, which, bkt, ri, mi) {
   const isWin=m.w===which;
   const isLos=m.w&&m.w!==which;
   const hasOther=!!m[other];
-  if (!wr) return `<div class="sl empty"><span class="sl-tbd">TBD</span></div>`;
+  if (!wr) return m.bye ? `<div class="sl empty"><span class="sl-tbd">BYE</span></div>` : `<div class="sl empty"><span class="sl-tbd">TBD</span></div>`;   // m.bye: printed BYE (historical builder only)
   const canPick=!m.w&&wr&&hasOther&&viewMode==='picks';   // OFFICIAL brackets are read-only in 3B
   const canSwap=isLos&&viewMode==='picks';
   const cls=`sl ${isWin?'w':''} ${isLos?'l':''}`.trim();
@@ -3155,6 +3155,9 @@ function careerYearCore(year, localId) { const Y = window.historicalCareerYears[
 function histSeedView(obj, year) {
   const F = window.HistoricalSeeds && window.HistoricalSeeds.facts, T = window.HistoricalSeeds && window.HistoricalSeeds.table;
   if (!obj || !F || !F[String(year)] || !T) return obj;
+  // historical bye points (HistoricalRules, rule years only): the wrestler's own credit is part of his tournament points
+  if (obj.wrestler && obj.points && window.HistoricalRules) { const lm = /(\d{3}-\d{2})$/.exec(String(obj.wrestler.id || '')); const c = lm ? window.HistoricalRules.creditOf(year, lm[1]) : 0;
+    if (c && !obj.points.byeCredit) { obj.points.byeCredit = c; obj.points.total = (obj.points.total || 0) + c; if (typeof obj.points.adv === 'number') obj.points.adv += c; } }
   const nk = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
   const maps = {}; const mapFor = w => { if (!maps[w]) { const m = {}; const t = (T[String(year)] || {})[String(w)] || {}; Object.keys(t).forEach(k => { m[nk(k)] = t[k]; }); maps[w] = m; } return maps[w]; };
   const walk = o => { if (!o || typeof o !== 'object') return; if (Array.isArray(o)) { o.forEach(walk); return; }
@@ -4432,11 +4435,12 @@ setTimeout(applyMobileRoundView, 100);
 setTimeout(updateChampPill, 100);
 </script>
 <!-- HISTORY MODE (read-only, never writes Firebase/OFFICIAL) -->
-<script src="historical-adapter.js?v=1"></script>
-<script src="historical-seeds.js?v=2"></script>
-<script src="historical-state-builder.js?v=6"></script>
+<script src="historical-adapter.js?v=2"></script>
+<script src="historical-seeds.js?v=3"></script>
+<script src="historical-state-builder.js?v=7"></script>
 <script src="historical-adjustments.js?v=2"></script>
-<script src="historical-mode.js?v=7"></script>
-<script src="historical-careers.js?v=2"></script>
-<script src="career-panel.js?v=2"></script>
+<script src="historical-rules.js?v=1"></script>
+<script src="historical-mode.js?v=8"></script>
+<script src="historical-careers.js?v=3"></script>
+<script src="career-panel.js?v=3"></script>
 <!-- ════════════════════════════════════════════════════════════ -->

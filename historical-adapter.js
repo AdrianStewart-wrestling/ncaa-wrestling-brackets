@@ -95,6 +95,7 @@ const HistoricalAdapter = (function () {
   }
 
   function matchRecord(r) {
+    if (r.__bye) return { bye: true, a: { name: r.wrestler, school: r.__school || '' }, b: null, winner: { name: r.wrestler, school: r.__school || '' }, bout: r.bout, result: 'BYE' };
     return { a: personFromRow(r,'winner'), b: personFromRow(r,'loser'), winner: personFromRow(r,'winner'), bout: r.bout, result: r.result || '' };
   }
 
@@ -109,9 +110,18 @@ const HistoricalAdapter = (function () {
     const { slotFor, usedFallback } = mapPhasesByName(bouts);
     const byslot = {}; PHASE_ORDER.forEach(s => byslot[s] = []);
     bouts.forEach(r => { const slot = slotFor[r.round]; if (slot) byslot[slot].push(r); });
+    // EXPLICIT SOURCED BYES (HistoricalSeeds.facts[year][weight].byes): a printed BYE has no bout row. It becomes a bye
+    // record at its printed bout number -- the present wrestler, no opponent, no result -- so slot positions stay exact.
+    const F_ = (typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts) || null;
+    const byeFacts = (F_ && F_[String(year)] && F_[String(year)][weightStr] && F_[String(year)][weightStr].byes) || [];
+    byeFacts.forEach(b => { if (byslot[b.phase]) byslot[b.phase].push({ __bye: true, bout: b.bout, wrestler: b.wrestler }); });
     PHASE_ORDER.forEach(s => byslot[s].sort((a,b) => (a.bout||0)-(b.bout||0)));
 
     const problems = [];
+    byeFacts.forEach(b => { const row = bouts.find(r => r.winner === b.wrestler || r.loser === b.wrestler);
+      const rec = byslot[b.phase] && byslot[b.phase].find(x => x.__bye && x.bout === b.bout);
+      if (!row) problems.push(`Bye wrestler ${b.wrestler} (bout ${b.bout}) appears in no bout.`); else if (rec) rec.__school = row.winner === b.wrestler ? row.winner_school : row.loser_school;
+      if (bouts.some(r => r.bout === b.bout)) problems.push(`Bye bout ${b.bout} also appears as a result row.`); });
 
     // Recognized legitimate structural variant: a bracket with exactly 32 entrants needs no pigtail and no
     // consolation pre-match at all. Detected here (both absent together), not assumed for any specific year.
