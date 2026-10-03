@@ -2711,7 +2711,14 @@ function render() {
   const noPt=hist&&st.pigtailSlot===null;   // historical 32-man bracket (e.g. 2021/285): no wrestle-in columns at all
   let html=`<div class="sec-hd sec-champ"><div class="line"></div><div class="lbl">Championship Bracket</div><div class="line"></div></div>`;
   html+=`<div class="bgrid">`;
-  if(!noPt){
+  // History N >= 2 wrestle-ins (pre-2009 variable fields): one box per wrestle-in, beside the R1 bout it feeds (printed order).
+  const multiPt=hist&&Array.isArray(st.pigtails)&&st.pigtails.length>=2;
+  const stackBoxes=(items,bracket,cls)=>{let y=0;return items.map(({m,k,pos})=>{const top=Math.max(0,pos*(MH+GAP)-y);y+=top+MH+GAP;return `<div style="margin-top:${top}px;margin-bottom:${GAP}px;">${matchHTML(m,bracket,k,0,cls)}</div>`;}).join('');};
+  if(multiPt){
+  const items=st.pigtails.map((m,k)=>({m,k,pos:st.pigtailSlots[k]})).sort((a,b)=>a.pos-b.pos||a.k-b.k);
+  html+=`<div class="rcol"><div class="rhdr gc" style="color:var(--gold);opacity:.7">Pigtails (${st.pigtails.length})</div><div style="display:flex;flex-direction:column;">${stackBoxes(items,'pigtail','pt')}</div></div>`;
+  html+=`<div class="rconn"></div>`;
+  } else if(!noPt){
   html+=`<div class="rcol"><div class="rhdr gc" style="color:var(--gold);opacity:.7">Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-top:${ptSlot*(MH+GAP)}px;margin-bottom:${GAP}px;">${matchHTML(st.pigtail,'pigtail',0,0,'pt')}</div></div></div>`;
   html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${ptSlot*(MH+GAP)+MH/2-6}px;"><div style="font-size:10px;color:var(--gold);opacity:.5;">→</div></div>`;
   }
@@ -2721,7 +2728,7 @@ function render() {
     round.forEach((m,mi)=>{
       const mt=mi===0?(sp-1)*(MH+GAP)/2:(sp-1)*(MH+GAP);
       const isOne=ri===0&&mi===ptSlot;
-      const extraCls=ri===4?'cm':(isOne&&!noPt&&!st.pigtail.w?'pt-pending':'');
+      const extraCls=ri===4?'cm':(!multiPt&&isOne&&!noPt&&!st.pigtail.w?'pt-pending':'');
       html+=`<div style="margin-top:${mt}px;margin-bottom:${GAP}px">${matchHTML(m,'champ',ri,mi,extraCls)}</div>`;
     });
     html+=`</div></div><div class="rconn"></div>`;
@@ -2731,7 +2738,11 @@ function render() {
   html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">⬇ Consolation Bracket — Losers Drop Here</div><div class="line"></div></div>`;
   html+=`<div class="bgrid" style="align-items:flex-start">`;
   const cpHasData=st.conPigtail.a||st.conPigtail.b;
-  if(!noPt){
+  if(multiPt){
+  const items=st.conPigtails.map((m,k)=>({m,k,pos:st.conPigtailSlots[k]>>1})).sort((a,b)=>a.pos-b.pos||a.k-b.k);
+  html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtails (${st.conPigtails.length})</div><div style="display:flex;flex-direction:column;">${stackBoxes(items,'conPigtail','con pt')}</div></div>`;
+  html+=`<div class="rconn"></div>`;
+  } else if(!noPt){
   html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-top:${(MH + GAP) * cpSeat}px;margin-bottom:${GAP}px;">${cpHasData?matchHTML(st.conPigtail,'conPigtail',0,0,'con pt'):`<div style="min-width:168px;padding:8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting pigtail & 3v30…</div>`}</div></div></div>`;
 html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${((MH + GAP) * cpSeat) + (MH/2 - 6)}px;"><div style="font-size:10px;color:var(--orange);opacity:.4;">→</div></div>`;
   }
@@ -3157,7 +3168,9 @@ function histSeedView(obj, year) {
   if (!obj || !F || !F[String(year)] || !T) return obj;
   // historical bye points (HistoricalRules, rule years only): the wrestler's own credit is part of his tournament points
   if (obj.wrestler && obj.points && window.HistoricalRules) { const lm = /(\d{3}-\d{2})$/.exec(String(obj.wrestler.id || '')); const c = lm ? window.HistoricalRules.creditOf(year, lm[1]) : 0;
-    if (c && !obj.points.byeCredit) { obj.points.byeCredit = c; obj.points.total = (obj.points.total || 0) + c; if (typeof obj.points.adv === 'number') obj.points.adv += c; } }
+    if (c && !obj.points.byeCredit) { obj.points.byeCredit = c; obj.points.total = (obj.points.total || 0) + c; if (typeof obj.points.adv === 'number') obj.points.adv += c; }
+    const pd = lm && window.HistoricalRules.placeDeltaOf ? window.HistoricalRules.placeDeltaOf(year, lm[1]) : 0;   // year-scoped placement table (1999-2000)
+    if (pd && obj.points.placeDelta === undefined) { obj.points.placeDelta = pd; obj.points.total = (obj.points.total || 0) + pd; if (typeof obj.points.place === 'number') obj.points.place += pd; } }
   const nk = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
   const maps = {}; const mapFor = w => { if (!maps[w]) { const m = {}; const t = (T[String(year)] || {})[String(w)] || {}; Object.keys(t).forEach(k => { m[nk(k)] = t[k]; }); maps[w] = m; } return maps[w]; };
   const walk = o => { if (!o || typeof o !== 'object') return; if (Array.isArray(o)) { o.forEach(walk); return; }
@@ -4435,12 +4448,13 @@ setTimeout(applyMobileRoundView, 100);
 setTimeout(updateChampPill, 100);
 </script>
 <!-- HISTORY MODE (read-only, never writes Firebase/OFFICIAL) -->
-<script src="historical-adapter.js?v=2"></script>
-<script src="historical-seeds.js?v=5"></script>
-<script src="historical-state-builder.js?v=8"></script>
+<script src="historical-adapter.js?v=4"></script>
+<script src="historical-seeds.js?v=7"></script>
+<script src="historical-core.js?v=1"></script>
+<script src="historical-state-builder.js?v=10"></script>
 <script src="historical-adjustments.js?v=2"></script>
-<script src="historical-rules.js?v=3"></script>
-<script src="historical-mode.js?v=10"></script>
-<script src="historical-careers.js?v=5"></script>
-<script src="career-panel.js?v=5"></script>
+<script src="historical-rules.js?v=5"></script>
+<script src="historical-mode.js?v=12"></script>
+<script src="historical-careers.js?v=7"></script>
+<script src="career-panel.js?v=7"></script>
 <!-- ════════════════════════════════════════════════════════════ -->

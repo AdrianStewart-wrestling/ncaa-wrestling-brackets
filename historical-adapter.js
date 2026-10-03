@@ -127,10 +127,15 @@ const HistoricalAdapter = (function () {
     // consolation pre-match at all. Detected here (both absent together), not assumed for any specific year.
     const noPigtailVariant = byslot.pigtail.length === 0 && byslot.consPre.length === 0;
 
+    // N wrestle-ins (pre-2009 variable field sizes): N championship and N consolation wrestle-ins, N read from the data.
+    // N <= 1 is checked exactly as before; N >= 2 requires equal counts and is carried as lists (pigtails / consPres).
+    const nPig = byslot.pigtail.length, multiPig = nPig >= 2;
+    if (multiPig && byslot.consPre.length !== nPig) problems.push(`${nPig} wrestle-ins but ${byslot.consPre.length} consolation wrestle-ins.`);
     PHASE_ORDER.forEach(slot => {
       const count = byslot[slot].length;
       const expected = EXPECTED_COUNTS[slot];
       if ((slot === 'pigtail' || slot === 'consPre') && noPigtailVariant) return; // legitimate, not a problem
+      if ((slot === 'pigtail' || slot === 'consPre') && multiPig) return;         // N >= 2: checked above
       if (count !== expected) {
         problems.push(`Phase "${slot}" has ${count} bout(s), expected ${expected}.`);
       }
@@ -161,7 +166,8 @@ const HistoricalAdapter = (function () {
       ok: true,
       problems: [],
       fallbacksUsed: usedFallback,
-      model: { year: year, weight: weightStr, hasPigtail: !noPigtailVariant, phases: phases }
+      model: multiPig ? { year: year, weight: weightStr, hasPigtail: true, pigtailCount: nPig, phases: Object.assign(phases, { pigtails: byslot.pigtail.map(matchRecord), consPres: byslot.consPre.map(matchRecord) }) }
+                      : { year: year, weight: weightStr, hasPigtail: !noPigtailVariant, phases: phases }
     };
   }
 

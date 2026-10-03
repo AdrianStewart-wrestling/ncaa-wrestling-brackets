@@ -22,7 +22,7 @@ const HistoryMode = (function () {
   // wherever you're serving that site's results*.js files (see README for options).
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
-  const AVAILABLE_YEARS = [2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const AVAILABLE_YEARS = [1999,2000,2001,2002,2003,2004,2005,2006,2007,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
@@ -125,7 +125,7 @@ const HistoryMode = (function () {
       if (!b.ok) { Y.problems.push(w + ': ' + b.problems.join('; ')); return; }
       Y.weights.push(w); Y.cores[w] = b.core; Y.books[w] = b.book;
       const st = b.book.states[w];
-      const entrants = [st.pigtail.a, st.pigtail.b].concat(st.champ[0].reduce((a, m) => a.concat([m.a, m.b]), []));
+      const entrants = (st.pigtails || [st.pigtail]).reduce((a, m) => a.concat([m.a, m.b]), []).concat(st.champ[0].reduce((a, m) => a.concat([m.a, m.b]), []));
       entrants.forEach(x => {
         if (!x) return;
         const id = TC.wrestlerId(w, x), school = String(x.s || '').trim();
@@ -137,7 +137,7 @@ const HistoryMode = (function () {
     });
     // Year/format-driven historical scoring rules (History layer only; the OFFICIAL scorer is untouched).
     if (window.HistoricalRules) { const ap = window.HistoricalRules.apply(year, Y.records, id => Y.schoolOf[id], Y.adjustments);
-      if (ap) { Y.adjustments = ap.adjustments; Y.byeCredits = ap.credits; window.HistoricalRules.register(year, ap.credits); } }
+      if (ap) { Y.adjustments = ap.adjustments; Y.byeCredits = ap.credits; window.HistoricalRules.register(year, ap.credits, ap.placeDeltas); } }
     return Y;
   }
 

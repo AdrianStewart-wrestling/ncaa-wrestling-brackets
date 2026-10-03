@@ -130,7 +130,7 @@ const HistoricalStateBuilder = (function () {
         if (L === undefined) { problems.push('R1 slot ' + i + ': no printed line for ' + x.name + '.'); return; }
         if (L !== 2 * i && L !== 2 * i + 1) problems.push('R1 slot ' + i + ': ' + x.name + ' is on printed line ' + L + ', not in this bout (lines ' + (2 * i) + '/' + (2 * i + 1) + ').');
         if (used[L]) problems.push('printed line ' + L + ' is used twice.'); used[L] = true;
-        const sd = printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO[L] !== sd) problems.push(x.name + ' (#' + sd + ') is printed on line ' + L + ', which is draw line #' + LINE_NO[L] + '.'); }));
+        const sd = printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO[L] !== sd) (byeLines.size ? warnings : problems).push(x.name + ' (#' + sd + ') is printed on line ' + L + ', which is draw line #' + LINE_NO[L] + (byeLines.size ? ' (short field with printed byes: the draw need not follow the 32-line seeding pattern)' : '') + '.'); }));
       byeLines.forEach(l => { if (used[l]) problems.push('printed BYE line ' + l + ' holds a wrestler.'); used[l] = true; });
       if (used.some(u => !u)) problems.push('printed lines not all used: ' + used.map((u, i) => u ? null : i).filter(v => v !== null).join(','));
       if (ptL && lineOfP(ptL) !== undefined) problems.push('wrestle-in loser ' + ptL.name + ' must not have a printed R1 line.');
@@ -446,8 +446,8 @@ const HistoricalStateBuilder = (function () {
       ['r5', [model.phases.r5]],
     ];
     if (model.hasPigtail) {
-      phaseList.unshift(['pigtail', [model.phases.pigtail]]);
-      phaseList.splice(2, 0, ['consPre', [model.phases.consPre]]);
+      phaseList.unshift(['pigtail', model.pigtailCount >= 2 ? model.phases.pigtails : [model.phases.pigtail]]);
+      phaseList.splice(2, 0, ['consPre', model.pigtailCount >= 2 ? model.phases.consPres : [model.phases.consPre]]);
     }
     phaseList.forEach(([label, matches]) => {
       matches.forEach(m => {
@@ -476,8 +476,149 @@ const HistoricalStateBuilder = (function () {
     try { return buildUnsafe(model, weight); }
     catch (e) { return { ok: false, problems: ['historical state could not be built: ' + (e && e.message ? e.message : e)] }; }
   }
+
+  // ================= N >= 2 WRESTLE-INS (pre-2009 variable field sizes) — generic, data-driven, FAIL-CLOSED =================
+  // Used ONLY when the canonical model carries pigtailCount >= 2; every other weight (all of 2009-2026) uses the code above
+  // unchanged. Nothing here caps N. Rules (each violation is a PROBLEM -- never a guess):
+  //  - every wrestle-in winner holds a printed R1 line, distinct, inside the R1 bout he actually wrestled; losers hold none;
+  //  - an R1 bout fed by one wrestle-in takes it on side b (as for N = 1); fed by two, the printed line order gives a/b;
+  //  - each consolation wrestle-in pairs EXACTLY ONE wrestle-in loser with EXACTLY ONE R1 loser; every wrestle-in is covered once;
+  //  - draw numbers: the 2N wrestle-in entrants take the top 2N numbers (33-N .. 32+N, pairs in bout order, alphabetical inside a
+  //    pair); a real entrant whose natural line number falls in the reserved range takes a freed number (the winners' lines'
+  //    numbers below the range), in printed-line order. For N = 1 this is exactly the single-wrestle-in rule above.
+  const LINE_NO_ALL = [1,32,17,16,9,24,25,8,5,28,21,12,13,20,29,4,3,30,19,14,11,22,27,6,7,26,23,10,15,18,31,2];
+  function buildMultiFields(model) {
+    const problems = [], warnings = [], N = model.pigtailCount, r1 = model.phases.r1, pigs = model.phases.pigtails, cps = model.phases.consPres;
+    const loserOf = m => m.bye ? null : ((norm(m.a.name) === norm(m.winner.name)) ? m.b : m.a);
+    const FA = (typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts) || {};
+    const facts = (FA[String(model.year)] || {})[String(model.weight)] || null;
+    if (!facts || !facts.lines) return { problems: ['N = ' + N + ' wrestle-ins: no printed draw lines (facts) for ' + model.year + '/' + model.weight + '.'], warnings };
+    const TA = (window.HistoricalSeeds && window.HistoricalSeeds.table) || {}, yS = (TA[String(model.year)] || {})[String(model.weight)] || {};
+    const nk = k => { const i = k.indexOf('|'); return i < 0 ? norm(k) : norm(k.slice(0, i)) + '|' + norm(k.slice(i + 1)); };   // 'Name' or 'Name|School' (duplicated names)
+    const printedSeed = {}; Object.keys(yS).forEach(k => { printedSeed[nk(k)] = yS[k]; });
+    const idk = x => norm(x && x.name) + '|' + norm(x && x.school);
+    const notPrinted = (facts.seedsNotPrinted || []).map(x => x.seed), sv = Object.values(printedSeed).concat(notPrinted).sort((x, y) => x - y);
+    if (sv.length !== facts.seedCount || sv.some((v, i) => v !== i + 1)) problems.push('printed seeds are not exactly 1..' + facts.seedCount + ' (found ' + sv.join(',') + ').');
+    const lineOf = {}; Object.keys(facts.lines).forEach(k => { lineOf[nk(k)] = facts.lines[k]; }); const lineOfP = x => lineOf[idk(x)] !== undefined ? lineOf[idk(x)] : lineOf[norm(x && x.name)];
+    const dsOf = x => printedSeed[idk(x)] || printedSeed[norm(x.name)] || 0;
+    const W = pigs.map(m => m.winner), L = pigs.map(loserOf);
+    const P = W.map(w => lineOfP(w));
+    W.forEach((w, k) => { if (P[k] === undefined) problems.push('wrestle-in ' + k + ': winner ' + w.name + ' has no printed R1 line.'); });
+    if (new Set(P).size !== N) problems.push('wrestle-in winners do not hold distinct printed lines.');
+    L.forEach(l => { if (l && lineOfP(l) !== undefined) problems.push('wrestle-in loser ' + l.name + ' must not have a printed R1 line.'); });
+    const isW = x => W.some(w => idk(w) === idk(x));
+    const used = new Array(32).fill(false), byeLines = new Set((facts.byes || []).filter(b => b.phase === 'r1').map(b => b.line));
+    r1.forEach((m, i) => [m.a, m.b].filter(Boolean).forEach(x => { const Ln = lineOfP(x);
+      if (Ln === undefined) { problems.push('R1 slot ' + i + ': no printed line for ' + x.name + '.'); return; }
+      if (Ln !== 2 * i && Ln !== 2 * i + 1) problems.push('R1 slot ' + i + ': ' + x.name + ' is on printed line ' + Ln + ', not in this bout.');
+      if (used[Ln]) problems.push('printed line ' + Ln + ' is used twice.'); used[Ln] = true;
+      const sd = printedSeed[idk(x)] !== undefined ? printedSeed[idk(x)] : printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO_ALL[Ln] !== sd) { const seedLine = LINE_NO_ALL.indexOf(sd);
+        // a seeded WRESTLE-IN WINNER may be printed on the other line of his own seed's R1 pair (same bout; side is cosmetic)
+        if (isW(x) && (seedLine >> 1) === (Ln >> 1)) warnings.push(x.name + ' (#' + sd + ', wrestle-in winner) is printed on line ' + Ln + ' of his seed\'s R1 pair (line ' + seedLine + ').');
+        else (byeLines.size ? warnings : problems).push(x.name + ' (#' + sd + ') is printed on line ' + Ln + ', which is draw line #' + LINE_NO_ALL[Ln] + (byeLines.size ? ' (short field with printed byes)' : '') + '.'); } }));
+    byeLines.forEach(l => { if (used[l]) problems.push('printed BYE line ' + l + ' holds a wrestler.'); used[l] = true; });
+    if (used.some(u => !u)) problems.push('printed lines not all used: ' + used.map((u, i) => u ? null : i).filter(v => v !== null).join(','));
+    P.forEach((Ln, k) => { if (Ln === undefined) return; const m = r1[Ln >> 1]; if (!m || ![m.a, m.b].some(x => x && idk(x) === idk(W[k]))) problems.push('wrestle-in ' + k + ' winner ' + W[k].name + ' does not wrestle the R1 bout of his printed line.'); });
+    if (problems.length) return { problems, warnings };
+    // feeders per R1 slot -> engine side
+    const feeds = P.map(Ln => ({ slot: Ln >> 1, line: Ln, side: null }));
+    for (let i = 0; i < 16; i++) { const f = feeds.filter(x => x.slot === i).sort((a, b) => a.line - b.line);
+      if (f.length === 1) f[0].side = 'b'; else if (f.length === 2) { f[0].side = 'a'; f[1].side = 'b'; } else if (f.length > 2) problems.push('R1 slot ' + i + ' fed by ' + f.length + ' wrestle-ins.'); }
+    // numbering
+    const base = 33 - N, bySeed = new Array(32 + N).fill(null);
+    const setSeed = (num, person, ds) => { if (bySeed[num - 1]) problems.push('draw number ' + num + ' assigned twice.'); bySeed[num - 1] = { n: person.name, s: person.school || '', r: '', seed: num, ds: ds }; };
+    const pairNums = pigs.map((m, k) => { const pr = [m.winner, loserOf(m)].sort((x, y) => norm(x.name) < norm(y.name) ? -1 : norm(x.name) > norm(y.name) ? 1 : 0);
+      setSeed(base + 2 * k, pr[0], dsOf(pr[0])); setSeed(base + 2 * k + 1, pr[1], dsOf(pr[1])); return [base + 2 * k, base + 2 * k + 1]; });
+    const freed = P.map(Ln => LINE_NO_ALL[Ln]).filter(n => n < base).sort((a, b) => a - b);
+    const reals = []; r1.forEach(m => [m.a, m.b].filter(Boolean).forEach(x => { if (!isW(x)) reals.push({ x, line: lineOfP(x) }); }));
+    reals.sort((a, b) => a.line - b.line);
+    const needing = reals.filter(r => LINE_NO_ALL[r.line] >= base);
+    if (needing.length !== freed.length) problems.push('draw numbering: ' + needing.length + ' entrants on reserved numbers but ' + freed.length + ' freed numbers.');
+    const numOf = new Map(); reals.forEach(r => numOf.set(r, LINE_NO_ALL[r.line])); needing.forEach((r, j) => numOf.set(r, freed[j]));
+    reals.forEach(r => setSeed(numOf.get(r), r.x, dsOf(r.x)));
+    const numByName = {}; reals.forEach(r => { numByName[idk(r.x)] = numOf.get(r); });
+    const engineR1 = r1.map((m, i) => { const f = feeds.filter(x => x.slot === i);
+      if (m.bye) return [numByName[idk(m.a)], null];
+      if (f.length === 2) return [null, null];
+      if (f.length === 1) { const real = [m.a, m.b].find(x => !isW(x)); return [numByName[idk(real)], null]; }
+      const top = lineOfP(m.a) === 2 * i ? m.a : m.b, bot = top === m.a ? m.b : m.a; return [numByName[idk(top)], numByName[idk(bot)]]; });
+    // consolation wrestle-ins as SEAT CHAINS, in bout order: each pairs exactly one current seat occupant (initially the seat's
+    // R1 loser) with exactly one wrestle-in loser not yet used; the winner becomes the seat's occupant. A plain consolation
+    // wrestle-in is a chain of length 1. Anything not uniquely defined is a PROBLEM.
+    const r1L = r1.map(loserOf), occ = r1L.slice(), cpt = new Array(N).fill(null), cpNext = new Array(N).fill(null), lastInSeat = {}, cpFirst = {};
+    cps.forEach((c, j) => { const ent = [c.a, c.b];
+      const roles = ent.map(x => ({ seats: occ.map((o, i) => o && idk(o) === idk(x) ? i : -1).filter(i => i >= 0), k: L.findIndex((l, i) => l && cpt[i] === null && idk(l) === idk(x)) }));
+      const opts = [[0, 1], [1, 0]].filter(([o, n]) => roles[o].seats.length === 1 && roles[n].k >= 0);
+      if (opts.length !== 1) { problems.push('consolation wrestle-in ' + j + ' (' + ent.map(x => x.name).join(' v ') + '): not uniquely one seat occupant + one unused wrestle-in loser.'); return; }
+      const [o, n] = opts[0], s0 = roles[o].seats[0], k = roles[n].k;
+      cpt[k] = s0; if (lastInSeat[s0] !== undefined) cpNext[lastInSeat[s0]] = k; else cpFirst[s0] = k; lastInSeat[s0] = k;
+      occ[s0] = c.winner; });
+    if (cpt.some(x => x === null)) problems.push('not every wrestle-in has its consolation wrestle-in.');
+    return { fields: bySeed, engineR1, feeds, cpt, cpNext, cpFirst, pairNums, problems, warnings };
+  }
+  function buildEngineMulti(fields, weight, engineR1, feeds, cpt, pairNums, drops, byes, cpNext, cpFirst) {
+    cpNext = cpNext || cpt.map(() => null); cpFirst = cpFirst || (() => { const f = {}; cpt.forEach((s, k) => { f[s] = k; }); return f; })();
+    const N = feeds.length, states = {};
+    const DROP_R1 = (drops && drops.r1) || null, seatOf = mi => DROP_R1 ? DROP_R1[mi] : [mi >> 1, mi % 2 ? 'b' : 'a'];
+    const DROP_R2 = (drops && drops.r2) || [7, 6, 5, 4, 3, 2, 1, 0], DROP_QF = (drops && drops.qf) || [1, 0, 3, 2], DROP_SF = (drops && drops.sf) || [1, 0];
+    const BYE_R1 = (byes || []).filter(b => b.phase === 'r1').map(b => b.slot);
+    function initBracket(wt) {
+      const F = fields;
+      const pigtails = pairNums.map(([x, y]) => mkMatch(mkW(F, x - 1), mkW(F, y - 1))), conPigtails = pairNums.map(() => mkMatch(null, null));
+      const r1 = engineR1.map(([sa, sb]) => mkMatch(sa == null ? null : mkW(F, sa - 1), sb == null ? null : mkW(F, sb - 1)));
+      const A = n => Array.from({ length: n }, () => mkMatch(null, null));
+      states[wt] = { pigtail: pigtails[0], conPigtail: conPigtails[0], pigtails, conPigtails,
+        champ: [r1, A(8), A(4), A(2), A(1)], con: [A(8), A(8), A(4), A(4), A(2), A(2)],
+        place3: mkMatch(null, null), place5: mkMatch(null, null), place7: mkMatch(null, null), champion: null,
+        pigtailSlot: feeds[0].slot, conPigtailSlot: cpt[0], pigtailSlots: feeds.map(f => f.slot), pigtailSides: feeds.map(f => f.side), conPigtailSlots: cpt.slice() };
+      BYE_R1.forEach(i => { const st = states[wt], m = st.champ[0][i]; m.w = 'a'; m.bye = true;
+        const nm = st.champ[1][Math.floor(i / 2)]; if (i % 2 === 0) nm.a = m.a; else nm.b = m.a; const [cm, side] = seatOf(i); st.con[0][cm].vacant = side; });
+    }
+    function resolveVacant(st, cm) { const m = st.con[0][cm]; if (!m.vacant || m.w) return; const present = m.vacant === 'a' ? 'b' : 'a';
+      if (m[present]) { m.w = present; m.bye = true; advanceCon(st, 0, cm, m[present], null); } }
+    function applyPick(st, bracket, ri, mi, slot) {
+      let match;
+      if (bracket === 'pigtail') match = st.pigtails[ri]; else if (bracket === 'conPigtail') match = st.conPigtails[ri];
+      else if (bracket === 'champ') match = st.champ[ri][mi]; else if (bracket === 'con') match = st.con[ri][mi];
+      else if (bracket === 'p3') match = st.place3; else if (bracket === 'p5') match = st.place5; else if (bracket === 'p7') match = st.place7;
+      if (!match || !match.a || !match.b || match.w) return;
+      const winner = slot === 'a' ? match.a : match.b, loser = slot === 'a' ? match.b : match.a; match.w = slot;
+      if (bracket === 'pigtail') { const f = feeds[ri]; st.champ[0][f.slot][f.side] = winner; st.conPigtails[ri].a = loser; }
+      else if (bracket === 'conPigtail') { if (cpNext[ri] !== null) st.conPigtails[cpNext[ri]].b = winner; else { const [cm, side] = seatOf(cpt[ri]); st.con[0][cm][side] = winner; resolveVacant(st, cm); } }
+      else if (bracket === 'champ') advanceChamp(st, ri, mi, winner, loser);
+      else if (bracket === 'con') advanceCon(st, ri, mi, winner, loser);
+    }
+    function advanceChamp(st, ri, mi, winner, loser) {
+      if (ri < 4) { const nm = st.champ[ri + 1][Math.floor(mi / 2)]; if (mi % 2 === 0) nm.a = winner; else nm.b = winner; } else { st.champion = winner; }
+      if (ri === 0) { const k = cpFirst[mi]; if (k !== undefined) st.conPigtails[k].b = loser; else { const [cm, side] = seatOf(mi); st.con[0][cm][side] = loser; resolveVacant(st, cm); } }
+      else if (ri === 1) { if (DROP_R2[mi] !== undefined) st.con[1][DROP_R2[mi]].a = loser; }
+      else if (ri === 2) { st.con[3][DROP_QF[mi]].a = loser; }
+      else if (ri === 3) { st.con[5][DROP_SF[mi]].a = loser; }
+    }
+    function advanceCon(st, ri, mi, winner, loser) {
+      if (ri === 0) { st.con[1][mi].b = winner; }
+      else if (ri === 1) { const nm = st.con[2][Math.floor(mi / 2)]; if (mi % 2 === 0) nm.b = winner; else nm.a = winner; }
+      else if (ri === 2) { st.con[3][mi].b = winner; }
+      else if (ri === 3) { const nm = st.con[4][Math.floor(mi / 2)]; if (mi % 2 === 0) nm.a = winner; else nm.b = winner; }
+      else if (ri === 4) { st.con[5][mi].b = winner; if (!st.place7.a) st.place7.a = loser; else st.place7.b = loser; }
+      else if (ri === 5) { if (!st.place3.a) st.place3.a = winner; else st.place3.b = winner; if (!st.place5.a) st.place5.a = loser; else st.place5.b = loser; }
+    }
+    const adapter = { weights: [weight], pigtailCount: N, boutNumbers: window.BoutModel.boutNumbers,
+      newState: function (wt) { initBracket(wt); return states[wt]; }, applyPick: applyPick,
+      roundNames: { champ: ['Round 1','Rd of 16','Quarterfinals','Semifinals','Finals'], con: ['Con. Rd 1','Con. Rd 2','Con. Rd 3','Con. Rd 4','Con. Qtrs','Con. Semis'] } };
+    return window.HistoricalCore.create(adapter);
+  }
+
   function buildUnsafe(model, weight) {
     if (!window.TournamentCore || !window.BoutModel) return { ok: false, problems: ['TournamentCore / BoutModel are not available on this page.'] };
+    if (model.pigtailCount >= 2) {                     // N >= 2 wrestle-ins: generic History path (HistoricalCore)
+      if (!window.HistoricalCore) return { ok: false, problems: ['HistoricalCore is not available on this page.'] };
+      const mf = buildMultiFields(model); if (mf.problems.length) return { ok: false, problems: mf.problems, fieldWarnings: mf.warnings };
+      const FM = (window.HistoricalSeeds && window.HistoricalSeeds.facts) || {}, fx = (FM[String(model.year)] || {})[String(model.weight)] || {};
+      const core = buildEngineMulti(mf.fields, Number(weight), mf.engineR1, mf.feeds, mf.cpt, mf.pairNums, fx.drops || null, fx.byes || null, mf.cpNext, mf.cpFirst);
+      const book = core.newBook(), problems = replayModel(core, book, model, Number(weight));
+      return { ok: problems.length === 0, core, book, problems, fieldWarnings: mf.warnings, pigtailSlot: mf.feeds[0].slot, conPigtailSlot: mf.cpt[0] };
+    }
     const { fields, engineR1, pigtailSlot, conPigtailSlot, warnings: fieldWarnings, problems: fieldProblems } = buildHistoricalFields(model);
     if (fieldProblems.length) return { ok: false, problems: fieldProblems, fieldWarnings: fieldWarnings };
     const F_ = (typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts) || {};
@@ -489,7 +630,7 @@ const HistoricalStateBuilder = (function () {
     return { ok: problems.length === 0, core: core, book: book, problems: problems, fieldWarnings: fieldWarnings, pigtailSlot: pigtailSlot, conPigtailSlot: conPigtailSlot };
   }
 
-  return { build: build, buildHistoricalFields: buildHistoricalFields, parseResult: parseResult };
+  return { build: build, buildHistoricalFields: buildHistoricalFields, buildMultiFields: buildMultiFields, parseResult: parseResult };
 })();
 
 if (typeof module === 'object' && module.exports) module.exports = HistoricalStateBuilder;
