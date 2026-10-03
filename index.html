@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NCAA Division I Wrestling Championships</title>
+<title>Tournament Central</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -467,23 +467,44 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 </style>
 <!-- Tournament Central (Phase 2, read-only) -->
 <link rel="stylesheet" href="tournament-central.css?v=road1">
+<style id="layout-sections">
+/* LAYOUT milestone: top-level sections + per-section context rows. Purely presentational. */
+.topnav{display:flex;gap:0;background:#11151f;border-bottom:1px solid var(--b1);padding:0 14px;flex-shrink:0}
+.topnav-btn{flex:0 0 auto;padding:11px 22px;border:none;border-bottom:3px solid transparent;background:none;color:#e4e8f0;font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:2px;cursor:pointer;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.topnav-btn:hover{color:#fff}
+.topnav-btn.on{color:var(--gold2);border-bottom-color:var(--gold)}
+.topnav-btn[data-mode="history"].on{color:#d8b589;border-bottom-color:#b08a5a}
+.wtab-sec{display:flex;align-items:center;gap:6px;margin-left:auto;padding-left:14px}
+.wtab-mini{padding:4px 9px;border:1px solid var(--b1);border-radius:4px;background:none;color:var(--t3);font-size:11px;letter-spacing:.5px;cursor:pointer;white-space:nowrap}
+.wtab-mini:hover{color:var(--gold2);border-color:var(--gold2)}
+.wtab.submit-tab{color:var(--gold2)}
+.hist-hint{flex-basis:100%;font-size:12px;color:#d8b589;opacity:.9}
+/* the hamburger drawer carries MY BRACKET actions only: never shown in 2026 OFFICIAL or NCAA HISTORY */
+body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display:none !important}
+@media (max-width:700px){
+  .topnav{padding:0 4px}
+  .topnav-btn{flex:1 1 0;padding:10px 4px;font-size:17px;letter-spacing:1.2px}
+}
+</style>
 </head>
 <body>
 
 <div class="hdr">
   <div class="hdr-hex">🤼</div>
   <div>
-    <div class="hdr-t">NCAA Wrestling Championships</div>
-    <div class="hdr-s">Division I · Cleveland, OH · March 19–21, 2026</div>
+    <div class="hdr-t">Tournament Central</div>
   </div>
   <div class="hdr-sp"></div>
-  <button class="rst-btn" onclick="resetBracket()">↺ Reset</button>
-  <button class="rst-btn" onclick="openLoadModal()">📂 Load Entry</button>
 <!-- <button class="rst-btn" onclick="openResultsModal()">🏁 Submit Results</button> -->
-  <button class="rst-btn" onclick="openLeaderboard()">🏆 Leaderboard</button>
-  <button class="rst-btn prt-btn" onclick="printBracket()">📤 Submit Entry</button>
-  <button class="rst-btn" onclick="switchHistory()" style="background:#5b4636;">🕰️ HISTORY (read-only)</button>
 </div>
+
+<!-- LAYOUT: the three top-level sections. Each only calls existing functions; the context row below (#wtabs, or the
+     History controls) is rebuilt by renderWeightTabs()/renderTopNav() for the active section. -->
+<nav class="topnav" id="topnav" aria-label="Tournament Central sections">
+  <button type="button" class="topnav-btn" data-mode="official" onclick="switchCentral()">2026 OFFICIAL</button>
+  <button type="button" class="topnav-btn" data-mode="picks" onclick="chooseMode('picks')">MY BRACKET</button>
+  <button type="button" class="topnav-btn" data-mode="history" onclick="switchHistory()">NCAA HISTORY</button>
+</nav>
 
 <div class="wtabs" id="wtabs"></div>
 
@@ -512,13 +533,14 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
       <option value="285">285</option>
     </select>
   </div>
-  <button class="rst-btn" type="button" id="hist-show-btn">Show Bracket</button>
+  <button class="rst-btn" type="button" id="hist-show-btn">View Bracket</button>
   <button class="rst-btn" type="button" id="hist-scores-btn">Team Scores</button>
   <div id="hist-status" style="font-size:12px;color:var(--t2);"></div>
+  <div id="hist-hint" class="hist-hint">Click any wrestler to see his Path to the Finals and NCAA Career.</div>
 </div>
 
 <div class="area" id="area">
-  <div class="tip"><div class="tip-dot"></div>Click a wrestler's name to advance them — their opponent automatically drops to the consolation bracket below</div>
+  <div class="tip" id="area-tip"><div class="tip-dot"></div><span id="area-tip-text">Click a wrestler's name to advance them — their opponent automatically drops to the consolation bracket below</span></div>
   <div id="bkt"></div>
 </div>
 
@@ -527,8 +549,8 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 <div id="scores-view">
   <div class="scores-wrap">
     <div class="scores-main">
-      <div class="picks-badge">MY PICKS</div>
-      <div class="scores-title">My Picks — Projected Team Scores</div>
+      <div class="picks-badge">MY BRACKET</div>
+      <div class="scores-title">My Bracket — Projected Team Scores</div>
       <div class="scores-sub">Top 15 teams projected from YOUR picks · not actual tournament results</div>
       <div class="picks-callout">These totals come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>.</div>
       <table class="lb-table" id="lb-table">
@@ -595,8 +617,8 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 <!-- All-Americans View -->
 <div id="aa-view">
-  <div class="picks-badge">MY PICKS</div>
-  <div class="aa-view-title">My Picks — Projected All-Americans</div>
+  <div class="picks-badge">MY BRACKET</div>
+  <div class="aa-view-title">My Bracket — Projected All-Americans</div>
   <div class="aa-view-sub">Top 8 per weight projected from YOUR picks · not actual results</div>
   <div class="picks-callout">These places come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialAA()">⭐ OFFICIAL All-Americans</button>.</div>
   <div id="aa-grid-125-157"></div>
@@ -1540,6 +1562,8 @@ function renderChampPage(data) {
 </script>
 
 <script type="module">
+// LAYOUT: active top-level section — 'official' | 'picks' | 'history'. Declared first so every function can read it.
+let uiMode = 'official';
 // ── CHANGE 1: FIELDS now includes r:"(W-L)" for every wrestler ──
 const FIELDS = {
   125: [
@@ -2068,16 +2092,44 @@ const WLIST = [125,133,141,149,157,165,174,184,197,285];
 const CHAMP_RND_NAMES = ['Round 1','Rd of 16','Quarterfinals','Semifinals','Finals'];
 const CON_RND_NAMES   = ['Con. Rd 1','Con. Rd 2','Con. Rd 3','Con. Rd 4','Con. Qtrs','Con. Semis'];
 
+// LAYOUT: the context row under the top navigation, for the active section. Every button calls an EXISTING function.
+//  2026 OFFICIAL: OVERVIEW (Central) | 125..285 | TEAM SCORES | ALL-AMERICANS
+//  MY BRACKET:    125..285 | MY SCORES | MY ALL-AMERICANS | LEADERBOARD | SUBMIT  + small LOAD ENTRY / RESET
+//  NCAA HISTORY:  no live weight row at all — only the History controls (#history-controls).
+function goWeight(w) { setViewMode(uiMode === 'picks' ? 'picks' : 'official'); switchW(w); }   // a weight in the active section
 function renderWeightTabs() {
-  const centralBtn = `<button class="wtab tc-tab ${showCentral?'on':''}" onclick="switchCentral()">🏠 Central</button>`;
-  const weightBtns = WLIST.map(w=>
-    `<button class="wtab ${w===CW && !showScores && !showAA && !showCentral && !showOfficialScores && !showOfficialAA?'on':''}" onclick="switchW(${w})">${w}</button>`
-  ).join('');
-  const officialScoreBtn = `<button class="wtab scores-tab official-tab ${showOfficialScores?'on':''}" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>`;
-  const scoreBtn = `<button class="wtab scores-tab ${showScores?'on':''}" onclick="switchScores()">🏆 My Picks Scores</button>`;
-  const officialAaBtn = `<button class="wtab aa-tab official-tab ${showOfficialAA?'on':''}" onclick="switchOfficialAA()">⭐ OFFICIAL All-Americans</button>`;
-  const aaBtn    = `<button class="wtab aa-tab ${showAA?'on':''}" onclick="switchAA()">⭐ My Picks All-Americans</button>`;
-  document.getElementById('wtabs').innerHTML = centralBtn + weightBtns + officialScoreBtn + scoreBtn + officialAaBtn + aaBtn;
+  const tab = (cls, on, fn, label) => `<button class="wtab ${cls}${on ? ' on' : ''}" onclick="${fn}">${label}</button>`;
+  const weightOn = w => w === CW && !showScores && !showAA && !showCentral && !showOfficialScores && !showOfficialAA && !showLeaderboard;
+  const weightBtns = WLIST.map(w => tab('', weightOn(w), `goWeight(${w})`, w)).join('');
+  let html;
+  if (uiMode === 'picks') {
+    html = weightBtns
+      + tab('scores-tab', showScores, 'switchScores()', '🏆 MY SCORES')
+      + tab('aa-tab', showAA, 'switchAA()', '⭐ MY ALL-AMERICANS')
+      + tab('lb-tab', showLeaderboard, 'openLeaderboard()', '🏅 LEADERBOARD')
+      + tab('submit-tab', false, 'printBracket()', '📤 SUBMIT')
+      + `<span class="wtab-sec"><button class="wtab-mini" onclick="openLoadModal()">📂 Load Entry</button><button class="wtab-mini" onclick="resetBracket()">↺ Reset</button></span>`;
+  } else {
+    html = tab('tc-tab', showCentral, 'switchCentral()', '🏠 OVERVIEW') + weightBtns
+      + tab('scores-tab official-tab', showOfficialScores, 'switchOfficialScores()', '🏆 TEAM SCORES')
+      + tab('aa-tab official-tab', showOfficialAA, 'switchOfficialAA()', '⭐ ALL-AMERICANS');
+  }
+  document.getElementById('wtabs').innerHTML = html;
+  renderTopNav();
+}
+const AREA_TIPS = {
+  official: 'Click any wrestler to see his Path to the Finals.',
+  picks: 'Click a wrestler\u2019s name to advance them \u2014 their opponent automatically drops to the consolation bracket below',
+  history: 'Click any wrestler to see his Path to the Finals and NCAA Career.'
+};
+function renderTopNav() {
+  document.querySelectorAll('#topnav .topnav-btn').forEach(b => { const on = b.dataset.mode === uiMode; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  const wt = document.getElementById('wtabs'); if (wt) wt.style.display = uiMode === 'history' ? 'none' : '';
+  ['official', 'picks', 'history'].forEach(m => document.body.classList.toggle('ui-' + m, uiMode === m));
+  const tip = document.getElementById('area-tip-text'); if (tip) tip.textContent = AREA_TIPS[uiMode];
+  const at = document.getElementById('area-tip'); if (at) at.style.display = uiMode === 'history' ? 'none' : '';   // History shows its hint under its own controls
+  if (uiMode === 'history') { const b = document.getElementById('mode-banner'); if (b) b.hidden = true; }
+  if (window.closeMobileMenu && uiMode !== 'picks') window.closeMobileMenu();
 }
 
 let showScores = false;
@@ -2114,16 +2166,18 @@ function setViewMode(mode) {
   if (mode === 'picks' && window.PathPanel) window.PathPanel.close();          // Path to the Finals belongs to OFFICIAL only
   if (mode === 'official' && !officialCore) mode = 'picks';       // official store unavailable => picks only
   viewMode = mode;
+  uiMode = mode === 'official' ? 'official' : 'picks';            // LAYOUT: which top-level section is active
   document.body.classList.toggle('mode-official', !!officialCore && mode === 'official');
   document.body.classList.toggle('mode-picks', !!officialCore && mode === 'picks');
   renderModeBanner();
+  renderWeightTabs();                                              // LAYOUT: the context row follows the section
   if (mode === 'official') loadOfficial(false);                    // lazy: first time OFFICIAL is shown
 }
 function chooseMode(mode) { setViewMode(mode); switchW(CW); }     // banner buttons: switch source, show that bracket
 
 function renderModeBanner() {
   const b = document.getElementById('mode-banner'); if (!b) return;
-  if (!officialCore) { b.hidden = true; return; }
+  if (!officialCore || uiMode === 'history') { b.hidden = true; return; }   // NCAA HISTORY has its own controls
   b.hidden = false; b.className = 'mode-banner mb-' + viewMode;
   while (b.firstChild) b.removeChild(b.firstChild);
   const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -2142,7 +2196,7 @@ function renderModeBanner() {
     if (i.loadedAt && i.legacyIgnored > 0) left.appendChild(mk('span', 'mb-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? '' : 's') + ' not shown'));
     if (i.loadedAt && i.problems && i.problems.length) left.appendChild(mk('span', 'mb-note', i.problems.length + ' record' + (i.problems.length === 1 ? '' : 's') + ' could not be applied'));
   } else {
-    left.appendChild(mk('span', 'mb-tag', 'MY PICKS'));
+    left.appendChild(mk('span', 'mb-tag', 'MY BRACKET'));
     left.appendChild(mk('span', 'mb-status', 'Your own predictions — not official results'));
   }
   b.appendChild(left);
@@ -2156,12 +2210,8 @@ function renderModeBanner() {
     else if (o.state === 'signedOut' && officialCore && window.OfficialWriter && /[?&]ops=1(&|$)/.test(location.search)) right.appendChild(btn('mb-refresh', 'Operator sign-in', operatorSignIn));   // the invite is only ever shown on the operator's own bookmarked link; anyone already mid-flow (checking/operator/notOperator/error) still sees their own state regardless of the URL
     right.appendChild(btn('mb-refresh', '↻ Refresh', () => loadOfficial(true)));
   }
-  const sw = mk('span', 'mode-sw'); sw.setAttribute('role', 'group'); sw.setAttribute('aria-label', 'Bracket source');
-  [['official', 'OFFICIAL'], ['picks', 'MY PICKS']].forEach(([m, label]) => {
-    const btn = mk('button', 'mode-btn' + (viewMode === m ? ' on' : ''), label); btn.type = 'button';
-    btn.addEventListener('click', () => chooseMode(m)); sw.appendChild(btn);
-  });
-  right.appendChild(sw); b.appendChild(right);
+  // (The OFFICIAL / MY BRACKET switch now lives in the top navigation — #topnav.)
+  b.appendChild(right);
 }
 
 // Firestore may hand back a snapshot built from the local cache (offline / not yet confirmed by the server). Such a snapshot is
@@ -2431,9 +2481,11 @@ function hideMainPanels() {
 function switchHistory() {
   showScores=false; showAA=false; showLeaderboard=false;
   hideMainPanels();
+  uiMode = 'history';                                               // LAYOUT: NCAA HISTORY section (no live weight row)
   document.getElementById('history-controls').style.display='flex';
   document.getElementById('area').style.display='flex';
-  document.getElementById('bkt').innerHTML = '<p style="padding:20px;color:var(--t2);font-family:\'DM Mono\',monospace;">Choose a year and weight above, then click SHOW BRACKET.</p>';
+  renderModeBanner(); renderWeightTabs();
+  document.getElementById('bkt').innerHTML = '<p style="padding:20px;color:var(--t2);font-family:\'DM Mono\',monospace;">Choose a year and weight above, then click VIEW BRACKET.</p>';
   if (window.HistoryMode) window.HistoryMode.init();
 }
 // Called by historical-mode.js once it has fetched a year's data and built the historical core+book (via the
@@ -3883,7 +3935,7 @@ async function loadSelectedSubmission(){
 // Required because type="module" scopes functions locally
 // and HTML onclick handlers need global access
 Object.assign(window, {
-  resetBracket, switchW, switchScores, switchAA, switchCentral, switchOfficialScores, switchOfficialAA, openLeaderboard, chooseMode,
+  resetBracket, switchW, goWeight, switchScores, switchAA, switchCentral, switchOfficialScores, switchOfficialAA, openLeaderboard, chooseMode,
   switchHistory, showHistoricalBracket, clearHistoricalBracket, showHistoricalScores,
   doPrint, closePrintModal, printBracket,
   pmSelectAll, pmSelectNone,
@@ -4023,7 +4075,7 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
 <script src="official-checkpoint.js?v=ckpt2"></script>
 <script src="official-writer.js?v=lr"></script>
 <script src="flo-import.js?v=20261001a"></script>
-<script src="tournament-central.js?v=20261001a"></script>
+<script src="tournament-central.js?v=layout1"></script>
 <script src="path-panel.js?v=career1"></script>
 <script src="team-panel.js?v=lr"></script>
 <script src="official-aa-view.js?v=lr"></script>
