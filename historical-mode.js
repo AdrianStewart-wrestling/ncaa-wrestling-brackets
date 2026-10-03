@@ -22,7 +22,7 @@ const HistoryMode = (function () {
   // wherever you're serving that site's results*.js files (see README for options).
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
-  const AVAILABLE_YEARS = [2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const AVAILABLE_YEARS = [2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 

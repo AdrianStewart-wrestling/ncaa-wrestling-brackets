@@ -65,9 +65,10 @@ const HistoricalStateBuilder = (function () {
     const nameToSeed = {};
     const r1 = model.phases.r1;
 
-    const setSeed = (seedNum, person) => {
+    const setSeed = (seedNum, person, ds) => {
       if (!person || !person.name) return;
       bySeed[seedNum - 1] = { n: person.name, s: person.school || '', r: '', seed: seedNum };
+      if (ds !== undefined) bySeed[seedNum - 1].ds = ds;          // printed-line years only: the PRINTED seed (0 = unseeded)
       nameToSeed[norm(person.name)] = seedNum;
     };
     const loserOf = m => (norm(m.a.name) === norm(m.winner.name)) ? m.b : m.a;
@@ -99,6 +100,57 @@ const HistoricalStateBuilder = (function () {
       }
     }
 
+    // ---- PRINTED-LINE MODE (historical bracket FACTS, generic): used when HistoricalSeeds.facts[year][weight] exists.
+    // facts = { seedCount, lines: { dataName: printedLine 0..31 } } transcribed from the printed draw; seeds from table[year][weight].
+    // Every R1 wrestler sits on his PRINTED line; his identity number is the standard NCAA 32-line draw number of that line,
+    // validated against every printed seed (a mismatch, a missing line, or a duplicate fails the build -- nothing is guessed,
+    // and nothing is inferred from who won). Engine-fixed positions: wrestle-in entrants are #32/#33 (alphabetical, as KI-1);
+    // when the wrestle-in feeds slot p > 0, slot 0's printed line-1 wrestler takes the number of the line the wrestle-in
+    // winner occupies (the KI-1 'vacated' rule). Each field carries ds = the PRINTED seed (0 = unseeded) for display.
+    const factsAll = (typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts) || null;
+    const facts = factsAll && factsAll[String(model.year)] && factsAll[String(model.year)][String(model.weight)];
+    const histPair = new Array(16); // historical slot -> [seed on line a, seed on line b | null]
+    if (facts) {
+      const LINE_NO = [1,32,17,16,9,24,25,8,5,28,21,12,13,20,29,4,3,30,19,14,11,22,27,6,7,26,23,10,15,18,31,2];
+      const tableAll = (window.HistoricalSeeds && window.HistoricalSeeds.table) || {};
+      const yS = (tableAll[String(model.year)] || {})[String(model.weight)] || {};
+      const printedSeed = {}; Object.keys(yS).forEach(k => { printedSeed[norm(k)] = yS[k]; });
+      const lineOf = {}; Object.keys(facts.lines || {}).forEach(k => { lineOf[norm(k)] = facts.lines[k]; });
+      const N = facts.seedCount;
+      const seedVals = Object.values(printedSeed).sort((x, y) => x - y);
+      if (!(N >= 1 && N <= 33) || seedVals.length !== N || seedVals.some((v, i) => v !== i + 1)) problems.push('printed seeds are not exactly 1..' + N + ' (found ' + seedVals.join(',') + ').');
+      const used = new Array(32).fill(false);
+      const lineOfP = person => lineOf[norm(person && person.name)];
+      const ptW = model.hasPigtail ? model.phases.pigtail.winner : null, ptL = model.hasPigtail ? loserOf(model.phases.pigtail) : null;
+      const isPtW = person => ptW && norm(person.name) === norm(ptW.name);
+      r1.forEach((m, i) => [m.a, m.b].forEach(x => { const L = lineOfP(x);
+        if (L === undefined) { problems.push('R1 slot ' + i + ': no printed line for ' + x.name + '.'); return; }
+        if (L !== 2 * i && L !== 2 * i + 1) problems.push('R1 slot ' + i + ': ' + x.name + ' is on printed line ' + L + ', not in this bout (lines ' + (2 * i) + '/' + (2 * i + 1) + ').');
+        if (used[L]) problems.push('printed line ' + L + ' is used twice.'); used[L] = true;
+        const sd = printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO[L] !== sd) problems.push(x.name + ' (#' + sd + ') is printed on line ' + L + ', which is draw line #' + LINE_NO[L] + '.'); }));
+      if (used.some(u => !u)) problems.push('printed lines not all used: ' + used.map((u, i) => u ? null : i).filter(v => v !== null).join(','));
+      if (ptL && lineOfP(ptL) !== undefined) problems.push('wrestle-in loser ' + ptL.name + ' must not have a printed R1 line.');
+      if (!problems.length) {
+        const dsOf = x => printedSeed[norm(x.name)] || 0;
+        let vacated = null;
+        if (model.hasPigtail) {
+          const ordered = [ptW, ptL].slice().sort((x, y) => norm(x.name) < norm(y.name) ? -1 : norm(x.name) > norm(y.name) ? 1 : 0);
+          setSeed(32, ordered[0], dsOf(ordered[0])); setSeed(33, ordered[1], dsOf(ordered[1]));
+          if (p !== 0) vacated = LINE_NO[lineOfP(ptW)];
+        }
+        r1.forEach((m, i) => {
+          const top = lineOfP(m.a) === 2 * i ? m.a : m.b, bot = top === m.a ? m.b : m.a;
+          const numOf = (x, L) => (i === 0 && L === 1 && vacated !== null) ? vacated : LINE_NO[L];
+          if (model.hasPigtail && i === p) {
+            const real = isPtW(m.a) ? m.b : m.a; const n = numOf(real, lineOfP(real));
+            setSeed(n, real, dsOf(real)); histPair[i] = [n, null];
+          } else {
+            const nt = numOf(top, 2 * i), nb = numOf(bot, 2 * i + 1);
+            setSeed(nt, top, dsOf(top)); setSeed(nb, bot, dsOf(bot)); histPair[i] = [nt, nb];
+          }
+        });
+      }
+    } else {
     // ---- KI-1: SEED IDENTITY COMES FROM THE SOURCED SEED TABLE (historical-seeds.js), NEVER FROM THE RESULT.
     // The adapter's R1 bouts are {a: winner, b: loser}, so a/b carry no draw information. Each wrestler's seed is
     // looked up by name in HistoricalSeeds.table[year][weight] (keyed by the data's own spelling):
@@ -161,7 +213,7 @@ const HistoricalStateBuilder = (function () {
     // special when the wrestle-in exists: slot p holds the wrestle-in winner (already seeded 32/33) and one real
     // entrant; slot 0 (pre-2019, p !== 0) then holds #1 and the entrant who sits on the line the wrestle-in winner
     // vacated in PAIRS[p] (the higher number). When p === 0 these collapse to the modern 1-vs-wrestle-in shape.
-    const histPair = new Array(16); // historical slot -> [seed on line a, seed on line b | null]
+ // historical slot -> [seed on line a, seed on line b | null]
     r1.forEach((m, i) => {
       const lo = (PAIRS[i][1] === null) ? 1 : Math.min(PAIRS[i][0], PAIRS[i][1]) + 1;
       const hi = (PAIRS[i][1] === null) ? null : Math.max(PAIRS[i][0], PAIRS[i][1]) + 1;
@@ -193,6 +245,8 @@ const HistoricalStateBuilder = (function () {
         histPair[i] = [PAIRS[i][0] + 1, PAIRS[i][1] + 1]; // fixed lines by draw position, independent of result
       }
     });
+
+    }
 
     // Engine R1 pairing = the source draw order, unchanged. Slot p's b side is left null -- the engine fills it
     // with the wrestle-in winner (OFFICIAL does the same at slot 0).
@@ -239,7 +293,7 @@ const HistoricalStateBuilder = (function () {
       return decWithScore(m[2], m[3], ot === 'RO' ? null : ot);
     }
     // Tech fall: "TF-1.5 3:56 (18-2)", "TF-1.5 18-2", "TF-1.5 6:34", "TF 4:25 19-4", "TF 19-4 6:51", "TF 19-3", "TF 4:22"
-    if ((m = /^TF(?:-1\.5)?\s+(.*)$/i.exec(s))) {
+    if ((m = /^TF(?:-\d+(?:\.\d+)?)?\s+(.*)$/i.exec(s))) {          // any printed bonus: TF-1.5, TF-1, TF
       // a stray trailing integer after a complete "time (score)" is ignored ("TF-1.5 4:24 (17-1) 395")
       const rest = m[1].replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim().replace(/^(\d{1,2}:\d{2} \d+-\d+) \d+$/, '$1');
       const tm = new RegExp(T).exec(rest), sc = new RegExp(S).exec(rest.replace(new RegExp(T), ' '));
@@ -266,7 +320,10 @@ const HistoricalStateBuilder = (function () {
   // same code already validated throughout this project's Verify work as real_official_core.js). Not modified.
   function mkW(field, idx0) {
     const f = field[idx0];
-    return f ? { n: f.n, s: f.s, r: f.r || '', seed: idx0 + 1 } : null;
+    if (!f) return null;
+    const o = { n: f.n, s: f.s, r: f.r || '', seed: idx0 + 1 };
+    if (f.ds !== undefined) o.ds = f.ds;                          // printed-line years only
+    return o;
   }
   function mkMatch(a, b) { return { a, b, w: null }; }
 

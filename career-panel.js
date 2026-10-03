@@ -1,6 +1,6 @@
 /* ============================================================================
    NCAA CAREER — HISTORY ONLY. Opened from the History Path to the Finals panel ("NCAA Career"). One wrestler's NCAA
-   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (2016–2026, no 2020 Championships), identified by
+   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (2013–2026, no 2020 Championships), identified by
    the Career Registry (historical-careers.js) — never by name. Read-only: only calls TCEngine.careerLoad() and
    PathPanel.open(); writes nothing; builds its screen with textContent only. OFFICIAL / MY PICKS never reach this panel.
    ============================================================================ */
@@ -11,7 +11,7 @@
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
   function fmtN(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
   var POINTS_TIP = 'Tournament Points are calculated by Tournament Central from the historical bout results (advancement, bonus and placement points). Team-level deductions are not attributable to individual wrestlers, so these can differ from official team totals.';
-  var COVERAGE = 'Covers the 2016–2026 NCAA Championships in Tournament Central (there were no 2020 Championships). Appearances before 2016 are not included, so this may not be his complete NCAA career.';
+  var COVERAGE = 'Covers the 2013–2026 NCAA Championships in Tournament Central (there were no 2020 Championships). Appearances before 2013 are not included, so this may not be his complete NCAA career.';
 
   function ensureStyle() {
     if (document.getElementById('cp-style')) return;

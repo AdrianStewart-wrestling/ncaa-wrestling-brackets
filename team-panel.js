@@ -43,7 +43,7 @@
       li.appendChild(el('span', 'pp-rd', p.wrestler.weight + ' lbs'));
       var main = el('span', 'pp-main'); var nb = el('button', 'pp-opp', p.wrestler.name); nb.type = 'button';
       nb.addEventListener('click', function () { closePanel(); if (window.PathPanel) window.PathPanel.open(p.wrestler.id); });
-      main.appendChild(nb); main.appendChild(el('span', 'pp-osc', '#' + p.wrestler.seed + (p.aa ? ' · ★ AA' : '')));
+      main.appendChild(nb); main.appendChild(el('span', 'pp-osc', (p.wrestler.seed ? '#' + p.wrestler.seed : 'Unseeded') + (p.aa ? ' · ★ AA' : '')));
       li.appendChild(main);
       li.appendChild(el('span', 'pp-res', p.outcome.label));
       if (p.points) li.appendChild(el('span', 'pp-pt', fmtN(p.points.total) + ' pts'));

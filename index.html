@@ -2609,7 +2609,7 @@ function slotHTML(m, which, bkt, ri, mi) {
   const nameParts=wr.n.split(' ');
   const fn=nameParts[0];
   const ln=nameParts.slice(1).join(' ');
-  const seedStr=wr.seed<=16?wr.seed:'';
+  const seedStr=(wr.ds!==undefined)?(wr.ds||''):(wr.seed<=16?wr.seed:'');   // printed-line history years carry ds = PRINTED seed (0 = unseeded)
   let onclick='',title='';
   if(canPick){onclick=`onclick="pick(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Advance ${wr.n}"`;}
   else if(canSwap){onclick=`onclick="swap(${CW},'${bkt}',${ri},${mi},'${which}')"`;title=`title="Switch winner to ${wr.n}"`;}
@@ -3000,7 +3000,7 @@ function teamRoster(school) {
     const Y = window.historicalYear; if (!window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Team detail is not available for this historical year.' };
     let sc = null; try { sc = historicalScoresModel(); } catch (e) { sc = null; }
     const opts = sc ? { events: sc.events, floors: sc.floors } : {};
-    const wrestlers = (Y.idsBySchool[school] || []).map(id => { const w = Number(String(id).split('-')[0]); return Y.cores[w] ? window.OfficialPath.compute(Y.cores[w], Y.books[w], id, opts) : null; }).filter(p => p && p.ok);
+    const wrestlers = (Y.idsBySchool[school] || []).map(id => { const w = Number(String(id).split('-')[0]); return Y.cores[w] ? histSeedView(window.OfficialPath.compute(Y.cores[w], Y.books[w], id, opts), Y.year) : null; }).filter(p => p && p.ok);
     wrestlers.sort((a, b) => a.wrestler.weight - b.wrestler.weight || a.wrestler.seed - b.wrestler.seed);
     return { ok: true, school: school, wrestlers: wrestlers, team: sc ? (sc.teams.find(t => t.school === school) || null) : null };
   }
@@ -3150,10 +3150,22 @@ window.historicalCareerYears = window.historicalCareerYears || {};
 function parseYearId(id) { const m = /^(\d{4}):(\d{3}-\d{2})$/.exec(String(id)); return m ? { year: Number(m[1]), local: m[2] } : null; }
 function qualifyIds(obj, year) { return JSON.parse(JSON.stringify(obj), (k, v) => (k === 'id' && typeof v === 'string' && /^\d{3}-\d{2}$/.test(v)) ? year + ':' + v : v); }
 function careerYearCore(year, localId) { const Y = window.historicalCareerYears[year], w = Number(String(localId).split('-')[0]); return Y && Y.cores[w] ? { Y: Y, core: Y.cores[w], book: Y.books[w] } : null; }
+// Printed-line history years (HistoricalSeeds.facts[year]): show each wrestler's PRINTED seed (null = unseeded) instead of the
+// engine identity number. Years without facts (2016-2026) are returned untouched.
+function histSeedView(obj, year) {
+  const F = window.HistoricalSeeds && window.HistoricalSeeds.facts, T = window.HistoricalSeeds && window.HistoricalSeeds.table;
+  if (!obj || !F || !F[String(year)] || !T) return obj;
+  const nk = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
+  const maps = {}; const mapFor = w => { if (!maps[w]) { const m = {}; const t = (T[String(year)] || {})[String(w)] || {}; Object.keys(t).forEach(k => { m[nk(k)] = t[k]; }); maps[w] = m; } return maps[w]; };
+  const walk = o => { if (!o || typeof o !== 'object') return; if (Array.isArray(o)) { o.forEach(walk); return; }
+    if (typeof o.seed === 'number' && typeof o.name === 'string' && typeof o.id === 'string') { const m = /(\d{3})-\d{2}$/.exec(o.id); if (m) o.seed = mapFor(Number(m[1]))[nk(o.name)] || null; }
+    Object.keys(o).forEach(k => { if (o[k] && typeof o[k] === 'object') walk(o[k]); }); };
+  walk(obj); return obj;
+}
 function careerYearPath(year, localId) {
   const c = careerYearCore(year, localId); if (!c || !window.OfficialPath) return null;
   let sc = null; try { sc = historicalScoresModel(c.Y); } catch (e) { sc = null; }
-  return window.OfficialPath.compute(c.core, c.book, localId, sc ? { events: sc.events, floors: sc.floors } : {});
+  return histSeedView(window.OfficialPath.compute(c.core, c.book, localId, sc ? { events: sc.events, floors: sc.floors } : {}), year);
 }
 function careerKeyFor(id) {                                // registry key (year:weight-seed) for a Path id in History
   if (viewMode !== 'historical' || !window.HistoricalCareers) return null;
@@ -3196,11 +3208,11 @@ function pathFor(wrestlerId) {
     const hy = historicalYearCoreFor(wrestlerId);
     if (!hy || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available for this historical wrestler.' };
     let sc = null; try { sc = historicalScoresModel(); } catch (e) { sc = null; }
-    return window.OfficialPath.compute(hy.core, hy.book, wrestlerId, sc ? { events: sc.events, floors: sc.floors } : {});
+    return histSeedView(window.OfficialPath.compute(hy.core, hy.book, wrestlerId, sc ? { events: sc.events, floors: sc.floors } : {}), window.historicalYear && window.historicalYear.year);
   }
   if (viewMode === 'historical') {
     if (!window.historicalCore || !window.historicalBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available for this historical bracket.' };
-    return window.OfficialPath.compute(window.historicalCore, window.historicalBook, wrestlerId, {}); // no scoring/AA extras for historical brackets
+    return histSeedView(window.OfficialPath.compute(window.historicalCore, window.historicalBook, wrestlerId, {}), window.historicalBracketYear); // no scoring/AA extras for historical brackets
   }
   if (!officialCore || !officialBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available in this session.' };
   let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }
@@ -3210,7 +3222,7 @@ function roadFor(wrestlerId) {
   const yq = viewMode === 'historical' ? parseYearId(wrestlerId) : null;
   if (yq) { const c = careerYearCore(yq.year, yq.local);
     if (!c || !window.OfficialPath || !window.OfficialPath.project) return { ok: false, code: 'unavailable', message: 'Road Ahead is not available for this historical wrestler.' };
-    return qualifyIds(window.OfficialPath.project(c.core, c.book, yq.local), yq.year); }
+    return histSeedView(qualifyIds(window.OfficialPath.project(c.core, c.book, yq.local), yq.year), yq.year); }
   if (viewMode === 'historical' && window.historicalYear) {
     const hy = historicalYearCoreFor(wrestlerId);
     if (!hy || !window.OfficialPath || !window.OfficialPath.project) return { ok: false, code: 'unavailable', message: 'Road Ahead is not available for this historical wrestler.' };
@@ -3218,7 +3230,7 @@ function roadFor(wrestlerId) {
   }
   if (viewMode === 'historical') {
     if (!window.historicalCore || !window.historicalBook || !window.OfficialPath || !window.OfficialPath.project) return { ok: false, code: 'unavailable', message: 'Road Ahead is not available for this historical bracket.' };
-    return window.OfficialPath.project(window.historicalCore, window.historicalBook, wrestlerId);
+    return histSeedView(window.OfficialPath.project(window.historicalCore, window.historicalBook, wrestlerId), window.historicalBracketYear);
   }
   if (!officialCore || !officialBook || !window.OfficialPath || !window.OfficialPath.project) return { ok: false, code: 'unavailable', message: 'Road Ahead is not available in this session.' };
   return window.OfficialPath.project(officialCore, officialBook, wrestlerId);
@@ -4076,8 +4088,8 @@ if (!/[?&]view=bracket(&|$)/.test(location.search)) {
 <script src="official-writer.js?v=lr"></script>
 <script src="flo-import.js?v=20261001a"></script>
 <script src="tournament-central.js?v=layout1"></script>
-<script src="path-panel.js?v=career1"></script>
-<script src="team-panel.js?v=lr"></script>
+<script src="path-panel.js?v=hx1"></script>
+<script src="team-panel.js?v=hx1"></script>
 <script src="official-aa-view.js?v=lr"></script>
 </body>
 </html>
@@ -4421,10 +4433,10 @@ setTimeout(updateChampPill, 100);
 </script>
 <!-- HISTORY MODE (read-only, never writes Firebase/OFFICIAL) -->
 <script src="historical-adapter.js?v=1"></script>
-<script src="historical-seeds.js?v=1"></script>
-<script src="historical-state-builder.js?v=5"></script>
-<script src="historical-adjustments.js?v=1"></script>
-<script src="historical-mode.js?v=6"></script>
-<script src="historical-careers.js?v=1"></script>
-<script src="career-panel.js?v=1"></script>
+<script src="historical-seeds.js?v=2"></script>
+<script src="historical-state-builder.js?v=6"></script>
+<script src="historical-adjustments.js?v=2"></script>
+<script src="historical-mode.js?v=7"></script>
+<script src="historical-careers.js?v=2"></script>
+<script src="career-panel.js?v=2"></script>
 <!-- ════════════════════════════════════════════════════════════ -->

@@ -9,7 +9,7 @@
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
   function fmtN(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
-  function who(p) { return p.name + ', ' + p.school + ' (#' + p.seed + ')'; }
+  function who(p) { return p.name + ', ' + p.school + (p.seed ? ' (#' + p.seed + ')' : ' (Unseeded)'); }
   // Live record: the roster carries only the wrestler's SEASON record at seeding time (e.g. "21-0"), never updated.
   // This adds his DECIDED tournament bouts on top of it, purely for display -- it reads only m.wrestler.record and
   // m.journey (already computed by official-path.js for every row in the panel). No data is written; no other feature
@@ -44,7 +44,7 @@
     var w = m.wrestler, o = m.outcome, b = st.body;
     var h = el('h2', 'pp-name', w.name); h.id = 'pp-title'; b.appendChild(h);
     var lr = liveRecord(w, m.journey);
-    b.appendChild(el('div', 'pp-sub', w.weight + ' lbs · #' + w.seed + ' seed · ' + w.school + (lr ? ' · ' + lr : '')));
+    b.appendChild(el('div', 'pp-sub', w.weight + ' lbs · ' + (w.seed ? '#' + w.seed + ' seed' : 'Unseeded') + ' · ' + w.school + (lr ? ' · ' + lr : '')));
     var chips = el('div', 'pp-chips'); chips.appendChild(el('span', 'pp-chip pp-chip--' + o.code, o.code === 'champion' ? '🏆 ' + o.label : o.label));
     if (m.aa === true) chips.appendChild(el('span', 'pp-chip pp-chip--aa', '★ All-American')); b.appendChild(chips);
 
@@ -78,7 +78,7 @@
           else rr.opponents.forEach(function (op, oi) {
             if (oi) people.appendChild(el('span', 'pp-road-or', 'OR'));
             var ob = el('button', 'pp-opp pp-road-opp', op.name); ob.type = 'button'; ob.addEventListener('click', function () { openPanel(op.id); }); people.appendChild(ob);
-            people.appendChild(el('span', 'pp-osc', op.school + ' · #' + op.seed));
+            people.appendChild(el('span', 'pp-osc', op.school + (op.seed ? ' · #' + op.seed : ' · Unseeded')));
           });
           row.appendChild(people); rl.appendChild(row);
         });

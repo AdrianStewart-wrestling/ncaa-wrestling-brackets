@@ -19,7 +19,15 @@ const HistoricalAdjustments = (function () {
 
   const SRC_2018_OSU = 'FloWrestling, "Retrospective: Ohio State\'s 2018 NCAA Tournament" (officials deducted a team point when Kyle Snyder threw his headgear into the crowd after the finals; 134.5 -> 133.5); NCAA Division I Wrestling Championships Records Book 2018-19 (Ohio St. 133.5)';
 
+  // kind 'printed-bonus': the official NCAA bracket prints a result whose team-scoring bonus differs from the engine's
+  // fixed value for that result type. The bout keeps its printed type (Tech Fall); this entry applies the documented
+  // difference. 2015: tech falls printed 'TF-1' (1 bonus point); the engine scores every tech fall at 1.5.
+  const SRC_2015_PDF = 'Official NCAA 2015 Division I Wrestling Championships bracket PDF';
   const DATA = {
+    2015: {
+      'Wisconsin':     { points: -0.5, kind: 'printed-bonus', source: SRC_2015_PDF, reason: 'Printed tech-fall bonus: 133 lbs bout 42, Bradley Taylor (Wisconsin) over Mitch Finesilver, printed "TF-1 5:58 (23-8)" (1 bonus point; engine scores tech falls 1.5). Source: ' + SRC_2015_PDF + ', 133 page.' },
+      'Virginia Tech': { points: -0.5, kind: 'printed-bonus', source: SRC_2015_PDF, reason: 'Printed tech-fall bonus: 141 lbs bout 50, Devin Carter (Virginia Tech) over Tyler Small, printed "TF-1 6:59 (23-7)" (1 bonus point; engine scores tech falls 1.5). Source: ' + SRC_2015_PDF + ', 141 page.' }
+    },
     // kind 'deduction': a team-point deduction DOCUMENTED by a source (what happened is stated by the source).
     2018: {
       'Ohio State':        { points: -1, kind: 'deduction', publishedTotal: 133.5, source: SRC_2018_OSU, reason: 'Documented team-point deduction (1 point): officials deducted a point when Kyle Snyder threw his headgear into the crowd after the finals. Published NCAA final team total 133.5. Source: ' + SRC_2018_OSU + '.' }
