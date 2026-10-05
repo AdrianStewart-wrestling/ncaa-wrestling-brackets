@@ -22,14 +22,14 @@ const HistoryMode = (function () {
   // wherever you're serving that site's results*.js files (see README for options).
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
-  const AVAILABLE_YEARS = [1999,2000,2001,2002,2003,2004,2005,2006,2007,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const AVAILABLE_YEARS = [1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
   function init() {
     const yearSel = document.getElementById('hist-year');
     if (!initialized) {
-      AVAILABLE_YEARS.slice().reverse().forEach(y => {
+      [...new Set(AVAILABLE_YEARS)].sort((a, b) => b - a).forEach(y => {   // de-duplicated, newest first
         const opt = document.createElement('option');
         opt.value = y; opt.textContent = y;
         if (y === 2016) opt.selected = true; // this milestone's one acceptance case
