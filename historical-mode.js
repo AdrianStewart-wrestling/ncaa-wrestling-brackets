@@ -20,10 +20,10 @@
    different set of weight classes keeps its REAL labels in its data (results1998.js says "118") and is mapped onto the
    same 10 slots, in order, only when a bracket is handed to the engine; every label the user sees is the real one.
    Years not listed here use the modern labels unchanged (identity), so 1999-2026 behave exactly as before.
-   Source for 1998: the WrestlingStats 1998 compiled bracket (weight-class pages 118 ... 275). */
+   Sources: the WrestlingStats 1997 and 1998 compiled brackets (weight-class pages 118 ... 275). */
 const HistoricalWeights = (function () {
   const MODERN = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
-  const CLASSES = { 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
+  const CLASSES = { 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
   const of = year => CLASSES[Number(year)] || MODERN;
   return {
     classes: of,                                                                  // labels for a year, lightest first
@@ -58,7 +58,7 @@ const HistoryMode = (function () {
   // wherever you're serving that site's results*.js files (see README for options).
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
-  const AVAILABLE_YEARS = [1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const AVAILABLE_YEARS = [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
