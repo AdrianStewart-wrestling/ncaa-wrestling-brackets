@@ -1,6 +1,6 @@
 /* ============================================================================
    NCAA CAREER — HISTORY ONLY. Opened from the History Path to the Finals panel ("NCAA Career"). One wrestler's NCAA
-   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (1981–2026, no 2020 Championships; 1999–2009 and 2012 results from a fallback source), identified by
+   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (1980–2026, no 2020 Championships; 1999–2009 and 2012 results from a fallback source), identified by
    the Career Registry (historical-careers.js) — never by name. Read-only: only calls TCEngine.careerLoad() and
    PathPanel.open(); writes nothing; builds its screen with textContent only. OFFICIAL / MY PICKS never reach this panel.
    ============================================================================ */
@@ -12,7 +12,7 @@
   function pending(y) { return !!(window.HistoryMode && window.HistoryMode.scoringPending && window.HistoryMode.scoringPending(y)); }
   function fmtN(n) { return n % 1 === 0 ? String(n) : String(Math.round(n * 100) / 100); }   // halves unchanged; quarter points exact (1988-1994)
   var POINTS_TIP = 'Tournament Points are calculated by Tournament Central from the historical bout results (advancement, bonus and placement points). Team-level deductions are not attributable to individual wrestlers, so these can differ from official team totals.';
-  var COVERAGE = 'Covers the 1981–2026 NCAA Championships in Tournament Central (there were no 2020 Championships; 2012 completed results come from the WrestlingStats fallback, structure from the official NCAA draw; 1981–2009 bracket and results come from the WrestlingStats fallback, checked against the NCAA Records Book; 2009 bracket and results come from the WrestlingStats fallback). Appearances before 1981 are not included, so this may not be his complete NCAA career.';
+  var COVERAGE = 'Covers the 1980–2026 NCAA Championships in Tournament Central (there were no 2020 Championships; 2012 completed results come from the WrestlingStats fallback, structure from the official NCAA draw; 1980–2009 bracket and results come from the WrestlingStats fallback, checked against the NCAA Records Book; 2009 bracket and results come from the WrestlingStats fallback). Appearances before 1980 are not included, so this may not be his complete NCAA career.';
 
   function ensureStyle() {
     if (document.getElementById('cp-style')) return;

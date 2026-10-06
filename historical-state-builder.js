@@ -282,6 +282,10 @@ const HistoricalStateBuilder = (function () {
     return { resultType: 'Dec', score: w + '-' + l + (ot ? ' ' + ot : ''), time: '' };
   }
   function parseResult(raw) {
+    // explicit historical state: a win whose result the source does not print (1980 WrestlingStats consolation wrestle-ins;
+    // tools/pre1999/bout_resolutions.json boutOverrides). Recorded with the engine's decision type but no score and flagged:
+    // advancement only, zero bonus, displayed "Win (result not printed)" -- never shown or exported as a decision.
+    if (String(raw).trim() === 'WIN-NP') return { resultType: 'Dec', score: '', time: '', notPrinted: true };
     // Normalize: trim, drop ';' / ',' separators, collapse whitespace. ("TF 4:25 ;19-4", "TF  5:21 19-4", "Dec TB1, 4-1")
     const s = String(raw || '').replace(/[;,]/g, ' ').replace(/\s+/g, ' ').trim();
     let m;
@@ -746,7 +750,9 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
         }));
         [st.place3, st.place5, st.place7].forEach(pm => {
           if (pm.w || !pm.missing) return; const filled = (pm.a ? 1 : 0) + (pm.b ? 1 : 0);
-          if (filled === 1 && filled + pm.missing === 2) { pm.w = pm.a ? 'a' : 'b'; pm.bye = true; changed = true; }
+          if (filled === 1 && filled + pm.missing === 2) { pm.w = pm.a ? 'a' : 'b'; pm.bye = true; changed = true;
+            // a printed placement forfeit approved as a scoring event (facts byes[].forfeitBonus; 1981 134 Lewis only)
+            if ((F.byes || []).some(b => b.phase === 'printedBye' && b.forfeitBonus && b.wrestler === pm[pm.w].n)) pm.forfeitBonus = true; }
         });
       }
     }
@@ -778,7 +784,9 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const core = N >= 2 ? window.HistoricalCore.create(adapter) : window.TournamentCore.create(adapter);
     core.roundLabel = key => { const p = String(key).split(':'); return p[0] === 'con' ? (SH.path[+p[1]] || null) : null; };      // optional hook read by official-path.js (absent on every other core)
     // 1976-1987 rule: a decision won by 12+ points is a SUPERIOR DECISION (stored as the engine's MajDec; the printed score decides).
+    const notPrinted = new Set();   // bout keys recorded from a WIN-NP row (filled during the replay below)
     if (Number(year) >= 1976 && Number(year) <= 1987) core.methodLabel = (key, res) => {
+      if (notPrinted.has(key)) return 'Win (result not printed)';
       const m = /^(\d+)-(\d+)$/.exec(String(res && res.score || '')); return res && res.resultType === 'MajDec' && m && (+m[1] - +m[2]) >= 12 ? 'Sup. Dec.' : null; };
     const book = core.newBook(), wt = Number(slotWeight);
     const pending = () => core.keys.map(k => core.boutIdOf(wt, k)).filter(Boolean).map(id => core.describe(book, id)).filter(d => d && d.status === 'pending');
@@ -790,6 +798,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       const pr = parse(r.result); if (!pr) { problems.push(r.round + ': could not parse "' + r.result + '"'); return; }
       const res = core.record(book, { boutId: c.boutId, winnerId: norm(c.a.name) === norm(r.winner) ? c.a.id : c.b.id, resultType: pr.resultType, score: pr.score, time: pr.time, source: 'historical-replay' });
       if (!res.ok) problems.push(r.round + ': ' + r.winner + ' vs ' + r.loser + ' -- ' + (res.message || res.code));
+      else if (pr.notPrinted) notPrinted.add(c.key);
     });
     const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
     if (VAC) {   // every printed bye must be a bye the vacancies produce, and vice versa
