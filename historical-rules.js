@@ -21,14 +21,17 @@ const HistoricalRules = (function () {
   // The tech-fall near-fall distinction (1 point without a near fall) is NOT modelled: the sources do not record near falls.
   const OLD_PLACE = [16, 12, 9, 7, 5, 3, 2, 1], MODERN_PLACE = [16, 12, 10, 9, 7, 6, 4, 3];
   const PLACE_SRC = 'Pre-2001 placement table 16-12-9-7-5-3-2-1 (WrestlingStats compiled chronology; validated against NCAA published standings; contemporary NCAA rules text not located)';
-  const RULES = { 1997: { byePoints64: true, placementTable: OLD_PLACE }, 1998: { byePoints64: true, placementTable: OLD_PLACE }, 1999: { byePoints64: true, placementTable: OLD_PLACE }, 2000: { byePoints64: true, placementTable: OLD_PLACE }, 2001: { byePoints64: true }, 2002: { byePoints64: true }, 2003: { byePoints64: true }, 2004: { byePoints64: true }, 2005: { byePoints64: true }, 2006: { byePoints64: true }, 2007: { byePoints64: true }, 2008: { byePoints64: true }, 2009: { byePoints64: true }, 2010: { byePoints64: true }, 2011: { byePoints64: true }, 2012: { byePoints64: true } };   // 2012 brackets print the 64-wrestler note; reconciled below
+  const RULES = { 1996: { byePoints64: true, placementTable: OLD_PLACE }, 1997: { byePoints64: true, placementTable: OLD_PLACE }, 1998: { byePoints64: true, placementTable: OLD_PLACE }, 1999: { byePoints64: true, placementTable: OLD_PLACE }, 2000: { byePoints64: true, placementTable: OLD_PLACE }, 2001: { byePoints64: true }, 2002: { byePoints64: true }, 2003: { byePoints64: true }, 2004: { byePoints64: true }, 2005: { byePoints64: true }, 2006: { byePoints64: true }, 2007: { byePoints64: true }, 2008: { byePoints64: true }, 2009: { byePoints64: true }, 2010: { byePoints64: true }, 2011: { byePoints64: true }, 2012: { byePoints64: true } };   // 2012 brackets print the 64-wrestler note; reconciled below
   // 1998 (pre-1999 weight classes 118-275; same 32-line + wrestle-in format as 1999): the 1999 rule set, validated against the
   // ten team totals printed on the WrestlingStats 1998 summary page -- 6/10 exact with the rule set vs 1/10 (modern table, no bye
-  // points), 0/10 (old table only), 1/10 (bye points only). Residuals Iowa +0.5, Oklahoma State +2, Illinois +1.5, Oregon State +0.5
-  // are NOT reconciled: no source itemizes them, and the unmodelled tech-fall near-fall rule cannot account for all of them.
+  // points), 0/10 (old table only), 1/10 (bye points only); 7/10 with the printed-MT bonus (historical-adjustments.js). Residuals
+  // Oklahoma State +2, Illinois +1.5, Oregon State +0.5 are NOT reconciled: no source itemizes them.
+  // 1996 (same format and weights): the same rule set plus the printed-MT bonus (historical-adjustments.js) -- 6/10 exact on the
+  // WrestlingStats 1996 summary page (3/10 without the MT bonus; 1/10 old table only; 0/10 modern). Residuals Iowa +1, Iowa State +1,
+  // CSU Bakersfield +1, Oklahoma State +1 are NOT reconciled (no source itemizes them).
   // 1997 (same format and weights as 1998): the same rule set, validated against the ten totals printed on the WrestlingStats 1997
-  // summary page -- 6/10 exact vs 2/10 modern, 0/10 old table only, 1/10 bye points only. Residuals Iowa +1.5, Oklahoma State +0.5,
-  // Iowa State +0.5, Illinois +1 are NOT reconciled (no source itemizes them).
+  // summary page -- 6/10 exact vs 2/10 modern, 0/10 old table only, 1/10 bye points only; 7/10 with the printed-MT bonus
+  // (historical-adjustments.js). Residuals Iowa +1, Oklahoma State +0.5, Illinois +1 are NOT reconciled (no source itemizes them).
   // Generalized by the 2008 evidence (variable field sizes): a weight WITH at least one wrestle-in is a 64-line bracket
   // (every non-wrestle-in entrant holds a first-round bye: the 2009-2012 rule below); a weight with NO wrestle-in is a
   // 32-line bracket where only an ACTUAL bye earns a credit -- a wrestler with no R1 bout who wins his first real bout (+1),
@@ -78,9 +81,12 @@ const HistoricalRules = (function () {
     Object.entries(credits).forEach(([id, pts]) => { const s = schoolOf(id); if (!s) return;
       const a = adj[s] || (adj[s] = { points: 0, kind: 'scoring-rule', reason: '' }); a.points += pts;
       a.byePts = (a.byePts || 0) + pts; });
-    Object.values(adj).forEach(a => { if (a.kind !== 'scoring-rule') return; const parts = [];
+    Object.values(adj).forEach(a => { const parts = [];
       if (a.byePts) parts.push('64-wrestler bracket bye points (' + a.byePts + '). Source: ' + SRC);
-      if (a.placeDelta) parts.push('placement-table difference (' + a.placeDelta + '). Source: ' + PLACE_SRC); a.reason = parts.join('; ') + '.'; });
+      if (a.placeDelta) parts.push('placement-table difference (' + a.placeDelta + '). Source: ' + PLACE_SRC);
+      if (a.kind === 'scoring-rule') a.reason = parts.join('; ') + '.';
+      else if (parts.length) a.reason = (a.reason || '') + ' Also: ' + parts.join('; ') + '.';   // a sourced base adjustment (e.g. 1996-1998 printed MT) keeps its own reason; the rule parts are appended
+    });
     return { credits, adjustments: adj, placeDeltas: pdel }; }
   const registry = {};   // year -> { wrestlerId: credit }, set when a year is built
   const placeReg = {};
