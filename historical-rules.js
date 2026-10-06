@@ -174,7 +174,9 @@ const HistoricalWrestlebackScoring = (function () {
       add(s, 'Advancement', pts, 'Bye (1985 rule; 1996-2012 reading)', after, roundOfKey(after.key), id); });
     // a placement decided by a printed bye (1981 source exceptions): placement credit only -- no bout, no advancement, no bonus
     ((opts && opts.byePlacements) || []).forEach(bp => { const s = schoolOf(bp.id), sch = SCHEDULE[bp.round]; if (!s || !sch) return;
-      const t = team(s); t.place += worth(sch[1]) - worth(sch[0]); events.push({ school: s, wrestlerId: bp.id, weight: null, boutId: null, round: bp.round, category: 'Placement', points: worth(sch[1]) - worth(sch[0]), source: 'Printed placement by forfeit/bye (no bout): ' + label(sch[0]) + ' -> ' + label(sch[1]) }); floor(bp.id, sch[1], s); });
+      const t = team(s); t.place += worth(sch[1]) - worth(sch[0]); events.push({ school: s, wrestlerId: bp.id, weight: null, boutId: null, round: bp.round, category: 'Placement', points: worth(sch[1]) - worth(sch[0]), source: 'Printed placement by forfeit/bye (no bout): ' + label(sch[0]) + ' -> ' + label(sch[1]) }); floor(bp.id, sch[1], s);
+      if (bp.forfeitBonus) { const fb = bonusTable(year).FFT || 0; t.bonus += fb;   // approved printed WFT scoring event (1981 134 Lewis): the era's forfeit bonus; no bout, no opponent
+        events.push({ school: s, wrestlerId: bp.id, weight: null, boutId: null, round: bp.round, category: 'Bonus', points: fb, source: 'Printed placement forfeit (WFT), no opponent: forfeit bonus' }); } });
     const aaBy = {}; Object.keys(floors).forEach(w => { if (floors[w] <= 8) aaBy[schoolOfW[w]] = (aaBy[schoolOfW[w]] || 0) + 1; });
     const teams = Object.values(byTeam).map(t => ({ school: t.school, adv: t.adv, bonus: t.bonus, place: t.place, aa: aaBy[t.school] || 0, total: t.adv + t.bonus + t.place }));
     teams.sort((a, b) => (b.total - a.total) || (a.school < b.school ? -1 : 1));
