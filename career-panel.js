@@ -1,6 +1,6 @@
 /* ============================================================================
    NCAA CAREER — HISTORY ONLY. Opened from the History Path to the Finals panel ("NCAA Career"). One wrestler's NCAA
-   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (1990–1992 and 1994–2026; 1993 not yet available; no 2020 Championships; 1999–2009 and 2012 results from a fallback source), identified by
+   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (1987–2026, no 2020 Championships; 1999–2009 and 2012 results from a fallback source), identified by
    the Career Registry (historical-careers.js) — never by name. Read-only: only calls TCEngine.careerLoad() and
    PathPanel.open(); writes nothing; builds its screen with textContent only. OFFICIAL / MY PICKS never reach this panel.
    ============================================================================ */
@@ -12,7 +12,7 @@
   function pending(y) { return !!(window.HistoryMode && window.HistoryMode.scoringPending && window.HistoryMode.scoringPending(y)); }
   function fmtN(n) { return n % 1 === 0 ? String(n) : String(Math.round(n * 100) / 100); }   // halves unchanged; quarter points exact (1988-1994)
   var POINTS_TIP = 'Tournament Points are calculated by Tournament Central from the historical bout results (advancement, bonus and placement points). Team-level deductions are not attributable to individual wrestlers, so these can differ from official team totals.';
-  var COVERAGE = 'Covers the 1990–1992 and 1994–2026 NCAA Championships in Tournament Central (1993 is not yet available; there were no 2020 Championships; 2012 completed results come from the WrestlingStats fallback, structure from the official NCAA draw; 1990–2009 bracket and results come from the WrestlingStats fallback, checked against the NCAA Records Book; 2009 bracket and results come from the WrestlingStats fallback). Appearances before 1990 are not included, so this may not be his complete NCAA career.';
+  var COVERAGE = 'Covers the 1987–2026 NCAA Championships in Tournament Central (there were no 2020 Championships; 2012 completed results come from the WrestlingStats fallback, structure from the official NCAA draw; 1987–2009 bracket and results come from the WrestlingStats fallback, checked against the NCAA Records Book; 2009 bracket and results come from the WrestlingStats fallback). Appearances before 1987 are not included, so this may not be his complete NCAA career.';
 
   function ensureStyle() {
     if (document.getElementById('cp-style')) return;
@@ -56,14 +56,14 @@
     var aaCount = (c.rows || []).filter(function (r) { return r.ok && r.aa; }).length;
     stat(g, String(s.appearances), 'NCAA APPEARANCES'); stat(g, String(s.titles), 'NCAA TITLES'); stat(g, String(aaCount), 'ALL-AMERICAN');
     var pend = (c.rows || []).some(function (r) { return pending(r.year); });   // 1990-1995 points are not computed yet: the total would be incomplete
-    stat(g, s.w + '-' + s.l, 'NCAA W-L'); stat(g, pend ? '—' : fmtN(s.points), pend ? 'TOURNAMENT POINTS (pending)' : 'TOURNAMENT POINTS ⓘ', pend ? 'Team points for 1990–1995 appearances are not computed yet: the scoring rules for that era are under review.' : POINTS_TIP); b.appendChild(g);
+    stat(g, s.w + '-' + s.l, 'NCAA W-L'); stat(g, pend ? '—' : fmtN(s.points), pend ? 'TOURNAMENT POINTS (pending)' : 'TOURNAMENT POINTS ⓘ', pend ? 'Team points for 1987 appearances are not computed yet: the 1985–1987 scoring rules are under review.' : POINTS_TIP); b.appendChild(g);
     var ol = el('ol', 'cp-list');
     c.rows.forEach(function (r) {
       var li = el('li', 'cp-row');
       if (!r.ok) { li.appendChild(el('div', 'pp-empty', r.year + ': this appearance could not be loaded.')); ol.appendChild(li); return; }
       var btn = el('button', 'cp-app'); btn.type = 'button';
       btn.setAttribute('aria-label', r.year + ' Path to the Finals: ' + c.name);
-      var l1 = el('div', 'cp-l1', r.year + ' · ' + (window.HistoricalWeights ? window.HistoricalWeights.labelOf(r.year, r.weight) : r.weight) + ' lbs · ' + r.school);   // the year's real weight class (1996-1998: 118-275)
+      var l1 = el('div', 'cp-l1', r.year + ' · ' + (window.HistoricalWeights ? window.HistoricalWeights.unit(window.HistoricalWeights.labelOf(r.year, r.weight)) : r.weight + ' lbs') + ' · ' + r.school);   // the year's real weight class (1996-1998: 118-275)
       if (r.aa) l1.appendChild(el('span', 'cp-aa', '★ All-American'));
       btn.appendChild(l1);
       btn.appendChild(el('div', 'cp-l2', (r.seed == null ? 'Unseeded' : '#' + r.seed + ' seed') + ' · ' + (r.finishCode === 'champion' ? '🏆 ' : '') + r.finish +

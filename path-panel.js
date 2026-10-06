@@ -44,7 +44,7 @@
     var w = m.wrestler, o = m.outcome, b = st.body;
     var h = el('h2', 'pp-name', w.name); h.id = 'pp-title'; b.appendChild(h);
     var lr = liveRecord(w, m.journey);
-    b.appendChild(el('div', 'pp-sub', (window.HistoricalWeights ? window.HistoricalWeights.display(w.weight) : w.weight) + ' lbs · ' + (w.seed ? '#' + w.seed + ' seed' : 'Unseeded') + ' · ' + w.school + (lr ? ' · ' + lr : '')));
+    b.appendChild(el('div', 'pp-sub', (window.HistoricalWeights ? window.HistoricalWeights.unit(window.HistoricalWeights.display(w.weight)) : w.weight + ' lbs') + ' · ' + (w.seed ? '#' + w.seed + ' seed' : 'Unseeded') + ' · ' + w.school + (lr ? ' · ' + lr : '')));
     var chips = el('div', 'pp-chips'); chips.appendChild(el('span', 'pp-chip pp-chip--' + o.code, o.code === 'champion' ? '🏆 ' + o.label : o.label));
     if (m.aa === true) chips.appendChild(el('span', 'pp-chip pp-chip--aa', '★ All-American')); b.appendChild(chips);
 
@@ -107,7 +107,7 @@
       var pt = el('div', 'pp-pts'); pt.appendChild(el('div', 'pp-pts-h', 'TEAM POINTS EARNED'));
       pt.appendChild(el('div', 'pp-pts-v', fmtN(m.points.total) + ' for ' + w.school)); pt.appendChild(el('div', 'pp-pts-s', 'Advancement ' + fmtN(m.points.adv) + ' · Bonus ' + fmtN(m.points.bonus) + ' · Placement ' + fmtN(m.points.place))); b.appendChild(pt);
     }
-    var vb = el('button', 'pp-btn pp-view', 'View the ' + (window.HistoricalWeights ? window.HistoricalWeights.display(w.weight) : w.weight) + ' lb bracket');   // label only; openWeight() still gets the engine slot vb.type = 'button';
+    var vb = el('button', 'pp-btn pp-view', 'View the ' + (window.HistoricalWeights ? window.HistoricalWeights.bracketName(window.HistoricalWeights.display(w.weight)) : w.weight + ' lb') + ' bracket');   // label only; openWeight() still gets the engine slot vb.type = 'button';
     vb.addEventListener('click', function () { closePanel(); if (eng.openWeight) eng.openWeight(w.weight); }); b.appendChild(vb);
     // NCAA Career (HISTORY only): careerFor() is ok only in History mode for a wrestler in the Career Registry, so OFFICIAL
     // and MY PICKS never render this button.

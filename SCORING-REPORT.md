@@ -1,4 +1,4 @@
-# 1990–1995 team scoring — report (Oct 6 2026)
+# 1988–1995 team scoring (1987 pending) — report (Oct 6 2026)
 
 ## Model (approved; history layer: `HistoricalWrestlebackScoring` in historical-rules.js)
 Built only from the documented rules (WrestlingStats "NCAA Wrestling Rules for Scoring",
@@ -18,7 +18,7 @@ Disclosure: the first draft read the rule as printed byes only (7/50 exact over 
 Both are shown below. No reconciliation adjustments, no per-year tuning; residuals are reported, not forced.
 
 ## Results against every published top-ten total (summary page of each year's WrestlingStats bracket)
-Exact: 1995 8/10 · 1994 9/10 · 1992 6/10 · 1991 7/10 · 1990 8/10 — **38/50**. 1993 not scored (held, see batch report).
+Exact: 1988 6/10 · 1989 6/10 · 1993 7/10 · 1995 8/10 · 1994 9/10 · 1992 6/10 · 1991 7/10 · 1990 8/10 — **57/80** (1988–1995). 1993 not scored (held, see batch report).
 ```
 1995: 8/10 published top-ten totals exact; scoring problems: 0
    1 Iowa                   published 134     model 134    exact   (adv 36, bonus 26, place 72)
@@ -106,6 +106,54 @@ Exact: 1995 8/10 · 1994 9/10 · 1992 6/10 · 1991 7/10 · 1990 8/10 — **38/50
 * 1992 residuals are all +1 (Iowa, Penn State, Arizona State, Wisconsin); 1990 Oklahoma State +1, Arizona State +0.5. A systematic
   rule detail may exist for 1992 (e.g. how a specific default or bye was scored) — not investigated further without a source.
 * 1995 prints tech falls as "MT" only (match termination, 1 point by the 1995 rule) — scored as such; 1994 prints "TF" (¾).
+
+## 1989 (added this step; same model, 1988 bonus scale)
+```
+1989: 6/10 published top-ten totals exact; scoring problems: 0
+   1 Oklahoma State         published 91.25   model 91.25  exact
+   2 Arizona State          published 70.5    model 70.5   exact
+   3 Iowa State             published 63      model 63     exact
+   4 Oklahoma               published 61      model 62     residual +1
+   5 Michigan               published 53.25   model 54.75  residual +1.5
+   6 Iowa                   published 52.5    model 52.5   exact
+   7 Minnesota              published 45.75   model 45.75  exact
+   8 Northwestern           published 40.5    model 40.5   exact
+   9 Edinboro               published 40      model 40.5   residual +0.5
+  10 Penn State             published 39.75   model 40.25  residual +0.5
+```
+Bye-rule sensitivity 1989: established reading 6/10; printed byes only 0/10; no bye points 0/10.
+
+## 1993 (added; same model, 1988 scale)
+```
+1993: 7/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 123.75  model 123.75 exact
+   2 Penn State             published 87.5    model 87.5   exact
+   3 Nebraska               published 79.5    model 79.5   exact
+   4 Arizona State          published 72.5    model 74.5   residual +2
+   5 Ohio State             published 64      model 64     exact
+   6 Iowa State             published 58.25   model 58.25  exact
+   7 NC State               published 38.5    model 39     residual +0.5
+   8 Fresno State           published 37.75   model 38.75  residual +1
+   9 Minnesota              published 36.5    model 36.5   exact
+  10 Cornell                published 35      model 35     exact
+```
+
+## 1988 (added; same model, 1988 scale)
+```
+1988: 6/10 published top-ten totals exact; scoring problems: 0
+   1 Arizona State          published 93      model 93     exact
+   2 Iowa                   published 85.5    model 85.5   exact
+   3 Iowa State             published 83.75   model 83.75  exact
+   4 Oklahoma State         published 80.5    model 80.5   exact
+   5 Penn State             published 71.5    model 72     residual +0.5
+   6 Michigan               published 62.5    model 63.5   residual +1
+   7 Edinboro               published 53.5    model 53     residual -0.5
+   8 Oklahoma               published 45      model 45.5   residual +0.5
+   9 Ohio State             published 39.75   model 39.75  exact
+  10 NC State               published 36      model 36     exact
+```
+
+## 1987 — not scored (pending approval of the 1985–1987 rules; see BATCH-REPORT.md)
 
 ## 1999 MT correction (approved, narrowly scoped)
 Rule: 1997 — tech fall with back points 1.5; match termination (15+ without back points) 1 point. 1999 bouts printed "MT":

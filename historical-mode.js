@@ -23,13 +23,16 @@
    Sources: the WrestlingStats 1996, 1997 and 1998 compiled brackets (weight-class pages 118 ... 275). */
 const HistoricalWeights = (function () {
   const MODERN = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
-  const CLASSES = { 1990: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1991: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1992: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1994: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1995: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
+  const CLASSES = { 1987: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1988: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1989: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1990: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1991: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1992: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1993: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1994: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1995: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
   const of = year => CLASSES[Number(year)] || MODERN;
   return {
     classes: of,                                                                  // labels for a year, lightest first
     labelOf(year, slot) { const i = MODERN.indexOf(Number(slot)); return i < 0 ? Number(slot) : of(year)[i]; },
-    slotOf(year, label) { const i = of(year).indexOf(Number(label)); return i < 0 ? Number(label) : MODERN[i]; },
+    slotOf(year, label) { const i = of(year).findIndex(l => String(l) === String(label)); return i < 0 ? Number(label) : MODERN[i]; },   // string compare: 1986 heavyweight label is 'UNL'
     isMapped: year => !!CLASSES[Number(year)],
+    // Text for a weight label: numbers keep their unit exactly as before ('118 lbs' / 'the 118 lb bracket'); 'UNL' (unlimited, pre-1987) shows as printed.
+    unit: label => /^\d+$/.test(String(label)) ? label + ' lbs' : String(label),
+    bracketName: label => /^\d+$/.test(String(label)) ? label + ' lb' : String(label),
     // On-screen label for an engine weight slot. Only while the History controls are showing (History mode), using the same
     // year precedence index.html uses for "View the ___ lb bracket"; everywhere else (2026 OFFICIAL, MY BRACKET) it returns the
     // slot unchanged, so non-history views can never be relabelled.
@@ -58,8 +61,8 @@ const HistoryMode = (function () {
   // wherever you're serving that site's results*.js files (see README for options).
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
-  const SCORING_PENDING = new Set([]);   // years whose team-scoring rule is awaiting approval (none: 1990-1995 approved Oct 6 2026, history-layer model)
-  const AVAILABLE_YEARS = [1990,1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const SCORING_PENDING = new Set([1987]);   // 1985-1987 scoring rules (tech fall 1, superior decision 3/4) not yet approved   // years whose team-scoring rule is awaiting approval (none: 1990-1995 approved Oct 6 2026, history-layer model)
+  const AVAILABLE_YEARS = [1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
@@ -155,7 +158,7 @@ const HistoryMode = (function () {
 
       if (typeof window.showHistoricalBracket !== 'function') throw new Error('showHistoricalBracket() is not available on this page.');
       window.showHistoricalBracket(Number(slot), built.core, built.book, Number(year));
-      setStatus(year + ' ' + weight + ' lbs — read-only historical bracket. No OFFICIAL or Firebase involvement.');
+      setStatus(year + ' ' + HistoricalWeights.unit(weight) + ' — read-only historical bracket. No OFFICIAL or Firebase involvement.');
     }).catch(err => {
       if (mySeq !== loadSeq) return;
       fail(year, weight, 'Error: ' + err.message);
