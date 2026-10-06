@@ -40,7 +40,7 @@
     var ol = el('ol', 'pp-list tp-list');
     r.wrestlers.forEach(function (p) {
       var li = el('li', 'pp-row tp-row');
-      li.appendChild(el('span', 'pp-rd', p.wrestler.weight + ' lbs'));
+      li.appendChild(el('span', 'pp-rd', (window.HistoricalWeights ? window.HistoricalWeights.display(p.wrestler.weight) : p.wrestler.weight) + ' lbs'));   // History: the year's real weight class
       var main = el('span', 'pp-main'); var nb = el('button', 'pp-opp', p.wrestler.name); nb.type = 'button';
       nb.addEventListener('click', function () { closePanel(); if (window.PathPanel) window.PathPanel.open(p.wrestler.id); });
       main.appendChild(nb); main.appendChild(el('span', 'pp-osc', (p.wrestler.seed ? '#' + p.wrestler.seed : 'Unseeded') + (p.aa ? ' · ★ AA' : '')));

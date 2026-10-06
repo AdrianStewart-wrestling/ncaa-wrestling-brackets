@@ -130,7 +130,7 @@ const HistoricalStateBuilder = (function () {
         if (L === undefined) { problems.push('R1 slot ' + i + ': no printed line for ' + x.name + '.'); return; }
         if (L !== 2 * i && L !== 2 * i + 1) problems.push('R1 slot ' + i + ': ' + x.name + ' is on printed line ' + L + ', not in this bout (lines ' + (2 * i) + '/' + (2 * i + 1) + ').');
         if (used[L]) problems.push('printed line ' + L + ' is used twice.'); used[L] = true;
-        const sd = printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO[L] !== sd) (byeLines.size ? warnings : problems).push(x.name + ' (#' + sd + ') is printed on line ' + L + ', which is draw line #' + LINE_NO[L] + (byeLines.size ? ' (short field with printed byes: the draw need not follow the 32-line seeding pattern)' : '') + '.'); }));
+        const sd = printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO[L] !== sd) (byeLines.size || facts.nonStandardSeedLines ? warnings : problems).push(x.name + ' (#' + sd + ') is printed on line ' + L + ', which is draw line #' + LINE_NO[L] + (byeLines.size ? ' (short field with printed byes: the draw need not follow the 32-line seeding pattern)' : '') + '.'); }));
       byeLines.forEach(l => { if (used[l]) problems.push('printed BYE line ' + l + ' holds a wrestler.'); used[l] = true; });
       if (used.some(u => !u)) problems.push('printed lines not all used: ' + used.map((u, i) => u ? null : i).filter(v => v !== null).join(','));
       if (ptL && lineOfP(ptL) !== undefined) problems.push('wrestle-in loser ' + ptL.name + ' must not have a printed R1 line.');
@@ -515,7 +515,7 @@ const HistoricalStateBuilder = (function () {
       const sd = printedSeed[idk(x)] !== undefined ? printedSeed[idk(x)] : printedSeed[norm(x.name)]; if (sd !== undefined && LINE_NO_ALL[Ln] !== sd) { const seedLine = LINE_NO_ALL.indexOf(sd);
         // a seeded WRESTLE-IN WINNER may be printed on the other line of his own seed's R1 pair (same bout; side is cosmetic)
         if (isW(x) && (seedLine >> 1) === (Ln >> 1)) warnings.push(x.name + ' (#' + sd + ', wrestle-in winner) is printed on line ' + Ln + ' of his seed\'s R1 pair (line ' + seedLine + ').');
-        else (byeLines.size ? warnings : problems).push(x.name + ' (#' + sd + ') is printed on line ' + Ln + ', which is draw line #' + LINE_NO_ALL[Ln] + (byeLines.size ? ' (short field with printed byes)' : '') + '.'); } }));
+        else (byeLines.size || facts.nonStandardSeedLines ? warnings : problems).push(x.name + ' (#' + sd + ') is printed on line ' + Ln + ', which is draw line #' + LINE_NO_ALL[Ln] + (byeLines.size ? ' (short field with printed byes)' : '') + '.'); } }));
     byeLines.forEach(l => { if (used[l]) problems.push('printed BYE line ' + l + ' holds a wrestler.'); used[l] = true; });
     if (used.some(u => !u)) problems.push('printed lines not all used: ' + used.map((u, i) => u ? null : i).filter(v => v !== null).join(','));
     P.forEach((Ln, k) => { if (Ln === undefined) return; const m = r1[Ln >> 1]; if (!m || ![m.a, m.b].some(x => x && idk(x) === idk(W[k]))) problems.push('wrestle-in ' + k + ' winner ' + W[k].name + ' does not wrestle the R1 bout of his printed line.'); });

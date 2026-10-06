@@ -15,6 +15,42 @@
    officialBook, officialCore, states (MY PICKS), or any Firebase API.
    ============================================================================ */
 
+/* ---- HISTORICAL WEIGHT CLASSES (pre-1999 years) -------------------------------------------------------------------
+   The engine numbers bouts by weight SLOT (the 10 positions of BoutModel.WEIGHT_ORDER: 125 ... 285). A year with a
+   different set of weight classes keeps its REAL labels in its data (results1998.js says "118") and is mapped onto the
+   same 10 slots, in order, only when a bracket is handed to the engine; every label the user sees is the real one.
+   Years not listed here use the modern labels unchanged (identity), so 1999-2026 behave exactly as before.
+   Source for 1998: the WrestlingStats 1998 compiled bracket (weight-class pages 118 ... 275). */
+const HistoricalWeights = (function () {
+  const MODERN = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
+  const CLASSES = { 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
+  const of = year => CLASSES[Number(year)] || MODERN;
+  return {
+    classes: of,                                                                  // labels for a year, lightest first
+    labelOf(year, slot) { const i = MODERN.indexOf(Number(slot)); return i < 0 ? Number(slot) : of(year)[i]; },
+    slotOf(year, label) { const i = of(year).indexOf(Number(label)); return i < 0 ? Number(label) : MODERN[i]; },
+    isMapped: year => !!CLASSES[Number(year)],
+    // On-screen label for an engine weight slot. Only while the History controls are showing (History mode), using the same
+    // year precedence index.html uses for "View the ___ lb bracket"; everywhere else (2026 OFFICIAL, MY BRACKET) it returns the
+    // slot unchanged, so non-history views can never be relabelled.
+    display(slot) {
+      const hc = typeof document !== 'undefined' && document.getElementById('history-controls');
+      if (!hc || hc.style.display === 'none') return slot;
+      const y = window.historicalPathYear || (window.historicalYear && window.historicalYear.year) || window.historicalBracketYear;
+      return y ? this.labelOf(y, slot) : slot;
+    },
+    // Seed-table alias for a mapped year: index.html's histSeedView() reads printed seeds by the wrestler id's engine slot
+    // ("125-07"), while the table is keyed by the real label ("118"). For mapped years only, each label's table is also
+    // registered under its slot (the label and slot sets never overlap: 118-275 vs 125-285). Nothing else reads those keys.
+    aliasSeeds(year) {
+      const T = window.HistoricalSeeds && window.HistoricalSeeds.table && window.HistoricalSeeds.table[String(year)];
+      if (!T || !CLASSES[Number(year)]) return;
+      of(year).forEach((label, i) => { if (T[String(label)] && !T[String(MODERN[i])]) T[String(MODERN[i])] = T[String(label)]; });
+    }
+  };
+})();
+if (typeof window !== 'undefined') window.HistoricalWeights = HistoricalWeights;
+
 const HistoryMode = (function () {
 
   // CONFIGURATION: where the historical results live -- a separate repository from Tournament Central. Edit
@@ -22,7 +58,7 @@ const HistoryMode = (function () {
   // wherever you're serving that site's results*.js files (see README for options).
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
-  const AVAILABLE_YEARS = [1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const AVAILABLE_YEARS = [1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
@@ -35,11 +71,24 @@ const HistoryMode = (function () {
         if (y === 2016) opt.selected = true; // this milestone's one acceptance case
         yearSel.appendChild(opt);
       });
+      yearSel.addEventListener('change', fillWeights);
       document.getElementById('hist-show-btn').addEventListener('click', showBracket);
       const scoresBtn = document.getElementById('hist-scores-btn');
       if (scoresBtn) scoresBtn.addEventListener('click', showTeamScores);
       initialized = true;
     }
+  }
+
+  // Weight select: the year's own weight classes (1998: 118 ... 275; every other year: 125 ... 285, unchanged). The selected
+  // POSITION is kept when the year changes (149 <-> 142 are both the 4th class).
+  function fillWeights() {
+    const ws = document.getElementById('hist-weight'), year = document.getElementById('hist-year').value;
+    if (!ws) return;
+    const labels = HistoricalWeights.classes(year).map(String);
+    if (Array.from(ws.options).map(o => o.value).join() === labels.join()) return;
+    const pos = Math.max(0, ws.selectedIndex);
+    ws.innerHTML = '';
+    labels.forEach((l, i) => { const o = document.createElement('option'); o.value = l; o.textContent = l; if (i === pos) o.selected = true; ws.appendChild(o); });
   }
 
   function setStatus(msg, isError) {
@@ -95,11 +144,13 @@ const HistoryMode = (function () {
       const modelResult = HistoricalAdapter.buildCanonicalBracketModel(resultData, year, weight);
       if (!modelResult.ok) { fail(year, weight, year + '/' + weight + ' could not be rendered: ' + modelResult.problems.join('; ')); return; }
 
-      const built = HistoricalStateBuilder.build(modelResult.model, weight);
+      const slot = HistoricalWeights.slotOf(year, weight);              // engine slot (identity for 1999-2026)
+      HistoricalWeights.aliasSeeds(year);
+      const built = HistoricalStateBuilder.build(modelResult.model, String(slot));
       if (!built.ok) { fail(year, weight, year + '/' + weight + ' could not be built: ' + built.problems.join('; ')); return; }
 
       if (typeof window.showHistoricalBracket !== 'function') throw new Error('showHistoricalBracket() is not available on this page.');
-      window.showHistoricalBracket(Number(weight), built.core, built.book, Number(year));
+      window.showHistoricalBracket(Number(slot), built.core, built.book, Number(year));
       setStatus(year + ' ' + weight + ' lbs — read-only historical bracket. No OFFICIAL or Firebase involvement.');
     }).catch(err => {
       if (mySeq !== loadSeq) return;
@@ -118,11 +169,13 @@ const HistoryMode = (function () {
     const TC = window.TournamentCore, weights = (window.BoutModel && window.BoutModel.WEIGHT_ORDER) || [];
     const Y = { year: Number(year), weights: [], cores: {}, books: {}, schoolOf: {}, idsBySchool: {}, records: [], problems: [],
                 adjustments: (window.HistoricalAdjustments && window.HistoricalAdjustments.forYear(year)) || null };
+    HistoricalWeights.aliasSeeds(year);
     weights.forEach(w => {
-      const mr = HistoricalAdapter.buildCanonicalBracketModel(resultData, year, String(w));
-      if (!mr.ok) { Y.problems.push(w + ': ' + mr.problems.join('; ')); return; }
+      const label = HistoricalWeights.labelOf(year, w);                 // the year's real weight class (identity for 1999-2026)
+      const mr = HistoricalAdapter.buildCanonicalBracketModel(resultData, year, String(label));
+      if (!mr.ok) { Y.problems.push(label + ': ' + mr.problems.join('; ')); return; }
       const b = HistoricalStateBuilder.build(mr.model, String(w));
-      if (!b.ok) { Y.problems.push(w + ': ' + b.problems.join('; ')); return; }
+      if (!b.ok) { Y.problems.push(label + ': ' + b.problems.join('; ')); return; }
       Y.weights.push(w); Y.cores[w] = b.core; Y.books[w] = b.book;
       const st = b.book.states[w];
       const entrants = (st.pigtails || [st.pigtail]).reduce((a, m) => a.concat([m.a, m.b]), []).concat(st.champ[0].reduce((a, m) => a.concat([m.a, m.b]), []));
@@ -171,8 +224,10 @@ const HistoryMode = (function () {
   function openBracket(year, weight) {
     const ys = document.getElementById('hist-year'), ws = document.getElementById('hist-weight');
     if (!ys || !ws) return false;
-    ys.value = String(year); ws.value = String(weight);
-    if (ys.value !== String(year) || ws.value !== String(weight)) return false; // unknown year/weight option
+    ys.value = String(year); fillWeights();
+    const label = String(HistoricalWeights.labelOf(year, weight));        // Path passes the engine slot
+    ws.value = label;
+    if (ys.value !== String(year) || ws.value !== label) return false; // unknown year/weight option
     showBracket();
     return true;
   }
