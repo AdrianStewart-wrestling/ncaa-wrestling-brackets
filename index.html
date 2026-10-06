@@ -2820,7 +2820,7 @@ function renderScores() {
   document.getElementById('scores-note').textContent=`${matchCount} match${matchCount===1?'':'es'} picked across ${WLIST.filter(w=>states[w]).length} weight class${WLIST.filter(w=>states[w]).length===1?'':'es'} · Projected from your picks — not actual results`;
 }
 
-function fmt(n){return n%1===0?n.toString():n.toFixed(1);}
+function fmt(n){return n%1===0?n.toString():String(Math.round(n*100)/100);}   // 2 decimals max: halves unchanged ('98.5'), 1988-1994 quarter points shown exactly ('118.75')
 
 // ══════ OFFICIAL TEAM SCORES ══════
 // Reads ONLY the OFFICIAL book, through the pure model in official-scoring.js (the Phase 6b OG scoring model: normal advancement,
@@ -2853,7 +2853,7 @@ function renderOfficialScores() {
     live: (r, t, inf) => '● LIVE · ' + r.stats.records + ' official result' + (r.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(inf.loadedAt) });
   const i = hist ? { legacyIgnored: 0, problems: [] } : officialInfo, res = S.res;
   const L = hist
-    ? { badge: '🕰️ HISTORY', title: hist.year + ' TEAM SCORES', sub: 'Final NCAA results replayed from historical bout data · read-only · same scoring model as OFFICIAL', caption: hist.year + ' NCAA TEAM SCORES · historical' }
+    ? { badge: '🕰️ HISTORY', title: hist.year + ' TEAM SCORES', sub: (res && res.subtitle) || 'Final NCAA results replayed from historical bout data · read-only · same scoring model as OFFICIAL', caption: hist.year + ' NCAA TEAM SCORES · historical' }
     : { badge: '🔒 OFFICIAL', title: 'OFFICIAL TEAM SCORES', sub: 'Actual NCAA tournament results — not picks · placement points count the moment a finish is clinched', caption: 'OFFICIAL TEAM SCORES · actual tournament' };
   [['.os-badge', L.badge], ['.os-title', L.title], ['.os-sub', L.sub], ['#os-table caption', L.caption]].forEach(([q, x]) => { const e = v.querySelector(q); if (e) e.textContent = x; });
   st.className = 'os-status os-status--' + S.mode; st.textContent = S.text; v.setAttribute('data-os-state', S.mode);
@@ -2883,6 +2883,7 @@ function renderOfficialScores() {
     more.onclick = () => { officialScoresShowAll = !officialScoresShowAll; renderOfficialScores(); };
   }
   // the key is generated from the model's own tables, so it can never drift from the scoring
+  if (hist && res && Array.isArray(res.keyLines)) { key.appendChild(mk('div', 'os-key-hdr', res.keyTitle || 'How these scores work')); res.keyLines.forEach(l => key.appendChild(mk('div', 'os-key-line', l))); return; }   // a history-layer model (1990-1995) explains its own rules
   const OS2 = window.OfficialScoring, names = { QF: 'Quarterfinal win', SF: 'Semifinal win', Final: 'Final win', BloodRound: 'Blood-round win', ConsQF: 'Con. quarterfinal win', ConsSF: 'Con. semifinal win', '3rd': '3rd-place win', '5th': '5th-place win', '7th': '7th-place win' };
   key.appendChild(mk('div', 'os-key-hdr', hist ? 'How these scores work (same model as OFFICIAL)' : 'How OFFICIAL scores work'));
   key.appendChild(mk('div', 'os-key-line', 'Adv: 1 per championship win, ½ per consolation win. Bonus: Major Decision 1 · Tech Fall 1.5 · Fall / Forfeit / DQ 2.'));

@@ -8,7 +8,7 @@
   var st = { open: false, stack: [], root: null, body: null, back: null, close: null, lastFocus: null };
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
-  function fmtN(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
+  function fmtN(n) { return n % 1 === 0 ? String(n) : String(Math.round(n * 100) / 100); }   // halves unchanged; quarter points exact (1988-1994)
   function who(p) { return p.name + ', ' + p.school + (p.seed ? ' (#' + p.seed + ')' : ' (Unseeded)'); }
   // Live record: the roster carries only the wrestler's SEASON record at seeding time (e.g. "21-0"), never updated.
   // This adds his DECIDED tournament bouts on top of it, purely for display -- it reads only m.wrestler.record and

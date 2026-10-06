@@ -8,7 +8,7 @@
   var st = { open: false, school: null, root: null, body: null, lastFocus: null };
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
-  function fmtN(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
+  function fmtN(n) { return n % 1 === 0 ? String(n) : String(Math.round(n * 100) / 100); }   // halves unchanged; quarter points exact (1988-1994)
 
   function ensure() {
     if (st.root) return;

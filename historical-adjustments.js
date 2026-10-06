@@ -47,6 +47,13 @@ const HistoricalAdjustments = (function () {
       "Cal State Fullerton": { points: -0.5, kind: 'printed-bonus', source: SRC_WS_MT(1998), reason: 'Printed MT tech-fall bonus (1 team point each; engine scores tech falls 1.5): ' + "118 lbs, ChampR1: Sean Kim over James Butera, printed \"MT 24-9, 7:00\"" + '. Source: ' + SRC_WS_MT(1998) + '.' },
       "Iowa": { points: -0.5, kind: 'printed-bonus', source: SRC_WS_MT(1998), reason: 'Printed MT tech-fall bonus (1 team point each; engine scores tech falls 1.5): ' + "134 lbs, ChampR1: Mark Ironside over Chad Jesko, printed \"MT 23-8, 5:55\"" + '. Source: ' + SRC_WS_MT(1998) + '.' }
     },
+    // 1999 printed MT (approved Oct 6 2026, narrowly scoped): the 1997 rule -- tech fall (with back points) 1.5, match termination (15+
+    // without back points) 1 team point -- still applied in 1999. Two 1999 bouts are printed "MT"; each scores 1 point, not the engine's 1.5.
+    // Bout results, bracket, placements, Career and identities are unchanged; only these two team-point bonuses.
+    1999: {
+      "Iowa": { points: -0.5, kind: 'printed-bonus', source: SRC_WS_MT(1999), reason: 'Printed MT (match termination, 1 team point under the 1997 rule; engine scores tech falls 1.5): ' + "285 lbs, ChampR1: Wes Hand over Bill Bell, printed \"MT 23-8, 7:00\"" + '. Source: ' + SRC_WS_MT(1999) + '.' },
+      "Wisconsin": { points: -0.5, kind: 'printed-bonus', source: SRC_WS_MT(1999), reason: 'Printed MT (match termination, 1 team point under the 1997 rule; engine scores tech falls 1.5): ' + "165 lbs, ChampR1: Don Pritzlaff over Brian Wood, printed \"MT 19-4, 7:00\"" + '. Source: ' + SRC_WS_MT(1999) + '.' }
+    },
     2015: {
       'Wisconsin':     { points: -0.5, kind: 'printed-bonus', source: SRC_2015_PDF, reason: 'Printed tech-fall bonus: 133 lbs bout 42, Bradley Taylor (Wisconsin) over Mitch Finesilver, printed "TF-1 5:58 (23-8)" (1 bonus point; engine scores tech falls 1.5). Source: ' + SRC_2015_PDF + ', 133 page.' },
       'Virginia Tech': { points: -0.5, kind: 'printed-bonus', source: SRC_2015_PDF, reason: 'Printed tech-fall bonus: 141 lbs bout 50, Devin Carter (Virginia Tech) over Tyler Small, printed "TF-1 6:59 (23-7)" (1 bonus point; engine scores tech falls 1.5). Source: ' + SRC_2015_PDF + ', 141 page.' }

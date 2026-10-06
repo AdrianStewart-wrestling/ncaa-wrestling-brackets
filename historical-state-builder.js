@@ -675,7 +675,10 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const W = n => { const f = fieldOf[n]; return f ? { n: f.n, s: f.s, r: '', seed: f.seed, ds: f.ds } : null; };
     const lineName = {}; Object.entries(F.lines).forEach(([n, L]) => { lineName[L] = n; });
     const feeds = WB.feeds || [], fedSeat = {}; feeds.forEach(f => { fedSeat[f.slot + f.side] = f.k; });
-    const byesR1 = (F.byes || []).filter(b => b.phase === 'r1'), vacant = (F.byes || []).filter(b => b.phase === 'wb1').map(b => b.slot);
+    const byesR1 = (F.byes || []).filter(b => b.phase === 'r1'), vacant = (F.byes || []).filter(b => b.phase === 'wb1');
+    // printed sides (facts record a side only when it differs from the rule's default: pre-R2 seat = a, R2 victim = b)
+    const r2SeatOf = mi => { const v = WB.r2Seat[mi]; return v === undefined ? null : Array.isArray(v) ? { p: v[0], side: v[1] } : { p: v, side: 'b' }; };
+    const cpSide = j => (WB.conPigSide && WB.conPigSide[j]) || 'a';
     const mk = (a, b) => ({ a, b, w: null });
     const states = {};
     function initBracket(wt) {
@@ -690,7 +693,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
         st.pigtailSlots = feeds.map(f => f.slot); st.conPigtailSlots = conPigs.map((m, j) => WB.conPigSeat[j] !== undefined ? 2 * WB.conPigSeat[j] : 0); }
       else { st.pigtail = N === 1 ? pigs[0] : mk(null, null); st.conPigtail = conPigs[0];
         st.pigtailSlot = N === 1 ? feeds[0].slot : null; st.conPigtailSlot = (M === 1 && WB.conPigSeat[0] !== undefined) ? 2 * WB.conPigSeat[0] : (N === 1 ? 0 : null); }
-      vacant.forEach(p => { st.con[0][p].vacant = 'a'; });
+      vacant.forEach(b => { st.con[0][b.slot].vacant = b.side || 'a'; });
       byesR1.forEach(b => { const m = st.champ[0][b.slot]; m.a = W(b.wrestler); m.b = null; m.w = 'a'; m.bye = true; const nm = st.champ[1][b.slot >> 1]; if (b.slot % 2 === 0) nm.a = m.a; else nm.b = m.a; });
       states[wt] = st;
     }
@@ -715,11 +718,11 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       const w = slot === 'a' ? m.a : m.b, l = slot === 'a' ? m.b : m.a; m.w = slot;
       if (bracket === 'pigtail') { const k = N >= 2 ? ri : 0, f = feeds[k]; if (f) seat(st.champ[0][f.slot], f.side, w);
         const j = WB.pigCons[k]; if (j !== undefined) seat(N >= 2 ? st.conPigtails[j] : st.conPigtail, 'a', l); }
-      else if (bracket === 'conPigtail') { const j = N >= 2 ? ri : 0, p = WB.conPigSeat[j]; if (p !== undefined) { seat(st.con[0][p], 'a', w); resolveVacant(st, p); } }
+      else if (bracket === 'conPigtail') { const j = N >= 2 ? ri : 0, p = WB.conPigSeat[j]; if (p !== undefined) { seat(st.con[0][p], cpSide(j), w); resolveVacant(st, p); } }
       else if (bracket === 'champ') {
         if (ri < 4) seat(st.champ[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w); else st.champion = w;
-        if (ri === 0) { const d = WB.r1Dest[mi]; if (d && d.wb1 !== undefined) { seat(st.con[0][d.wb1], 'a', l); resolveVacant(st, d.wb1); } else if (d && d.conPig !== undefined) seat(N >= 2 ? st.conPigtails[d.conPig] : st.conPigtail, 'b', l); }
-        else if (ri === 1) { const p = WB.r2Seat[mi]; if (p !== undefined) { seat(st.con[0][p], 'b', l); resolveVacant(st, p); } }
+        if (ri === 0) { const d = WB.r1Dest[mi]; if (d && d.wb1 !== undefined) { seat(st.con[0][d.wb1], d.side || 'a', l); resolveVacant(st, d.wb1); } else if (d && d.conPig !== undefined) seat(N >= 2 ? st.conPigtails[d.conPig] : st.conPigtail, 'b', l); }
+        else if (ri === 1) { const r = r2SeatOf(mi); if (r) { seat(st.con[0][r.p], r.side, l); resolveVacant(st, r.p); } }
         else if (ri === 2) seat(st.con[2][WB.qfSeat[mi]], 'a', l);
         else if (ri === 3) seat(st.con[4][WB.sfSeat[mi]], 'a', l);
       }
