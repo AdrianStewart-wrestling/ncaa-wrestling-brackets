@@ -1,9 +1,13 @@
-# Regression report — 1985–1987 scoring, Superior Decision, #null, 1985 (Oct 6 2026)
+# Regression report — 1981 (Oct 6 2026)
 
-Baseline: the delivered TC-1986-2026 package on a clean copy of the original repo. Field by field (tools/pre1999/regress.js):
+Baseline: the live TC-1982-2026 package on a clean copy of the original repo. Field by field (tools/pre1999/regress.js):
 ```
-1986: CHANGED totals -- totals changed for 36 team(s): Iowa 156.25->158, Oklahoma 84.5->85.75, Oklahoma State 76.75->77.25, Iowa State 69.75->70, Penn State 45.75->46.25, North Carolina 38.5->38.75, Bloomsburg 36.25->37.75, Michigan 32.75->33, Lehigh 32.5->32.75, Nebraska 27.5->27.75, Army 26.5->26.75, Syracuse 24.75->25 ...
-1987: CHANGED totals -- totals changed for 30 team(s): Iowa State 131.25->132.5, Iowa 107->108, Penn State 96.5->97.25, Oklahoma State 83.75->84.75, Bloomsburg 45.75->46.25, Clarion 45.75->46.5, North Carolina 42->42.25, Edinboro 37.5->37.75, Arizona State 35.75->36.25, CSU Bakersfield 31.75->32.5, Lehigh 31.5->31.75, Wisconsin 28.25->28.5 ...
+1982: identical
+1983: identical
+1984: identical
+1985: identical
+1986: identical
+1987: identical
 1988: identical
 1989: identical
 1990: identical
@@ -43,8 +47,7 @@ Baseline: the delivered TC-1986-2026 package on a clean copy of the original rep
 2025: identical
 2026: identical
 ```
-* 38 of 40 years identical in every field. 1986 and 1987: records, placers, problems and bye credits identical; team totals now come from the
-  approved 1985–87 model (the baseline values were the harness's internal placeholder; the site showed "pending").
-* Engine generalization (two wrestleback shapes): all 40 years byte-identical after the change, and again after the scorer change.
-* Display: "Sup. Dec." only for 1976–1987 cores (1989, 1999, 2016 still "MD"); #null fix: seeded opponents 1–33 render identically.
-* Career: every published career ID kept (13,293/13,293). New year 1985: 492 bouts, 0 problems, 80 placers.
+**All 44 previously completed years identical in every field; fingerprint files byte-identical** — including after the supplement mechanism,
+the printed-vacancy assembler path, the engine vacancy carry-forward and the bye-placement scoring input (each verified separately).
+1982–1998 regenerate from their PDFs byte-identically (data, provenance and facts). 1981: 487 bouts, 0 problems, 0 pending, 79 placers
+(all published). Career: every published ID kept (14,683/14,683). Path display changes affect only decided bouts with no opponent (1981).

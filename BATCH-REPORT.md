@@ -1,87 +1,118 @@
-# 1985–1987 scoring, Superior Decision, #null fix, and 1985 (semifinalist wrestleback) — report (Oct 6 2026)
+# 1981 (supplement + printed vacancies) and 1980 — report (Oct 6 2026)
 
-**Completed: 1986 and 1987 team scoring; 1985 (new semifinalist-wrestleback shape) to the full standard. Stopped at 1984**: its bracket
-assembles cleanly, but it is the first year with a genuinely new historical issue (below). Coverage is now continuous 1985–2026.
+**Completed: 1981. Stopped at 1980** on a genuinely new issue (three consolation wrestle-ins printed with the winner but no result). Nothing
+from 1980 is installed. This package is therefore **TC-1981-2026** (not TC-1980-2026); its manifest is relative to the live 1982–2026 baseline.
 
-## Approved items delivered
-1. **1985–1987 scoring** (history-layer model): fall / forfeit / default / DQ 1 · major decision (8–11) ½ · **superior decision (12+) ¾** ·
-   tech fall 1; consolation advancement ½; places 16-12-9-7-5-3-2-1; 1985 bye rule (established reading). No adjustments.
-2. **Superior Decision display**: year-scoped (1976–1987) through an optional core hook; Path to the Finals (also opened from Career) shows
-   "Sup. Dec." for 12+ decisions (37 bouts in 1986, 25 in 1987, plus 1985). Later years unchanged ("MD" in 1989, 1999, 2016 verified).
-   Note: bracket boxes show names and seeds only, for every year — no result method is displayed there for any result type, so there is
-   nothing to relabel; Career rows show finishes, and their Path shows the method.
-3. **"TF 5:38"** notation: approved and in place (time kept, no score).
-4. **#null fix** (path-panel.js, one line): unseeded opponents show the school only; seeded opponents identical (1–33 verified).
+## 1981 134 — source supplement (approved)
+`tools/pre1999/bout_supplements.json`: **Jim Gibbons (Iowa State) def. Cliff Porter (Oregon), Fall 7:09** — from the NCAA annual "1982 NCAA
+Wrestling" (55th ed., 1981 results), 134-pound PRELIMINARY ROUND: "Gibbons (Iowa State) pinned Porter (Oregon), 7:09" (nwhof.org/guides/45).
+Provenance records: the NCAA annual as the source; the WrestlingStats omission (its wrestle-in page lists three); the annual's agreement with
+WrestlingStats on the other three 134 preliminary bouts and on Anderson's results (pinned Rosenstein, d. Landrum 17-3, d. Selmon by forfeit);
+and that the bout explains the Bower–Porter consolation wrestle-in under the normal semifinalist routing.
+**Name note:** the approval text said "Ed Gibbons"; the WrestlingStats draw line, the champion, and the annual's first-round "Gibbons (Iowa
+State) pinned Bower, 2:29" (= the bracket's R1 Jim Gibbons def. Mark Bower, Fall 2:29) all identify **Jim Gibbons** — entering "Ed Gibbons"
+would have created a wrestler who appears nowhere else. Recorded as Jim Gibbons, with this note in provenance.
 
-## Scoring results (every published top-ten total)
-```
-1987: 1/10 published top-ten totals exact; scoring problems: 0
-   1 Iowa State             published 133     model 132.5  residual -0.5
-   2 Iowa                   published 108     model 108    exact
-   3 Penn State             published 97.75   model 97.25  residual -0.5
-   4 Oklahoma State         published 85.25   model 84.75  residual -0.5
-   5 Bloomsburg             published 47.25   model 46.25  residual -1
-   6 Clarion                published 46      model 46.5   residual +0.5
-   7 North Carolina         published 42.75   model 42.25  residual -0.5
-   8 Edinboro               published 38.25   model 37.75  residual -0.5
-   9 Arizona State          published 35.75   model 36.25  residual +0.5
-  10 Lehigh                 published 32.25   model 31.75  residual -0.5
+## 1981 printed vacancies (approved; exactly as printed; source-specific, no general rule)
+* **134:** Anderson won his quarterfinal by forfeit over Selmon. Printed "Bye / Bye" first-round consolation pair preserved; **Steve Rosenstein
+  and Thomas Landrum** (Anderson's R1 and R2 victims) are recorded as structurally eligible but absent from the printed wrestleback — the source
+  gives no reason; Selmon's quarterfinal-loser seat printed Bye. The vacancies carry forward as byes: round 3 "Baza FFT" (advanced, no
+  opponent); 7th place "Randy Lewis, Iowa FFT" / summary "(WFT)" — 7th with no opponent; **no 8th place** (none printed, none manufactured).
+* **190:** Atiyeh forfeited his quarterfinal; his seat printed Bye; "Milligan FFT" = Milligan advanced past the vacant seat (no bout).
+* No consolation bouts, wins or losses were manufactured: the absent wrestlers' Paths end where the print ends them (e.g. Rosenstein: one R32
+  loss; Landrum: R32 win, R16 loss). Each printed bye is cross-checked against the byes the vacancies produce (build fails on any mismatch).
+* Implementation: separate assembler path for `printedVacancies` weights (items placed by printed position); engine vacancy carry-forward
+  (only when facts list vacant seats); a placement decided by a printed bye counts as that placement (placement credit only — no bout,
+  advancement or bonus). All 44 completed years byte-identical after each addition.
+* Path display: a decided bout with no opponent now reads "No opponent (printed forfeit / bye)" and the finish line "7th — by forfeit in the
+  7th Place (no opponent printed)" (it had shown "Opponent not decided yet" and thrown an error); unchanged for every other year.
+* **Pattern watch:** 1980 has no consolation byes and no quarterfinal forfeits (only an ordinary R1 default at 134) — no repeat. The two 1981
+  cases remain source-specific (they also differ: only 134 lost an eligible pair).
 
-1986: 5/10 published top-ten totals exact; scoring problems: 0
-   1 Iowa                   published 158     model 158    exact
-   2 Oklahoma               published 84.75   model 85.75  residual +1
-   3 Oklahoma State         published 77.25   model 77.25  exact
-   4 Iowa State             published 71      model 70     residual -1
-   5 Penn State             published 47.25   model 46.25  residual -1
-   6 North Carolina         published 38.75   model 38.75  exact
-   7 Bloomsburg             published 37.75   model 37.75  exact
-   8 Arizona State          published 36.5    model 36     residual -0.5
-   9 Lehigh                 published 32.75   model 32.75  exact
-  10 Michigan               published 32      model 33     residual +1
-
-1985: 5/10 published top-ten totals exact; scoring problems: 0
-   1 Iowa                   published 145.25  model 145.25 exact
-   2 Oklahoma               published 98.5    model 98.5   exact
-   3 Iowa State             published 70      model 70.5   residual +0.5
-   4 Oklahoma State         published 56      model 56.5   residual +0.5
-   5 Michigan               published 52      model 52     exact
-   6 Arizona State          published 50.75   model 51.25  residual +0.5
-   7 Penn State             published 46.75   model 46.75  exact
-   8 Tennessee              published 32.5    model 34.5   residual +2
-   9 Lehigh                 published 31.5    model 31.5   exact
-  10 Bloomsburg             published 31      model 30.5   residual -0.5
-```
-1987: residuals are mostly −0.5 (7 of 10 teams). Diagnostics (not acted on): the residuals do not track tech-fall or superior-decision
-counts (e.g. Edinboro −0.5 with no tech falls; Clarion +0.5 with three and no superior decisions); the bye-rule alternatives score 0/10.
-Unexplained; no tuning applied. 1986: residuals ±0.5/±1. 1985: Tennessee +2, others ±0.5.
-
-## 1985 — semifinalist wrestleback (new shape, approved)
-Its own shape (`consFormat: 'sf-wrestleback'`): consolation 4-4-2-2 — each semifinalist's R1 v R2 victim → v quarterfinal losers (winners
-clinch All-American) → pairs (losers 7th) → v semifinal losers (winners 3rd, losers 5th). New assembler `assemble_sf.py` and emitter
-`gen_js_sf.py`; the engine and scorer take a shape table. **The generalization was proven: all 40 completed years byte-identical** after
-the engine change and again after the scorer change.
-| 1985 | |
+## 1981 results
+| | |
 |---|---|
-| Venue · published champion | Oklahoma City · Iowa 145.25 |
-| Bouts | 492 (28 wrestle-ins / 4 consolation wrestle-ins, 0 byes) |
-| Replay · placers | 0 problems, 0 pending · 80/80 |
-| Every SC1 seat | matches the semifinalist rule; crossovers: QF losers straight, SF losers crossed [1,0] — identical in all 10 weights |
-| Team totals exact | 5/10 |
-| Career | 157 careers extended, 191 new, 24 review cases; every existing ID kept (13,293/13,293) |
-| Seeds not printed | none |
-**Flagged, outside the list:** "17-1, 5:44" (1985) — score + stoppage time, no "TF" label; margin 15+ → tech fall by the existing
-margin derivation, printed text in provenance.
+| Venue · published champion | Princeton · Iowa 129.75 |
+| Bouts | 487 (29 wrestle-ins incl. the supplement / 3 consolation wrestle-ins; 3 printed byes) |
+| Replay · placers | 0 problems, 0 pending · **79/79** published placers (no 8th at 134) |
+| Superior decisions | 52 (25 by 15+); 0 tech falls; 0 bye points |
+| Team totals exact | **9/10** — Iowa −1 |
+| Career | 165 careers extended, 184 new, 19 review cases; every existing ID kept (14,683/14,683) |
+| Seeds not printed | 150 #8, 177 #11 (none placed; not derivable) |
+```
+1981: 9/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 129.75  model 128.75 residual -1
+   2 Oklahoma               published 100.25  model 100.25 exact
+   3 Iowa State             published 84.75   model 84.75  exact
+   4 Oklahoma State         published 68.5    model 68.5   exact
+   5 Lehigh                 published 38      model 38     exact
+   6 Penn State             published 31.75   model 31.75  exact
+   7 Syracuse               published 30.5    model 30.5   exact
+   8 Central Michigan       published 28.75   model 28.75  exact
+   9 Auburn                 published 25.75   model 25.75  exact
+  10 Oregon State           published 25.25   model 25.25  exact
+```
+Observation (not acted on): Iowa's −1 equals the 1-point forfeit bonus that Randy Lewis's printed "(WFT)" 7th place would carry if the NCAA
+scored it as a forfeit win; the model credits the placement only, as instructed (no manufactured win). Bye-reading check:
+```
+1981 0/10   established 1996-2012 reading                    Iowa+7 Penn+3 Oklahoma+4.5 Syracuse+3 Iowa+7 Central+2 Oklahoma+4 Auburn+3 Lehigh+4 Oregon+1.5
+1981 9/10   printed byes only                                Iowa-1 Penn✓ Oklahoma✓ Syracuse✓ Iowa✓ Central✓ Oklahoma✓ Auburn✓ Lehigh✓ Oregon✓
+1981 9/10   no bye points (MODEL: no bye rule before 1985)   Iowa-1 Penn✓ Oklahoma✓ Syracuse✓ Iowa✓ Central✓ Oklahoma✓ Auburn✓ Lehigh✓ Oregon✓
+```
 
-## Why the batch stops at 1984 (read-only dry run)
-1984 assembles with 0 problems (494 bouts, all results recognized, 80 placers) through the semifinalist pipeline. But:
-* **Tech falls did not exist before 1985.** 20 championship-side 1984 bouts were won by 15+ points (printed as plain scores). The converter's
-  standing margin rule would store them as tech falls; historically they were superior decisions (12+, 1976 rule) — a result-classification
-  change for 1980–1984 that needs your decision.
-* **Scoring 1980–1984**: no tech fall; **no bye-point rule** (it begins in 1985); superior decision ¾, major ½, fall 1 — a different scale
-  and bye treatment from the approved 1985–87 model.
-Proposed: for 1980–1984, (a) classify 15+ decisions as Superior Decision (no tech-fall derivation), (b) score with the 1976–1984 rules (no
-bye points), validated against every published top ten. Awaiting approval.
+## Why the batch stops at 1980
+1980 assembles with 0 problems in all 10 weights (498 bouts). Four results are not convertible:
+* **Consolation wrestle-ins printed with the winner but no result** — 126 "Bohay" (def. Alan Reto), 142 "Hogan" (def. Joe Galli), 150 "Boss"
+  (def. Tom Elcott). The winner is printed; the result TYPE (decision / major / superior / fall …) is not — and it decides bonus points.
+  Options: (a) record the bout as a win with result "not printed" (a decision with no score, no bonus credited, flagged in provenance);
+  (b) supplement the results from the NCAA annual's 1980 edition (not yet located) before including 1980.
+* **126 5th place** printed "4-" (cut off); the same PDF's summary page prints "5th: Byron McGlathery … (4-1)". Proposed: take the score from
+  the summary page, recording both.
 
-## Open source ambiguity (completed years)
-1986 has one tech fall derived from a printed score with no time ("19-4"); under the 1985–87 rules it could be a tech fall (1) or a
-superior decision (¾). Left as stored; ¼ point at most.
+## Regression
+```
+1982: identical
+1983: identical
+1984: identical
+1985: identical
+1986: identical
+1987: identical
+1988: identical
+1989: identical
+1990: identical
+1991: identical
+1992: identical
+1993: identical
+1994: identical
+1995: identical
+1996: identical
+1997: identical
+1998: identical
+1999: identical
+2000: identical
+2001: identical
+2002: identical
+2003: identical
+2004: identical
+2005: identical
+2006: identical
+2007: identical
+2008: identical
+2009: identical
+2010: identical
+2011: identical
+2012: identical
+2013: identical
+2014: identical
+2015: identical
+2016: identical
+2017: identical
+2018: identical
+2019: identical
+2021: identical
+2022: identical
+2023: identical
+2024: identical
+2025: identical
+2026: identical
+```

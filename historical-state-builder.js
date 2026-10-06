@@ -706,6 +706,9 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       else { st.pigtail = N === 1 ? pigs[0] : mk(null, null); st.conPigtail = conPigs[0];
         st.pigtailSlot = N === 1 ? feeds[0].slot : null; st.conPigtailSlot = (M === 1 && WB.conPigSeat[0] !== undefined) ? 2 * WB.conPigSeat[0] : (N === 1 ? 0 : null); }
       vacant.forEach(b => { st.con[0][b.slot].vacant = b.side || 'a'; });
+      // printed vacancies (1981 source exceptions only: facts.wb.vacant) -- carried forward by settle() as byes / void bouts
+      (WB.vacant || []).forEach(([b, ri, mi, side]) => { const m = st.con[ri][mi]; m.vac = Object.assign(m.vac || {}, { [side]: true }); });
+      if (VAC) settle(st);
       byesR1.forEach(b => { const m = st.champ[0][b.slot]; m.a = W(b.wrestler); m.b = null; m.w = 'a'; m.bye = true; const nm = st.champ[1][b.slot >> 1]; if (b.slot % 2 === 0) nm.a = m.a; else nm.b = m.a; });
       states[wt] = st;
     }
@@ -721,6 +724,32 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       if (ri + 1 === SH.qfRound || ri + 1 === SH.sfRound) seat(st.con[ri + 1][mi], 'b', w); else seat(st.con[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w);
       if (ri === SH.lastRound - 1 && l) { if (!st.place7.a) st.place7.a = l; else st.place7.b = l; }
     }
+    // ---- printed-vacancy propagation (only when facts.wb.vacant is present; no effect on any other weight/year) ----
+    const VAC = !!(WB.vacant && WB.vacant.length);
+    function settle(st) {
+      const markDown = (ri, mi) => {                       // the (void) winner of con[ri][mi] leaves a vacant seat downstream
+        if (ri === SH.lastRound) { st.place3.missing = (st.place3.missing || 0) + 1; st.place5.missing = (st.place5.missing || 0) + 1; return; }
+        if (ri + 1 === SH.qfRound || ri + 1 === SH.sfRound) { const n = st.con[ri + 1][mi]; n.vac = Object.assign(n.vac || {}, { b: true }); }
+        else { const n = st.con[ri + 1][mi >> 1]; n.vac = Object.assign(n.vac || {}, { [mi % 2 ? 'b' : 'a']: true }); }
+      };
+      let changed = true;
+      while (changed) {
+        changed = false;
+        st.con.forEach((round, ri) => round.forEach((m, mi) => {
+          if (m.w || m.void || !m.vac) return;
+          const va = !!m.vac.a, vb = !!m.vac.b;
+          if (va && vb) { m.void = true; markDown(ri, mi); if (ri === SH.lastRound - 1) st.place7.missing = (st.place7.missing || 0) + 1; changed = true; return; }
+          const pres = va && m.b ? 'b' : vb && m.a ? 'a' : null;
+          if (pres) { m.w = pres; m.bye = true; advCon(st, ri, mi, m[pres], null);
+            if (ri === SH.lastRound - 1) st.place7.missing = (st.place7.missing || 0) + 1;
+            if (ri === SH.lastRound) st.place5.missing = (st.place5.missing || 0) + 1; changed = true; }
+        }));
+        [st.place3, st.place5, st.place7].forEach(pm => {
+          if (pm.w || !pm.missing) return; const filled = (pm.a ? 1 : 0) + (pm.b ? 1 : 0);
+          if (filled === 1 && filled + pm.missing === 2) { pm.w = pm.a ? 'a' : 'b'; pm.bye = true; changed = true; }
+        });
+      }
+    }
     function applyPick(st, bracket, ri, mi, slot) {
       let m = null;
       if (bracket === 'pigtail') m = N >= 2 ? st.pigtails[ri] : st.pigtail;
@@ -735,12 +764,14 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       else if (bracket === 'conPigtail') { const j = N >= 2 ? ri : 0, p = WB.conPigSeat[j]; if (p !== undefined) { seat(st.con[0][p], cpSide(j), w); resolveVacant(st, p); } }
       else if (bracket === 'champ') {
         if (ri < 4) seat(st.champ[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w); else st.champion = w;
-        if (ri === 0) { const d = WB.r1Dest[mi]; if (d && d.wb1 !== undefined) { seat(st.con[0][d.wb1], d.side || 'a', l); resolveVacant(st, d.wb1); } else if (d && d.conPig !== undefined) seat(N >= 2 ? st.conPigtails[d.conPig] : st.conPigtail, 'b', l); }
+        if (ri === 0) { const d = WB.r1Dest[mi]; if (d && d.wb2 !== undefined) seat(st.con[SH.qfRound][d.wb2], 'a', l);   // source-specific exception: an R1 loser printed in a quarterfinal-loser seat (1982 190)
+          else if (d && d.wb1 !== undefined) { seat(st.con[0][d.wb1], d.side || 'a', l); resolveVacant(st, d.wb1); } else if (d && d.conPig !== undefined) seat(N >= 2 ? st.conPigtails[d.conPig] : st.conPigtail, 'b', l); }
         else if (ri === 1) { const r = r2SeatOf(mi); if (r) { seat(st.con[0][r.p], r.side, l); resolveVacant(st, r.p); } }
-        else if (ri === 2) seat(st.con[SH.qfRound][WB.qfSeat[mi]], 'a', l);
+        else if (ri === 2) { if (WB.qfSeat[mi] !== null && WB.qfSeat[mi] !== undefined) seat(st.con[SH.qfRound][WB.qfSeat[mi]], 'a', l); }   // null only under a documented exception: that QF loser exits
         else if (ri === 3) seat(st.con[SH.sfRound][WB.sfSeat[mi]], 'a', l);
       }
       else if (bracket === 'con') advCon(st, ri, mi, w, l);
+      if (VAC) settle(st);
     }
     const adapter = { weights: [Number(slotWeight)], pigtailCount: N, boutNumbers: w => SH.numbers(WEIGHTS.indexOf(Number(w))), newState: wt => { initBracket(wt); return states[wt]; }, applyPick,
       roundNames: { champ: ['Round 1', 'Rd of 16', 'Quarterfinals', 'Semifinals', 'Finals'], con: SH.render } };
@@ -761,6 +792,14 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       if (!res.ok) problems.push(r.round + ': ' + r.winner + ' vs ' + r.loser + ' -- ' + (res.message || res.code));
     });
     const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
+    if (VAC) {   // every printed bye must be a bye the vacancies produce, and vice versa
+      const st = book.states[wt], got = [];
+      st.con.forEach((round, ri) => round.forEach((m, mi) => { if (m.bye && m.vac) got.push('con' + ri + ':' + m[m.w].n); }));
+      [['third', st.place3], ['fifth', st.place5], ['seventh', st.place7]].forEach(([n, pm]) => { if (pm.bye) got.push(n + ':' + pm[pm.w].n); });
+      const RN = { wb1: 'con0', wb2: 'con1', wb3: 'con2', wb4: 'con3', third: 'third', fifth: 'fifth', seventh: 'seventh' };
+      const want = (F.byes || []).filter(b => b.phase === 'printedBye').map(b => RN[b.round] + ':' + b.wrestler);
+      if (JSON.stringify(got.slice().sort()) !== JSON.stringify(want.slice().sort())) problems.push('printed byes ' + JSON.stringify(want) + ' != derived ' + JSON.stringify(got));
+    }
     return { ok: problems.length === 0, core, book, problems, wrestleback: true };
   }
   const api = { isWrestleback, shapeOf, build, boutNumbers, roundLabel, PATH_CON, RENDER_CON, SHAPES };

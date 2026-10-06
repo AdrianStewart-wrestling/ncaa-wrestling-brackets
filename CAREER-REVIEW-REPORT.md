@@ -1,30 +1,76 @@
-# NCAA Career — unresolved review cases involving 1985–1998 (Oct 6 2026)
+# NCAA Career — unresolved review cases involving 1981–1998 (Oct 6 2026)
 
 Every case below is KEPT SPLIT: no sourced decision covers all of its appearances. Nothing was forced. To link one, add a LINK line to
 tools/career/career-decisions.txt (evidence + source; keys given), rebuild, publish historical-careers.js. Career IDs never change.
 
-Totals: 145 cases — A: 94 · B: 31 · C: 20. Registry continuous 1985–2026.
+Totals: 184 cases — A: 117 · B: 43 · C: 24. Registry continuous 1981–2026.
 
-## A. Same name, different school (94)
+## A. Same name, different school (117)
 
+- 1981/134 Clar Anderson (Auburn) > 1982/134 Clar Anderson (Oklahoma State) > 1983/134 Clar Anderson (Oklahoma State) > 1984/134 Clar Anderson (Oklahoma State)  
+  keys: `1981:141-01,1982:141-29,1983:141-25,1984:141-12`
+- 1981/134 Harlan Kistler (Arizona State) > 1983/142 Harlan Kistler (Iowa)  
+  keys: `1981:141-09,1983:149-02`
+- 1981/150 Mike Elinsky (Auburn) > 1982/150 Mike Elinsky (North Carolina)  
+  keys: `1981:157-35,1982:157-03`
+- 1981/150 Tom Coffing (Arizona) > 1982/150 Tom Coffing (Nevada-Las Vegas)  
+  keys: `1981:157-12,1982:157-06`
+- 1981/167 Tim Jones (Marshall) > 1984/167 Tim Jones (Northern Michigan)  
+  keys: `1981:174-25,1984:174-11`
+- 1981/167 Mark Johnson (Cleveland State) > 1982/167 Mark Johnson (Cleveland State) > 1983/190 Mark Johnson (Northern Iowa) > 1985/UNL Mark Johnson (Army)  
+  keys: `1981:174-08,1982:174-07,1983:197-22,1985:285-04`
+- 1981/167 Jeff Dillman (Nebraska) > 1983/190 Jeff Dillman (Eastern Illinois)  
+  keys: `1981:174-07,1983:197-28`
+- 1981/177 Eli Blazeff (Auburn) > 1983/177 Eli Blazeff (Michigan State) > 1984/190 Eli Blazeff (Michigan State)  
+  keys: `1981:184-21,1983:184-18,1984:197-26`
+- 1981/177 Tom Kolopus (Cleveland State) > 1983/177 Tom Kolopus (Arizona State) > 1984/177 Tom Kolopus (Arizona State) > 1985/177 Tom Kolopus (Arizona State)  
+  keys: `1981:184-10,1983:184-32,1984:184-11,1985:184-09`
+- 1981/190 Tod Giles (Rhode Island) > 1982/177 Tod Giles (Boston University) > 1983/190 Tod Giles (Boston University) > 1984/190 Tod Giles (Boston University)  
+  keys: `1981:197-09,1982:184-06,1983:197-23,1984:197-09`
+- 1981/UNL Jeff Green (Kentucky) > 1984/UNL Jeff Green (Morgan State) > 1985/UNL Jeff Green (Morgan State)  
+  keys: `1981:285-24,1984:285-22,1985:285-05`
+- 1982/118 Brad Gustafson (San Jose State) > 1986/126 Brad Gustafson (Brigham Young)  
+  keys: `1982:125-26,1986:133-30`
+- 1982/126 Mike Jones (Oklahoma State) > 1983/167 Mike Jones (Illinois State)  
+  keys: `1982:133-32,1983:174-28`
+- 1982/142 Tony Tracey (New Mexico) > 1983/142 Tony Tracey (New Mexico) > 1985/158 Tony Tracey (Louisiana State)  
+  keys: `1982:149-01,1983:149-30,1985:165-20`
+- 1982/158 Bill Dykeman (Louisiana State) > 1984/158 Bill Dykeman (Oklahoma State) > 1985/158 Bill Dykeman (Oklahoma State)  
+  keys: `1982:165-30,1984:165-27,1985:165-14`
+- 1982/167 Wayne Catan (Tennessee) > 1983/177 Wayne Catan (Tennessee) > 1985/177 Wayne Catan (Syracuse) > 1986/177 Wayne Catan (Syracuse)  
+  keys: `1982:174-22,1983:184-16,1985:184-10,1986:184-19`
+- 1982/190 Kevin Jackson (New Mexico) > 1983/158 Kevin Jackson (Louisiana State) > 1983/190 Kevin Jackson (New Mexico) > 1984/158 Kevin Jackson (Louisiana State) > 1985/167 Kevin Jackson (Louisiana State) > 1987/167 Kevin Jackson (Iowa State)  
+  keys: `1982:197-11,1983:165-12,1983:197-25,1984:165-23,1985:174-29,1987:174-14`
+- 1983/118 Marc Sodano (Wilkes) > 1984/118 Marc Sodano (Wilkes) > 1986/126 Marc Sodano (NC State) > 1987/126 Marc Sodano (NC State)  
+  keys: `1983:125-16,1984:125-18,1986:133-24,1987:133-26`
+- 1983/167 John Major (Illinois) > 1985/177 John Major (Northern Illinois) > 1986/177 John Major (Northern Illinois)  
+  keys: `1983:174-21,1985:184-07,1986:184-04`
+- 1983/190 John Heropoulos (Slippery Rock) > 1984/190 John Heropoulos (Slippery Rock) > 1985/190 John Heropoulos (Iowa State) > 1986/UNL John Heropoulos (Iowa State)  
+  keys: `1983:197-09,1984:197-16,1985:197-06,1986:285-09`
+- 1983/UNL Kahlan O'Hara (Nevada-Las Vegas) > 1984/UNL Kahlan O'Hara (Nevada-Las Vegas) > 1985/UNL Kahlan O'Hara (Oklahoma State)  
+  keys: `1983:285-15,1984:285-09,1985:285-09`
+- 1984/126 Rob Johnson (Louisiana State) > 1985/126 Rob Johnson (Louisiana State) > 1986/134 Rob Johnson (Ohio) > 1987/134 Rob Johnson (Ohio)  
+  keys: `1984:133-31,1985:133-07,1986:141-28,1987:141-08`
+- 1984/150 Glen Lanham (Tennessee) > 1985/158 Glen Lanham (Tennessee) > 1987/158 Glen Lanham (Oklahoma State)  
+  keys: `1984:157-36,1985:165-17,1987:165-19`
+- 1984/158 Darryl Pope (San Jose State) > 1986/167 Darryl Pope (CSU Bakersfield) > 1987/177 Darryl Pope (CSU Bakersfield)  
+  keys: `1984:165-25,1986:174-14,1987:184-28`
+- 1984/167 Neil Alton (West Chester) > 1985/167 Neil Alton (Temple)  
+  keys: `1984:174-32,1985:174-09`
+- 1984/177 Marvin Jones (San Jose State) > 1986/177 Marvin Jones (CSU Bakersfield)  
+  keys: `1984:184-26,1986:184-09`
+- 1984/190 Bob Kopecky (Nevada-Las Vegas) > 1985/190 Bob Kopecky (Oklahoma State)  
+  keys: `1984:197-01,1985:197-23`
 - 1985/118 Joe Melchiore (Oklahoma) > 1986/118 Joe Melchiore (Oklahoma) > 1988/134 Joe Melchiore (Iowa) > 1989/134 Joe Melchiore (Iowa)  
   keys: `1985:125-32,1986:125-10,1988:141-03,1989:141-14`
-- 1985/118 David Jones (Montana State) > 1989/275 David Jones (Cal State Fullerton) > 1990/275 David Jones (Cal State Fullerton) > 1991/275 David Jones (Cal State Fullerton)  
-  keys: `1985:125-26,1989:285-15,1990:285-27,1991:285-01`
-- 1985/126 Rob Johnson (Louisiana State) > 1986/134 Rob Johnson (Ohio) > 1987/134 Rob Johnson (Ohio)  
-  keys: `1985:133-07,1986:141-28,1987:141-08`
 - 1985/134 Jeff Clark (Harvard) > 1991/158 Jeff Clark (VMI)  
   keys: `1985:141-33,1991:165-28`
 - 1985/134 Chuck Toler (American) > 1988/134 Chuck Toler (George Mason) > 1989/134 Chuck Toler (George Mason)  
   keys: `1985:141-37,1988:141-07,1989:141-30`
-- 1985/158 Glen Lanham (Tennessee) > 1987/158 Glen Lanham (Oklahoma State)  
-  keys: `1985:165-17,1987:165-19`
 - 1985/167 Mike Kraft (Northwestern) > 1991/190 Mike Kraft (Penn State)  
   keys: `1985:174-08,1991:197-03`
 - 1985/167 Dave Lee (Stanford) > 1986/167 Dave Lee (Stanford) > 1988/167 Dave Lee (Wisconsin) > 1989/167 Dave Lee (Wisconsin)  
   keys: `1985:174-12,1986:174-27,1988:174-28,1989:174-12`
-- 1985/167 Kevin Jackson (Louisiana State) > 1987/167 Kevin Jackson (Iowa State)  
-  keys: `1985:174-29,1987:174-14`
 - 1985/177 Chuck Kearney (Oklahoma State) > 1987/167 Chuck Kearney (Oregon) > 1988/177 Chuck Kearney (Oregon)  
   keys: `1985:184-30,1987:174-33,1988:184-23`
 - 1985/190 Mark Coleman (Miami Ohio) > 1986/190 Mark Coleman (Miami Ohio) > 1988/190 Mark Coleman (Ohio State)  
@@ -196,16 +242,42 @@ Totals: 145 cases — A: 94 · B: 31 · C: 20. Registry continuous 1985–2026.
 - 1998/275 Billy Blunt (NC State) > 2001/285 Billy Blunt (Fresno State)  
   keys: `1998:285-26,2001:285-07`
 
-## B. Same name, implausible under the automatic rule (31)
+## B. Same name, implausible under the automatic rule (43)
 
+- 1981/126 David Barnes (San Jose State) > 1983/142 David Barnes (San Jose State) > 1984/142 David Barnes (San Jose State) > 1991/150 David Barnes (Miami Ohio) > 1992/150 David Barnes (Miami Ohio) > 1993/150 David Barnes (Miami Ohio)  
+  keys: `1981:133-32,1983:149-17,1984:149-05,1991:157-26,1992:157-14,1993:157-26`
+- 1981/158 Mike Carroll (Massachusetts) > 2002/285 Mike Carroll (Drexel) > 2003/285 Mike Carroll (Drexel)  
+  keys: `1981:165-04,2002:285-16,2003:285-29`
+- 1981/167 Jeff Turner (Lehigh) > 1983/177 Jeff Turner (Lehigh) > 1988/158 Jeff Turner (Pittsburgh) > 1989/158 Jeff Turner (Pittsburgh)  
+  keys: `1981:174-12,1983:184-28,1988:165-26,1989:165-15`
+- 1981/177 Mike Miller (Oregon) > 1992/158 Mike Miller (Clemson) > 1993/150 Mike Miller (Clemson) > 1995/118 Mike Miller (NC State) > 1996/118 Mike Miller (NC State) > 2007/165 Mike Miller (Central Michigan) > 2009/174 Mike Miller (Central Michigan) > 2010/184 Mike Miller (Central Michigan)  
+  keys: `1981:184-13,1992:165-04,1993:157-16,1995:125-19,1996:125-01,2007:165-22,2009:174-07,2010:184-32`
+- 1981/UNL Steve Williams (Oklahoma) > 1982/UNL Steve Williams (Oklahoma) > 1990/167 Steve Williams (NC State) > 1991/177 Steve Williams (NC State) > 1992/177 Steve Williams (NC State)  
+  keys: `1981:285-09,1982:285-26,1990:174-18,1991:184-04,1992:184-11`
+- 1982/118 David Jones (Montana State) > 1983/118 David Jones (Montana State) > 1985/118 David Jones (Montana State) > 1989/275 David Jones (Cal State Fullerton) > 1990/275 David Jones (Cal State Fullerton) > 1991/275 David Jones (Cal State Fullerton)  
+  keys: `1982:125-18,1983:125-32,1985:125-26,1989:285-15,1990:285-27,1991:285-01`
+- 1982/134 Mike Garcia (Central Missouri) > 1996/150 Mike Garcia (Bucknell)  
+  keys: `1982:141-17,1996:157-15`
+- 1982/150 Pat O'Donnell (Cal Poly) > 1983/150 Pat O'Donnell (Cal Poly) > 2001/165 Pat O'Donnell (Harvard) > 2002/165 Pat O'Donnell (Harvard) > 2003/174 Pat O'Donnell (Harvard)  
+  keys: `1982:157-32,1983:157-30,2001:165-30,2002:165-21,2003:174-18`
+- 1982/158 John Davis (Morgan State) > 1983/158 John Davis (Morgan State) > 1984/158 John Davis (Morgan State) > 2004/184 John Davis (Chattanooga) > 2005/184 John Davis (Chattanooga) > 2006/184 John Davis (Chattanooga)  
+  keys: `1982:165-31,1983:165-25,1984:165-16,2004:184-29,2005:184-32,2006:184-14`
+- 1983/118 Joe Downey (Hofstra) > 1984/126 Joe Downey (Hofstra) > 2000/197 Joe Downey (Buffalo)  
+  keys: `1983:125-18,1984:133-25,2000:197-14`
+- 1983/126 Chris Davis (Illinois) > 1984/126 Chris Davis (Illinois) > 2006/141 Chris Davis (Sacred Heart)  
+  keys: `1983:133-32,1984:133-32,2006:141-21`
+- 1983/126 Mark Perry (Oklahoma State) > 1984/118 Mark Perry (Oklahoma State) > 1985/118 Mark Perry (Oklahoma State) > 2005/165 Mark Perry (Iowa) > 2006/174 Mark Perry (Iowa) > 2007/165 Mark Perry (Iowa) > 2008/165 Mark Perry (Iowa)  
+  keys: `1983:133-23,1984:125-15,1985:125-21,2005:165-04,2006:174-03,2007:165-02,2008:165-02`
+- 1983/150 Joey McKenna (Clemson) > 1984/142 Joey McKenna (Clemson) > 1985/142 Joey McKenna (Clemson) > 1986/150 Joey McKenna (Clemson) > 2016/141 Joey McKenna (Stanford) > 2017/141 Joey McKenna (Stanford) > 2018/141 Joey McKenna (Ohio State) > 2019/141 Joey McKenna (Ohio State)  
+  keys: `1983:157-17,1984:149-21,1985:149-12,1986:157-02,2016:141-02,2017:141-03,2018:141-04,2019:141-02`
+- 1983/150 Eric Childs (Penn State) > 1984/142 Eric Childs (Penn State) > 1990/134 Eric Childs (Rider) > 1993/134 Eric Childs (Rider)  
+  keys: `1983:157-11,1984:149-04,1990:141-26,1993:141-32`
+- 1984/118 Steve Brown (Eastern Michigan) > 1985/118 Steve Brown (Eastern Michigan) > 1986/118 Steve Brown (Eastern Michigan) > 1988/126 Steve Brown (Eastern Michigan) > 2008/157 Steve Brown (Central Michigan) > 2009/149 Steve Brown (Central Michigan)  
+  keys: `1984:125-24,1985:125-13,1986:125-32,1988:133-20,2008:157-14,2009:149-11`
+- 1984/118 Wayne Jackson (Michigan State) > 1995/126 Wayne Jackson (NC State)  
+  keys: `1984:125-08,1995:133-04`
 - 1985/118 Ken Johnson (Indiana) > 1995/167 Ken Johnson (NC State) > 1996/167 Ken Johnson (NC State)  
   keys: `1985:125-08,1995:174-24,1996:174-10`
-- 1985/118 Mark Perry (Oklahoma State) > 2005/165 Mark Perry (Iowa) > 2006/174 Mark Perry (Iowa) > 2007/165 Mark Perry (Iowa) > 2008/165 Mark Perry (Iowa)  
-  keys: `1985:125-21,2005:165-04,2006:174-03,2007:165-02,2008:165-02`
-- 1985/118 Steve Brown (Eastern Michigan) > 1986/118 Steve Brown (Eastern Michigan) > 1988/126 Steve Brown (Eastern Michigan) > 2008/157 Steve Brown (Central Michigan) > 2009/149 Steve Brown (Central Michigan)  
-  keys: `1985:125-13,1986:125-32,1988:133-20,2008:157-14,2009:149-11`
-- 1985/142 Joey McKenna (Clemson) > 1986/150 Joey McKenna (Clemson) > 2016/141 Joey McKenna (Stanford) > 2017/141 Joey McKenna (Stanford) > 2018/141 Joey McKenna (Ohio State) > 2019/141 Joey McKenna (Ohio State)  
-  keys: `1985:149-12,1986:157-02,2016:141-02,2017:141-03,2018:141-04,2019:141-02`
 - 1986/118 Chris Brown (Brigham Young) > 1987/118 Chris Brown (Brigham Young) > 2008/165 Chris Brown (Old Dominion) > 2009/165 Chris Brown (Old Dominion) > 2010/165 Chris Brown (Old Dominion)  
   keys: `1986:125-06,1987:125-12,2008:165-29,2009:165-32,2010:165-29`
 - 1986/126 Jon Anderson (Drake) > 1988/134 Jon Anderson (Drake) > 1989/134 Jon Anderson (Drake) > 2006/165 Jon Anderson (Army)  
@@ -246,8 +318,6 @@ Totals: 145 cases — A: 94 · B: 31 · C: 20. Registry continuous 1985–2026.
   keys: `1990:184-03,2012:174-30`
 - 1990/275 Eric Schultz (Ohio State) > 1991/190 Eric Schultz (Purdue) > 2018/197 Eric Schultz (Nebraska) > 2019/197 Eric Schultz (Nebraska) > 2021/197 Eric Schultz (Nebraska) > 2022/197 Eric Schultz (Nebraska)  
   keys: `1990:285-19,1991:197-20,2018:197-19,2019:197-14,2021:197-02,2022:197-03`
-- 1992/158 Mike Miller (Clemson) > 1993/150 Mike Miller (Clemson) > 1995/118 Mike Miller (NC State) > 1996/118 Mike Miller (NC State) > 2007/165 Mike Miller (Central Michigan) > 2009/174 Mike Miller (Central Michigan) > 2010/184 Mike Miller (Central Michigan)  
-  keys: `1992:165-04,1993:157-16,1995:125-19,1996:125-01,2007:165-22,2009:174-07,2010:184-32`
 - 1993/177 Richard Murry (Eastern Illinois) > 1994/177 Richard Murry (Eastern Illinois) > 1996/142 Richard Murry (Eastern Illinois)  
   keys: `1993:184-24,1994:184-20,1996:149-30`
 - 1994/118 Eric Smith (Seton Hall) > 1995/158 Eric Smith (Ohio State) > 1996/158 Eric Smith (Ohio State) > 2005/285 Eric Smith (Boise State)  
@@ -261,18 +331,26 @@ Totals: 145 cases — A: 94 · B: 31 · C: 20. Registry continuous 1985–2026.
 - 1996/190 Casey Strand (Arizona State) > 1997/167 Casey Strand (Arizona State) > 1998/167 Casey Strand (Arizona State) > 1999/184 Casey Strand (Arizona State)  
   keys: `1996:197-16,1997:174-05,1998:174-20,1999:184-06`
 
-## C. Spelling variants (same school) (20)
+## C. Spelling variants (same school) (24)
 
-- 1985/118 Ricky Bonomo (Bloomsburg) > 1985/126 Rocky Bonomo (Bloomsburg) > 1986/118 Ricky Bonomo (Bloomsburg) > 1986/126 Rocky Bonomo (Bloomsburg) > 1987/118 Ricky Bonomo (Bloomsburg) > 1987/126 Rocky Bonomo (Bloomsburg)  
-  keys: `1985:125-22,1985:133-18,1986:125-20,1986:133-13,1987:125-29,1987:133-24`
-- 1985/134 Chris Luttrell (New Mexico) > 1985/167 Curtis Luttrell (New Mexico) > 1986/134 Chris Luttrell (New Mexico) > 1987/134 Chris Luttrell (New Mexico)  
-  keys: `1985:141-16,1985:174-01,1986:141-08,1987:141-21`
-- 1985/134 Jim Jordan (Wisconsin) > 1985/150 Jeff Jordan (Wisconsin) > 1986/134 Jim Jordan (Wisconsin) > 1986/142 Jeff Jordan (Wisconsin) > 1987/150 Jeff Jordan (Wisconsin) > 1988/150 Jeff Jordan (Wisconsin)  
-  keys: `1985:141-13,1985:157-17,1986:141-04,1986:149-15,1987:157-18,1988:157-23`
-- 1985/142 Joe Gibbons (Iowa State) > 1986/134 Jeff Gibbons (Iowa State) > 1986/142 Joe Gibbons (Iowa State) > 1987/134 Jeff Gibbons (Iowa State) > 1988/134 Jeff Gibbons (Iowa State) > 1989/142 Jeff Gibbons (Iowa State)  
-  keys: `1985:149-13,1986:141-15,1986:149-02,1987:141-06,1988:141-16,1989:149-15`
-- 1985/150 Jim Heffernan (Iowa) > 1986/150 Jim Heffernan (Iowa) > 1987/150 Jim Heffernan (Iowa) > 1987/158 John Heffernan (Iowa) > 1988/158 John Heffernan (Iowa) > 1989/167 John Heffernan (Iowa)  
-  keys: `1985:157-19,1986:157-14,1987:157-30,1987:165-05,1988:165-25,1989:174-15`
+- 1981/142 Eddie Blazeff (Auburn) > 1981/177 Eli Blazeff (Auburn)  
+  keys: `1981:149-14,1981:184-21`
+- 1981/167 John Reich (Navy) > 1982/167 John Reich (Navy) > 1983/167 John Reich (Navy) > 1984/167 Jim Reich (Navy) > 1986/167 Jim Reich (Navy)  
+  keys: `1981:174-23,1982:174-24,1983:174-19,1984:174-03,1986:174-12`
+- 1981/UNL Duane Koslowski (Minnesota-Morris) > 1982/UNL Dennis Koslowski (Minnesota-Morris)  
+  keys: `1981:285-25,1982:285-03`
+- 1982/126 Cliff Berger (Oregon State) > 1982/142 Curt Berger (Oregon State) > 1983/142 Cliff Berger (Oregon State) > 1984/142 Cliff Berger (Oregon State) > 1985/134 Cliff Berger (Oregon State)  
+  keys: `1982:133-22,1982:149-35,1983:149-34,1984:149-12,1985:141-15`
+- 1983/126 Chris Luttrell (New Mexico) > 1984/158 Curtis Luttrell (New Mexico) > 1985/134 Chris Luttrell (New Mexico) > 1985/167 Curtis Luttrell (New Mexico) > 1986/134 Chris Luttrell (New Mexico) > 1987/134 Chris Luttrell (New Mexico)  
+  keys: `1983:133-05,1984:165-36,1985:141-16,1985:174-01,1986:141-08,1987:141-21`
+- 1983/150 Jim Heffernan (Iowa) > 1985/150 Jim Heffernan (Iowa) > 1986/150 Jim Heffernan (Iowa) > 1987/150 Jim Heffernan (Iowa) > 1987/158 John Heffernan (Iowa) > 1988/158 John Heffernan (Iowa) > 1989/167 John Heffernan (Iowa)  
+  keys: `1983:157-32,1985:157-19,1986:157-14,1987:157-30,1987:165-05,1988:165-25,1989:174-15`
+- 1983/177 Eli Blazeff (Michigan State) > 1984/190 Eli Blazeff (Michigan State) > 1985/158 Ernie Blazeff (Michigan State)  
+  keys: `1983:184-18,1984:197-26,1985:165-09`
+- 1984/118 Ricky Bonomo (Bloomsburg) > 1984/126 Rocky Bonomo (Bloomsburg) > 1985/118 Ricky Bonomo (Bloomsburg) > 1985/126 Rocky Bonomo (Bloomsburg) > 1986/118 Ricky Bonomo (Bloomsburg) > 1986/126 Rocky Bonomo (Bloomsburg) > 1987/118 Ricky Bonomo (Bloomsburg) > 1987/126 Rocky Bonomo (Bloomsburg)  
+  keys: `1984:125-31,1984:133-01,1985:125-22,1985:133-18,1986:125-20,1986:133-13,1987:125-29,1987:133-24`
+- 1984/134 Jim Jordan (Wisconsin) > 1985/134 Jim Jordan (Wisconsin) > 1985/150 Jeff Jordan (Wisconsin) > 1986/134 Jim Jordan (Wisconsin) > 1986/142 Jeff Jordan (Wisconsin) > 1987/150 Jeff Jordan (Wisconsin) > 1988/150 Jeff Jordan (Wisconsin)  
+  keys: `1984:141-29,1985:141-13,1985:157-17,1986:141-04,1986:149-15,1987:157-18,1988:157-23`
 - 1985/167 Jody Karam (Lock Haven) > 1987/167 Jody Karam (Lock Haven) > 1988/167 Jody Karam (Lock Haven) > 1989/167 Jeff Karam (Lock Haven) > 1990/158 Jeff Karam (Lock Haven)  
   keys: `1985:174-36,1987:174-08,1988:174-01,1989:174-03,1990:165-23`
 - 1986/118 Mark Schwab (Northern Iowa) > 1987/126 Mike Schwab (Northern Iowa) > 1988/126 Mike Schwab (Northern Iowa) > 1989/118 Mark Schwab (Northern Iowa) > 1990/118 Mark Schwab (Northern Iowa)  

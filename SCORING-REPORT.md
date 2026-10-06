@@ -1,4 +1,4 @@
-# 1985–1995 team scoring — report (Oct 6 2026)
+# 1981–1995 team scoring — report (Oct 6 2026)
 
 ## Model (approved; history layer: `HistoricalWrestlebackScoring` in historical-rules.js)
 Built only from the documented rules (WrestlingStats "NCAA Wrestling Rules for Scoring",
@@ -191,7 +191,63 @@ Bye-rule sensitivity 1989: established reading 6/10; printed byes only 0/10; no 
    9 Lehigh                 published 31.5    model 31.5   exact
   10 Bloomsburg             published 31      model 30.5   residual -0.5
 ```
-Cumulative 1985–1995: 68/110 published totals exact.
+## 1984 (approved: fall 1, major ½, superior ¾, no tech fall, no bye points)
+```
+1984: 7/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 123.75  model 123.75 exact
+   2 Oklahoma State         published 98      model 99     residual +1
+   3 Penn State             published 70.5    model 70.5   exact
+   4 Nebraska               published 61      model 62     residual +1
+   5 Oklahoma               published 51.5    model 52.5   residual +1
+   6 Wisconsin              published 49.5    model 49.5   exact
+   7 Iowa State             published 40.25   model 40.25  exact
+   8 Louisiana State        published 38.75   model 38.75  exact
+   9 Michigan State         published 29.25   model 29.25  exact
+  10 Missouri               published 29      model 29     exact
+```
+## 1983 (same 1976–1984 model)
+```
+1983: 10/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 155     model 155    exact
+   2 Oklahoma State         published 102     model 102    exact
+   3 Iowa State             published 94.25   model 94.25  exact
+   4 Oklahoma               published 64.75   model 64.75  exact
+   5 Lehigh                 published 49      model 49     exact
+   6 Nebraska               published 46      model 46     exact
+   7 Penn State             published 33.75   model 33.75  exact
+   8 Louisiana State        published 30.5    model 30.5   exact
+   9 Cal Poly               published 28.5    model 28.5   exact
+  10 Northern Iowa          published 26.5    model 26.5   exact
+```
+## 1982 (same 1976–1984 model)
+```
+1982: 9/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 131.75  model 131.75 exact
+   2 Iowa State             published 111     model 111    exact
+   3 Oklahoma               published 109     model 109    exact
+   4 Oklahoma State         published 71.75   model 71.75  exact
+   5 North Carolina         published 47      model 47     exact
+   6 Nebraska               published 40.25   model 41.25  residual +1
+   7 Indiana State          published 33      model 33     exact
+   8 Lehigh                 published 31.75   model 31.75  exact
+   9 San Jose State         published 26.75   model 26.75  exact
+  10 Northern Iowa          published 26      model 26     exact
+```
+## 1981 (same 1976–1984 model; printed-bye placement credited as placement only)
+```
+1981: 9/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 129.75  model 128.75 residual -1
+   2 Oklahoma               published 100.25  model 100.25 exact
+   3 Iowa State             published 84.75   model 84.75  exact
+   4 Oklahoma State         published 68.5    model 68.5   exact
+   5 Lehigh                 published 38      model 38     exact
+   6 Penn State             published 31.75   model 31.75  exact
+   7 Syracuse               published 30.5    model 30.5   exact
+   8 Central Michigan       published 28.75   model 28.75  exact
+   9 Auburn                 published 25.75   model 25.75  exact
+  10 Oregon State           published 25.25   model 25.25  exact
+```
+Cumulative 1981–1995: 103/150 published totals exact.
 
 ## 1999 MT correction (approved, narrowly scoped)
 Rule: 1997 — tech fall with back points 1.5; match termination (15+ without back points) 1 point. 1999 bouts printed "MT":
