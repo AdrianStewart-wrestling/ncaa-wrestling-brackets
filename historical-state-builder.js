@@ -634,3 +634,116 @@ const HistoricalStateBuilder = (function () {
 })();
 
 if (typeof module === 'object' && module.exports) module.exports = HistoricalStateBuilder;
+
+/* ============================================================================================================================
+   QUARTERFINAL WRESTLEBACK (1990-1995) -- ITS OWN historical bracket shape. Selected ONLY by HistoricalSeeds.facts[year][weight]
+   .consFormat === 'qf-wrestleback'; never used for any other year (1996-2026 keep the code above, unchanged).
+   Consolation = 5 rounds: WB1 (8) quarterfinalists' R1/wrestle-in victim vs R2 victim -> WB2 (4) pairs -> WB3 (4) vs quarterfinal losers
+   -> WB4 (2) pairs, losers to 7th -> WB5 (2) vs semifinal losers, winners to 3rd, losers to 5th. Who wrestles back is a historical
+   FACT read from the printed consolation bracket (facts.wb, each seat checked against the rule by assemble_wb.py); a loser with no seat
+   is eliminated. Runs on the existing cores unchanged (TournamentCore for 0-1 wrestle-ins, HistoricalCore for 2+), which discover the
+   routing by probing this engine's applyPick. Bout numbers: wrestleback session order (same as results{YEAR}.js).
+   ============================================================================================================================ */
+(function () {
+  const LINE_NO = [1,32,17,16,9,24,25,8,5,28,21,12,13,20,29,4,3,30,19,14,11,22,27,6,7,26,23,10,15,18,31,2];
+  const WEIGHTS = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
+  const ORDER = ['Prelims', 'ChampR1', 'ConsPrelims', 'ChampR2', 'WbConsR1', 'QuarterFinals', 'WbConsR2', 'WbConsR3', 'SemiFinals', 'WbConsR4', 'WbConsR5', '7thPlace', '5thPlace', '3rdPlace', 'Finals'];
+  const PATH_CON = ['Con R1', 'Con R2', 'Con R3', 'Con QF', 'Con SF'];                    // Path to the Finals labels (5 rounds)
+  const RENDER_CON = ['Con. Rd 1', 'Con. Rd 2', 'Con. Rd 3', 'Con. Qtrs', 'Con. Semis'];  // bracket column headers (5 rounds)
+  const norm = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
+  function factsOf(year, label) { const F = typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts; return (F && F[String(year)] && F[String(year)][String(label)]) || null; }
+  function isWrestleback(year, label) { const f = factsOf(year, label); return !!(f && f.consFormat === 'qf-wrestleback'); }
+  function boutNumbers(weight) { const wi = WEIGHTS.indexOf(Number(weight));
+    return { pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 8 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 4 * wi,
+             c3Start: 421 + 4 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi,
+             seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }; }
+  function roundLabel(key) { const p = String(key).split(':'); return p[0] === 'con' ? (PATH_CON[+p[1]] || null) : null; }
+
+  function build(resultData, year, label, slotWeight) {
+    const problems = [], F = factsOf(year, label);
+    if (!F || F.consFormat !== 'qf-wrestleback') return { ok: false, problems: ['no qf-wrestleback facts for ' + year + '/' + label] };
+    const rows = resultData.filter(r => String(r.weight) === String(label));
+    const T = ((window.HistoricalSeeds.table || {})[String(year)] || {})[String(label)] || {};
+    const WB = F.wb, N = rows.filter(r => r.round === 'Prelims').length, M = rows.filter(r => r.round === 'ConsPrelims').length;
+    const school = {}; rows.forEach(r => { school[r.winner] = r.winner_school; school[r.loser] = r.loser_school; });
+    // identity: a wrestler on a printed line takes that line's standard draw number; wrestle-in losers (no line) take 33, 34, ... in order
+    const fieldOf = {}; Object.entries(F.lines).forEach(([n, L]) => { fieldOf[n] = { n, s: school[n] || '', r: '', seed: LINE_NO[L], ds: T[n] || 0 }; });
+    const pigRows = rows.filter(r => r.round === 'Prelims').sort((a, b) => a.bout - b.bout);
+    let nextNo = 33; pigRows.forEach(r => [r.winner, r.loser].forEach(n => { if (!fieldOf[n]) fieldOf[n] = { n, s: school[n] || '', r: '', seed: nextNo++, ds: T[n] || 0 }; }));
+    rows.forEach(r => [r.winner, r.loser].forEach(n => { if (!fieldOf[n]) problems.push(n + ' has no printed line and is not a wrestle-in entrant'); }));
+    if (problems.length) return { ok: false, problems };
+    const W = n => { const f = fieldOf[n]; return f ? { n: f.n, s: f.s, r: '', seed: f.seed, ds: f.ds } : null; };
+    const lineName = {}; Object.entries(F.lines).forEach(([n, L]) => { lineName[L] = n; });
+    const feeds = WB.feeds || [], fedSeat = {}; feeds.forEach(f => { fedSeat[f.slot + f.side] = f.k; });
+    const byesR1 = (F.byes || []).filter(b => b.phase === 'r1'), vacant = (F.byes || []).filter(b => b.phase === 'wb1').map(b => b.slot);
+    const mk = (a, b) => ({ a, b, w: null });
+    const states = {};
+    function initBracket(wt) {
+      const r1 = Array.from({ length: 16 }, (_, i) => mk(fedSeat[i + 'a'] !== undefined ? null : W(lineName[2 * i]), fedSeat[i + 'b'] !== undefined ? null : W(lineName[2 * i + 1])));
+      const pigs = pigRows.map(r => { const e = [r.winner, r.loser].sort((x, y) => norm(x) < norm(y) ? -1 : 1); return mk(W(e[0]), W(e[1])); });
+      const conPigs = Array.from({ length: Math.max(N, 1) }, () => mk(null, null));
+      const st = { champ: [r1, Array.from({ length: 8 }, () => mk(null, null)), Array.from({ length: 4 }, () => mk(null, null)), Array.from({ length: 2 }, () => mk(null, null)), [mk(null, null)]],
+        con: [8, 4, 4, 2, 2].map(n => Array.from({ length: n }, () => mk(null, null))),
+        place3: mk(null, null), place5: mk(null, null), place7: mk(null, null), champion: null,
+        wrestleback: true, conRoundNames: RENDER_CON };
+      if (N >= 2) { st.pigtails = pigs; st.conPigtails = conPigs; st.pigtail = pigs[0]; st.conPigtail = conPigs[0];
+        st.pigtailSlots = feeds.map(f => f.slot); st.conPigtailSlots = conPigs.map((m, j) => WB.conPigSeat[j] !== undefined ? 2 * WB.conPigSeat[j] : 0); }
+      else { st.pigtail = N === 1 ? pigs[0] : mk(null, null); st.conPigtail = conPigs[0];
+        st.pigtailSlot = N === 1 ? feeds[0].slot : null; st.conPigtailSlot = (M === 1 && WB.conPigSeat[0] !== undefined) ? 2 * WB.conPigSeat[0] : (N === 1 ? 0 : null); }
+      vacant.forEach(p => { st.con[0][p].vacant = 'a'; });
+      byesR1.forEach(b => { const m = st.champ[0][b.slot]; m.a = W(b.wrestler); m.b = null; m.w = 'a'; m.bye = true; const nm = st.champ[1][b.slot >> 1]; if (b.slot % 2 === 0) nm.a = m.a; else nm.b = m.a; });
+      states[wt] = st;
+    }
+    const seat = (m, side, x) => { m[side] = x; };
+    function resolveVacant(st, p) { const m = st.con[0][p]; if (!m.vacant || m.w) return; const present = m.vacant === 'a' ? 'b' : 'a';
+      if (m[present]) { m.w = present; m.bye = true; advCon(st, 0, p, m[present], null); } }
+    function advCon(st, ri, mi, w, l) {
+      if (ri === 0) seat(st.con[1][mi >> 1], mi % 2 ? 'b' : 'a', w);
+      else if (ri === 1) seat(st.con[2][mi], 'b', w);
+      else if (ri === 2) seat(st.con[3][mi >> 1], mi % 2 ? 'b' : 'a', w);
+      else if (ri === 3) { seat(st.con[4][mi], 'b', w); if (l) { if (!st.place7.a) st.place7.a = l; else st.place7.b = l; } }
+      else if (ri === 4) { if (!st.place3.a) st.place3.a = w; else st.place3.b = w; if (l) { if (!st.place5.a) st.place5.a = l; else st.place5.b = l; } }
+    }
+    function applyPick(st, bracket, ri, mi, slot) {
+      let m = null;
+      if (bracket === 'pigtail') m = N >= 2 ? st.pigtails[ri] : st.pigtail;
+      else if (bracket === 'conPigtail') m = N >= 2 ? st.conPigtails[ri] : st.conPigtail;
+      else if (bracket === 'champ') m = st.champ[ri][mi];
+      else if (bracket === 'con') m = st.con[ri][mi];
+      else if (bracket === 'p3') m = st.place3; else if (bracket === 'p5') m = st.place5; else if (bracket === 'p7') m = st.place7;
+      if (!m || !m.a || !m.b || m.w) return;
+      const w = slot === 'a' ? m.a : m.b, l = slot === 'a' ? m.b : m.a; m.w = slot;
+      if (bracket === 'pigtail') { const k = N >= 2 ? ri : 0, f = feeds[k]; if (f) seat(st.champ[0][f.slot], f.side, w);
+        const j = WB.pigCons[k]; if (j !== undefined) seat(N >= 2 ? st.conPigtails[j] : st.conPigtail, 'a', l); }
+      else if (bracket === 'conPigtail') { const j = N >= 2 ? ri : 0, p = WB.conPigSeat[j]; if (p !== undefined) { seat(st.con[0][p], 'a', w); resolveVacant(st, p); } }
+      else if (bracket === 'champ') {
+        if (ri < 4) seat(st.champ[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w); else st.champion = w;
+        if (ri === 0) { const d = WB.r1Dest[mi]; if (d && d.wb1 !== undefined) { seat(st.con[0][d.wb1], 'a', l); resolveVacant(st, d.wb1); } else if (d && d.conPig !== undefined) seat(N >= 2 ? st.conPigtails[d.conPig] : st.conPigtail, 'b', l); }
+        else if (ri === 1) { const p = WB.r2Seat[mi]; if (p !== undefined) { seat(st.con[0][p], 'b', l); resolveVacant(st, p); } }
+        else if (ri === 2) seat(st.con[2][WB.qfSeat[mi]], 'a', l);
+        else if (ri === 3) seat(st.con[4][WB.sfSeat[mi]], 'a', l);
+      }
+      else if (bracket === 'con') advCon(st, ri, mi, w, l);
+    }
+    const adapter = { weights: [Number(slotWeight)], pigtailCount: N, boutNumbers, newState: wt => { initBracket(wt); return states[wt]; }, applyPick,
+      roundNames: { champ: ['Round 1', 'Rd of 16', 'Quarterfinals', 'Semifinals', 'Finals'], con: RENDER_CON } };
+    const core = N >= 2 ? window.HistoricalCore.create(adapter) : window.TournamentCore.create(adapter);
+    core.roundLabel = roundLabel;      // optional hook read by official-path.js (absent on every other core)
+    const book = core.newBook(), wt = Number(slotWeight);
+    const pending = () => core.keys.map(k => core.boutIdOf(wt, k)).filter(Boolean).map(id => core.describe(book, id)).filter(d => d && d.status === 'pending');
+    const parse = (typeof HistoricalStateBuilder !== 'undefined' ? HistoricalStateBuilder : window.HistoricalStateBuilder).parseResult;   // same file: the top-level const (not on window in browsers)
+    rows.slice().sort((a, b) => ORDER.indexOf(a.round) - ORDER.indexOf(b.round) || a.bout - b.bout).forEach(r => {
+      if (ORDER.indexOf(r.round) < 0) { problems.push('unknown round ' + r.round); return; }
+      const c = pending().find(d => (norm(d.a && d.a.name) === norm(r.winner) && norm(d.b && d.b.name) === norm(r.loser)) || (norm(d.b && d.b.name) === norm(r.winner) && norm(d.a && d.a.name) === norm(r.loser)));
+      if (!c) { problems.push(r.round + ': no pending bout for ' + r.winner + ' vs ' + r.loser); return; }
+      const pr = parse(r.result); if (!pr) { problems.push(r.round + ': could not parse "' + r.result + '"'); return; }
+      const res = core.record(book, { boutId: c.boutId, winnerId: norm(c.a.name) === norm(r.winner) ? c.a.id : c.b.id, resultType: pr.resultType, score: pr.score, time: pr.time, source: 'historical-replay' });
+      if (!res.ok) problems.push(r.round + ': ' + r.winner + ' vs ' + r.loser + ' -- ' + (res.message || res.code));
+    });
+    const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
+    return { ok: problems.length === 0, core, book, problems, wrestleback: true };
+  }
+  const api = { isWrestleback, build, boutNumbers, roundLabel, PATH_CON, RENDER_CON };
+  if (typeof window !== 'undefined') window.HistoricalWrestleback = api;
+  if (typeof globalThis !== 'undefined') globalThis.HistoricalWrestleback = api;
+})();

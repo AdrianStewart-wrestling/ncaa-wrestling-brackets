@@ -35,6 +35,7 @@
     if (b === 'con' && CON[ri]) return CON[ri];
     return String(key);
   }
+  function labelFor(core, key) { var x = core && typeof core.roundLabel === 'function' ? core.roundLabel(key) : null; return x || roundLabel(key); }   // optional core hook (1990-1995 wrestleback); every other core -> roundLabel
   function bracketOf(key) { var b = String(key).split(':')[0]; return b === 'champ' || b === 'pigtail' ? 'championship' : b === 'con' || b === 'conPigtail' ? 'consolation' : 'placement'; }
   function ordinal(n) { return n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : n + 'th'; }
   function fail(code, message) { return { ok: false, code: code, message: message }; }
@@ -71,7 +72,7 @@
       var opp = isMe(d.a) ? d.b : d.a, decided = d.status === 'decided', won = decided && d.winnerId === wrestlerId;
       var res = d.result || null;
       rows.push({
-        boutId: cur, key: d.key, round: roundLabel(d.key), bracket: bracketOf(d.key), status: d.status,
+        boutId: cur, key: d.key, round: labelFor(core, d.key), bracket: bracketOf(d.key), status: d.status,
         result: decided ? (won ? 'W' : 'L') : null, opponent: person(opp),
         resultType: decided && res ? res.resultType : null, method: decided && res ? (METHOD[res.resultType] || '') : '',
         score: decided && res ? (res.score || '') : '', time: decided && res ? (res.time || '') : '', points: pointsFor(cur)
@@ -99,7 +100,7 @@
       var rt = core.routes(last.boutId), destOf = function (b, kind) {
         if (kind === 'win' && rt.winnerIsChampion) return { kind: 'champion', label: 'NCAA Champion' };
         var to = kind === 'win' ? rt.winnerTo : rt.loserTo, fin2 = FINISH[last.key];
-        if (to !== null && to !== undefined) return { kind: 'advance', boutId: to, round: roundLabel(core.locate(to).key), label: (kind === 'win' ? 'Advances to ' : 'Drops to ') + roundLabel(core.locate(to).key) };
+        if (to !== null && to !== undefined) return { kind: 'advance', boutId: to, round: labelFor(core, core.locate(to).key), label: (kind === 'win' ? 'Advances to ' : 'Drops to ') + labelFor(core, core.locate(to).key) };
         if (fin2) return { kind: 'finish', place: fin2[kind === 'win' ? 0 : 1], label: 'Finishes ' + ordinal(fin2[kind === 'win' ? 0 : 1]) };
         return { kind: 'eliminated', label: 'Eliminated' };
       };
@@ -109,7 +110,7 @@
         var feeders = ids.filter(function (b) { if (b === prev || b === last.boutId) return false; var q = core.routes(b); return q.winnerTo === last.boutId || q.loserTo === last.boutId; });
         next.waitingOn = feeders.map(function (b) {
           var fd = descs[b], q = core.routes(b);
-          return { boutId: b, round: roundLabel(fd.key), via: q.winnerTo === last.boutId ? 'winner' : 'loser', status: fd.status, a: person(fd.a), b: person(fd.b) };
+          return { boutId: b, round: labelFor(core, fd.key), via: q.winnerTo === last.boutId ? 'winner' : 'loser', status: fd.status, a: person(fd.a), b: person(fd.b) };
         });
       }
     }
@@ -216,7 +217,7 @@
       var opp = [];
       bs.forEach(function (q, i) { if (i !== mine) opp = opp.concat(q); });
       opp = uniqPeople(opp).filter(function (x) { return x.id !== wrestlerId; });
-      rounds.push({ boutId: cur, key: d.key, round: roundLabel(d.key), status: d.status, opponents: opp });
+      rounds.push({ boutId: cur, key: d.key, round: labelFor(core, d.key), status: d.status, opponents: opp });
       var rt = core.routes(cur);
       if (!rt || rt.winnerIsChampion || rt.winnerTo === null || rt.winnerTo === undefined) break;
       cur = rt.winnerTo;

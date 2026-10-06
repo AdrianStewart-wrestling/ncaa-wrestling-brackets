@@ -2531,7 +2531,7 @@ function hideHistoricalScoresView() {
 }
 function historicalScoresModel(Yarg) {                // Yarg: a specific historical year build (NCAA Career); default = the year on screen
   const Y = Yarg || window.historicalYear;
-  if (!Y || !window.OfficialScoring) return null;
+  if (!Y || !window.OfficialScoring || Y.scoringPending) return null;   // 1990-1995: scoring rule awaiting approval (historical-mode.js)
   // schools: the COMPLETE historical field, so teams that scored no points still get a row (and any reconciliation applies)
   if (!Y.scores) Y.scores = window.OfficialScoring.compute(Y.records, { bonusOf: bonusOfResult, schoolOf: id => Y.schoolOf[id] || '', adjustments: Y.adjustments || undefined, schools: Object.keys(Y.idsBySchool) });
   return Y.scores;                                   // the year's results are static, so the model is computed once per build
@@ -2739,15 +2739,15 @@ function render() {
   html+=`<div class="bgrid" style="align-items:flex-start">`;
   const cpHasData=st.conPigtail.a||st.conPigtail.b;
   if(multiPt){
-  const items=st.conPigtails.map((m,k)=>({m,k,pos:st.conPigtailSlots[k]>>1})).sort((a,b)=>a.pos-b.pos||a.k-b.k);
-  html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtails (${st.conPigtails.length})</div><div style="display:flex;flex-direction:column;">${stackBoxes(items,'conPigtail','con pt')}</div></div>`;
+  const items=st.conPigtails.map((m,k)=>({m,k,pos:st.conPigtailSlots[k]>>1})).filter(x=>!st.wrestleback||x.m.a||x.m.b).sort((a,b)=>a.pos-b.pos||a.k-b.k);
+  html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtails (${items.length})</div><div style="display:flex;flex-direction:column;">${stackBoxes(items,'conPigtail','con pt')}</div></div>`;
   html+=`<div class="rconn"></div>`;
   } else if(!noPt){
   html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-top:${(MH + GAP) * cpSeat}px;margin-bottom:${GAP}px;">${cpHasData?matchHTML(st.conPigtail,'conPigtail',0,0,'con pt'):`<div style="min-width:168px;padding:8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting pigtail & 3v30…</div>`}</div></div></div>`;
 html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${((MH + GAP) * cpSeat) + (MH/2 - 6)}px;"><div style="font-size:10px;color:var(--orange);opacity:.4;">→</div></div>`;
   }
   st.con.forEach((round,ri)=>{
-    html+=`<div class="rcol"><div class="rhdr cc">${CON_RND_NAMES[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
+    html+=`<div class="rcol"><div class="rhdr cc">${(st.conRoundNames||CON_RND_NAMES)[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
     const hasData=round.some(m=>m.a||m.b);
     if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting results…</div>`;}
     else{round.forEach((m,mi)=>{html+=`<div>${matchHTML(m,'con',ri,mi,'con')}</div>`;});}

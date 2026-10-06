@@ -1,6 +1,6 @@
 /* ============================================================================
    NCAA CAREER — HISTORY ONLY. Opened from the History Path to the Finals panel ("NCAA Career"). One wrestler's NCAA
-   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (1996–2026, no 2020 Championships; 1999–2009 and 2012 results from a fallback source), identified by
+   Championships appearances WITHIN TOURNAMENT CENTRAL'S HISTORICAL DATA (1994–2026, no 2020 Championships; 1999–2009 and 2012 results from a fallback source), identified by
    the Career Registry (historical-careers.js) — never by name. Read-only: only calls TCEngine.careerLoad() and
    PathPanel.open(); writes nothing; builds its screen with textContent only. OFFICIAL / MY PICKS never reach this panel.
    ============================================================================ */
@@ -9,9 +9,10 @@
   var st = { open: false, id: null, root: null, body: null, lastFocus: null, seq: 0 };
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+  function pending(y) { return !!(window.HistoryMode && window.HistoryMode.scoringPending && window.HistoryMode.scoringPending(y)); }
   function fmtN(n) { return n % 1 === 0 ? String(n) : n.toFixed(1); }
   var POINTS_TIP = 'Tournament Points are calculated by Tournament Central from the historical bout results (advancement, bonus and placement points). Team-level deductions are not attributable to individual wrestlers, so these can differ from official team totals.';
-  var COVERAGE = 'Covers the 1996–2026 NCAA Championships in Tournament Central (there were no 2020 Championships; 2012 completed results come from the WrestlingStats fallback, structure from the official NCAA draw; 1996–2009 bracket and results come from the WrestlingStats fallback, checked against the NCAA Records Book; 2009 bracket and results come from the WrestlingStats fallback). Appearances before 1996 are not included, so this may not be his complete NCAA career.';
+  var COVERAGE = 'Covers the 1994–2026 NCAA Championships in Tournament Central (there were no 2020 Championships; 2012 completed results come from the WrestlingStats fallback, structure from the official NCAA draw; 1994–2009 bracket and results come from the WrestlingStats fallback, checked against the NCAA Records Book; 2009 bracket and results come from the WrestlingStats fallback). Appearances before 1994 are not included, so this may not be his complete NCAA career.';
 
   function ensureStyle() {
     if (document.getElementById('cp-style')) return;
@@ -50,8 +51,12 @@
     b.appendChild(el('div', 'pp-sub', c.schools.join(' → ')));
     b.appendChild(el('div', 'cp-cov', COVERAGE));
     var s = c.summary, g = el('div', 'cp-grid');
-    stat(g, String(s.appearances), 'NCAA APPEARANCES'); stat(g, String(s.titles), 'NCAA TITLES'); stat(g, String(s.aa), 'ALL-AMERICAN');
-    stat(g, s.w + '-' + s.l, 'NCAA W-L'); stat(g, fmtN(s.points), 'TOURNAMENT POINTS ⓘ', POINTS_TIP); b.appendChild(g);
+    // All-American = placed 1st-8th. Scored years carry it from the scoring model; scoring-pending years (1990-1995) take it from the finish.
+    (c.rows || []).forEach(function (r) { if (r.ok && !r.aa && pending(r.year) && (r.finishCode === 'champion' || r.finishCode === 'placed')) r.aa = true; });
+    var aaCount = (c.rows || []).filter(function (r) { return r.ok && r.aa; }).length;
+    stat(g, String(s.appearances), 'NCAA APPEARANCES'); stat(g, String(s.titles), 'NCAA TITLES'); stat(g, String(aaCount), 'ALL-AMERICAN');
+    var pend = (c.rows || []).some(function (r) { return pending(r.year); });   // 1990-1995 points are not computed yet: the total would be incomplete
+    stat(g, s.w + '-' + s.l, 'NCAA W-L'); stat(g, pend ? '—' : fmtN(s.points), pend ? 'TOURNAMENT POINTS (pending)' : 'TOURNAMENT POINTS ⓘ', pend ? 'Team points for 1990–1995 appearances are not computed yet: the scoring rules for that era are under review.' : POINTS_TIP); b.appendChild(g);
     var ol = el('ol', 'cp-list');
     c.rows.forEach(function (r) {
       var li = el('li', 'cp-row');
@@ -62,7 +67,7 @@
       if (r.aa) l1.appendChild(el('span', 'cp-aa', '★ All-American'));
       btn.appendChild(l1);
       btn.appendChild(el('div', 'cp-l2', (r.seed == null ? 'Unseeded' : '#' + r.seed + ' seed') + ' · ' + (r.finishCode === 'champion' ? '🏆 ' : '') + r.finish +
-        ' · ' + r.w + '-' + r.l + ' · ' + fmtN(r.points) + ' pts' + (r.bonus ? ' (bonus ' + fmtN(r.bonus) + ')' : '')));
+        ' · ' + r.w + '-' + r.l + (pending(r.year) ? ' · team points pending (scoring rules under review)' : ' · ' + fmtN(r.points) + ' pts' + (r.bonus ? ' (bonus ' + fmtN(r.bonus) + ')' : ''))));
       btn.addEventListener('click', function () { closePanel(); if (window.PathPanel) window.PathPanel.open(r.pathId); });
       li.appendChild(btn); ol.appendChild(li);
     });

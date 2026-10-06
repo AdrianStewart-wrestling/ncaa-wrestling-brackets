@@ -23,7 +23,7 @@
    Sources: the WrestlingStats 1996, 1997 and 1998 compiled brackets (weight-class pages 118 ... 275). */
 const HistoricalWeights = (function () {
   const MODERN = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
-  const CLASSES = { 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
+  const CLASSES = { 1994: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1995: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
   const of = year => CLASSES[Number(year)] || MODERN;
   return {
     classes: of,                                                                  // labels for a year, lightest first
@@ -58,7 +58,8 @@ const HistoryMode = (function () {
   // wherever you're serving that site's results*.js files (see README for options).
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
-  const AVAILABLE_YEARS = [1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const SCORING_PENDING = new Set([1990, 1991, 1992, 1993, 1994, 1995]);   // team-scoring rule not yet approved for these years
+  const AVAILABLE_YEARS = [1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
@@ -141,12 +142,15 @@ const HistoryMode = (function () {
       if (typeof HistoricalAdapter === 'undefined') throw new Error('historical-adapter.js did not load.');
       if (typeof HistoricalStateBuilder === 'undefined') throw new Error('historical-state-builder.js did not load.');
 
-      const modelResult = HistoricalAdapter.buildCanonicalBracketModel(resultData, year, weight);
-      if (!modelResult.ok) { fail(year, weight, year + '/' + weight + ' could not be rendered: ' + modelResult.problems.join('; ')); return; }
-
       const slot = HistoricalWeights.slotOf(year, weight);              // engine slot (identity for 1999-2026)
       HistoricalWeights.aliasSeeds(year);
-      const built = HistoricalStateBuilder.build(modelResult.model, String(slot));
+      let built;
+      if (window.HistoricalWrestleback && HistoricalWrestleback.isWrestleback(year, weight)) built = HistoricalWrestleback.build(resultData, year, weight, String(slot));   // 1990-1995 shape
+      else {
+        const modelResult = HistoricalAdapter.buildCanonicalBracketModel(resultData, year, weight);
+        if (!modelResult.ok) { fail(year, weight, year + '/' + weight + ' could not be rendered: ' + modelResult.problems.join('; ')); return; }
+        built = HistoricalStateBuilder.build(modelResult.model, String(slot));
+      }
       if (!built.ok) { fail(year, weight, year + '/' + weight + ' could not be built: ' + built.problems.join('; ')); return; }
 
       if (typeof window.showHistoricalBracket !== 'function') throw new Error('showHistoricalBracket() is not available on this page.');
@@ -172,9 +176,11 @@ const HistoryMode = (function () {
     HistoricalWeights.aliasSeeds(year);
     weights.forEach(w => {
       const label = HistoricalWeights.labelOf(year, w);                 // the year's real weight class (identity for 1999-2026)
-      const mr = HistoricalAdapter.buildCanonicalBracketModel(resultData, year, String(label));
-      if (!mr.ok) { Y.problems.push(label + ': ' + mr.problems.join('; ')); return; }
-      const b = HistoricalStateBuilder.build(mr.model, String(w));
+      let b;
+      if (window.HistoricalWrestleback && HistoricalWrestleback.isWrestleback(year, label)) b = HistoricalWrestleback.build(resultData, year, String(label), String(w));   // 1990-1995 shape
+      else { const mr = HistoricalAdapter.buildCanonicalBracketModel(resultData, year, String(label));
+        if (!mr.ok) { Y.problems.push(label + ': ' + mr.problems.join('; ')); return; }
+        b = HistoricalStateBuilder.build(mr.model, String(w)); }
       if (!b.ok) { Y.problems.push(label + ': ' + b.problems.join('; ')); return; }
       Y.weights.push(w); Y.cores[w] = b.core; Y.books[w] = b.book;
       const st = b.book.states[w];
@@ -188,6 +194,9 @@ const HistoryMode = (function () {
       });
       Y.records = Y.records.concat(b.core.toRecords(b.book));
     });
+    // 1990-1995 (quarterfinal wrestleback): team scoring is NOT computed until a historical scoring rule is approved -- the modern
+    // scorer's round semantics and the published quarter-point totals do not apply as-is. Brackets, Path and Career work normally.
+    if (SCORING_PENDING.has(Number(year))) { Y.scoringPending = true; return Y; }
     // Year/format-driven historical scoring rules (History layer only; the OFFICIAL scorer is untouched).
     if (window.HistoricalRules) { const ap = window.HistoricalRules.apply(year, Y.records, id => Y.schoolOf[id], Y.adjustments);
       if (ap) { Y.adjustments = ap.adjustments; Y.byeCredits = ap.credits; window.HistoricalRules.register(year, ap.credits, ap.placeDeltas); } }
@@ -196,6 +205,7 @@ const HistoryMode = (function () {
 
   function showTeamScores() {
     const year = document.getElementById('hist-year').value;
+    if (SCORING_PENDING.has(Number(year))) { setStatus(year + ' team scores are not shown yet: the ' + year + ' scoring rules (quarterfinal-wrestleback era) are awaiting review. Brackets, Path to the Finals and NCAA Career are available.', true); return; }
     const mySeq = ++loadSeq;
     setStatus('Building ' + year + ' team scores (all 10 weights)…');
     const ready = yearCache[year] ? Promise.resolve(yearCache[year]) : loadYearData(year).then(data => {
@@ -243,7 +253,7 @@ const HistoryMode = (function () {
     });
   }
 
-  return { init: init, buildYear: buildYear, openBracket: openBracket, getYear: getYear };
+  return { init: init, buildYear: buildYear, openBracket: openBracket, getYear: getYear, scoringPending: y => SCORING_PENDING.has(Number(y)) };
 })();
 
 window.HistoryMode = HistoryMode; // 'const' at script scope does not attach to window on its own -- needed since
