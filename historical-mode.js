@@ -23,7 +23,7 @@
    Sources: the WrestlingStats 1996, 1997 and 1998 compiled brackets (weight-class pages 118 ... 275). */
 const HistoricalWeights = (function () {
   const MODERN = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
-  const CLASSES = { 1980: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1980: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1981: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1981: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1982: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1983: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1984: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1985: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1986: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1987: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1988: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1989: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1990: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1991: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1992: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1993: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1994: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1995: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
+  const CLASSES = { 1980: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1981: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1982: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1983: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1984: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1985: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1986: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1987: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1988: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1989: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1990: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1991: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1992: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1993: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1994: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1995: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
   const of = year => CLASSES[Number(year)] || MODERN;
   return {
     classes: of,                                                                  // labels for a year, lightest first
@@ -62,7 +62,7 @@ const HistoryMode = (function () {
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
   const SCORING_PENDING = new Set([]);   // none: 1985-1987 rules approved Oct 6 2026 (history-layer model)   // years whose team-scoring rule is awaiting approval (none: 1990-1995 approved Oct 6 2026, history-layer model)
-  const AVAILABLE_YEARS = [1980,1980,1981,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const AVAILABLE_YEARS = [1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
@@ -204,7 +204,7 @@ const HistoryMode = (function () {
       const shape = HistoricalWrestleback.shapeOf(year, HistoricalWeights.labelOf(year, Y.weights[0]));
       const byePlacements = [];   // placements decided by a printed bye (1981 source exceptions): no bout record -- read from the bracket state
       Y.weights.forEach(w => { const st = Y.books[w] && Y.books[w].states[w]; if (!st) return;
-        [[3, 'place3'], [5, 'place5'], [7, 'place7']].forEach(([pl, k]) => { const m = st[k]; if (m && m.bye && m.w) byePlacements.push(Object.assign({ id: TournamentCore.wrestlerId(w, m[m.w]), round: pl + (pl === 3 ? 'rd' : 'th') }, m.forfeitBonus ? { forfeitBonus: true } : {})); }); });
+        [[3, 'place3'], [5, 'place5'], [7, 'place7']].forEach(([pl, k]) => { const m = st[k]; if (m && m.bye && m.w) byePlacements.push({ id: TournamentCore.wrestlerId(w, m[m.w]), round: pl + (pl === 3 ? 'rd' : 'th') }); }); });
       Y.scores = HistoricalWrestlebackScoring.compute(year, Y.records, id => Y.schoolOf[id] || '', Object.keys(Y.idsBySchool), Object.assign({ shape }, byePlacements.length ? { byePlacements } : {}));   // 1972-1995 history-layer model
       return Y; }
     // Year/format-driven historical scoring rules (History layer only; the OFFICIAL scorer is untouched).

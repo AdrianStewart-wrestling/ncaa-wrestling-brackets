@@ -750,9 +750,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
         }));
         [st.place3, st.place5, st.place7].forEach(pm => {
           if (pm.w || !pm.missing) return; const filled = (pm.a ? 1 : 0) + (pm.b ? 1 : 0);
-          if (filled === 1 && filled + pm.missing === 2) { pm.w = pm.a ? 'a' : 'b'; pm.bye = true; changed = true;
-            // a printed placement forfeit approved as a scoring event (facts byes[].forfeitBonus; 1981 134 Lewis only)
-            if ((F.byes || []).some(b => b.phase === 'printedBye' && b.forfeitBonus && b.wrestler === pm[pm.w].n)) pm.forfeitBonus = true; }
+          if (filled === 1 && filled + pm.missing === 2) { pm.w = pm.a ? 'a' : 'b'; pm.bye = true; changed = true; }
         });
       }
     }
