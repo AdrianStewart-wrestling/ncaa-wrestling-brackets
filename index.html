@@ -4069,10 +4069,42 @@ window.TCEngine = Object.freeze({
 document.dispatchEvent(new CustomEvent('tc-engine-ready'));
 
 // Landing: Tournament Central (OFFICIAL). ?view=bracket opens the bracket directly in MY PICKS, exactly as before.
+// DEEP LINKS (navigation only, for home pages): ?view=picks opens MY BRACKET; ?view=history opens NCAA HISTORY, optionally
+// &year=YYYY with &weight=WEIGHT (that bracket) or &show=scores (that year's Team Scores). They only call the existing
+// switch functions and press the existing History buttons. Any other URL -- none, ?view=official, ?view=bracket, an unknown
+// view -- takes the unchanged landing below. Unavailable years/weights fall back to the History landing; nothing throws.
+const TC_DEEP_LINK = (function () {
+  try { const q = new URLSearchParams(location.search), v = q.get('view');
+    return v === 'picks' || v === 'history' ? { view: v, year: q.get('year'), weight: q.get('weight'), show: q.get('show') } : null;
+  } catch (e) { return null; }
+})();
 setViewMode('picks');
-if (!/[?&]view=bracket(&|$)/.test(location.search)) {
+if (!TC_DEEP_LINK && !/[?&]view=bracket(&|$)/.test(location.search)) {
   if (window.TournamentCentral && window.TournamentCentral.ready) switchCentral();
   else document.addEventListener('tc-ready', function () { switchCentral(); }, { once: true });
+}
+if (TC_DEEP_LINK) {
+  const go = function () {           // after every script has loaded (the History scripts load after this one)
+    try {
+      if (TC_DEEP_LINK.view === 'picks') { chooseMode('picks'); return; }
+      switchHistory();
+      const ys = document.getElementById('hist-year'), ws = document.getElementById('hist-weight'), st = document.getElementById('hist-status');
+      const y = TC_DEEP_LINK.year == null ? '' : String(TC_DEEP_LINK.year).trim();
+      if (!y || !ys || !ws) return;
+      if (!Array.from(ys.options).some(function (o) { return o.value === y; })) {
+        if (st) st.textContent = (y === '2020' ? 'There were no 2020 NCAA Championships (canceled).' : y + ' is not available.') + ' Choose a year above.';
+        return;
+      }
+      ys.value = y; ys.dispatchEvent(new Event('change'));
+      if (TC_DEEP_LINK.show === 'scores') { document.getElementById('hist-scores-btn').click(); return; }
+      const w = TC_DEEP_LINK.weight == null ? '' : String(TC_DEEP_LINK.weight).trim();
+      if (!w) return;
+      const opt = Array.from(ws.options).find(function (o) { return o.value.toUpperCase() === w.toUpperCase(); });
+      if (!opt) { if (st) st.textContent = y + ' has no ' + w + ' lb class. Choose a weight above.'; return; }
+      ws.value = opt.value; document.getElementById('hist-show-btn').click();
+    } catch (e) { /* navigation only: never break the page */ }
+  };
+  if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
 }
 </script>
 

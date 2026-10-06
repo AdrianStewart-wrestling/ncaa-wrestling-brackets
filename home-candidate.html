@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tournament Central · NCAA Wrestling brackets, picks and history</title>
+<meta name="description" content="Follow the NCAA Wrestling Championships bout by bout, build your own bracket, and relive 46 NCAA Championships from 1980 to 2026.">
+<meta property="og:title" content="NCAA Wrestling Tournament Central">
+<meta property="og:description" content="Build it. Follow it. Relive it. Official brackets, your own picks, and 46 NCAA Championships of history, 1980–2026.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,4 94,27 94,73 50,96 6,73 6,27' fill='%23d4a72c'/><text x='50' y='64' font-size='40' text-anchor='middle' font-family='Arial Black,Arial' fill='%230a1830'>TC</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#071226; --navy:#0c1d38; --panel:#0f2240; --line:rgba(160,190,235,.16);
+  --gold:#d4a72c; --gold2:#f1cf6a; --blue:#2f7de1; --red:#c0242f; --steel:#9fb2cc; --white:#f3f6fb;
+  --display:'Bebas Neue',Impact,'Arial Narrow',sans-serif; --cond:'Barlow Condensed','Arial Narrow',sans-serif; --body:'Barlow',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--night);color:var(--white);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:3px solid var(--gold2);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:rgba(7,18,38,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:22px;letter-spacing:2px;white-space:nowrap}
+.hex{width:30px;height:30px;background:var(--gold);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:grid;place-items:center;color:var(--night);font-family:var(--display);font-size:15px;letter-spacing:0;flex-shrink:0}
+nav{display:flex;gap:26px;font-family:var(--cond);font-weight:600;font-size:16px;letter-spacing:1.5px;text-transform:uppercase}
+nav a{padding:18px 0;border-bottom:3px solid transparent;color:rgba(243,246,251,.85);white-space:nowrap}
+nav a:hover{color:var(--white)}
+nav a.on{color:var(--gold2);border-color:var(--gold)}
+
+/* hero: a packed championship arena */
+.hero{position:relative;overflow:hidden;padding:38px 0 0;text-align:center;isolation:isolate;background:#030913}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,18,38,0),var(--night))}
+.hero .crowd{position:absolute;inset:0;width:100%;height:100%;z-index:-3}
+.hero .beams{position:absolute;inset:0;z-index:-2;pointer-events:none;mix-blend-mode:screen}
+.beam{position:absolute;top:-40px;height:118%;transform-origin:50% 0;filter:blur(10px);
+  background:linear-gradient(180deg,rgba(225,236,255,.42),rgba(190,215,255,.16) 55%,rgba(190,215,255,0) 92%);
+  clip-path:polygon(44% 0,56% 0,100% 100%,0 100%)}
+.beam.c{left:calc(50% - 300px);width:600px;background:linear-gradient(180deg,rgba(255,250,235,.6),rgba(255,240,205,.22) 55%,rgba(255,240,205,0) 95%)}
+.beam.l1{left:calc(50% - 760px);width:380px;transform:rotate(-14deg);opacity:.75}
+.beam.r1{left:calc(50% + 380px);width:380px;transform:rotate(14deg);opacity:.75}
+.beam.l2{left:calc(50% - 560px);width:300px;transform:rotate(-26deg);opacity:.5}
+.beam.r2{left:calc(50% + 260px);width:300px;transform:rotate(26deg);opacity:.5}
+.hero .haze{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 34% 18% at 50% 0,rgba(255,255,255,.55),transparent 70%),
+    radial-gradient(ellipse 60% 42% at 50% 64%,rgba(120,170,255,.22),transparent 70%),
+    radial-gradient(ellipse 90% 30% at 50% 46%,rgba(170,195,235,.10),transparent 75%),
+    linear-gradient(90deg,rgba(3,9,19,.85) 0,transparent 22%,transparent 78%,rgba(3,9,19,.85) 100%)}
+.rig{position:absolute;top:0;left:0;right:0;height:26px;z-index:-1;display:flex;justify-content:center;gap:clamp(38px,6vw,92px)}
+.rig i{width:14px;height:9px;border-radius:0 0 7px 7px;background:#fffdf3;box-shadow:0 0 14px 6px rgba(255,248,225,.75),0 0 60px 18px rgba(210,225,255,.35)}
+h1{font-family:var(--display);font-weight:400;line-height:.84;position:relative}
+h1 .l1{display:block;font-size:clamp(30px,4.6vw,66px);letter-spacing:.16em;color:var(--white);text-shadow:0 2px 18px rgba(0,0,0,.8)}
+h1 .l2{display:block;font-size:clamp(58px,10.6vw,156px);letter-spacing:.01em;margin-top:2px;
+  background:linear-gradient(180deg,#fff1b8 0%,var(--gold2) 22%,var(--gold) 58%,#8d6810 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 0 rgba(0,0,0,.55)) drop-shadow(0 0 34px rgba(241,207,106,.32))}
+.tag{font-family:var(--cond);font-weight:700;font-size:clamp(15px,1.9vw,22px);letter-spacing:.42em;text-transform:uppercase;margin-top:18px;color:var(--white);display:inline-block;padding:0 0 10px;border-bottom:2px solid var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.9)}
+.hero-shot{position:relative;z-index:0}
+.hero-shot img{display:block}
+.scene{position:relative;z-index:0;display:block;width:min(1240px,118vw);margin:-26px auto 0;position:relative;left:50%;transform:translateX(-50%);height:auto}
+
+/* wide screens: the photo is the whole hero (it carries the arena, title and mat) */
+@media (min-width:721px){
+  .hero{padding:0;aspect-ratio:1983/793;background:var(--night)}
+  .hero .crowd,.hero .beams,.hero .haze,.hero .rig,.hero::after{display:none}
+  .hero .wrap{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .hero-shot{position:absolute;inset:0}
+  .hero-shot img{width:100%;height:100%;object-fit:cover;
+    -webkit-mask-image:linear-gradient(180deg,#000 74%,transparent 100%),linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);-webkit-mask-composite:source-in;
+    mask-image:linear-gradient(180deg,#000 74%,transparent 100%),linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-composite:intersect}
+}
+/* phones: real headline on top, photo cropped to the wrestlers and mat */
+@media (max-width:720px){
+  .hero-shot{height:54vw;overflow:hidden;margin-top:-14px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 30%,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 30%,#000 82%,transparent 100%)}
+  .hero-shot img{position:absolute;width:217%;max-width:none;left:-58.5%;bottom:0;height:auto}
+}
+
+/* three doors */
+.doors{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:-4.4vw;position:relative;z-index:3}
+.door{position:relative;display:grid;grid-template-columns:76px 1fr;gap:16px;align-items:center;padding:24px 22px 24px 20px;border-radius:12px;border:1px solid rgba(255,255,255,.2);min-height:178px;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px rgba(255,255,255,.04),0 28px 60px rgba(0,0,0,.65),0 0 46px var(--glow)}
+.door::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 30% 0,rgba(255,255,255,.18),transparent 70%)}
+.door::after{content:"";position:absolute;left:12%;right:12%;bottom:0;height:3px;background:var(--edge);box-shadow:0 0 18px 2px var(--edge);opacity:.9}
+.door:hover{transform:translateY(-5px);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 36px 70px rgba(0,0,0,.7),0 0 70px var(--glow)}
+.door.official{--glow:rgba(47,125,225,.55);--edge:#5fa2ff;background:linear-gradient(140deg,#1a4c95,#0f2c5f 55%,#0a1d40)}
+.door.picks{--glow:rgba(220,40,55,.5);--edge:#ff5a63;background:linear-gradient(140deg,#a81b27,#6a111b 55%,#410b12)}
+.door.history{--glow:rgba(241,207,106,.32);--edge:#f1cf6a;background:linear-gradient(140deg,#34465f,#1f2d43 55%,#141f31)}
+.door svg.ico{width:76px;height:76px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.door h2{font-family:var(--display);font-weight:400;font-size:38px;line-height:1;letter-spacing:.5px}
+.door .sub{font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold2);margin:4px 0 10px}
+.door .rows{font-size:14.5px;color:rgba(243,246,251,.88);display:grid;gap:2px}
+.door .rows span{white-space:nowrap}
+.door .rows span:not(:last-child)::after{content:"|";opacity:.45;margin:0 9px}
+.go{position:absolute;right:16px;top:18px;width:34px;height:34px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center}
+.official .go{color:#5fa2ff}.picks .go{color:#ff5a63}.history .go{color:#d7e0ee}
+.go svg{width:14px;height:14px}
+
+/* championship banner */
+.champ{margin-top:26px;display:grid;grid-template-columns:200px 1fr 330px;align-items:center;gap:28px;padding:26px 28px;border-radius:10px;border:1px solid var(--line);position:relative;overflow:hidden;
+  background:linear-gradient(90deg,var(--panel) 0%,rgba(15,34,64,.92) 50%,var(--panel) 100%)}
+.skyline{position:absolute;right:330px;bottom:0;width:430px;height:100%;opacity:.32;pointer-events:none}
+.badge{width:170px;height:190px;justify-self:center;display:grid;place-items:center;text-align:center;background:var(--night);border:0;position:relative;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.badge::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,var(--gold2),var(--gold));clip-path:inherit;z-index:-1}
+.badge-in{position:absolute;inset:5px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(180deg,#123a75,#0b1f43);display:grid;place-items:center;align-content:center;gap:2px}
+.badge .yr{font-family:var(--display);font-size:54px;line-height:.9;color:var(--gold2)}
+.badge .ev{font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.badge .ct{font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+.champ-main{position:relative;z-index:1;border-left:1px solid var(--line);padding-left:28px}
+.champ .kicker{font-family:var(--cond);font-weight:600;font-size:15px;color:var(--gold2);letter-spacing:.06em}
+.champ h3{font-family:var(--display);font-weight:400;font-size:clamp(30px,3.4vw,46px);line-height:.95;margin:4px 0 16px;max-width:24ch}
+.facts{display:flex;flex-wrap:wrap;gap:14px 30px;font-size:17px}
+.fact{display:flex;align-items:center;gap:10px}
+.fact svg{width:28px;height:28px;flex-shrink:0;color:var(--steel)}
+.count{position:relative;z-index:1;text-align:center;padding:22px 18px;border-radius:8px;border:1px solid rgba(212,167,44,.4);background:rgba(7,18,38,.82)}
+.count .k{font-family:var(--display);font-size:24px;letter-spacing:1px;color:var(--gold2)}
+.count .n{font-family:var(--display);font-size:64px;line-height:.95;margin:2px 0}
+.count p{font-size:14.5px;color:rgba(243,246,251,.8);max-width:28ch;margin:6px auto 0}
+
+/* feature strip */
+.strip{margin-top:22px;display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--line);border-radius:10px;background:rgba(15,34,64,.6)}
+.feat{display:flex;gap:12px;padding:20px 16px;align-items:flex-start}
+.feat+.feat{border-left:1px solid var(--line)}
+.feat svg{width:34px;height:34px;flex-shrink:0;color:var(--blue)}
+.feat b{display:block;font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;text-transform:uppercase;line-height:1.15}
+.feat span{display:block;font-size:14px;color:rgba(243,246,251,.75);margin-top:3px;line-height:1.35}
+
+/* info sections */
+.info{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:56px}
+.info section{padding:28px;border-radius:10px;border:1px solid var(--line);background:rgba(15,34,64,.45);scroll-margin-top:80px}
+.info h2{font-family:var(--display);font-weight:400;font-size:34px;letter-spacing:.5px;color:var(--gold2);margin-bottom:10px}
+.info p{color:rgba(243,246,251,.85);max-width:62ch}
+.info p+p{margin-top:12px}
+.more{margin-top:22px;padding:24px 28px;border-radius:10px;border:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px}
+.more h2{font-family:var(--display);font-weight:400;font-size:28px;letter-spacing:.5px}
+.more a{font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:6px;border:1px solid rgba(212,167,44,.5);color:var(--gold2)}
+.more a:hover{background:rgba(212,167,44,.12)}
+footer{margin:48px 0 0;padding:26px 0 34px;border-top:1px solid var(--line);font-size:13.5px;color:rgba(243,246,251,.55)}
+
+/* page-load moment: title, then the doors */
+@media (prefers-reduced-motion:no-preference){
+  h1 .l1,h1 .l2,.tag{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+  h1 .l2{animation-delay:.12s}.tag{animation-delay:.24s}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.door{transition:none}}
+
+@media (max-width:1100px){
+  .doors{grid-template-columns:1fr}
+  .door{min-height:0}
+  .champ{grid-template-columns:150px 1fr}
+  .badge{width:140px;height:158px}.badge .yr{font-size:44px}
+  .count{grid-column:1/-1}
+  .skyline{right:0;width:360px}
+  .strip{grid-template-columns:repeat(3,1fr)}
+  .feat:nth-child(4){border-left:0}
+  .feat:nth-child(n+4){border-top:1px solid var(--line)}
+}
+@media (max-width:720px){
+  nav{gap:16px;font-size:14px}
+  nav .nl{display:none}
+  nav .opt{display:none}
+  .brand{font-size:19px}
+  .hero{padding:30px 0 0}
+  .tag{letter-spacing:.2em;font-size:15px}
+  .doors{margin-top:-6vw}
+  .rig{gap:26px}
+  .door{grid-template-columns:52px 1fr;padding:18px 16px 18px 14px;gap:12px}
+  .door svg.ico{width:52px;height:52px}
+  .door .rows{font-size:13.5px}
+  .door .rows span:not(:last-child)::after{margin:0 6px}
+  .go{right:12px;top:14px;width:30px;height:30px}
+  .door h2{font-size:32px}
+  .champ{grid-template-columns:1fr;padding:22px}
+  .badge{display:none}
+  .champ-main{border-left:0;padding-left:0}
+  .skyline{opacity:.25;width:100%}
+  .strip{grid-template-columns:1fr 1fr}
+  .feat:nth-child(odd){border-left:0}
+  .feat:nth-child(4){border-left:1px solid var(--line)}
+  .feat:nth-child(n+3){border-top:1px solid var(--line)}
+  .info{grid-template-columns:1fr}
+}
+/* ===== candidate additions (below the hero) ===== */
+:root{--e1:#b8823c;--e2:#d4a72c;--e3:#8fb3d9;--e4:#d0434c;--e5:#3d8ae8}
+nav a.cur{color:var(--gold2)}
+.mnav{display:none;position:relative}
+.mnav summary{list-style:none;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;font-family:var(--cond);font-weight:700;font-size:15px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px;border:1px solid var(--line);border-radius:6px;color:rgba(243,246,251,.9)}
+.mnav summary::-webkit-details-marker{display:none}
+.mnav summary::after{content:"";display:inline-block;width:7px;height:7px;margin-left:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-3px) rotate(45deg)}
+.mnav[open] summary{border-color:rgba(241,207,106,.6);color:var(--gold2)}
+.mnav-list{position:absolute;right:0;top:calc(100% + 8px);min-width:220px;display:grid;padding:6px;border:1px solid var(--line);border-radius:8px;background:rgba(7,18,38,.98);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.mnav-list a{font-family:var(--cond);font-weight:600;font-size:17px;padding:11px 12px;border-radius:5px;color:rgba(243,246,251,.9)}
+.mnav-list a:hover,.mnav-list a:focus-visible{background:rgba(160,190,235,.1);color:var(--white)}
+@media (max-width:1180px){nav .nl2{display:none}}
+@media (max-width:1100px){.top nav{display:none}.mnav{display:block}}
+.sec{margin-top:72px;scroll-margin-top:84px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.sec-h h2{font-family:var(--display);font-weight:400;font-size:clamp(40px,4.4vw,58px);line-height:.9;letter-spacing:.5px}
+.sec-h p{color:rgba(243,246,251,.78);max-width:58ch;font-size:16.5px}
+.lnk{font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.04em;color:var(--gold2);border-bottom:1px solid rgba(241,207,106,.45);padding-bottom:1px}
+.lnk:hover{border-color:var(--gold2)}
+
+/* history hub: the honeycomb of championships */
+.hub{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,1fr);gap:34px;align-items:start}
+.comb{display:grid;gap:6px;container-type:inline-size;--lab:64px;--lg:14px;--cg:6px}
+.dec{display:grid;grid-template-columns:var(--lab) 1fr;align-items:center;gap:var(--lg)}
+.dec:nth-child(even) .cells{padding-left:calc(var(--hx) * .5 + var(--cg) / 2)}
+.dec-l{font-family:var(--display);font-size:24px;color:var(--steel);letter-spacing:1px;text-align:right;white-space:nowrap}
+.dec-l .s{display:none}
+.cells{--hx:min(60px,calc((100cqw - var(--lab) - var(--lg) - 9 * var(--cg)) / 10.5));display:flex;gap:var(--cg)}
+.hx{width:var(--hx);aspect-ratio:1/1.12;border:0;cursor:pointer;position:relative;display:grid;place-items:center;font-family:var(--display);font-size:calc(var(--hx) * .36);letter-spacing:.5px;color:var(--white);
+  background:none;padding:0;-webkit-tap-highlight-color:transparent}
+/* the whole box is the tap target; the hexagon is drawn by two layers: the era ring (::after) and the face (::before) */
+.hx::after{content:"";position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--era);z-index:0}
+.hx::before{content:"";position:absolute;inset:3px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(170deg,#173560,#0d2140 70%);transition:background .15s ease;z-index:1}
+.hx span{z-index:2}
+.hx span{position:relative}
+.hx:hover::before{background:linear-gradient(170deg,#21467c,#123059 70%)}
+.hx[aria-pressed="true"]::before{background:var(--era)}
+.hx[aria-pressed="true"]{color:var(--night)}
+.hx:focus-visible{outline:none}.hx:focus-visible::after{background:var(--white)}
+.hx.gap{cursor:default}.hx.gap::after{background:rgba(160,190,235,.28)}
+.hx.gap::before{background:var(--night)}
+.hx.gap span{color:rgba(243,246,251,.4);font-size:calc(var(--hx) * .3)}
+.hx.pad{visibility:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:18px 0 0 calc(var(--lab-out,78px));font-family:var(--cond);font-weight:600;font-size:15px;color:rgba(243,246,251,.8)}
+.legend i{display:inline-block;width:12px;height:13px;margin-right:7px;vertical-align:-1px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--era)}
+.panel{position:sticky;top:84px;border:1px solid var(--line);border-top:4px solid var(--era,var(--gold));border-radius:4px 4px 10px 10px;background:linear-gradient(180deg,rgba(15,34,64,.85),rgba(12,29,56,.6));padding:24px 24px 26px}
+.p-yr{font-family:var(--display);font-size:92px;line-height:.8;color:var(--white)}
+.p-era{font-family:var(--cond);font-weight:700;font-size:16px;color:var(--era);margin-top:8px}
+.p-ch{margin-top:16px;font-size:17px;color:rgba(243,246,251,.85)}
+.p-ch b{display:block;font-family:var(--display);font-weight:400;font-size:34px;line-height:1;color:var(--gold2);letter-spacing:.5px;margin-top:2px}
+.p-k{font-family:var(--cond);font-weight:600;font-size:15px;color:var(--steel);margin:20px 0 8px}
+.wts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.wts a{text-align:center;font-family:var(--cond);font-weight:700;font-size:17px;padding:9px 0;border-radius:5px;background:rgba(160,190,235,.09);border:1px solid var(--line)}
+.wts a:hover{background:rgba(241,207,106,.16);border-color:rgba(241,207,106,.6);color:var(--gold2)}
+.p-act{display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:20px;align-items:center}
+.btn{display:inline-block;font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.03em;padding:11px 18px;border-radius:6px;background:var(--gold);color:var(--night)}
+.btn:hover{background:var(--gold2)}
+.steps{margin-top:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);counter-reset:st}
+.steps li{list-style:none;padding:18px 18px 0 0;counter-increment:st}
+.steps li::before{content:counter(st);display:block;font-family:var(--display);font-size:30px;color:var(--gold);line-height:1;margin-bottom:6px}
+.steps b{display:block;font-family:var(--cond);font-weight:700;font-size:17px}
+.steps span{display:block;font-size:14.5px;color:rgba(243,246,251,.75);margin-top:2px;max-width:30ch}
+
+/* scoring eras */
+.band{display:flex;height:16px;border-radius:3px;overflow:hidden;margin-bottom:6px}
+.band i{display:block;background:var(--era)}
+.band-ax{position:relative;height:18px;font-family:var(--cond);font-weight:600;font-size:14px;color:var(--steel);margin-bottom:22px}
+.band-ax span{position:absolute;top:0;transform:translateX(-50%)}
+.band-ax span:first-child{transform:none}.band-ax span:last-child{transform:translateX(-100%)}
+.era{display:grid;grid-template-columns:minmax(150px,max-content) minmax(0,1fr) 210px;gap:26px;padding:22px 0;border-top:1px solid var(--line);align-items:start}
+.era:last-child{border-bottom:1px solid var(--line)}
+.era-y{font-family:var(--display);font-size:38px;line-height:.9;color:var(--era);letter-spacing:.5px;white-space:nowrap}
+.era-y small{display:block;font-family:var(--cond);font-weight:600;font-size:14px;color:var(--steel);letter-spacing:0;margin-top:6px}
+.era h3{font-family:var(--cond);font-weight:700;font-size:23px;line-height:1.15;margin-bottom:6px}
+.era ul{list-style:none;display:grid;gap:4px;color:rgba(243,246,251,.85);max-width:68ch}
+.era ul li{padding-left:16px;position:relative}
+.era ul li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:2px;background:var(--era)}
+.era details{margin-top:10px}
+.era summary{cursor:pointer;font-family:var(--cond);font-weight:600;font-size:15px;color:var(--steel)}
+.era summary:hover{color:var(--white)}
+.era details p{font-size:14px;color:rgba(243,246,251,.72);margin-top:6px;max-width:80ch}
+.era-go{justify-self:end;text-align:right;padding-top:6px}
+
+/* from the archives */
+.arc{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:0;border:1px solid rgba(212,167,44,.35);border-radius:10px;overflow:hidden;background:linear-gradient(120deg,rgba(15,34,64,.9),rgba(7,18,38,.95))}
+.arc-main{padding:34px 36px}
+.arc-tag{display:flex;align-items:baseline;gap:14px;font-family:var(--display);color:var(--gold);font-size:60px;line-height:.85}
+.arc-tag span{font-family:var(--cond);font-weight:600;font-size:17px;color:var(--steel)}
+.arc h3{font-family:var(--display);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:.98;margin:16px 0 12px;max-width:22ch}
+.arc .dek{font-family:var(--cond);font-weight:600;font-size:20px;color:var(--gold2);max-width:48ch;margin-bottom:16px}
+.arc-main p.b{color:rgba(243,246,251,.86);max-width:64ch}
+.arc-main p.b+p.b{margin-top:12px}
+.arc-full summary{display:none;list-style:none}
+.arc-full summary::-webkit-details-marker{display:none}
+.arc-src{margin-top:18px;font-size:13.5px;color:rgba(243,246,251,.55);max-width:70ch}
+.arc-side{padding:30px 28px;background:rgba(3,9,19,.55);border-left:1px solid rgba(212,167,44,.25)}
+.arc-side h4{font-family:var(--cond);font-weight:700;font-size:18px;color:var(--steel);margin-bottom:10px}
+.ledger{display:grid}
+.ledger div{display:grid;gap:1px;padding:10px 0;border-top:1px solid var(--line)}
+.ledger dt{font-family:var(--cond);font-weight:600;font-size:14px;color:var(--steel)}
+.ledger dd{font-size:15.5px}
+.ledger div.nil dd{color:var(--gold2);font-family:var(--display);font-size:24px;letter-spacing:.5px}
+.arc-side .p-act{margin-top:22px;flex-direction:column;align-items:flex-start}
+
+/* data & sources */
+.src{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:34px}
+.srow{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:16px 0;border-top:1px solid var(--line)}
+.srow:last-child{border-bottom:1px solid var(--line)}
+.srow b{font-family:var(--display);font-weight:400;font-size:26px;line-height:1;color:var(--gold2)}
+.srow p{color:rgba(243,246,251,.84)}
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:22px}
+.nums div{background:var(--navy);padding:16px 18px}
+.nums b{display:block;font-family:var(--display);font-weight:400;font-size:40px;line-height:.95}
+.nums span{font-size:14px;color:rgba(243,246,251,.72)}
+.src h3{font-family:var(--cond);font-weight:700;font-size:20px;margin:0 0 6px}
+.src .note{color:rgba(243,246,251,.8);font-size:15.5px;max-width:62ch}
+.exc{list-style:none;margin-top:10px}
+.exc li{display:grid;grid-template-columns:92px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.exc .yw{font-family:var(--cond);font-weight:700;font-size:16px;color:var(--steel)}
+.exc .yw span{display:block;font-weight:600;font-size:13.5px;opacity:.8}
+.exc b{display:block;font-family:var(--cond);font-weight:700;font-size:17px}
+.exc p{font-size:14.5px;color:rgba(243,246,251,.75)}
+
+/* about + fan hub */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px}
+.about p{color:rgba(243,246,251,.85);max-width:62ch}
+.about p+p{margin-top:12px}
+.nojs{padding:18px;border:1px dashed var(--line);border-radius:8px;color:rgba(243,246,251,.8)}
+
+@media (max-width:1100px){
+  .hub{grid-template-columns:1fr}
+  .panel{position:static}
+  .steps{grid-template-columns:1fr 1fr}
+  .era{grid-template-columns:minmax(120px,max-content) minmax(0,1fr)}
+  .era-go{grid-column:2;justify-self:start;text-align:left;padding-top:0}
+  .arc{grid-template-columns:1fr}
+  .arc-side{border-left:0;border-top:1px solid rgba(212,167,44,.25)}
+  .src,.about{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .sec{margin-top:54px}
+  .comb{--lab:30px;--lg:6px;--cg:4px}
+  .dec-l{font-size:17px}
+  .dec-l .l{display:none}.dec-l .s{display:inline}
+  .legend{margin-left:0}
+  .steps{grid-template-columns:1fr}
+  .era{grid-template-columns:1fr;gap:10px}
+  .era-go{grid-column:1}
+  .arc{display:flex;flex-direction:column;padding:24px 20px}
+  .arc-main,.arc-side{display:contents}
+  .arc-tag{order:1}.arc h3{order:2;margin-top:12px}.arc .dek{order:3}
+  .arc-side h4{order:4;margin-top:8px}.ledger{order:5}.arc-side .p-act{order:6;margin-top:18px}
+  .arc-full{order:7;margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
+  .arc-full summary{display:block;cursor:pointer;font-family:var(--cond);font-weight:700;font-size:17px;color:var(--gold2)}
+  .arc-full summary::before{content:"+ ";}.arc-full[open] summary::before{content:"\2212  ";}
+  .arc-full:not([open]) p.b{display:none}
+  .arc-full[open] p.b:first-of-type{margin-top:12px}
+  .arc-src{order:8}
+  .arc-tag{font-size:48px}
+  .srow{grid-template-columns:1fr;gap:4px}
+  .p-yr{font-size:76px}
+}
+@media (prefers-reduced-motion:reduce){.hx::before{transition:none}}
+
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="home-candidate.html" aria-label="Tournament Central home"><span class="hex" aria-hidden="true">TC</span>Tournament Central</a>
+    <nav aria-label="Main">
+      <a class="opt" href="index.html">Tournament Central</a>
+      <a href="#history"><span class="nl">NCAA </span>History</a>
+      <a class="opt" href="#archives"><span class="nl2">From the </span>Archives</a>
+      <a class="opt" href="#sources">Data &amp; Sources</a>
+      <a class="opt" href="#about">About</a>
+    </nav>
+    <details class="mnav">
+      <summary aria-label="Menu">Menu</summary>
+      <div class="mnav-list">
+        <a href="index.html">Tournament Central</a>
+        <a href="#history">NCAA History</a>
+        <a href="#archives">From the Archives</a>
+        <a href="#sources">Data &amp; Sources</a>
+        <a href="#about">About</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <svg class="crowd" viewBox="0 0 1600 760" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <pattern id="seatsA" width="18" height="16" patternUnits="userSpaceOnUse"><circle cx="9" cy="6" r="3.6" fill="#1b2c4a"/><path d="M3 16c0-5 3-7 6-7s6 2 6 7z" fill="#14223b"/></pattern>
+        <pattern id="seatsB" width="12" height="11" patternUnits="userSpaceOnUse"><circle cx="6" cy="4" r="2.5" fill="#1a2a47"/><path d="M2 11c0-3.5 2-5 4-5s4 1.5 4 5z" fill="#132039"/></pattern>
+        <pattern id="seatsC" width="8" height="7" patternUnits="userSpaceOnUse"><circle cx="4" cy="2.6" r="1.7" fill="#182742"/><path d="M1.4 7c0-2.3 1.2-3.3 2.6-3.3S6.6 4.7 6.6 7z" fill="#111d34"/></pattern>
+        <linearGradient id="crowdFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".55" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity=".9"/></linearGradient>
+        <mask id="crowdMask"><rect width="1600" height="760" fill="url(#crowdFade)"/></mask>
+      </defs>
+      <rect width="1600" height="760" fill="#040b18"/>
+      <g mask="url(#crowdMask)">
+        <rect y="40" width="1600" height="150" fill="url(#seatsC)"/>
+        <path d="M0 190h1600" stroke="#2a4570" stroke-width="2"/>
+        <rect y="196" width="1600" height="190" fill="url(#seatsB)"/>
+        <path d="M0 388h1600" stroke="#34558a" stroke-width="3"/>
+        <rect y="396" width="1600" height="260" fill="url(#seatsA)"/>
+        <path d="M0 658h1600" stroke="#3b62a0" stroke-width="3"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="212" cy="120" r="1.6" opacity=".9"/><circle cx="1312" cy="88" r="1.4" opacity=".8"/><circle cx="410" cy="270" r="1.8" opacity=".85"/><circle cx="1170" cy="300" r="1.6" opacity=".7"/>
+        <circle cx="96" cy="470" r="2" opacity=".7"/><circle cx="1490" cy="520" r="2" opacity=".75"/><circle cx="760" cy="150" r="1.3" opacity=".6"/><circle cx="1010" cy="232" r="1.5" opacity=".7"/>
+      </g>
+    </svg>
+    <div class="beams" aria-hidden="true"><i class="beam l2"></i><i class="beam l1"></i><i class="beam c"></i><i class="beam r1"></i><i class="beam r2"></i></div>
+    <div class="haze" aria-hidden="true"></div>
+    <div class="rig" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <h1><span class="l1">NCAA Wrestling</span><span class="l2">Tournament Central</span></h1>
+      <p class="tag">Build it. Follow it. Relive it.</p>
+    </div>
+    <div class="hero-shot"><img src="tc-hero.webp" width="1983" height="793" fetchpriority="high"
+      alt="NCAA Wrestling Tournament Central: two wrestlers locked in a collar tie on a TC mat under arena spotlights, in front of a packed crowd"></div>
+  </section>
+
+  <div class="wrap">
+    <div class="doors">
+      <a class="door official" href="index.html?view=official">
+        <svg class="ico" viewBox="0 0 96 96" aria-hidden="true"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1cf6a"/><stop offset="1" stop-color="#a77d17"/></linearGradient></defs>
+          <path d="M28 10h40v20c0 13-9 23-20 23S28 43 28 30z" fill="url(#g1)"/><path d="M28 16H14c0 14 7 22 16 22M68 16h14c0 14-7 22-16 22" stroke="#d4a72c" stroke-width="4" fill="none"/>
+          <rect x="43" y="52" width="10" height="14" fill="#c89a24"/><rect x="30" y="66" width="36" height="8" rx="2" fill="#d4a72c"/><rect x="24" y="74" width="48" height="12" rx="2" fill="#7c5c10"/></svg>
+        <div>
+          <h2>2026 Official</h2>
+          <p class="sub">Every bout of the 2026 NCAAs</p>
+          <div class="rows"><div><span>Brackets</span><span>Results</span><span>Team Scores</span></div><div><span>All-Americans</span><span>Path to the Finals</span></div></div>
+        </div>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2.4" fill="none"/></svg></span>
+      </a>
+      <a class="door picks" href="index.html?view=picks">
+        <svg class="ico" viewBox="0 0 96 96" aria-hidden="true"><rect x="16" y="14" width="64" height="76" rx="6" fill="#f3f6fb"/><rect x="21" y="22" width="54" height="62" rx="2" fill="#1a2233"/><rect x="36" y="8" width="24" height="12" rx="4" fill="#9fb2cc"/>
+          <path d="M28 32h12v12H28M28 60h12V44h12M28 70h12M52 44v14h14" stroke="#f3f6fb" stroke-width="3" fill="none"/><path d="M60 54l6 4-6 4" stroke="#ff5a63" stroke-width="3" fill="none"/></svg>
+        <div>
+          <h2>My Bracket</h2>
+          <p class="sub">Make your own picks</p>
+          <div class="rows"><div><span>Pick Winners</span><span>Team Scores</span></div><div><span>Submit Bracket</span><span>Leaderboard</span></div></div>
+        </div>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2.4" fill="none"/></svg></span>
+      </a>
+      <a class="door history" href="index.html?view=history">
+        <svg class="ico" viewBox="0 0 96 96" aria-hidden="true"><path d="M48 24C38 16 22 15 8 18v56c14-3 30-2 40 6 10-8 26-9 40-6V18c-14-3-30-2-40 6z" fill="#e8edf5"/><path d="M48 24v56" stroke="#9fb2cc" stroke-width="2"/>
+          <path d="M16 30c8-2 16-1 24 2M16 40c8-2 16-1 24 2M16 50c8-2 16-1 24 2M56 32c8-3 16-4 24-2M56 42c8-3 16-4 24-2M56 52c8-3 16-4 24-2" stroke="#7f91ab" stroke-width="2.5"/><path d="M8 74c14-3 30-2 40 6 10-8 26-9 40-6v6c-14-3-30-2-40 6-10-8-26-9-40-6z" fill="#d4a72c"/></svg>
+        <div>
+          <h2>NCAA History</h2>
+          <p class="sub">46 NCAA Championships · 1980–2026</p>
+          <div class="rows"><div><span>Brackets</span><span>Team Scores</span></div><div><span>Path to the Finals</span><span>NCAA Career</span></div></div>
+        </div>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2.4" fill="none"/></svg></span>
+      </a>
+    </div>
+
+    <section class="champ" aria-labelledby="champ-title">
+      <svg class="skyline" viewBox="0 0 430 190" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
+        <path d="M110 190C110 40 160 20 175 20S240 40 240 190" stroke="#c9d4e4" stroke-width="7" fill="none"/>
+        <path d="M0 190v-30h18v-14h14v24h12v-40h16v40h10v-22h14v42zM250 190v-48h16v-20h14v20h10v-36h18v36h12v-22h14v30h16v-56h20v56h14v-18h16v44h30v14z" fill="#1d3150"/>
+        <path d="M0 189h430" stroke="#2f7de1" stroke-width="2" opacity=".6"/>
+      </svg>
+      <div class="badge" aria-hidden="true"><div class="badge-in"><span class="yr">2027</span><span class="ev">Division I</span><span class="ct">St. Louis</span></div></div>
+      <div class="champ-main">
+        <p class="kicker">Next up</p>
+        <h3 id="champ-title">2027 NCAA Division I Wrestling Championships</h3>
+        <div class="facts">
+          <span class="fact"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="22" height="20" rx="2"/><path d="M3 11h22M9 2v6M19 2v6"/><path d="M8 16h3M13 16h3M18 16h3M8 20h3M13 20h3" stroke-width="2.4"/></svg>March 18–20, 2027</span>
+          <span class="fact"><svg viewBox="0 0 28 28" fill="currentColor"><path d="M14 2a9 9 0 0 0-9 9c0 7 9 15 9 15s9-8 9-15a9 9 0 0 0-9-9zm0 12.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>Enterprise Center, St. Louis, Missouri</span>
+        </div>
+      </div>
+      <div class="count" id="count" aria-live="polite">
+        <div class="k" id="count-k">Official results</div>
+        <div class="n" id="count-n">Not live yet</div>
+        <p id="count-p">Live results will run here during the 2027 championships.</p>
+      </div>
+    </section>
+
+
+    <section class="sec" id="history" aria-labelledby="history-h">
+      <div class="sec-h">
+        <h2 id="history-h">46 NCAA Championships · 1980–2026</h2>
+        <p>Every bracket from 1980 to 2026 is replayed bout by bout. There were no championships in 2020. Choose a year to open its brackets and team scores.</p>
+      </div>
+      <div class="hub" id="hub">
+        <div>
+          <div class="comb" id="comb" role="group" aria-label="Championship years"></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <aside class="panel" id="panel" aria-live="polite"><p class="nojs">Year details load here. <a class="lnk" href="index.html?view=history">Open NCAA History</a></p></aside>
+      </div>
+      <ol class="steps">
+        <li><b>Pick a year</b><span>Any championship from 1980 to 2026.</span></li>
+        <li><b>Open a bracket or team scores</b><span>Every weight class, every bout, final standings.</span></li>
+        <li><b>Click any wrestler</b><span>His Path to the Finals, round by round.</span></li>
+        <li><b>Follow his NCAA Career</b><span>Every appearance from 1980 on, linked from his Path.</span></li>
+      </ol>
+    </section>
+
+    <section class="sec" id="eras" aria-labelledby="eras-h">
+      <div class="sec-h">
+        <h2 id="eras-h">How the tournament changed</h2>
+        <p>Team scores are calculated with the rules of each year. Bonus points, tech falls, byes and who wrestles back all changed along the way.</p>
+      </div>
+      <div class="band" id="band" aria-hidden="true"></div>
+      <div class="band-ax" id="band-ax" aria-hidden="true"></div>
+      <div id="era-list"></div>
+    </section>
+
+    <section class="sec" id="archives" aria-labelledby="archives-h">
+      <div class="sec-h">
+        <h2 id="archives-h">From the Archives</h2>
+        <p>Stories from the championship record. Every fact is checked against the replayed brackets before it appears here.</p>
+      </div>
+      <div id="arc-list"></div>
+    </section>
+
+    <section class="sec" id="sources" aria-labelledby="sources-h">
+      <div class="sec-h">
+        <h2 id="sources-h">Data &amp; Sources</h2>
+        <p>Where every bout comes from, and how the history was checked.</p>
+      </div>
+      <div class="src">
+        <div>
+          <div id="src-rows"></div>
+          <h3 style="margin-top:28px">Documented source decisions</h3>
+          <p class="note">Where sources disagree or a bracket is incomplete, the decision is recorded bout by bout. Nothing is reconciled silently.</p>
+          <ul class="exc" id="exc"></ul>
+        </div>
+        <div>
+          <div class="nums" id="nums"></div>
+          <h3>What is recorded for each bout</h3>
+          <p class="note">Tournament Central preserves the source result rather than silently normalizing it. For historical years with bout-level provenance, the source text, the source itself and any documented decision are retained alongside the reconstructed result. When a source doesn’t print a result, Tournament Central says so rather than guessing.</p>
+          <h3 style="margin-top:20px">The official 2026 bracket</h3>
+          <p class="note">Entered result by result by Tournament Central operators as bouts finish. Team scores and All-Americans are calculated from those results.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="about" aria-labelledby="about-h">
+      <div class="sec-h"><h2 id="about-h">About</h2></div>
+      <div class="about">
+        <div>
+          <p>Tournament Central is a fan-built home for the NCAA Division I Wrestling Championships. Follow the official bracket as results come in, fill out your own bracket and see how your projected team scores stack up, or open any championship since 1980.</p>
+          <p>Click any wrestler in a bracket to see his path through the tournament, and in NCAA History, his whole NCAA career.</p>
+        </div>
+        <div class="more" style="margin-top:0">
+          <h2>More from the fan hub</h2>
+          <a href="https://adrianstewart-wrestling.github.io/FanRankings/">Fan Rankings</a>
+          <a href="https://adrianstewart-wrestling.github.io/FanRankings/road-to-55.html">Road to 55</a>
+          <a href="https://adrianstewart-wrestling.github.io/FanRankings/dual-pickem.html">Dual Pick'em</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>Tournament Central is an independent fan project. It is not affiliated with, sponsored by, or endorsed by the NCAA.</footer>
+  </div>
+</main>
+<script>
+// Countdown to the 2027 championships (Enterprise Center, Mar 18–20, 2027, Central Time).
+(function () {
+  var START = Date.parse('2027-03-18T11:00:00-05:00');   // Thu Mar 18, 11:00 AM CDT
+  var END   = Date.parse('2027-03-20T23:59:00-05:00');   // Sat Mar 20, end of finals day
+  var k = document.getElementById('count-k'), n = document.getElementById('count-n'), p = document.getElementById('count-p');
+  function tick() {
+    var now = Date.now();
+    if (now < START) {
+      var days = Math.ceil((START - now) / 864e5);
+      k.textContent = 'Countdown to St. Louis';
+      n.textContent = days === 1 ? '1 day' : days + ' days';
+      p.textContent = 'Official results not live yet. Live results will run here during the 2027 championships.';
+    } else if (now <= END) {
+      k.textContent = 'Happening now';
+      n.textContent = 'Live';
+      p.textContent = 'The 2027 championships are underway in St. Louis.';
+    } else {
+      k.textContent = '2027 championships';
+      n.textContent = 'Complete';
+      p.textContent = 'The 2027 championships are in the books.';
+    }
+  }
+  tick(); setInterval(tick, 60000);
+})();
+</script>
+<script src="home-candidate-data.js"></script>
+<script>
+// Renders the History hub, scoring eras, archives and sources from home-candidate-data.js (generated; see tools/home/).
+// Navigation only: every link opens an existing Tournament Central view through index.html's deep links.
+(function () {
+  var D = window.TC_HOME_DATA; if (!D) return;
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function a(href, cls, text) { var e = el('a', cls, text); e.href = href; return e; }
+  var ERA = {}; D.eras.forEach(function (e) { ERA[e.id] = e; });
+  var eraColor = function (id) { return 'var(--' + id + ')'; };
+  var byYear = {}; D.years.forEach(function (r) { byYear[r.y] = r; });
+  var hist = function (q) { return 'index.html?view=history' + q; };
+
+  // ---- honeycomb: one hex per championship, decade rows, 2020 hollow
+  var comb = document.getElementById('comb'), panel = document.getElementById('panel'), buttons = {};
+  [1980, 1990, 2000, 2010, 2020].forEach(function (d) {
+    var row = el('div', 'dec'), cells = el('div', 'cells');
+    var lab = el('div', 'dec-l'); lab.appendChild(el('span', 'l', d + 's')); lab.appendChild(el('span', 's', '\u2019' + String(d).slice(2) + 's')); row.appendChild(lab);
+    for (var y = d; y < d + 10; y++) {
+      if (y > D.counts.last) { var pad = el('span', 'hx pad'); pad.setAttribute('aria-hidden', 'true'); cells.appendChild(pad); continue; }
+      var r = byYear[y];
+      if (!r) { var g = el('span', 'hx gap'); g.title = y + ': championships canceled'; g.setAttribute('role', 'img'); g.setAttribute('aria-label', y + ', championships canceled'); g.appendChild(el('span', null, String(y).slice(2))); cells.appendChild(g); continue; }
+      var b = el('button', 'hx'); b.type = 'button'; b.style.setProperty('--era', eraColor(r.era));
+      b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', y + ' NCAA Championships, champion ' + r.champ);
+      b.appendChild(el('span', null, String(y).slice(2)));
+      b.addEventListener('click', (function (yy) { return function () { select(yy, true); }; })(y));
+      buttons[y] = b; cells.appendChild(b);
+    }
+    row.appendChild(cells); comb.appendChild(row);
+  });
+  var legend = document.getElementById('legend');
+  D.eras.forEach(function (e) { var s = el('span'); var i = el('i'); i.style.setProperty('--era', eraColor(e.id)); s.appendChild(i); s.appendChild(document.createTextNode(e.from === e.to ? String(e.from) : e.from + '–' + e.to)); legend.appendChild(s); });
+  var g2020 = el('span'); var gi = el('i'); gi.style.setProperty('--era', 'rgba(160,190,235,.28)'); g2020.appendChild(gi); g2020.appendChild(document.createTextNode('2020 canceled')); legend.appendChild(g2020);
+
+  function select(y, fromClick) {
+    var r = byYear[y], e = ERA[r.era];
+    Object.keys(buttons).forEach(function (k) { buttons[k].setAttribute('aria-pressed', String(+k === y)); });
+    panel.style.setProperty('--era', eraColor(r.era)); panel.textContent = '';
+    panel.appendChild(el('div', 'p-yr', String(y)));
+    var era = el('div', 'p-era', e.name + ' (' + (e.from === e.to ? e.from : e.from + '–' + e.to) + ')'); panel.appendChild(era);
+    var ch = el('div', 'p-ch', r.tied ? 'Team champions (tied)' : 'Team champion'); ch.appendChild(el('b', null, r.champ)); panel.appendChild(ch);
+    panel.appendChild(el('div', 'p-k', 'Brackets by weight class'));
+    var w = el('div', 'wts');
+    r.weights.forEach(function (wt) { var l = a(hist('&year=' + y + '&weight=' + encodeURIComponent(wt)), null, wt); l.setAttribute('aria-label', y + ' ' + wt + ' bracket'); w.appendChild(l); });
+    panel.appendChild(w);
+    var act = el('div', 'p-act');
+    act.appendChild(a(hist('&year=' + y + '&show=scores'), 'btn', y + ' team scores'));
+    act.appendChild(a('#era-' + r.era, 'lnk', 'How ' + y + ' was scored'));
+    panel.appendChild(act);
+  }
+  select(D.counts.last);
+
+  // ---- scoring eras
+  var band = document.getElementById('band'), span = D.counts.last - D.counts.first + 1;
+  D.eras.forEach(function (e) { var i = el('i'); i.style.setProperty('--era', eraColor(e.id)); i.style.width = ((e.to - e.from + 1) / span * 100) + '%'; band.appendChild(i); });
+  var ax = document.getElementById('band-ax');
+  [1980, 1990, 2000, 2010, D.counts.last].forEach(function (y) { var s = el('span', null, String(y)); s.style.left = ((y - D.counts.first) / span * 100) + '%'; if (y === D.counts.last) s.style.left = '100%'; ax.appendChild(s); });
+  var list = document.getElementById('era-list');
+  D.eras.forEach(function (e) {
+    var row = el('article', 'era'); row.id = 'era-' + e.id; row.style.setProperty('--era', eraColor(e.id));
+    var yr = el('div', 'era-y', e.from === e.to ? String(e.from) : e.from + '–' + e.to);
+    yr.appendChild(el('small', null, e.years === 1 ? '1 championship' : e.years + ' championships')); row.appendChild(yr);
+    var mid = el('div'); mid.appendChild(el('h3', null, e.name));
+    var ul = el('ul'); e.summary.forEach(function (s) { ul.appendChild(el('li', null, s)); }); mid.appendChild(ul);
+    var det = el('details'); det.appendChild(el('summary', null, 'Exact scoring rules'));
+    e.rules.forEach(function (l) { det.appendChild(el('p', null, l)); }); mid.appendChild(det); row.appendChild(mid);
+    var go = el('div', 'era-go'); go.appendChild(a(hist('&year=' + e.sample + '&show=scores'), 'lnk', 'See ' + e.sample + ' team scores')); row.appendChild(go);
+    list.appendChild(row);
+  });
+
+  // ---- from the archives
+  var arcs = document.getElementById('arc-list'), fulls = [];
+  D.archives.forEach(function (s) {
+    var art = el('article', 'arc'), main = el('div', 'arc-main');
+    var tag = el('div', 'arc-tag', String(s.year)); tag.appendChild(el('span', null, s.weight + ' lbs')); main.appendChild(tag);
+    main.appendChild(el('h3', null, s.title)); main.appendChild(el('p', 'dek', s.dek));
+    var full = el('details', 'arc-full'); full.appendChild(el('summary', null, 'Read the full story'));
+    s.body.forEach(function (p) { full.appendChild(el('p', 'b', p)); }); main.appendChild(full); fulls.push(full);
+    main.appendChild(el('p', 'arc-src', 'Sources: ' + s.sources.join('; ') + '.'));
+    var side = el('aside', 'arc-side'); side.appendChild(el('h4', null, 'The record'));
+    var dl = el('dl', 'ledger');
+    s.record.forEach(function (rw) { var d = el('div', rw[1] === 'None' ? 'nil' : null); d.appendChild(el('dt', null, rw[0])); d.appendChild(el('dd', null, rw[1])); dl.appendChild(d); });
+    side.appendChild(dl);
+    var act = el('div', 'p-act'); s.links.forEach(function (l, i) { act.appendChild(a(l[1], i ? 'lnk' : 'btn', l[0])); }); side.appendChild(act);
+    art.appendChild(main); art.appendChild(side); arcs.appendChild(art);
+  });
+
+  // the full story is expanded on desktop and collapsed (Read the full story) on phones
+  var phone = window.matchMedia('(max-width: 720px)');
+  var setFull = function () { fulls.forEach(function (f) { f.open = !phone.matches; }); };
+  var mnav = document.querySelector('.mnav');                 // phone menu closes after choosing a destination
+  if (mnav) mnav.addEventListener('click', function (ev) { if (ev.target.closest('a')) mnav.open = false; });
+  setFull(); if (phone.addEventListener) phone.addEventListener('change', setFull); else if (phone.addListener) phone.addListener(setFull);
+
+  // ---- data & sources
+  var sr = document.getElementById('src-rows');
+  D.sources.forEach(function (s) { var r = el('div', 'srow'); r.appendChild(el('b', null, s.years)); r.appendChild(el('p', null, s.text)); sr.appendChild(r); });
+  var exc = document.getElementById('exc');
+  D.exceptions.forEach(function (x) { var li = el('li'); var yw = el('div', 'yw', String(x.y)); yw.appendChild(el('span', null, x.w + ' lbs')); li.appendChild(yw);
+    var t = el('div'); t.appendChild(el('b', null, x.title)); t.appendChild(el('p', null, x.text)); li.appendChild(t); exc.appendChild(li); });
+  var nums = document.getElementById('nums'), fmt = function (n) { return n.toLocaleString('en-US'); }, v = D.counts.validated;
+  [[fmt(D.counts.championships), 'NCAA Championships, ' + D.counts.first + '–' + D.counts.last],
+   [fmt(D.counts.bouts), 'bouts replayed'],
+   [fmt(D.counts.careers), 'NCAA careers linked'],
+   [v.exact + ' of ' + v.of, 'published top-ten team totals matched exactly, ' + v.from + '–' + v.to + ', with no adjustments']
+  ].forEach(function (n) { var d = el('div'); d.appendChild(el('b', null, n[0])); d.appendChild(el('span', null, n[1])); nums.appendChild(d); });
+})();
+</script>
+</body>
+</html>
