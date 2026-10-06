@@ -54,7 +54,7 @@
       var li = el('li', cls); li.appendChild(el('span', 'pp-rd', r.round));
       li.appendChild(el('span', 'pp-mk', r.status === 'decided' ? (r.result === 'W' ? '✓' : '✗') : '→'));
       var main = el('span', 'pp-main');
-      if (r.opponent) { var ob = el('button', 'pp-opp', r.opponent.name); ob.type = 'button'; ob.addEventListener('click', function () { openPanel(r.opponent.id); }); main.appendChild(ob); main.appendChild(el('span', 'pp-osc', r.opponent.school + ' · #' + r.opponent.seed)); }
+      if (r.opponent) { var ob = el('button', 'pp-opp', r.opponent.name); ob.type = 'button'; ob.addEventListener('click', function () { openPanel(r.opponent.id); }); main.appendChild(ob); main.appendChild(el('span', 'pp-osc', r.opponent.school + (r.opponent.seed ? ' · #' + r.opponent.seed : ''))); }   // unseeded: school only (was '#null')
       else main.appendChild(el('span', 'pp-tbd', 'Opponent not decided yet'));
       li.appendChild(main);
       li.appendChild(el('span', 'pp-res', r.status === 'decided' ? res(r) : 'Bout ' + r.boutId));

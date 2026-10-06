@@ -115,10 +115,15 @@ const HistoricalWrestlebackScoring = (function () {
     '1988-1994': { Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1, MajDec: 0.5, TechFall: 0.75, Dec: 0 },
     '1995':      { Fall: 2, FFT: 2, MedFFT: 2, Default: 2, DQ: 2, MajDec: 1, TechFall: 1, Dec: 0 }      // 1995: TechFall = match termination
   };
-  const bonusTable = y => (Number(y) >= 1995 ? BONUS['1995'] : BONUS['1988-1994']);
-  const ADV = { ChampPigtail: 1, R32: 1, R16: 1, QF: 1, SF: 1, Final: 0, ConsPigtail: 0.5, ConsR1: 0.5, ConsR2: 0.5, ConsR3: 0.5, ConsQF: 0.5, ConsSF: 0.5, '3rd': 0, '5th': 0, '7th': 0 };
-  const SCHEDULE = { QF: [NONE, 6, NONE], SF: [6, 2, 6], Final: [2, 1, 2], ConsR3: [NONE, 8, NONE], ConsQF: [8, 6, 8], ConsSF: [6, 4, 6], '3rd': [4, 3, 4], '5th': [6, 5, 6], '7th': [8, 7, 8] };
-  const CHAMP = ['R32', 'R16', 'QF', 'SF', 'Final'], CON = ['ConsR1', 'ConsR2', 'ConsR3', 'ConsQF', 'ConsSF'];
+  BONUS['1985-1987'] = { Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1, MajDec: 0.5, TechFall: 1, Dec: 0, SupDec: 0.75 };   // approved Oct 6 2026
+  const bonusTable = y => (Number(y) >= 1995 ? BONUS['1995'] : Number(y) >= 1988 ? BONUS['1988-1994'] : BONUS['1985-1987']);
+  const isSuperior = (y, r) => { if (Number(y) > 1987 || r.resultType !== 'MajDec') return false; const m = /^(\d+)-(\d+)$/.exec(String(r.score || '')); return !!m && (+m[1] - +m[2]) >= 12; };
+  const ADV = { ChampPigtail: 1, R32: 1, R16: 1, QF: 1, SF: 1, Final: 0, ConsPigtail: 0.5, ConsR1: 0.5, ConsR2: 0.5, ConsR3: 0.5, ConsAA: 0.5, ConsQF: 0.5, ConsSF: 0.5, '3rd': 0, '5th': 0, '7th': 0 };
+  const SCHEDULE = { QF: [NONE, 6, NONE], SF: [6, 2, 6], Final: [2, 1, 2], ConsR3: [NONE, 8, NONE], ConsAA: [NONE, 8, NONE], ConsQF: [8, 6, 8], ConsSF: [6, 4, 6], '3rd': [4, 3, 4], '5th': [6, 5, 6], '7th': [8, 7, 8] };
+  const CHAMP = ['R32', 'R16', 'QF', 'SF', 'Final'];
+  // consolation round names per shape: 1986-1995 (qf) 5 rounds, AA clinched in round 3; 1972-1985 (sf) 4 rounds, AA clinched in round 2 ('ConsAA')
+  const CONS = { 'qf-wrestleback': ['ConsR1', 'ConsR2', 'ConsR3', 'ConsQF', 'ConsSF'], 'sf-wrestleback': ['ConsR1', 'ConsAA', 'ConsQF', 'ConsSF'] };
+  let CON = CONS['qf-wrestleback'];
   function roundOfKey(key) { const p = String(key).split(':'), b = p[0], ri = +p[1];
     return b === 'pigtail' ? 'ChampPigtail' : b === 'conPigtail' ? 'ConsPigtail' : b === 'p3' ? '3rd' : b === 'p5' ? '5th' : b === 'p7' ? '7th' : b === 'champ' ? CHAMP[ri] : b === 'con' ? CON[ri] : null; }
   const worth = p => PLACE[p] || 0, label = p => p >= NONE ? 'none' : p === 1 ? '1st' : p === 2 ? '2nd' : p === 3 ? '3rd' : p + 'th';
@@ -139,7 +144,9 @@ const HistoricalWrestlebackScoring = (function () {
     });
     return out;
   }
-  function compute(year, records, schoolOf, schools) {
+  function compute(year, records, schoolOf, schools, opts) {
+    CON = CONS[(opts && opts.shape) || 'qf-wrestleback'] || CONS['qf-wrestleback'];
+    const sfShape = !!(opts && opts.shape === 'sf-wrestleback');
     const B = bonusTable(year), problems = [], events = [], byTeam = {}, floors = {}, schoolOfW = {};
     const team = s => byTeam[s] || (byTeam[s] = { school: s, adv: 0, bonus: 0, place: 0 });
     (schools || []).forEach(s => { s = String(s || '').trim(); if (s) team(s); });
@@ -149,8 +156,8 @@ const HistoricalWrestlebackScoring = (function () {
     records.slice().sort((a, b) => (a.boutId - b.boutId) || (a.key < b.key ? -1 : 1)).forEach(r => {
       const round = roundOfKey(r.key); if (!round) { problems.push({ boutId: r.boutId, code: 'unknown_bout', message: 'unrecognised bout ' + r.key }); return; }
       const ws = schoolOf(r.winnerId); if (!ws) { problems.push({ boutId: r.boutId, code: 'unknown_wrestler', message: 'no school for ' + r.winnerId }); return; }
-      const bonus = B[r.resultType]; if (typeof bonus !== 'number') problems.push({ boutId: r.boutId, code: 'unknown_result_type', message: 'unknown result type ' + r.resultType });
-      add(ws, 'Bonus', bonus || 0, 'Rule ' + (Number(year) >= 1995 ? '1995' : '1988') + ': ' + r.resultType, r, round, r.winnerId);
+      const sup = isSuperior(year, r); const bonus = sup ? B.SupDec : B[r.resultType]; if (typeof bonus !== 'number') problems.push({ boutId: r.boutId, code: 'unknown_result_type', message: 'unknown result type ' + r.resultType });
+      add(ws, 'Bonus', bonus || 0, 'Rule ' + (Number(year) >= 1995 ? '1995' : Number(year) >= 1988 ? '1988' : '1976/1985') + ': ' + (sup ? 'Superior decision' : r.resultType), r, round, r.winnerId);
       add(ws, 'Advancement', ADV[round] || 0, 'Rule 1974 (champ 1 / cons 1/2)', r, round, r.winnerId);
       const sch = SCHEDULE[round];
       if (sch) { const [entry, win, lose] = sch;
@@ -171,8 +178,10 @@ const HistoricalWrestlebackScoring = (function () {
     const y = Number(year), b = bonusTable(y);
     const keyLines = [
       'Adv: 1 per championship win, ½ per consolation win (placement bouts and the Final add none). Byes: a bye counts as an advancement when the wrestler wins his next bout (1985 rule; in weights with wrestle-ins every other entrant holds a first-round bye).',
+      y <= 1987 ? 'Bonus (1985–1987 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · Tech Fall 1.' :
       'Bonus (' + (y >= 1995 ? '1995 rules' : '1988–1994 rules') + '): Fall / Forfeit / Default / DQ ' + b.Fall + ' · Major Decision ' + b.MajDec + ' · ' + (y >= 1995 ? 'Match Termination (15+) ' : 'Tech Fall ') + b.TechFall + '.',
-      'Place: 16-12-9-7-5-3-2-1 (1979), counted the moment a finish is clinched on this era’s consolation (only wrestlers beaten by a quarterfinalist wrestle back): QF win clinches 6th · SF win 2nd · Con. Rd 3 win 8th · Con. Qtrs win 6th · Con. Semis win 4th.',
+      sfShape ? 'Place: 16-12-9-7-5-3-2-1 (1979), counted the moment a finish is clinched on this era’s consolation (only wrestlers beaten by a semifinalist wrestle back): QF win clinches 6th · SF win 2nd · Con. Rd 2 win 8th · Con. Qtrs win 6th · Con. Semis win 4th.'
+              : 'Place: 16-12-9-7-5-3-2-1 (1979), counted the moment a finish is clinched on this era’s consolation (only wrestlers beaten by a quarterfinalist wrestle back): QF win clinches 6th · SF win 2nd · Con. Rd 3 win 8th · Con. Qtrs win 6th · Con. Semis win 4th.',
       'Rules source: WrestlingStats “NCAA Wrestling Rules for Scoring”. No adjustments are applied; differences from the published totals are reported, not reconciled. Click a team name for its roster.'];
     return { teams, events, problems, floors, stats: { records: records.length, teams: teams.length, events: events.length }, model: 'wrestleback-1990s',
       subtitle: 'Final NCAA results replayed from historical bout data · read-only · scored with the ' + y + ' NCAA rules (history-layer model)', keyTitle: 'How these scores work (' + y + ' NCAA rules)', keyLines };

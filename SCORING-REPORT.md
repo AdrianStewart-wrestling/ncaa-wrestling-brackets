@@ -1,4 +1,4 @@
-# 1988–1995 team scoring (1987 pending) — report (Oct 6 2026)
+# 1985–1995 team scoring — report (Oct 6 2026)
 
 ## Model (approved; history layer: `HistoricalWrestlebackScoring` in historical-rules.js)
 Built only from the documented rules (WrestlingStats "NCAA Wrestling Rules for Scoring",
@@ -153,7 +153,45 @@ Bye-rule sensitivity 1989: established reading 6/10; printed byes only 0/10; no 
   10 NC State               published 36      model 36     exact
 ```
 
-## 1987 — not scored (pending approval of the 1985–1987 rules; see BATCH-REPORT.md)
+## 1985–1987 (approved Oct 6 2026: fall 1, major ½, superior decision ¾, tech fall 1)
+```
+1987: 1/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa State             published 133     model 132.5  residual -0.5
+   2 Iowa                   published 108     model 108    exact
+   3 Penn State             published 97.75   model 97.25  residual -0.5
+   4 Oklahoma State         published 85.25   model 84.75  residual -0.5
+   5 Bloomsburg             published 47.25   model 46.25  residual -1
+   6 Clarion                published 46      model 46.5   residual +0.5
+   7 North Carolina         published 42.75   model 42.25  residual -0.5
+   8 Edinboro               published 38.25   model 37.75  residual -0.5
+   9 Arizona State          published 35.75   model 36.25  residual +0.5
+  10 Lehigh                 published 32.25   model 31.75  residual -0.5
+
+1986: 5/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 158     model 158    exact
+   2 Oklahoma               published 84.75   model 85.75  residual +1
+   3 Oklahoma State         published 77.25   model 77.25  exact
+   4 Iowa State             published 71      model 70     residual -1
+   5 Penn State             published 47.25   model 46.25  residual -1
+   6 North Carolina         published 38.75   model 38.75  exact
+   7 Bloomsburg             published 37.75   model 37.75  exact
+   8 Arizona State          published 36.5    model 36     residual -0.5
+   9 Lehigh                 published 32.75   model 32.75  exact
+  10 Michigan               published 32      model 33     residual +1
+
+1985: 5/10 published top-ten totals exact; scoring problems: 0
+   1 Iowa                   published 145.25  model 145.25 exact
+   2 Oklahoma               published 98.5    model 98.5   exact
+   3 Iowa State             published 70      model 70.5   residual +0.5
+   4 Oklahoma State         published 56      model 56.5   residual +0.5
+   5 Michigan               published 52      model 52     exact
+   6 Arizona State          published 50.75   model 51.25  residual +0.5
+   7 Penn State             published 46.75   model 46.75  exact
+   8 Tennessee              published 32.5    model 34.5   residual +2
+   9 Lehigh                 published 31.5    model 31.5   exact
+  10 Bloomsburg             published 31      model 30.5   residual -0.5
+```
+Cumulative 1985–1995: 68/110 published totals exact.
 
 ## 1999 MT correction (approved, narrowly scoped)
 Rule: 1997 — tech fall with back points 1.5; match termination (15+ without back points) 1 point. 1999 bouts printed "MT":

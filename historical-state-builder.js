@@ -647,12 +647,24 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
 (function () {
   const LINE_NO = [1,32,17,16,9,24,25,8,5,28,21,12,13,20,29,4,3,30,19,14,11,22,27,6,7,26,23,10,15,18,31,2];
   const WEIGHTS = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
-  const ORDER = ['Prelims', 'ChampR1', 'ConsPrelims', 'ChampR2', 'WbConsR1', 'QuarterFinals', 'WbConsR2', 'WbConsR3', 'SemiFinals', 'WbConsR4', 'WbConsR5', '7thPlace', '5thPlace', '3rdPlace', 'Finals'];
+  const ORDER = ['Prelims', 'ChampR1', 'ConsPrelims', 'ChampR2', 'WbConsR1', 'SfConsR1', 'QuarterFinals', 'WbConsR2', 'SfConsR2', 'WbConsR3', 'SfConsR3', 'SemiFinals', 'WbConsR4', 'SfConsR4', 'WbConsR5', '7thPlace', '5thPlace', '3rdPlace', 'Finals'];
   const PATH_CON = ['Con R1', 'Con R2', 'Con R3', 'Con QF', 'Con SF'];                    // Path to the Finals labels (5 rounds)
   const RENDER_CON = ['Con. Rd 1', 'Con. Rd 2', 'Con. Rd 3', 'Con. Qtrs', 'Con. Semis'];  // bracket column headers (5 rounds)
   const norm = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
   function factsOf(year, label) { const F = typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts; return (F && F[String(year)] && F[String(year)][String(label)]) || null; }
-  function isWrestleback(year, label) { const f = factsOf(year, label); return !!(f && f.consFormat === 'qf-wrestleback'); }
+  // Two historical shapes share this module; everything shape-specific is in SHAPES (the qf entries reproduce the original code exactly).
+  //   qf-wrestleback (1986-1995): consolation 8-4-4-2-2; QF losers enter round 3, SF losers round 5.
+  //   sf-wrestleback (1972-1985): consolation 4-4-2-2 (only wrestlers beaten by a SEMIFINALIST); QF losers enter round 2, SF losers round 4.
+  const SHAPES = {
+    'qf-wrestleback': { con: [8, 4, 4, 2, 2], qfRound: 2, sfRound: 4, lastRound: 4, path: ['Con R1', 'Con R2', 'Con R3', 'Con QF', 'Con SF'], render: ['Con. Rd 1', 'Con. Rd 2', 'Con. Rd 3', 'Con. Qtrs', 'Con. Semis'],
+      numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 8 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 4 * wi,
+             c3Start: 421 + 4 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) },
+    'sf-wrestleback': { con: [4, 4, 2, 2], qfRound: 1, sfRound: 3, lastRound: 3, path: ['Con R1', 'Con R2', 'Con QF', 'Con SF'], render: ['Con. Rd 1', 'Con. Rd 2', 'Con. Qtrs', 'Con. Semis'],
+      numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 4 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 4 * wi,
+             c3Start: 421 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) }
+  };
+  function shapeOf(year, label) { const f = factsOf(year, label); return f && SHAPES[f.consFormat] ? f.consFormat : null; }
+  function isWrestleback(year, label) { return !!shapeOf(year, label); }
   function boutNumbers(weight) { const wi = WEIGHTS.indexOf(Number(weight));
     return { pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 8 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 4 * wi,
              c3Start: 421 + 4 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi,
@@ -660,8 +672,8 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
   function roundLabel(key) { const p = String(key).split(':'); return p[0] === 'con' ? (PATH_CON[+p[1]] || null) : null; }
 
   function build(resultData, year, label, slotWeight) {
-    const problems = [], F = factsOf(year, label);
-    if (!F || F.consFormat !== 'qf-wrestleback') return { ok: false, problems: ['no qf-wrestleback facts for ' + year + '/' + label] };
+    const problems = [], F = factsOf(year, label), SH = F && SHAPES[F.consFormat];
+    if (!SH) return { ok: false, problems: ['no wrestleback facts for ' + year + '/' + label] };
     const rows = resultData.filter(r => String(r.weight) === String(label));
     const T = ((window.HistoricalSeeds.table || {})[String(year)] || {})[String(label)] || {};
     const WB = F.wb, N = rows.filter(r => r.round === 'Prelims').length, M = rows.filter(r => r.round === 'ConsPrelims').length;
@@ -686,9 +698,9 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       const pigs = pigRows.map(r => { const e = [r.winner, r.loser].sort((x, y) => norm(x) < norm(y) ? -1 : 1); return mk(W(e[0]), W(e[1])); });
       const conPigs = Array.from({ length: Math.max(N, 1) }, () => mk(null, null));
       const st = { champ: [r1, Array.from({ length: 8 }, () => mk(null, null)), Array.from({ length: 4 }, () => mk(null, null)), Array.from({ length: 2 }, () => mk(null, null)), [mk(null, null)]],
-        con: [8, 4, 4, 2, 2].map(n => Array.from({ length: n }, () => mk(null, null))),
+        con: SH.con.map(n => Array.from({ length: n }, () => mk(null, null))),
         place3: mk(null, null), place5: mk(null, null), place7: mk(null, null), champion: null,
-        wrestleback: true, conRoundNames: RENDER_CON };
+        wrestleback: true, conRoundNames: SH.render };
       if (N >= 2) { st.pigtails = pigs; st.conPigtails = conPigs; st.pigtail = pigs[0]; st.conPigtail = conPigs[0];
         st.pigtailSlots = feeds.map(f => f.slot); st.conPigtailSlots = conPigs.map((m, j) => WB.conPigSeat[j] !== undefined ? 2 * WB.conPigSeat[j] : 0); }
       else { st.pigtail = N === 1 ? pigs[0] : mk(null, null); st.conPigtail = conPigs[0];
@@ -700,12 +712,14 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const seat = (m, side, x) => { m[side] = x; };
     function resolveVacant(st, p) { const m = st.con[0][p]; if (!m.vacant || m.w) return; const present = m.vacant === 'a' ? 'b' : 'a';
       if (m[present]) { m.w = present; m.bye = true; advCon(st, 0, p, m[present], null); } }
+    // Generic over the shape: a 'pair' round sends winners two-into-one; an 'entry' round meets a dropping champion loser (side a,
+    // winner on side b). The round before the last sends losers to 7th; the last sends winners to 3rd and losers to 5th.
+    // For qf-wrestleback this is exactly: 0 pair -> 1, 1 -> 2 (b), 2 pair -> 3, 3 -> 4 (b) + 7th, 4 -> 3rd/5th.
     function advCon(st, ri, mi, w, l) {
-      if (ri === 0) seat(st.con[1][mi >> 1], mi % 2 ? 'b' : 'a', w);
-      else if (ri === 1) seat(st.con[2][mi], 'b', w);
-      else if (ri === 2) seat(st.con[3][mi >> 1], mi % 2 ? 'b' : 'a', w);
-      else if (ri === 3) { seat(st.con[4][mi], 'b', w); if (l) { if (!st.place7.a) st.place7.a = l; else st.place7.b = l; } }
-      else if (ri === 4) { if (!st.place3.a) st.place3.a = w; else st.place3.b = w; if (l) { if (!st.place5.a) st.place5.a = l; else st.place5.b = l; } }
+      if (ri === SH.lastRound) { if (!st.place3.a) st.place3.a = w; else st.place3.b = w; if (l) { if (!st.place5.a) st.place5.a = l; else st.place5.b = l; } return; }
+      // an entry round (the champion loser takes side a) receives the winner on side b; otherwise two winners pair into one bout
+      if (ri + 1 === SH.qfRound || ri + 1 === SH.sfRound) seat(st.con[ri + 1][mi], 'b', w); else seat(st.con[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w);
+      if (ri === SH.lastRound - 1 && l) { if (!st.place7.a) st.place7.a = l; else st.place7.b = l; }
     }
     function applyPick(st, bracket, ri, mi, slot) {
       let m = null;
@@ -723,15 +737,18 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
         if (ri < 4) seat(st.champ[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w); else st.champion = w;
         if (ri === 0) { const d = WB.r1Dest[mi]; if (d && d.wb1 !== undefined) { seat(st.con[0][d.wb1], d.side || 'a', l); resolveVacant(st, d.wb1); } else if (d && d.conPig !== undefined) seat(N >= 2 ? st.conPigtails[d.conPig] : st.conPigtail, 'b', l); }
         else if (ri === 1) { const r = r2SeatOf(mi); if (r) { seat(st.con[0][r.p], r.side, l); resolveVacant(st, r.p); } }
-        else if (ri === 2) seat(st.con[2][WB.qfSeat[mi]], 'a', l);
-        else if (ri === 3) seat(st.con[4][WB.sfSeat[mi]], 'a', l);
+        else if (ri === 2) seat(st.con[SH.qfRound][WB.qfSeat[mi]], 'a', l);
+        else if (ri === 3) seat(st.con[SH.sfRound][WB.sfSeat[mi]], 'a', l);
       }
       else if (bracket === 'con') advCon(st, ri, mi, w, l);
     }
-    const adapter = { weights: [Number(slotWeight)], pigtailCount: N, boutNumbers, newState: wt => { initBracket(wt); return states[wt]; }, applyPick,
-      roundNames: { champ: ['Round 1', 'Rd of 16', 'Quarterfinals', 'Semifinals', 'Finals'], con: RENDER_CON } };
+    const adapter = { weights: [Number(slotWeight)], pigtailCount: N, boutNumbers: w => SH.numbers(WEIGHTS.indexOf(Number(w))), newState: wt => { initBracket(wt); return states[wt]; }, applyPick,
+      roundNames: { champ: ['Round 1', 'Rd of 16', 'Quarterfinals', 'Semifinals', 'Finals'], con: SH.render } };
     const core = N >= 2 ? window.HistoricalCore.create(adapter) : window.TournamentCore.create(adapter);
-    core.roundLabel = roundLabel;      // optional hook read by official-path.js (absent on every other core)
+    core.roundLabel = key => { const p = String(key).split(':'); return p[0] === 'con' ? (SH.path[+p[1]] || null) : null; };      // optional hook read by official-path.js (absent on every other core)
+    // 1976-1987 rule: a decision won by 12+ points is a SUPERIOR DECISION (stored as the engine's MajDec; the printed score decides).
+    if (Number(year) >= 1976 && Number(year) <= 1987) core.methodLabel = (key, res) => {
+      const m = /^(\d+)-(\d+)$/.exec(String(res && res.score || '')); return res && res.resultType === 'MajDec' && m && (+m[1] - +m[2]) >= 12 ? 'Sup. Dec.' : null; };
     const book = core.newBook(), wt = Number(slotWeight);
     const pending = () => core.keys.map(k => core.boutIdOf(wt, k)).filter(Boolean).map(id => core.describe(book, id)).filter(d => d && d.status === 'pending');
     const parse = (typeof HistoricalStateBuilder !== 'undefined' ? HistoricalStateBuilder : window.HistoricalStateBuilder).parseResult;   // same file: the top-level const (not on window in browsers)
@@ -746,7 +763,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
     return { ok: problems.length === 0, core, book, problems, wrestleback: true };
   }
-  const api = { isWrestleback, build, boutNumbers, roundLabel, PATH_CON, RENDER_CON };
+  const api = { isWrestleback, shapeOf, build, boutNumbers, roundLabel, PATH_CON, RENDER_CON, SHAPES };
   if (typeof window !== 'undefined') window.HistoricalWrestleback = api;
   if (typeof globalThis !== 'undefined') globalThis.HistoricalWrestleback = api;
 })();

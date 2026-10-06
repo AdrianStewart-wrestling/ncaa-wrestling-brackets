@@ -36,6 +36,7 @@
     return String(key);
   }
   function labelFor(core, key) { var x = core && typeof core.roundLabel === 'function' ? core.roundLabel(key) : null; return x || roundLabel(key); }   // optional core hook (1990-1995 wrestleback); every other core -> roundLabel
+  function methodFor(core, key, res) { var x = core && typeof core.methodLabel === 'function' ? core.methodLabel(key, res) : null; return x || METHOD[res.resultType] || ''; }   // optional core hook (1976-1987 'Sup. Dec.'); every other core -> METHOD
   function bracketOf(key) { var b = String(key).split(':')[0]; return b === 'champ' || b === 'pigtail' ? 'championship' : b === 'con' || b === 'conPigtail' ? 'consolation' : 'placement'; }
   function ordinal(n) { return n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : n + 'th'; }
   function fail(code, message) { return { ok: false, code: code, message: message }; }
@@ -74,7 +75,7 @@
       rows.push({
         boutId: cur, key: d.key, round: labelFor(core, d.key), bracket: bracketOf(d.key), status: d.status,
         result: decided ? (won ? 'W' : 'L') : null, opponent: person(opp),
-        resultType: decided && res ? res.resultType : null, method: decided && res ? (METHOD[res.resultType] || '') : '',
+        resultType: decided && res ? res.resultType : null, method: decided && res ? methodFor(core, d.key, res) : '',
         score: decided && res ? (res.score || '') : '', time: decided && res ? (res.time || '') : '', points: pointsFor(cur)
       });
       if (!decided) break;
