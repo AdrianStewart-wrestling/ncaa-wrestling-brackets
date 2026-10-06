@@ -115,8 +115,9 @@ const HistoricalWrestlebackScoring = (function () {
     '1988-1994': { Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1, MajDec: 0.5, TechFall: 0.75, Dec: 0 },
     '1995':      { Fall: 2, FFT: 2, MedFFT: 2, Default: 2, DQ: 2, MajDec: 1, TechFall: 1, Dec: 0 }      // 1995: TechFall = match termination
   };
+  BONUS['1976-1984'] = { Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1, MajDec: 0.5, Dec: 0, SupDec: 0.75 };   // no TechFall: tech falls did not exist (approved Oct 6 2026)
   BONUS['1985-1987'] = { Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1, MajDec: 0.5, TechFall: 1, Dec: 0, SupDec: 0.75 };   // approved Oct 6 2026
-  const bonusTable = y => (Number(y) >= 1995 ? BONUS['1995'] : Number(y) >= 1988 ? BONUS['1988-1994'] : BONUS['1985-1987']);
+  const bonusTable = y => (Number(y) >= 1995 ? BONUS['1995'] : Number(y) >= 1988 ? BONUS['1988-1994'] : Number(y) >= 1985 ? BONUS['1985-1987'] : BONUS['1976-1984']);
   const isSuperior = (y, r) => { if (Number(y) > 1987 || r.resultType !== 'MajDec') return false; const m = /^(\d+)-(\d+)$/.exec(String(r.score || '')); return !!m && (+m[1] - +m[2]) >= 12; };
   const ADV = { ChampPigtail: 1, R32: 1, R16: 1, QF: 1, SF: 1, Final: 0, ConsPigtail: 0.5, ConsR1: 0.5, ConsR2: 0.5, ConsR3: 0.5, ConsAA: 0.5, ConsQF: 0.5, ConsSF: 0.5, '3rd': 0, '5th': 0, '7th': 0 };
   const SCHEDULE = { QF: [NONE, 6, NONE], SF: [6, 2, 6], Final: [2, 1, 2], ConsR3: [NONE, 8, NONE], ConsAA: [NONE, 8, NONE], ConsQF: [8, 6, 8], ConsSF: [6, 4, 6], '3rd': [4, 3, 4], '5th': [6, 5, 6], '7th': [8, 7, 8] };
@@ -157,7 +158,7 @@ const HistoricalWrestlebackScoring = (function () {
       const round = roundOfKey(r.key); if (!round) { problems.push({ boutId: r.boutId, code: 'unknown_bout', message: 'unrecognised bout ' + r.key }); return; }
       const ws = schoolOf(r.winnerId); if (!ws) { problems.push({ boutId: r.boutId, code: 'unknown_wrestler', message: 'no school for ' + r.winnerId }); return; }
       const sup = isSuperior(year, r); const bonus = sup ? B.SupDec : B[r.resultType]; if (typeof bonus !== 'number') problems.push({ boutId: r.boutId, code: 'unknown_result_type', message: 'unknown result type ' + r.resultType });
-      add(ws, 'Bonus', bonus || 0, 'Rule ' + (Number(year) >= 1995 ? '1995' : Number(year) >= 1988 ? '1988' : '1976/1985') + ': ' + (sup ? 'Superior decision' : r.resultType), r, round, r.winnerId);
+      add(ws, 'Bonus', bonus || 0, 'Rule ' + (Number(year) >= 1995 ? '1995' : Number(year) >= 1988 ? '1988' : Number(year) >= 1985 ? '1976/1985' : '1976') + ': ' + (sup ? 'Superior decision' : r.resultType), r, round, r.winnerId);
       add(ws, 'Advancement', ADV[round] || 0, 'Rule 1974 (champ 1 / cons 1/2)', r, round, r.winnerId);
       const sch = SCHEDULE[round];
       if (sch) { const [entry, win, lose] = sch;
@@ -168,7 +169,7 @@ const HistoricalWrestlebackScoring = (function () {
     // in a weight with wrestle-ins the bracket counts as 64 lines (every non-wrestle-in entrant holds a first-round bye); otherwise
     // printed byes only. (byeCredits() below = the narrower printed-byes-only reading, kept for the sensitivity report.)
     const firstBout = {}; records.forEach(r => [r.winnerId, r.loserId].forEach(id => { if (id && (!firstBout[id] || r.boutId < firstBout[id].boutId)) firstBout[id] = r; }));
-    Object.entries(HistoricalRules.byeCredits(records)).forEach(([id, pts]) => { const s = schoolOf(id); if (!s) return;
+    if (Number(year) >= 1985) Object.entries(HistoricalRules.byeCredits(records)).forEach(([id, pts]) => { const s = schoolOf(id); if (!s) return;   // the bye rule begins in 1985
       const after = records.filter(r => r.winnerId === id).sort((a, b) => a.boutId - b.boutId)[0] || firstBout[id];
       add(s, 'Advancement', pts, 'Bye (1985 rule; 1996-2012 reading)', after, roundOfKey(after.key), id); });
     const aaBy = {}; Object.keys(floors).forEach(w => { if (floors[w] <= 8) aaBy[schoolOfW[w]] = (aaBy[schoolOfW[w]] || 0) + 1; });
@@ -177,7 +178,9 @@ const HistoricalWrestlebackScoring = (function () {
     teams.forEach(t => { t.rank = 1 + teams.filter(o => o.total > t.total).length; t.tied = teams.some(o => o !== t && o.total === t.total); t.rankLabel = t.tied ? 'T-' + t.rank : String(t.rank); });
     const y = Number(year), b = bonusTable(y);
     const keyLines = [
+      y <= 1984 ? 'Adv: 1 per championship win, ½ per consolation win (placement bouts and the Final add none). No bye points (the bye rule begins in 1985).' :
       'Adv: 1 per championship win, ½ per consolation win (placement bouts and the Final add none). Byes: a bye counts as an advancement when the wrestler wins his next bout (1985 rule; in weights with wrestle-ins every other entrant holds a first-round bye).',
+      y <= 1984 ? 'Bonus (1976–1984 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · no tech fall (none before 1985).' :
       y <= 1987 ? 'Bonus (1985–1987 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · Tech Fall 1.' :
       'Bonus (' + (y >= 1995 ? '1995 rules' : '1988–1994 rules') + '): Fall / Forfeit / Default / DQ ' + b.Fall + ' · Major Decision ' + b.MajDec + ' · ' + (y >= 1995 ? 'Match Termination (15+) ' : 'Tech Fall ') + b.TechFall + '.',
       sfShape ? 'Place: 16-12-9-7-5-3-2-1 (1979), counted the moment a finish is clinched on this era’s consolation (only wrestlers beaten by a semifinalist wrestle back): QF win clinches 6th · SF win 2nd · Con. Rd 2 win 8th · Con. Qtrs win 6th · Con. Semis win 4th.'
