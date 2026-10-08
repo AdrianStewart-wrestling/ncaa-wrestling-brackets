@@ -154,10 +154,10 @@ const exceptions = [
     text: 'The source prints only the winner\u2019s name. They count as wins (advancement only, no bonus) and show as \u201cWin (result not printed)\u201d.',
     ok: RES.boutOverrides.filter(o => o.year === '1980' && o.kind === 'resultNotPrinted').length === 3 },
   { y: 1980, w: '150', title: 'A default, not a fall',
-    text: 'The NCAA\u2019s own 1981 annual records Joe Solorio\u2019s wrestle-in win as a default; WrestlingStats printed a fall. Same bonus either way.',
+    text: 'The NCAA\u2019s own 1981 annual records Joe Solorio\u2019s wrestle-in win as a default; the compiled bracket printed a fall. Both readings are recorded. Same bonus either way.',
     ok: RES.boutOverrides.some(o => o.year === '1980' && o.kind === 'sourceCorrection' && o.winner === 'Joe Solorio') },
   { y: 1981, w: '134', title: 'A wrestle-in only the NCAA annual printed',
-    text: 'Jim Gibbons pinned Cliff Porter in a wrestle-in WrestlingStats omits. It explains the consolation bout Porter wrestled next.',
+    text: 'Jim Gibbons pinned Cliff Porter in a wrestle-in the compiled bracket omits. It explains the consolation bout Porter wrestled next.',
     ok: SUP.supplements.some(s => s.year === '1981' && s.winner === 'Jim Gibbons' && s.loser === 'Cliff Porter') },
   { y: 1981, w: '134 · 190', title: 'Empty consolation seats after quarterfinal forfeits',
     text: 'Represented exactly as printed: byes where seats were empty, no bouts invented for absent wrestlers.',
@@ -212,8 +212,8 @@ const archives = [{
     ['1981 · 8th place', 'None'],
     ['Iowa team total', '129.75, matching the published total']
   ],
-  sources: ['WrestlingStats 1981 compiled bracket and summary (\u201c7th: Randy Lewis [3] - Iowa (WFT)\u201d)',
-            'NCAA annual \u201c1982 NCAA Wrestling\u201d (1981 results), for the championship rounds'],
+  sources: ['NCAA annual \u201c1982 NCAA Wrestling\u201d (1981 results), for the championship rounds',
+            '1981 compiled championship bracket and summary (\u201c7th: Randy Lewis [3] - Iowa (WFT)\u201d)'],
   links: [['Open the 1981 134-lb bracket', 'index.html?view=history&year=1981&weight=134'],
           ['See 1981 team scores', 'index.html?view=history&year=1981&show=scores']]
 }];
@@ -232,7 +232,7 @@ check(r134.some(r => /Clar Anderson/.test(r.winnerId) && /Steve Rosenstein/.test
 // (no provenance inferred from adjacent years): each year's data-file header and MATRIX.md
 const header = y => { const t = fs.readFileSync(path.join(ROOT, 'historical-data', 'results' + y + '.js'), 'utf8').slice(0, 600); return (t.match(/^\/\/.*$/gm) || []).join(' '); };
 [2010, 2011, 2013, 2014, 2015].forEach(y => check(/official NCAA (final )?bracket/i.test(header(y)), `sources: ${y}'s data file does not document the official NCAA bracket`));
-check(/OFFICIAL NCAA 2012 draw/.test(header(2012)) && /WrestlingStats/i.test(fs.readFileSync(path.join(ROOT, 'career-panel.js'), 'utf8')), 'sources: 2012 wording not supported');
+check(/OFFICIAL NCAA 2012 draw/.test(header(2012)) && /compiled championship bracket, structure from the official NCAA draw/.test(fs.readFileSync(path.join(ROOT, 'career-panel.js'), 'utf8')), 'sources: 2012 wording not supported');
 YEARS.filter(y => y >= 2016).forEach(y => check(!/source|transcrib|official/i.test(header(y)), `sources: ${y}'s data file now names a source; review the 2016–2026 wording`));
 const matrix = fs.readFileSync(path.join(ROOT, 'MATRIX.md'), 'utf8');
 check(/Podiums additionally cross-checked against official\/published results for 2019 \(all\), 2021 \(all\), 2016\/125, 2016\/149, 2025\/174, 2026\/125/.test(matrix), 'sources: the MATRIX.md cross-check statement changed');
@@ -245,9 +245,9 @@ const DATA = {
             validated: { exact, of, from: YEARS[0], to: 1995, perYear, perYearOf } },
   years, canceled: [{ y: 2020, note: 'Championships canceled' }], eras, exceptions, archives,
   sources: [
-    { years: YEARS[0] + '–2009', text: 'WrestlingStats compiled brackets, checked against the NCAA Records Book. In a few documented cases the NCAA\u2019s own annual guides supply or correct a result; both sources are recorded.' },
+    { years: YEARS[0] + '–2009', text: 'Reconstructed bout by bout from compiled championship brackets and checked against the NCAA\u2019s own record: the official team scoring and top tens in the NCAA Wrestling Guides and Records Book. Where the NCAA\u2019s annual material supplies or corrects a result, both readings are recorded.' },
     { years: '2010–2011, 2013–2015', text: 'Transcribed from the official NCAA championship brackets, as recorded in each year\u2019s data file.' },
-    { years: '2012', text: 'Results from the WrestlingStats compiled bracket; bracket structure from the official NCAA draw.' },
+    { years: '2012', text: 'Results from a compiled championship bracket; bracket structure from the official NCAA draw.' },
     { years: '2016–2026', text: 'The data files for these years do not name a source document. Placings were cross-checked against official published results for all of 2019 and 2021, and for some weights in 2016, 2025 and 2026.' }
   ]
 };

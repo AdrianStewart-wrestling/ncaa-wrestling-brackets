@@ -43,7 +43,7 @@ async def main():
         arc = await pg.evaluate("({ t: document.querySelector('.arc h3').textContent, nil: document.querySelector('.ledger .nil dd').textContent, links: Array.from(document.querySelectorAll('.arc-side a')).map(a => a.getAttribute('href')) })")
         check('archives: the Lewis story with its record and links', 'nobody finished 8th' in arc['t'] and arc['nil'] == 'None' and arc['links'] == ['index.html?view=history&year=1981&weight=134', 'index.html?view=history&year=1981&show=scores'], arc)
         doors = await pg.evaluate("Array.from(document.querySelectorAll('.door')).map(d => [d.getAttribute('href'), d.querySelector('.sub').textContent])")
-        check('doors deep-link to Official, My Bracket and History; History reads 56 NCAA Championships', [d[0] for d in doors] == ['index.html?view=official','index.html?view=picks','index.html?view=history'] and doors[2][1] == '56 NCAA Championships · 1970–2026', doors)
+        check('doors deep-link to Official, My Bracket and History; History reads 56 NCAA Championships', [d[0] for d in doors] == ['index.html?view=official','index.html?view=picks','#history'] and doors[2][1] == '56 NCAA Championships · 1970–2026', doors)
         # follow links into Tournament Central (the router does the rest)
         for href, want in (('index.html?view=history&year=1981&weight=134', '1981 134'), ('index.html?view=history&year=1981&show=scores', 'scores')):
             t = await page(); await t.goto(BASE + href); await t.wait_for_timeout(4500)
