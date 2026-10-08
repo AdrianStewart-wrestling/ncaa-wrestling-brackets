@@ -60,7 +60,10 @@ async def main():
             await pg.wait_for_timeout(2200)
 
         # 1. bare index.html (and the other untouched landings) behave exactly as before
-        for q in ('', '?view=official', '?view=bracket', '?view=nonsense'):
+        # front door (approved): the bare URL now opens the homepage (home.html); every ?... URL is unchanged
+        fd = await page(); await fd.goto(C); await fd.wait_for_timeout(1500)
+        check('1. bare index.html: front door opens the homepage (home.html)', fd.url.endswith('home.html') and not fd.errs, (fd.url, fd.errs)); await fd.close()
+        for q in ('?view=official', '?view=bracket', '?view=nonsense'):
             a, b = await load(B + q), await load(C + q); sa, sb = await snap(a), await snap(b)
             check(f'1. {q or "bare index.html"}: identical to the pre-router page', sa == sb and not b.errs, f'{sa} != {sb} errs={b.errs}')
             await a.close(); await b.close()
@@ -88,7 +91,7 @@ async def main():
             c = await load(C + f'?view=history&year={y}&show=scores', 4800); sc = await snap(c)
             check(f'6. ?view=history&year={y}&show=scores opens {y} Team Scores', sc == sa and sc['vis']['off-scores-view'] not in ('none', 'hidden', 'missing') and y in sc['osTitle'] and not c.errs, f'{sc} != {sa}'); await a.close(); await c.close()
         # 7. 2020 and invalid years/weights fail safely to the History landing (no bracket, no error, a plain message)
-        for q, want in (('year=2020', 'no 2020'), ('year=1979', '1979 is not available'), ('year=abc', 'abc is not available'), ('year=19811', 'not available'),
+        for q, want in (('year=2020', 'no 2020'), ('year=1969', '1969 is not available'), ('year=abc', 'abc is not available'), ('year=19811', 'not available'),
                         ('year=2020&show=scores', 'no 2020'), ('year=1981&weight=999', 'has no 999'), ('year=1981&weight=125', 'has no 125'), ('year=1981&weight=', '')):
             c = await load(C + '?view=history&' + q, 3200); sc = await snap(c)
             ok = sc['topnav'][2].endswith(' on') and 'read-only historical bracket' not in sc['histStatus'] and sc['vis']['off-scores-view'] in ('none', 'hidden') and want.lower() in sc['histStatus'].lower() and not c.errs

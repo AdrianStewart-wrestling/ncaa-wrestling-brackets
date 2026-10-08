@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Checks for the approved polish pass on home-candidate.html (phone menu, nav label, archives layout, wording, tap targets).
+"""Checks for the approved polish pass on home.html (phone menu, nav label, archives layout, wording, tap targets).
 Usage: python3 tools/home/test_home_polish.py [REPO_ROOT]   (exit code 0 = all pass)"""
 import asyncio, functools, http.server, os, sys, threading
 from playwright.async_api import async_playwright
@@ -7,7 +7,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, '..', '..'))
 H = functools.partial(type('Q', (http.server.SimpleHTTPRequestHandler,), {'log_message': lambda *a: None}), directory=ROOT)
 srv = http.server.ThreadingHTTPServer(('127.0.0.1', 8804), H); threading.Thread(target=srv.serve_forever, daemon=True).start()
-URL = 'http://127.0.0.1:8804/home-candidate.html'; res = []
+URL = 'http://127.0.0.1:8804/home.html'; res = []
 def check(n, ok, d=''): res.append(ok); print(('PASS ' if ok else 'FAIL ') + n + ('' if ok else '  -- ' + str(d)[:400]))
 async def main():
     async with async_playwright() as p:
