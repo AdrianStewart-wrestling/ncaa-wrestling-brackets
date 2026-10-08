@@ -140,6 +140,33 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 /* TIP */
 .tip{display:flex;align-items:center;gap:8px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:3px;padding:6px 12px;margin-bottom:10px;font-size:11px;color:var(--blue);flex-shrink:0}
 .tip-dot{width:5px;height:5px;background:var(--blue);border-radius:50%;flex-shrink:0;animation:blink 1.6s infinite}
+/* MY BRACKET onboarding strip: reads existing picks only; every button calls an existing function */
+.bh{display:none;background:var(--s1);border:1px solid var(--s3);border-left:3px solid var(--gold2);border-radius:4px;padding:10px 14px;margin-bottom:10px;align-items:center;gap:18px;flex-wrap:wrap}
+.bh.on{display:flex}
+.bh-intro{min-width:170px}
+.bh-h{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--t1);line-height:1}
+.bh-d{font-size:11px;color:var(--t2);margin-top:3px}
+.bh-steps{display:flex;gap:14px;flex:1;min-width:260px}
+.bh-step{display:flex;gap:8px;align-items:flex-start;flex:1;min-width:0}
+.bh-n{font-family:'Bebas Neue',sans-serif;font-size:15px;width:22px;height:22px;border-radius:50%;background:var(--gold-bg);color:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bh-st{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;color:var(--t1);text-transform:uppercase}
+.bh-sd{font-size:11px;color:var(--t2);line-height:1.3}
+.bh-prog{min-width:170px}
+.bh-pl{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase}
+.bh-pv{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--t1);line-height:1.1}
+.bh-pv small{font-family:'Barlow',sans-serif;font-size:11px;color:var(--t2);letter-spacing:0}
+.bh-bar{height:5px;background:var(--s3);border-radius:3px;overflow:hidden;margin-top:4px}
+.bh-bar i{display:block;height:100%;background:var(--gold2);transition:width .25s}
+.bh-act{display:flex;gap:8px;align-items:center;margin-left:auto}
+.bh-go{background:var(--gold2);color:#1a1a1a;border:none;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.bh-go:hover{filter:brightness(1.07)}
+.bh-x{background:none;border:1px solid var(--s3);color:var(--t2);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.bh.min{padding:6px 12px;gap:12px}
+.bh.min .bh-intro,.bh.min .bh-steps,.bh.min .bh-go{display:none}
+.bh.min .bh-prog{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.bh.min .bh-pv{font-size:16px}
+.bh.min .bh-bar{width:120px;margin-top:0}
+@media (max-width:700px){.bh{gap:8px 10px;padding:9px 12px}.bh-intro{flex-basis:100%}.bh-d{display:none}.bh-steps{gap:8px;min-width:0;flex-basis:100%}.bh-step{gap:6px;align-items:center;flex:none}.bh-steps{gap:14px}.bh-sd{display:none}.bh-n{width:20px;height:20px;font-size:13px}.bh-st{font-size:11px}.bh-prog{flex:1;min-width:0}.bh-act{margin-left:0}.bh-go{padding:7px 10px;font-size:12px}.bh.min .bh-pl{display:none}.bh-long{display:none}.bh-st{white-space:nowrap}.bh.min .bh-bar{width:60px}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* SECTION LABEL */
@@ -541,6 +568,16 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
 </div>
 
 <div class="area" id="area">
+  <div class="bh" id="bh" role="region" aria-label="How to build your bracket">
+    <div class="bh-intro"><div class="bh-h">Build Your Bracket</div><div class="bh-d">Pick the NCAA champion, and every place, at all 10 weights.</div></div>
+    <div class="bh-steps">
+      <div class="bh-step"><span class="bh-n">1</span><div><div class="bh-st">Pick winners</div><div class="bh-sd">Click a wrestler to advance him</div></div></div>
+      <div class="bh-step"><span class="bh-n">2</span><div><div class="bh-st">My Scores</div><div class="bh-sd">See your projected team standings</div></div></div>
+      <div class="bh-step"><span class="bh-n">3</span><div><div class="bh-st">Submit</div><div class="bh-sd">Review and submit your entry</div></div></div>
+    </div>
+    <div class="bh-prog"><div class="bh-pl">Your progress</div><div class="bh-pv" id="bh-pv">0 / 10 <small><span class="bh-long">weight classes </span>fully picked</small></div><div class="bh-bar"><i id="bh-bar" style="width:0%"></i></div></div>
+    <div class="bh-act"><button type="button" class="bh-go" id="bh-go" onclick="goWeight(125)">Start at 125 lbs</button><button type="button" class="bh-x" id="bh-x" onclick="toggleBracketHelp()" aria-expanded="true">Hide</button></div>
+  </div>
   <div class="tip" id="area-tip"><div class="tip-dot"></div><span id="area-tip-text">Click a wrestler's name to advance them — their opponent automatically drops to the consolation bracket below</span></div>
   <div id="bkt"></div>
 </div>
@@ -2698,7 +2735,39 @@ function champBox(st) {
   return `<div class="cbox"><div>${champCard}</div>${aaPanel}</div>`;
 }
 
+// ── MY BRACKET onboarding strip (display only) ──
+// Progress is read from the same in-memory bracket state that Load Entry fills and Submit sends (states[w]); nothing is
+// stored and no bracket is created (states[w] is read, never getS()). A weight counts as fully picked only when every bout
+// that has two wrestlers is decided and the champion, 3rd, 5th and 7th places are set. Submit itself has no completeness
+// rule; this counter is guidance, not an eligibility check.
+let bracketHelpOpen = null;   // null = automatic (open until the first pick); true/false = the visitor's choice this visit
+let bracketHelpHadPicks = false;
+function bracketWeightStatus(w) {
+  const st = states[w]; if (!st) return 'none';
+  const all = [st.pigtail, st.conPigtail, st.place3, st.place5, st.place7].concat(...st.champ, ...st.con);
+  let decided = 0, open = 0;
+  all.forEach(m => { if (!m) return; if (m.w) decided++; else if (m.a && m.b) open++; });
+  if (st.champion && st.place3.w && st.place5.w && st.place7.w && open === 0) return 'complete';
+  return decided ? 'partial' : 'none';
+}
+function toggleBracketHelp() {
+  const el = document.getElementById('bh'); bracketHelpOpen = !(el && !el.classList.contains('min')); renderBracketHelp();
+}
+function renderBracketHelp() {
+  const el = document.getElementById('bh'); if (!el) return;
+  const show = viewMode === 'picks'; el.classList.toggle('on', show); if (!show) return;
+  const st = WLIST.map(bracketWeightStatus), done = st.filter(x => x === 'complete').length, any = st.some(x => x !== 'none');
+  if (any && !bracketHelpHadPicks && bracketHelpOpen === true) bracketHelpOpen = null;   // the first pick collapses the help
+  bracketHelpHadPicks = any;
+  const open = bracketHelpOpen === null ? !any : bracketHelpOpen;
+  el.classList.toggle('min', !open);
+  document.getElementById('bh-pv').innerHTML = done + ' / 10 <small><span class="bh-long">weight classes </span>fully picked</small>';
+  document.getElementById('bh-bar').style.width = (done * 10) + '%';
+  document.getElementById('bh-go').style.display = any ? 'none' : '';   // Start at 125 lbs: fresh entries only
+  const x = document.getElementById('bh-x'); x.textContent = open ? 'Hide' : 'How it works'; x.setAttribute('aria-expanded', String(open));
+}
 function render() {
+  renderBracketHelp();
   const st=viewState(CW);
   const MH=68, GAP=6;
   // Wrestle-in placement. OFFICIAL / MY PICKS (and 2019+ history, 33 seeds): #32/#33 winner feeds R1 slot 0,
@@ -3979,7 +4048,8 @@ Object.assign(window, {
   adminRecomputeLeaderboard,
   refreshLeaderboard,
   refreshSubmissionList, loadSelectedSubmission,
-  pick, swap
+  pick, swap,
+  toggleBracketHelp
 });
 
 // ══════ TOURNAMENT CENTRAL — READ-ONLY ENGINE FACADE (Phase 3B) ══════
