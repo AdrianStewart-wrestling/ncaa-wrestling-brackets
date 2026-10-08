@@ -26,6 +26,7 @@
     var r = eng && eng.teamRoster ? eng.teamRoster(st.school) : { ok: false, message: 'unavailable' };
     if (!r.ok) { st.body.appendChild(el('div', 'pp-empty', 'Team detail is not available' + (r.message ? ': ' + r.message : '.'))); return; }
     var b = st.body, h = el('h2', 'pp-name', r.school); h.id = 'tp-title'; b.appendChild(h);
+    if (r.year) b.appendChild(el('div', 'pp-sub', r.year + ' NCAA Championships'));   // History: the championship this team detail belongs to
     var t = r.team;
     if (t) {
       var chips = el('div', 'pp-chips');

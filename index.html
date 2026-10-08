@@ -3015,7 +3015,7 @@ function teamRoster(school) {
     const opts = sc ? { events: sc.events, floors: sc.floors } : {};
     const wrestlers = (Y.idsBySchool[school] || []).map(id => { const w = Number(String(id).split('-')[0]); return Y.cores[w] ? histSeedView(window.OfficialPath.compute(Y.cores[w], Y.books[w], id, opts), Y.year) : null; }).filter(p => p && p.ok);
     wrestlers.sort((a, b) => a.wrestler.weight - b.wrestler.weight || a.wrestler.seed - b.wrestler.seed);
-    return { ok: true, school: school, wrestlers: wrestlers, team: sc ? (sc.teams.find(t => t.school === school) || null) : null };
+    return { ok: true, school: school, year: Number(Y.year), wrestlers: wrestlers, team: sc ? (sc.teams.find(t => t.school === school) || null) : null };   // year: shown in the panel
   }
   if (!officialCore || !officialBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Team detail is not available in this session.' };
   let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }
@@ -3218,19 +3218,21 @@ function careerLoad(id) {                                  // Promise: the Caree
         w: ok.reduce((t, r) => t + r.w, 0), l: ok.reduce((t, r) => t + r.l, 0), points: ok.reduce((t, r) => t + r.points, 0), bonus: ok.reduce((t, r) => t + r.bonus, 0) } };
   });
 }
+// Every historical Path carries its championship year (shown in the panel subtitle), so a Path never appears without its context.
+const withPathYear = (p, y) => { if (p && p.ok && y) p.year = Number(y); return p; };
 function pathFor(wrestlerId) {
   const yq = viewMode === 'historical' ? parseYearId(wrestlerId) : null;
   if (viewMode === 'historical') window.historicalPathYear = yq ? yq.year : null;   // the year the open Path belongs to (Career)
-  if (yq) { const p = careerYearPath(yq.year, yq.local); return p ? qualifyIds(p, yq.year) : { ok: false, code: 'unavailable', message: 'This historical year is not loaded.' }; }
+  if (yq) { const p = careerYearPath(yq.year, yq.local); return p ? withPathYear(qualifyIds(p, yq.year), yq.year) : { ok: false, code: 'unavailable', message: 'This historical year is not loaded.' }; }
   if (viewMode === 'historical' && window.historicalYear) {
     const hy = historicalYearCoreFor(wrestlerId);
     if (!hy || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available for this historical wrestler.' };
     let sc = null; try { sc = historicalScoresModel(); } catch (e) { sc = null; }
-    return histSeedView(window.OfficialPath.compute(hy.core, hy.book, wrestlerId, sc ? { events: sc.events, floors: sc.floors } : {}), window.historicalYear && window.historicalYear.year);
+    return withPathYear(histSeedView(window.OfficialPath.compute(hy.core, hy.book, wrestlerId, sc ? { events: sc.events, floors: sc.floors } : {}), window.historicalYear && window.historicalYear.year), window.historicalYear && window.historicalYear.year);
   }
   if (viewMode === 'historical') {
     if (!window.historicalCore || !window.historicalBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available for this historical bracket.' };
-    return histSeedView(window.OfficialPath.compute(window.historicalCore, window.historicalBook, wrestlerId, {}), window.historicalBracketYear); // no scoring/AA extras for historical brackets
+    return withPathYear(histSeedView(window.OfficialPath.compute(window.historicalCore, window.historicalBook, wrestlerId, {}), window.historicalBracketYear), window.historicalBracketYear); // no scoring/AA extras for historical brackets
   }
   if (!officialCore || !officialBook || !window.OfficialPath) return { ok: false, code: 'unavailable', message: 'Path to the Finals is not available in this session.' };
   let sc = null; try { sc = officialScoresModel(); } catch (e) { sc = null; }

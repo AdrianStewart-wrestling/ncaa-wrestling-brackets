@@ -44,7 +44,7 @@
     var w = m.wrestler, o = m.outcome, b = st.body;
     var h = el('h2', 'pp-name', w.name); h.id = 'pp-title'; b.appendChild(h);
     var lr = liveRecord(w, m.journey);
-    b.appendChild(el('div', 'pp-sub', (window.HistoricalWeights ? window.HistoricalWeights.unit(window.HistoricalWeights.display(w.weight)) : w.weight + ' lbs') + ' · ' + (w.seed ? '#' + w.seed + ' seed' : 'Unseeded') + ' · ' + w.school + (lr ? ' · ' + lr : '')));
+    b.appendChild(el('div', 'pp-sub', (m.year ? m.year + ' · ' : '') + (window.HistoricalWeights ? window.HistoricalWeights.unit(window.HistoricalWeights.display(w.weight)) : w.weight + ' lbs') + ' · ' + (w.seed ? '#' + w.seed + ' seed' : 'Unseeded') + ' · ' + w.school + (lr ? ' · ' + lr : '')));
     var chips = el('div', 'pp-chips'); chips.appendChild(el('span', 'pp-chip pp-chip--' + o.code, o.code === 'champion' ? '🏆 ' + o.label : o.label));
     if (m.aa === true) chips.appendChild(el('span', 'pp-chip pp-chip--aa', '★ All-American')); b.appendChild(chips);
 

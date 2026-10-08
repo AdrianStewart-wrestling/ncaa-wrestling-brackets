@@ -75,7 +75,7 @@ const HistoryMode = (function () {
         if (y === 2016) opt.selected = true; // this milestone's one acceptance case
         yearSel.appendChild(opt);
       });
-      yearSel.addEventListener('change', fillWeights);
+      yearSel.addEventListener('change', function () { closePath(); closeTeam(); fillWeights(); });
       document.getElementById('hist-show-btn').addEventListener('click', showBracket);
       const scoresBtn = document.getElementById('hist-scores-btn');
       if (scoresBtn) scoresBtn.addEventListener('click', showTeamScores);
@@ -134,7 +134,13 @@ const HistoryMode = (function () {
     setStatus(msg, true);
   }
 
+  // A Path to the Finals belongs to one championship: close any open Path whenever the historical year or view changes,
+  // so it can never stay visible over another year's bracket or team scores. (Career-opened Paths change no year or view.)
+  function closePath() { if (window.PathPanel && window.PathPanel.isOpen && window.PathPanel.isOpen()) window.PathPanel.close(); }
+  // The Team panel is year-level: close it when the year changes (a new view already closes it, in hideHistoricalScoresView).
+  function closeTeam() { if (window.TeamPanel && window.TeamPanel.isOpen && window.TeamPanel.isOpen()) window.TeamPanel.close(); }
   function showBracket() {
+    closePath();
     const year = document.getElementById('hist-year').value;
     const weight = document.getElementById('hist-weight').value;
     const mySeq = ++loadSeq;
@@ -214,6 +220,7 @@ const HistoryMode = (function () {
   }
 
   function showTeamScores() {
+    closePath();
     const year = document.getElementById('hist-year').value;
     if (SCORING_PENDING.has(Number(year))) { setStatus(year + ' team scores are not shown yet: the ' + year + ' scoring rules (quarterfinal-wrestleback era) are awaiting review. Brackets, Path to the Finals and NCAA Career are available.', true); return; }
     const mySeq = ++loadSeq;
