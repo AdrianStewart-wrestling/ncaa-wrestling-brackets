@@ -179,7 +179,9 @@
       const out = new Set(), stack = [ks];
       while (stack.length) {
         const cur = stack.pop(), e = edges[cur];
-        [e.winner, e.loser].forEach(function (d) { if (d && !out.has(d)) { out.add(d); stack.push(d); } });
+        // engine.extraDependents (optional; finalist-repechage only): dependencies a single-bout probe cannot see, because the
+        // destination depends on who later reaches the final. Absent on every other engine, so the closure is unchanged there.
+        [e.winner, e.loser].concat(engine.extraDependents ? (engine.extraDependents(cur) || []) : []).forEach(function (d) { if (d && !out.has(d)) { out.add(d); stack.push(d); } });
       }
       return (descMemo[ks] = out);
     }

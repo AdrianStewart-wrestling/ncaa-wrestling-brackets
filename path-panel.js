@@ -55,9 +55,9 @@
       li.appendChild(el('span', 'pp-mk', r.status === 'decided' ? (r.result === 'W' ? '✓' : '✗') : '→'));
       var main = el('span', 'pp-main');
       if (r.opponent) { var ob = el('button', 'pp-opp', r.opponent.name); ob.type = 'button'; ob.addEventListener('click', function () { openPanel(r.opponent.id); }); main.appendChild(ob); main.appendChild(el('span', 'pp-osc', r.opponent.school + (r.opponent.seed ? ' · #' + r.opponent.seed : ''))); }   // unseeded: school only (was '#null')
-      else main.appendChild(el('span', 'pp-tbd', r.status === 'decided' ? 'No opponent (printed forfeit / bye)' : 'Opponent not decided yet'));   // decided with no opponent: 1981 printed vacancies only
+      else main.appendChild(el('span', 'pp-tbd', r.status === 'decided' ? (/^Rep\. A$/.test(r.round) ? 'No bout: his finalist had a first-round bye' : 'No opponent (printed forfeit / bye)') : 'Opponent not decided yet'));   // decided with no opponent: 1981 printed vacancies; finalist-repechage no-bout seat (1970-1971)
       li.appendChild(main);
-      li.appendChild(el('span', 'pp-res', r.status === 'decided' ? (r.opponent ? res(r) : 'Forfeit') : 'Bout ' + r.boutId));
+      li.appendChild(el('span', 'pp-res', r.status === 'decided' ? (r.opponent ? res(r) : (/^Rep\. A$/.test(r.round) ? 'Advanced' : 'Forfeit')) : 'Bout ' + r.boutId));
       if (r.points) li.appendChild(el('span', 'pp-pt', '+' + fmtN(r.points)));
       ol.appendChild(li);
     });

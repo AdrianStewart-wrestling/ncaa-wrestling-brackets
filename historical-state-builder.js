@@ -651,7 +651,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
 (function () {
   const LINE_NO = [1,32,17,16,9,24,25,8,5,28,21,12,13,20,29,4,3,30,19,14,11,22,27,6,7,26,23,10,15,18,31,2];
   const WEIGHTS = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
-  const ORDER = ['Prelims', 'ChampR1', 'ConsPrelims', 'ChampR2', 'WbConsR1', 'SfConsR1', 'QuarterFinals', 'WbConsR2', 'SfConsR2', 'WbConsR3', 'SfConsR3', 'SemiFinals', 'WbConsR4', 'SfConsR4', 'WbConsR5', '7thPlace', '5thPlace', '3rdPlace', 'Finals'];
+  const ORDER = ['Prelims', 'ChampR1', 'ConsPrelims', 'ChampR2', 'WbConsR1', 'SfConsR1', 'QuarterFinals', 'WbConsR2', 'SfConsR2', 'WbConsR3', 'SfConsR3', 'SemiFinals', 'RepConsP', 'RepConsA', 'RepConsB', 'RepConsC', 'WbConsR4', 'SfConsR4', 'WbConsR5', '7thPlace', '5thPlace', '3rdPlace', 'Finals'];
   const PATH_CON = ['Con R1', 'Con R2', 'Con R3', 'Con QF', 'Con SF'];                    // Path to the Finals labels (5 rounds)
   const RENDER_CON = ['Con. Rd 1', 'Con. Rd 2', 'Con. Rd 3', 'Con. Qtrs', 'Con. Semis'];  // bracket column headers (5 rounds)
   const norm = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
@@ -665,6 +665,17 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
              c3Start: 421 + 4 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) },
     'sf-wrestleback': { con: [4, 4, 2, 2], qfRound: 1, sfRound: 3, lastRound: 3, path: ['Con R1', 'Con R2', 'Con QF', 'Con SF'], render: ['Con. Rd 1', 'Con. Rd 2', 'Con. Qtrs', 'Con. Semis'],
       numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 4 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 4 * wi,
+             c3Start: 421 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) },
+    // sf-wrestleback-6 (1972-1978, approved Oct 2026): the same consolation, but six places -- no 7th-place bout; the two
+    // consolation-quarterfinal losers are eliminated unplaced.
+    'sf-wrestleback-6': { noPlace7: true, con: [4, 4, 2, 2], qfRound: 1, sfRound: 3, lastRound: 3, path: ['Con R1', 'Con R2', 'Con QF', 'Con SF'], render: ['Con. Rd 1', 'Con. Rd 2', 'Con. Qtrs', 'Con. Semis'],
+      numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 4 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 4 * wi,
+             c3Start: 421 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) },
+    // finalist-repechage-6 (1970-1971, approved Oct 2026): only wrestlers beaten by a FINALIST wrestle back, one chain per finalist
+    // (con[r][h], h = 0 top half / 1 bottom half): A = R1 victim v R2 victim, B = A winner v QF victim, C = B winner v SF victim;
+    // C winners -> 3rd, C losers -> 5th; six places, no 7th-place bout. Routing is derived at replay time (buildRepechage).
+    'finalist-repechage-6': { repechage: true, noPlace7: true, con: [2, 2, 2], path: ['Rep. A', 'Rep. B', 'Rep. C'], render: ['Repechage A', 'Repechage B', 'Repechage C'],
+      numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 2 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 2 * wi,
              c3Start: 421 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) }
   };
   function shapeOf(year, label) { const f = factsOf(year, label); return f && SHAPES[f.consFormat] ? f.consFormat : null; }
@@ -678,6 +689,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
   function build(resultData, year, label, slotWeight) {
     const problems = [], F = factsOf(year, label), SH = F && SHAPES[F.consFormat];
     if (!SH) return { ok: false, problems: ['no wrestleback facts for ' + year + '/' + label] };
+    if (SH.repechage) return buildRepechage(resultData, year, label, slotWeight, F, SH);
     const rows = resultData.filter(r => String(r.weight) === String(label));
     const T = ((window.HistoricalSeeds.table || {})[String(year)] || {})[String(label)] || {};
     const WB = F.wb, N = rows.filter(r => r.round === 'Prelims').length, M = rows.filter(r => r.round === 'ConsPrelims').length;
@@ -704,6 +716,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       const st = { champ: [r1, Array.from({ length: 8 }, () => mk(null, null)), Array.from({ length: 4 }, () => mk(null, null)), Array.from({ length: 2 }, () => mk(null, null)), [mk(null, null)]],
         con: SH.con.map(n => Array.from({ length: n }, () => mk(null, null))),
         place3: mk(null, null), place5: mk(null, null), place7: mk(null, null), champion: null,
+        ...(SH.noPlace7 ? { noPlace7: true } : {}),   // six-place years: the display shows six places
         wrestleback: true, conRoundNames: SH.render };
       if (N >= 2) { st.pigtails = pigs; st.conPigtails = conPigs; st.pigtail = pigs[0]; st.conPigtail = conPigs[0];
         st.pigtailSlots = feeds.map(f => f.slot); st.conPigtailSlots = conPigs.map((m, j) => WB.conPigSeat[j] !== undefined ? 2 * WB.conPigSeat[j] : 0); }
@@ -726,7 +739,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       if (ri === SH.lastRound) { if (!st.place3.a) st.place3.a = w; else st.place3.b = w; if (l) { if (!st.place5.a) st.place5.a = l; else st.place5.b = l; } return; }
       // an entry round (the champion loser takes side a) receives the winner on side b; otherwise two winners pair into one bout
       if (ri + 1 === SH.qfRound || ri + 1 === SH.sfRound) seat(st.con[ri + 1][mi], 'b', w); else seat(st.con[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w);
-      if (ri === SH.lastRound - 1 && l) { if (!st.place7.a) st.place7.a = l; else st.place7.b = l; }
+      if (ri === SH.lastRound - 1 && l && !SH.noPlace7) { if (!st.place7.a) st.place7.a = l; else st.place7.b = l; }   // six-place shape: eliminated, no 7th-place bout
     }
     // ---- printed-vacancy propagation (only when facts.wb.vacant is present; no effect on any other weight/year) ----
     const VAC = !!(WB.vacant && WB.vacant.length);
@@ -766,7 +779,8 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       if (!m || !m.a || !m.b || m.w) return;
       const w = slot === 'a' ? m.a : m.b, l = slot === 'a' ? m.b : m.a; m.w = slot;
       if (bracket === 'pigtail') { const k = N >= 2 ? ri : 0, f = feeds[k]; if (f) seat(st.champ[0][f.slot], f.side, w);
-        const j = WB.pigCons[k]; if (j !== undefined) seat(N >= 2 ? st.conPigtails[j] : st.conPigtail, 'a', l); }
+        const j = WB.pigCons[k]; if (j !== undefined) seat(N >= 2 ? st.conPigtails[j] : st.conPigtail, 'a', l);
+        else if (WB.pigSeat && WB.pigSeat[k]) { const [p, sd] = WB.pigSeat[k]; seat(st.con[0][p], sd, l); } }   // approved direct seat (1975 167 only): wrestle-in loser seated as printed; no bout
       else if (bracket === 'conPigtail') { const j = N >= 2 ? ri : 0, p = WB.conPigSeat[j]; if (p !== undefined) { seat(st.con[0][p], cpSide(j), w); resolveVacant(st, p); } }
       else if (bracket === 'champ') {
         if (ri < 4) seat(st.champ[ri + 1][mi >> 1], mi % 2 ? 'b' : 'a', w); else st.champion = w;
@@ -785,6 +799,11 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     core.roundLabel = key => { const p = String(key).split(':'); return p[0] === 'con' ? (SH.path[+p[1]] || null) : null; };      // optional hook read by official-path.js (absent on every other core)
     // 1976-1987 rule: a decision won by 12+ points is a SUPERIOR DECISION (stored as the engine's MajDec; the printed score decides).
     const notPrinted = new Set();   // bout keys recorded from a WIN-NP row (filled during the replay below)
+    // 1972-1975 NCAA rule (approved): decisions are scored by margin -- 10 or more earns 1/2; there was no major or superior decision.
+    if (Number(year) >= 1972 && Number(year) <= 1975) core.methodLabel = (key, res) => {
+      if (notPrinted.has(key)) return 'Win (result not printed)';
+      if (!res || (res.resultType !== 'Dec' && res.resultType !== 'MajDec')) return null;
+      const m = /^(\d+)-(\d+)/.exec(String(res.score || '')); return m && (+m[1] - +m[2]) >= 10 ? 'Dec (10+)' : 'Dec'; };
     if (Number(year) >= 1976 && Number(year) <= 1987) core.methodLabel = (key, res) => {
       if (notPrinted.has(key)) return 'Win (result not printed)';
       const m = /^(\d+)-(\d+)$/.exec(String(res && res.score || '')); return res && res.resultType === 'MajDec' && m && (+m[1] - +m[2]) >= 12 ? 'Sup. Dec.' : null; };
@@ -810,6 +829,106 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       if (JSON.stringify(got.slice().sort()) !== JSON.stringify(want.slice().sort())) problems.push('printed byes ' + JSON.stringify(want) + ' != derived ' + JSON.stringify(got));
     }
     return { ok: problems.length === 0, core, book, problems, wrestleback: true };
+  }
+  // ---- finalist repechage (1970-1971) ---------------------------------------------------------------------------------
+  // Championship: 32-line draw (printed R1 byes) -> R2 -> QF -> SF -> Final. When a semifinal is decided its half's finalist is
+  // known and HIS chain is seeded from his actual championship victims (read from the decided bouts on his path, by object
+  // identity, never by name). A finalist's R1 bye makes A a no-bout advance for his R2 victim (no record, no points).
+  // extraDependents: every R1-SF bout of half h lies on the path to that half's semifinal, so changing one changes (or removes)
+  // the finalist and therefore chain h and the 3rd/5th-place bouts; the final changes no chain. Exact, not a superset.
+  function buildRepechage(resultData, year, label, slotWeight, F, SH) {
+    const problems = [];
+    const rows = resultData.filter(r => String(r.weight) === String(label));
+    const T = ((window.HistoricalSeeds.table || {})[String(year)] || {})[String(label)] || {};
+    const school = {}; rows.forEach(r => { school[r.winner] = r.winner_school; school[r.loser] = r.loser_school; });
+    const fieldOf = {}; Object.entries(F.lines).forEach(([n, L]) => { fieldOf[n] = { n, s: school[n] || '', r: '', seed: LINE_NO[L], ds: T[n] || 0 }; });
+    // championship wrestle-ins (1970): rows 'Prelims', each feeding one R1 seat (facts.feeds); a wrestle-in loser holds no printed line (33, 34, ...)
+    const pigRows = rows.filter(r => r.round === 'Prelims').sort((a, b) => a.bout - b.bout), N = pigRows.length, feeds = F.feeds || [], fedSeat = {};
+    feeds.forEach(f => { fedSeat[f.slot + f.side] = f.k; });
+    if (N) { let nextNo = 33; pigRows.forEach(r => [r.winner, r.loser].forEach(n => { if (!fieldOf[n]) fieldOf[n] = { n, s: school[n] || '', r: '', seed: nextNo++, ds: T[n] || 0 }; })); }
+    rows.forEach(r => [r.winner, r.loser].forEach(n => { if (!fieldOf[n]) problems.push(n + ' has no printed line'); }));
+    if (problems.length) return { ok: false, problems };
+    const W = n => { const f = fieldOf[n]; return f ? { n: f.n, s: f.s, r: '', seed: f.seed, ds: f.ds } : null; };
+    const lineName = {}; Object.entries(F.lines).forEach(([n, L]) => { lineName[L] = n; });
+    const byesR1 = (F.byes || []).filter(b => b.phase === 'r1');
+    const mk = (a, b) => ({ a, b, w: null }), states = {};
+    // championship wrestle-ins (1970): rows 'Prelims', each feeding one R1 seat (facts.feeds). N = 0 (1971) leaves every path below unchanged.
+    const NP = N ? Math.max(N, 2) : 0;   // wrestle-in slots in the core; at least two so each chain has its own preliminary bout P
+    function initBracket(wt) {
+      const r1 = Array.from({ length: 16 }, (_, i) => mk(fedSeat[i + 'a'] !== undefined ? null : W(lineName[2 * i]), fedSeat[i + 'b'] !== undefined ? null : W(lineName[2 * i + 1])));
+      const st = { champ: [r1, Array.from({ length: 8 }, () => mk(null, null)), Array.from({ length: 4 }, () => mk(null, null)), Array.from({ length: 2 }, () => mk(null, null)), [mk(null, null)]],
+        con: SH.con.map(n => Array.from({ length: n }, () => mk(null, null))),
+        place3: mk(null, null), place5: mk(null, null), place7: mk(null, null), pigtail: mk(null, null), conPigtail: mk(null, null), champion: null,
+        noPlace7: true, wrestleback: true, repechage: true, conRoundNames: SH.render, repFinalist: [null, null],
+        ...(N ? {} : { pigtailSlot: null, conPigtailSlot: null }) };   // a plain 32-line draw (no wrestle-ins): the renderer shows no wrestle-in columns
+      if (N) { st.pigtails = Array.from({ length: NP }, (_, k) => k < N ? (e => mk(W(e[0]), W(e[1])))([pigRows[k].winner, pigRows[k].loser].sort((x, y) => norm(x) < norm(y) ? -1 : 1)) : mk(null, null));
+        st.conPigtails = Array.from({ length: NP }, () => mk(null, null)); st.pigtail = st.pigtails[0]; st.conPigtail = st.conPigtails[0];
+        st.pigtailSlots = st.pigtails.map((m, k) => feeds[k] ? feeds[k].slot : 0); st.conPigtailSlots = st.conPigtails.map((m, k) => k * 16); st.repPrelim = true; }
+      byesR1.forEach(b => { const m = st.champ[0][b.slot]; m.a = W(b.wrestler); m.b = null; m.w = 'a'; m.bye = true; const nm = st.champ[1][b.slot >> 1]; if (b.slot % 2 === 0) nm.a = m.a; else nm.b = m.a; });
+      states[wt] = st;
+    }
+    // a finalist's victims on his championship path: [R1, R2, QF, SF]; null = not decided, 'BYE' = printed R1 bye
+    function victimsOf(st, f) {
+      return [0, 1, 2, 3].map(ri => { const m = st.champ[ri].find(x => x.a === f || x.b === f);
+        if (!m || !m.w) return null; if (m.bye) return 'BYE'; return m[m.w === 'a' ? 'b' : 'a']; });
+    }
+    // his wrestle-in victim, if he entered through a wrestle-in (1970 Rule 6 section 6: every wrestler he beat is eligible)
+    function wrestleInVictimOf(st, f) { const m = (st.pigtails || []).find(x => x.w && x[x.w] === f); return m ? m[m.w === 'a' ? 'b' : 'a'] : null; }
+    function seedChain(st, h) {
+      const sf = st.champ[3][h]; if (!sf.w) return;
+      const f = sf[sf.w]; st.repFinalist[h] = f;
+      const v = victimsOf(st, f), A = st.con[0][h], B = st.con[1][h], C = st.con[2][h];
+      C.b = v[3];
+      if (v[2] && v[2] !== 'BYE') B.b = v[2];
+      if (v[0] === 'BYE') { if (v[1] && v[1] !== 'BYE') { A.a = null; A.b = v[1]; A.w = 'b'; A.bye = true; B.a = v[1]; } }
+      else {
+        const pv = N ? wrestleInVictimOf(st, f) : null;
+        if (pv && v[0]) { const P = st.conPigtails[h]; P.a = pv; P.b = v[0]; }   // five victims: preliminary P = wrestle-in victim v R1 victim; P winner -> A seat a
+        else if (v[0]) A.a = v[0];
+        if (v[1] && v[1] !== 'BYE') A.b = v[1]; }
+    }
+    function applyPick(st, bracket, ri, mi, slot) {
+      const m = bracket === 'champ' ? st.champ[ri][mi] : bracket === 'con' ? st.con[ri][mi] : bracket === 'p3' ? st.place3 : bracket === 'p5' ? st.place5
+              : bracket === 'pigtail' && st.pigtails ? st.pigtails[ri] : bracket === 'conPigtail' && st.conPigtails ? st.conPigtails[ri] : null;
+      if (!m || !m.a || !m.b || m.w) return;
+      const w = slot === 'a' ? m.a : m.b, l = slot === 'a' ? m.b : m.a; m.w = slot;
+      if (bracket === 'pigtail') { const f = feeds[ri]; if (f) st.champ[0][f.slot][f.side] = w; return; }   // the loser waits: only a finalist's wrestle-in victim wrestles back (via P)
+      if (bracket === 'conPigtail') { if (ri < 2) st.con[0][ri].a = w; return; }                            // P winner -> A, side a (slots 0/1 = the two chains' P; any other wrestle-in slot is unused)
+      if (bracket === 'champ') { if (ri < 4) st.champ[ri + 1][mi >> 1][mi % 2 ? 'b' : 'a'] = w; else st.champion = w; if (ri === 3) seedChain(st, mi); }
+      else if (bracket === 'con') { if (ri < 2) st.con[ri + 1][mi].a = w; else { st.place3[mi ? 'b' : 'a'] = w; st.place5[mi ? 'b' : 'a'] = l; } }
+    }
+    function extraDependents(ks) {
+      const p = String(ks).split(':');
+      if (N && p[0] === 'pigtail') { const f = feeds[+p[1]]; if (!f) return []; const h = f.slot >> 3; return ['conPigtail:' + h + ':0', 'con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0', 'p5:0:0']; }
+      if (p[0] !== 'champ') return [];
+      const ri = +p[1], mi = +p[2]; if (ri > 3) return [];
+      const h = mi >> (3 - ri); return (N ? ['conPigtail:' + h + ':0'] : []).concat(['con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0', 'p5:0:0']);
+    }
+    const adapter = { weights: [Number(slotWeight)], pigtailCount: NP, boutNumbers: w => SH.numbers(WEIGHTS.indexOf(Number(w))), newState: wt => { initBracket(wt); return states[wt]; },
+      applyPick, extraDependents, roundNames: { champ: ['Round 1', 'Rd of 16', 'Quarterfinals', 'Semifinals', 'Finals'], con: SH.render } };
+    const core = N ? window.HistoricalCore.create(adapter) : window.TournamentCore.create(adapter);
+    core.roundLabel = key => { const p = String(key).split(':'); return p[0] === 'con' ? (SH.path[+p[1]] || null) : (N && p[0] === 'conPigtail') ? 'Rep. P' : null; };
+    // 1970-1971 NCAA rule: no decision bonus of any kind -- every decision is a plain decision. Structurally implied bouts show as not printed.
+    const notPrinted = new Set();
+    if (Number(year) <= 1971) core.methodLabel = (key, res) => notPrinted.has(key) ? 'Result not printed' : (res && (res.resultType === 'Dec' || res.resultType === 'MajDec')) ? 'Dec' : null;
+    const book = core.newBook(), wt = Number(slotWeight);
+    const pending = () => core.keys.map(k => core.boutIdOf(wt, k)).filter(Boolean).map(id => core.describe(book, id)).filter(d => d && d.status === 'pending');
+    const parse = (typeof HistoricalStateBuilder !== 'undefined' ? HistoricalStateBuilder : window.HistoricalStateBuilder).parseResult;
+    rows.slice().sort((a, b) => ORDER.indexOf(a.round) - ORDER.indexOf(b.round) || a.bout - b.bout).forEach(r => {
+      if (ORDER.indexOf(r.round) < 0) { problems.push('unknown round ' + r.round); return; }
+      const c = pending().find(d => (norm(d.a && d.a.name) === norm(r.winner) && norm(d.b && d.b.name) === norm(r.loser)) || (norm(d.b && d.b.name) === norm(r.winner) && norm(d.a && d.a.name) === norm(r.loser)));
+      if (!c) { problems.push(r.round + ': no pending bout for ' + r.winner + ' vs ' + r.loser); return; }
+      const pr = parse(r.result); if (!pr) { problems.push(r.round + ': could not parse "' + r.result + '"'); return; }
+      const res = core.record(book, { boutId: c.boutId, winnerId: norm(c.a.name) === norm(r.winner) ? c.a.id : c.b.id, resultType: pr.resultType, score: pr.score, time: pr.time, source: 'historical-replay' });
+      if (!res.ok) problems.push(r.round + ': ' + r.winner + ' vs ' + r.loser + ' -- ' + (res.message || res.code));
+      else if (pr.notPrinted) notPrinted.add(c.key);
+    });
+    const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
+    // every printed no-bout repechage seat must be one the finalist's R1 bye produces, and vice versa
+    const st = book.states[wt], got = st.con[0].map((m, h) => m.bye ? h + ':' + m[m.w].n : null).filter(Boolean);
+    const want = (F.byes || []).filter(b => b.phase === 'repBye').map(b => b.chain + ':' + b.wrestler);
+    if (JSON.stringify(got.slice().sort()) !== JSON.stringify(want.slice().sort())) problems.push('printed repechage byes ' + JSON.stringify(want) + ' != derived ' + JSON.stringify(got));
+    return { ok: problems.length === 0, core, book, problems, wrestleback: true, repechage: true };
   }
   const api = { isWrestleback, shapeOf, build, boutNumbers, roundLabel, PATH_CON, RENDER_CON, SHAPES };
   if (typeof window !== 'undefined') window.HistoricalWrestleback = api;

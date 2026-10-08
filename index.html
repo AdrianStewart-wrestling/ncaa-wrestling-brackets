@@ -2643,7 +2643,7 @@ function getAllAmericans(st) {
     {place:6,medal:'6', wr:getLoser(st.place5)},
     {place:7,medal:'7', wr:getWinner(st.place7)},
     {place:8,medal:'8', wr:getLoser(st.place7)},
-  ];
+  ].filter(x=>!(st.noPlace7&&x.place>6));   // six-place historical years (1972-1978)
 }
 
 const MEDALS = ['','🥇','🥈','🥉','','','','',''];
@@ -2736,12 +2736,12 @@ function render() {
   });
   html+=champBox(st);
   html+=`</div>`;
-  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">⬇ Consolation Bracket — Losers Drop Here</div><div class="line"></div></div>`;
+  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">${st.repechage?'⬇ Repechage — wrestlers beaten by the two finalists':'⬇ Consolation Bracket — Losers Drop Here'}</div><div class="line"></div></div>`;
   html+=`<div class="bgrid" style="align-items:flex-start">`;
   const cpHasData=st.conPigtail.a||st.conPigtail.b;
   if(multiPt){
   const items=st.conPigtails.map((m,k)=>({m,k,pos:st.conPigtailSlots[k]>>1})).filter(x=>!st.wrestleback||x.m.a||x.m.b).sort((a,b)=>a.pos-b.pos||a.k-b.k);
-  html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtails (${items.length})</div><div style="display:flex;flex-direction:column;">${stackBoxes(items,'conPigtail','con pt')}</div></div>`;
+  html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">${st.repechage?'Repechage P (preliminary)':'Con Pigtails ('+items.length+')'}</div><div style="display:flex;flex-direction:column;">${stackBoxes(items,'conPigtail','con pt')}</div></div>`;
   html+=`<div class="rconn"></div>`;
   } else if(!noPt){
   html+=`<div class="rcol"><div class="rhdr cc" style="opacity:.7">Con Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-top:${(MH + GAP) * cpSeat}px;margin-bottom:${GAP}px;">${cpHasData?matchHTML(st.conPigtail,'conPigtail',0,0,'con pt'):`<div style="min-width:168px;padding:8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting pigtail & 3v30…</div>`}</div></div></div>`;
@@ -2751,7 +2751,7 @@ html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top
     html+=`<div class="rcol"><div class="rhdr cc">${(st.conRoundNames||CON_RND_NAMES)[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
     const hasData=round.some(m=>m.a||m.b);
     if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting results…</div>`;}
-    else{round.forEach((m,mi)=>{html+=`<div>${matchHTML(m,'con',ri,mi,'con')}</div>`;});}
+    else{round.forEach((m,mi)=>{const cap=st.repechage?`<div class="pl-lbl">${ri===0?'Beaten by ':'Chain of '}${(st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||'finalist'}</div>`:'';html+=`<div>${cap}${matchHTML(m,'con',ri,mi,'con')}</div>`;});}   // finalist repechage: one chain per finalist
     html+=`</div></div><div class="rconn"></div>`;
   });
   html+=`<div class="rcol"><div class="rhdr" style="color:#cd7f32">Place Matches</div><div style="display:flex;flex-direction:column;gap:10px">`;

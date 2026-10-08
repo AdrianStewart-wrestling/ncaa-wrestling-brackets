@@ -65,6 +65,13 @@
 
     // ---- follow his bouts along the core's own routes until they stop
     var rows = [], cur = first, guard = 0, terminal = null, me = null;
+    var visited = {};
+    function laterBoutOf(after) {   // the lowest-numbered LATER bout (numbered after 'after') that holds him and was not visited
+      var best = null;                  // (a repechage entry is always numbered after the loss that feeds it; earlier bouts, e.g. a
+      ids.forEach(function (b) { if (b <= after || visited[b]) return; var x = descs[b];   // consolation bye he already passed, never qualify)
+        if (x && ((x.a && x.a.id === wrestlerId) || (x.b && x.b.id === wrestlerId)) && (best === null || b < best)) best = b; });
+      return best;
+    }
     while (cur !== null && cur !== undefined && guard++ < 24) {
       var d = descs[cur]; if (!d) break;
       var mine = isMe(d.a) ? d.a : isMe(d.b) ? d.b : null;
@@ -80,7 +87,12 @@
       });
       if (!decided) break;
       var r = core.routes(cur), nxt = won ? r.winnerTo : r.loserTo;
+      // A loss with no static route normally ends his tournament. In a finalist repechage (1970-1971) the loser's destination depends
+      // on who later reached the final, so the core has no edge for it: continue to the next bout that actually holds him. On every other
+      // topology a wrestler whose loss has no route never appears in a later bout, so this changes nothing there.
+      if ((nxt === null || nxt === undefined) && !won) { visited[cur] = true; nxt = laterBoutOf(cur); }
       if (nxt === null || nxt === undefined) { terminal = { boutId: cur, key: d.key, won: won, champion: won && !!r.winnerIsChampion }; break; }
+      visited[cur] = true;
       cur = nxt;
     }
     if (!me) return fail('unknown_wrestler', 'That wrestler is not in the field.');
