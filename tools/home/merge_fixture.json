@@ -1,0 +1,2393 @@
+{
+ "_note": "Approved career merges (transfers). Each canonical ID must hold exactly these appearances; each alias must resolve to it. Checked by test_registry.js on every build.",
+ "merges": [
+  {
+   "name": "Mike Longo",
+   "canonical": "C0098",
+   "aliases": [
+    "C0379"
+   ],
+   "keys": [
+    "2015:141-26",
+    "2016:141-32",
+    "2017:141-23"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Ryan Millhof",
+   "canonical": "C0005",
+   "aliases": [
+    "C0527"
+   ],
+   "keys": [
+    "2016:125-05",
+    "2018:125-15"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Sean Russell",
+   "canonical": "C0021",
+   "aliases": [
+    "C0673"
+   ],
+   "keys": [
+    "2016:125-21",
+    "2017:125-07",
+    "2018:125-11",
+    "2019:125-06"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Brent Fleetwood",
+   "canonical": "C0029",
+   "aliases": [
+    "C0676"
+   ],
+   "keys": [
+    "2016:125-29",
+    "2017:125-31",
+    "2019:125-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Austin Eicher",
+   "canonical": "C0052",
+   "aliases": [
+    "C0358"
+   ],
+   "keys": [
+    "2016:133-19",
+    "2017:133-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Steve Bleise",
+   "canonical": "C0079",
+   "aliases": [
+    "C0591"
+   ],
+   "keys": [
+    "2016:141-13",
+    "2017:149-14",
+    "2018:149-33",
+    "2019:157-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Justin Oliver",
+   "canonical": "C0108",
+   "aliases": [
+    "C0724"
+   ],
+   "keys": [
+    "2016:149-09",
+    "2017:149-09",
+    "2018:149-06",
+    "2019:149-09"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Te'Shan Campbell",
+   "canonical": "C0221",
+   "aliases": [
+    "C0608"
+   ],
+   "keys": [
+    "2016:174-23",
+    "2017:165-10",
+    "2018:165-13",
+    "2019:165-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Tom Sleigh",
+   "canonical": "C0248",
+   "aliases": [
+    "C0803"
+   ],
+   "keys": [
+    "2016:184-17",
+    "2017:197-13",
+    "2019:197-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Noah Gonser",
+   "canonical": "C0340",
+   "aliases": [
+    "C0698"
+   ],
+   "keys": [
+    "2017:125-21",
+    "2019:133-22"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Korbin Myers",
+   "canonical": "C0363",
+   "aliases": [
+    "C0695"
+   ],
+   "keys": [
+    "2017:133-26",
+    "2018:133-14",
+    "2019:133-14",
+    "2021:133-03",
+    "2022:133-04"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jaydin Eierman",
+   "canonical": "C0370",
+   "aliases": [
+    "C0883"
+   ],
+   "keys": [
+    "2017:141-08",
+    "2018:141-02",
+    "2019:141-05",
+    "2021:141-01",
+    "2022:141-02"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Joseph Gunther",
+   "canonical": "C0431",
+   "aliases": [
+    "C0759"
+   ],
+   "keys": [
+    "2017:165-20",
+    "2018:174-20",
+    "2019:165-26"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Lorenzo De La Riva",
+   "canonical": "C0440",
+   "aliases": [
+    "C0774"
+   ],
+   "keys": [
+    "2017:165-29",
+    "2019:174-24"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Devin Skatzka",
+   "canonical": "C0459",
+   "aliases": [
+    "C0766"
+   ],
+   "keys": [
+    "2017:174-31",
+    "2018:174-24",
+    "2019:174-09"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Dakota Geer",
+   "canonical": "C0467",
+   "aliases": [
+    "C0794"
+   ],
+   "keys": [
+    "2017:184-14",
+    "2019:184-26",
+    "2021:184-11",
+    "2022:184-16"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Michael McGee",
+   "canonical": "C0534",
+   "aliases": [
+    "C0862"
+   ],
+   "keys": [
+    "2018:125-28",
+    "2019:125-12",
+    "2021:133-09",
+    "2022:133-03",
+    "2023:133-04"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Paul Bianchi",
+   "canonical": "C0532",
+   "aliases": [
+    "C0879"
+   ],
+   "keys": [
+    "2018:125-21",
+    "2021:133-29"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Taylor LaMont",
+   "canonical": "C0522",
+   "aliases": [
+    "C1220"
+   ],
+   "keys": [
+    "2018:125-07",
+    "2021:125-07",
+    "2022:125-21",
+    "2023:133-27"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Austin DeSanto",
+   "canonical": "C0540",
+   "aliases": [
+    "C0692"
+   ],
+   "keys": [
+    "2018:133-07",
+    "2019:133-07",
+    "2021:133-04",
+    "2022:133-05"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Sa'Derian Perry",
+   "canonical": "C0566",
+   "aliases": [
+    "C0712"
+   ],
+   "keys": [
+    "2018:141-24",
+    "2019:141-19"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Evan Wick",
+   "canonical": "C0606",
+   "aliases": [
+    "C1131"
+   ],
+   "keys": [
+    "2018:165-10",
+    "2019:165-04",
+    "2022:165-01"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Alan Clothier",
+   "canonical": "C0644",
+   "aliases": [
+    "C1010"
+   ],
+   "keys": [
+    "2018:184-32",
+    "2021:184-18",
+    "2022:197-27"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Greg Bulsak",
+   "canonical": "C0642",
+   "aliases": [
+    "C1170"
+   ],
+   "keys": [
+    "2018:184-30",
+    "2019:197-25",
+    "2021:197-14",
+    "2022:197-14"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Patrick Brucki",
+   "canonical": "C0650",
+   "aliases": [
+    "C1168"
+   ],
+   "keys": [
+    "2018:197-17",
+    "2019:197-04",
+    "2022:197-04"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Nathan Traxler",
+   "canonical": "C0654",
+   "aliases": [
+    "C1182"
+   ],
+   "keys": [
+    "2018:197-22",
+    "2019:197-08",
+    "2021:285-25",
+    "2022:285-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "William Miklus",
+   "canonical": "C0648",
+   "aliases": [
+    "C0801"
+   ],
+   "keys": [
+    "2018:197-06",
+    "2019:197-06"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Aj Nevills",
+   "canonical": "C0669",
+   "aliases": [
+    "C1187"
+   ],
+   "keys": [
+    "2018:285-29",
+    "2019:285-14",
+    "2022:285-22",
+    "2023:285-14"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Drew Hildebrandt",
+   "canonical": "C0677",
+   "aliases": [
+    "C1066"
+   ],
+   "keys": [
+    "2019:125-13",
+    "2021:125-04",
+    "2022:125-16"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Dom Demas",
+   "canonical": "C0708",
+   "aliases": [
+    "C1260"
+   ],
+   "keys": [
+    "2019:141-09",
+    "2021:141-05",
+    "2023:149-33"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Mitch Moore",
+   "canonical": "C0715",
+   "aliases": [
+    "C0913",
+    "C1379"
+   ],
+   "keys": [
+    "2019:141-24",
+    "2021:149-13",
+    "2023:149-18",
+    "2024:141-15"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jackson Hemauer",
+   "canonical": "C0791",
+   "aliases": [
+    "C0982"
+   ],
+   "keys": [
+    "2019:184-23",
+    "2021:174-13"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Tate Samuelson",
+   "canonical": "C0787",
+   "aliases": [
+    "C1306"
+   ],
+   "keys": [
+    "2019:184-18",
+    "2021:184-10",
+    "2022:184-21",
+    "2023:184-17"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Tate Orndorff",
+   "canonical": "C0821",
+   "aliases": [
+    "C1054"
+   ],
+   "keys": [
+    "2019:285-15",
+    "2021:285-21",
+    "2022:285-13",
+    "2023:285-16"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Kysen Terukina",
+   "canonical": "C0858",
+   "aliases": [
+    "C1666"
+   ],
+   "keys": [
+    "2021:125-33",
+    "2022:125-26",
+    "2024:125-24",
+    "2026:125-19"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Brody Teske",
+   "canonical": "C0836",
+   "aliases": [
+    "C1216"
+   ],
+   "keys": [
+    "2021:125-05",
+    "2022:125-15",
+    "2023:133-23",
+    "2024:133-15"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Michael DeAugustino",
+   "canonical": "C0839",
+   "aliases": [
+    "C1345"
+   ],
+   "keys": [
+    "2021:125-12",
+    "2022:125-10",
+    "2023:125-12",
+    "2024:125-18"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Mosha Schwartz",
+   "canonical": "C0867",
+   "aliases": [
+    "C1230"
+   ],
+   "keys": [
+    "2021:133-15",
+    "2023:141-09",
+    "2025:141-19"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Real Woods",
+   "canonical": "C0895",
+   "aliases": [
+    "C1227"
+   ],
+   "keys": [
+    "2021:141-21",
+    "2022:141-04",
+    "2023:141-01",
+    "2024:141-03"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Kyle Parco",
+   "canonical": "C0916",
+   "aliases": [
+    "C1111",
+    "C1544"
+   ],
+   "keys": [
+    "2021:149-17",
+    "2022:149-05",
+    "2023:149-03",
+    "2024:149-02",
+    "2025:149-05"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Cory Crooks",
+   "canonical": "C0927",
+   "aliases": [
+    "C1118"
+   ],
+   "keys": [
+    "2021:149-31",
+    "2022:149-27"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jared Franek",
+   "canonical": "C0932",
+   "aliases": [
+    "C1408"
+   ],
+   "keys": [
+    "2021:157-08",
+    "2022:157-06",
+    "2023:157-04",
+    "2024:157-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Holden Heller",
+   "canonical": "C0939",
+   "aliases": [
+    "C1281"
+   ],
+   "keys": [
+    "2021:157-19",
+    "2023:165-20",
+    "2024:165-25"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jacori Teemer",
+   "canonical": "C0934",
+   "aliases": [
+    "C1566"
+   ],
+   "keys": [
+    "2021:157-11",
+    "2022:157-03",
+    "2024:157-02",
+    "2025:157-18"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Chase Saldate",
+   "canonical": "C0936",
+   "aliases": [
+    "C1569"
+   ],
+   "keys": [
+    "2021:157-15",
+    "2022:157-21",
+    "2023:157-11",
+    "2024:157-24",
+    "2025:157-23"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Shane Griffith",
+   "canonical": "C0953",
+   "aliases": [
+    "C1438"
+   ],
+   "keys": [
+    "2021:165-08",
+    "2022:165-05",
+    "2023:165-09",
+    "2024:174-04"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Gerrit Nijenhuis",
+   "canonical": "C0962",
+   "aliases": [
+    "C1282"
+   ],
+   "keys": [
+    "2021:165-19",
+    "2022:174-25",
+    "2023:165-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Cameron Amine",
+   "canonical": "C0956",
+   "aliases": [
+    "C1581"
+   ],
+   "keys": [
+    "2021:165-11",
+    "2022:165-06",
+    "2023:165-11",
+    "2024:165-10",
+    "2025:165-08"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Izzak Olejnik",
+   "canonical": "C0961",
+   "aliases": [
+    "C1421"
+   ],
+   "keys": [
+    "2021:165-18",
+    "2022:165-11",
+    "2023:165-12",
+    "2024:165-07"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Bernie Truax",
+   "canonical": "C0981",
+   "aliases": [
+    "C1452"
+   ],
+   "keys": [
+    "2021:174-12",
+    "2022:184-05",
+    "2023:197-02",
+    "2024:184-06"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Rocky Jordan",
+   "canonical": "C1015",
+   "aliases": [
+    "C1289"
+   ],
+   "keys": [
+    "2021:184-24",
+    "2023:174-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Stephen Buchanan",
+   "canonical": "C1026",
+   "aliases": [
+    "C1470",
+    "C1626"
+   ],
+   "keys": [
+    "2021:197-08",
+    "2022:197-02",
+    "2024:197-08",
+    "2025:197-02"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Lucas Davison",
+   "canonical": "C1027",
+   "aliases": [
+    "C1484"
+   ],
+   "keys": [
+    "2021:197-12",
+    "2022:285-09",
+    "2023:285-09",
+    "2024:285-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Rocky Elam",
+   "canonical": "C1025",
+   "aliases": [
+    "C1806"
+   ],
+   "keys": [
+    "2021:197-07",
+    "2022:197-07",
+    "2023:197-03",
+    "2024:197-12",
+    "2026:197-02"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Michael Beard",
+   "canonical": "C1029",
+   "aliases": [
+    "C1318"
+   ],
+   "keys": [
+    "2021:197-15",
+    "2023:197-05",
+    "2024:197-04",
+    "2025:197-05"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Taye Ghadiali",
+   "canonical": "C1064",
+   "aliases": [
+    "C1825"
+   ],
+   "keys": [
+    "2021:285-32",
+    "2022:285-15",
+    "2023:285-17",
+    "2024:285-07",
+    "2026:285-03"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Wyatt Hendrickson",
+   "canonical": "C1050",
+   "aliases": [
+    "C1643"
+   ],
+   "keys": [
+    "2021:285-17",
+    "2022:285-05",
+    "2023:285-02",
+    "2024:285-03",
+    "2025:285-02"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Sam Schuyler",
+   "canonical": "C1058",
+   "aliases": [
+    "C1188"
+   ],
+   "keys": [
+    "2021:285-26",
+    "2022:285-24",
+    "2023:285-08"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Hunter Catka",
+   "canonical": "C1051",
+   "aliases": [
+    "C1837"
+   ],
+   "keys": [
+    "2021:285-18",
+    "2023:285-22",
+    "2024:285-26",
+    "2026:285-27"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Caleb Smith",
+   "canonical": "C1071",
+   "aliases": [
+    "C1344"
+   ],
+   "keys": [
+    "2022:125-25",
+    "2023:125-05",
+    "2024:125-15",
+    "2025:125-09"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jace Koelzer",
+   "canonical": "C1074",
+   "aliases": [
+    "C1370"
+   ],
+   "keys": [
+    "2022:125-30",
+    "2024:133-29"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Antonio Lorenzo",
+   "canonical": "C1075",
+   "aliases": [
+    "C1508"
+   ],
+   "keys": [
+    "2022:125-31",
+    "2023:125-30",
+    "2025:125-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Gabe Willochell",
+   "canonical": "C1101",
+   "aliases": [
+    "C1396"
+   ],
+   "keys": [
+    "2022:141-23",
+    "2024:149-22",
+    "2025:149-30",
+    "2026:149-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Dean Hamiti",
+   "canonical": "C1132",
+   "aliases": [
+    "C1595"
+   ],
+   "keys": [
+    "2022:165-04",
+    "2023:165-03",
+    "2024:165-05",
+    "2025:174-03"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Joshua Ogunsanya",
+   "canonical": "C1136",
+   "aliases": [
+    "C1601"
+   ],
+   "keys": [
+    "2022:165-14",
+    "2023:165-16",
+    "2025:174-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Caleb Fish",
+   "canonical": "C1143",
+   "aliases": [
+    "C1564"
+   ],
+   "keys": [
+    "2022:165-31",
+    "2023:165-29",
+    "2024:165-21",
+    "2025:157-12"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Tyler Eischens",
+   "canonical": "C1151",
+   "aliases": [
+    "C1444"
+   ],
+   "keys": [
+    "2022:174-26",
+    "2023:174-27",
+    "2024:174-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Evan Bockman",
+   "canonical": "C1176",
+   "aliases": [
+    "C1612"
+   ],
+   "keys": [
+    "2022:197-24",
+    "2023:197-20",
+    "2024:197-20",
+    "2025:184-13"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Gavin Hoffman",
+   "canonical": "C1174",
+   "aliases": [
+    "C1648"
+   ],
+   "keys": [
+    "2022:197-21",
+    "2023:197-26",
+    "2025:285-14"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jacob Cardenas",
+   "canonical": "C1173",
+   "aliases": [
+    "C1625"
+   ],
+   "keys": [
+    "2022:197-19",
+    "2023:197-10",
+    "2024:197-05",
+    "2025:197-01"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Nick Babin",
+   "canonical": "C1202",
+   "aliases": [
+    "C1510"
+   ],
+   "keys": [
+    "2023:125-24",
+    "2025:125-24"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jore Volk",
+   "canonical": "C1200",
+   "aliases": [
+    "C1661"
+   ],
+   "keys": [
+    "2023:125-21",
+    "2024:125-05",
+    "2026:125-06"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Dean Peterson",
+   "canonical": "C1195",
+   "aliases": [
+    "C1662"
+   ],
+   "keys": [
+    "2023:125-13",
+    "2024:125-16",
+    "2025:125-12",
+    "2026:125-08"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Diego Sotelo",
+   "canonical": "C1201",
+   "aliases": [
+    "C1667"
+   ],
+   "keys": [
+    "2023:125-22",
+    "2024:125-28",
+    "2026:125-20"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Stevo Poulin",
+   "canonical": "C1194",
+   "aliases": [
+    "C1663"
+   ],
+   "keys": [
+    "2023:125-06",
+    "2024:125-20",
+    "2025:125-10",
+    "2026:125-13"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Ethan Oakley",
+   "canonical": "C1226",
+   "aliases": [
+    "C1521"
+   ],
+   "keys": [
+    "2023:133-33",
+    "2024:133-21",
+    "2025:133-12"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Wyatt Henson",
+   "canonical": "C1217",
+   "aliases": [
+    "C1377"
+   ],
+   "keys": [
+    "2023:133-24",
+    "2024:141-12",
+    "2025:141-16",
+    "2026:141-13"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Aaron Nagao",
+   "canonical": "C1210",
+   "aliases": [
+    "C1358"
+   ],
+   "keys": [
+    "2023:133-08",
+    "2024:133-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Angelo Rini",
+   "canonical": "C1222",
+   "aliases": [
+    "C1526"
+   ],
+   "keys": [
+    "2023:133-29",
+    "2025:133-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Casey Swiderski",
+   "canonical": "C1239",
+   "aliases": [
+    "C1718"
+   ],
+   "keys": [
+    "2023:141-24",
+    "2024:149-08",
+    "2026:149-08"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Lachlan McNeil",
+   "canonical": "C1231",
+   "aliases": [
+    "C1721"
+   ],
+   "keys": [
+    "2023:141-10",
+    "2024:141-06",
+    "2025:149-06",
+    "2026:149-11"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Chance Lamer",
+   "canonical": "C1249",
+   "aliases": [
+    "C1392",
+    "C1728"
+   ],
+   "keys": [
+    "2023:149-22",
+    "2024:149-10",
+    "2025:149-14",
+    "2026:149-20"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Vinny Zerban",
+   "canonical": "C1275",
+   "aliases": [
+    "C1741"
+   ],
+   "keys": [
+    "2023:157-32",
+    "2024:157-18",
+    "2025:157-07",
+    "2026:157-12"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Tommy Askey",
+   "canonical": "C1269",
+   "aliases": [
+    "C1563"
+   ],
+   "keys": [
+    "2023:157-24",
+    "2024:157-19",
+    "2025:157-09"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jared Hill",
+   "canonical": "C1274",
+   "aliases": [
+    "C1565"
+   ],
+   "keys": [
+    "2023:157-30",
+    "2024:157-28",
+    "2025:157-13"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Cobe Siebrecht",
+   "canonical": "C1264",
+   "aliases": [
+    "C1567"
+   ],
+   "keys": [
+    "2023:157-14",
+    "2025:157-19"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Lennox Wolak",
+   "canonical": "C1294",
+   "aliases": [
+    "C1602"
+   ],
+   "keys": [
+    "2023:174-21",
+    "2024:174-07",
+    "2025:174-24"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Lenny Pinto",
+   "canonical": "C1303",
+   "aliases": [
+    "C1778"
+   ],
+   "keys": [
+    "2023:184-13",
+    "2024:184-05",
+    "2025:174-08",
+    "2026:174-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Will Feldkamp",
+   "canonical": "C1304",
+   "aliases": [
+    "C1459"
+   ],
+   "keys": [
+    "2023:184-14",
+    "2024:184-17"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Colton Hawks",
+   "canonical": "C1310",
+   "aliases": [
+    "C1820"
+   ],
+   "keys": [
+    "2023:184-22",
+    "2024:184-11",
+    "2025:184-31",
+    "2026:197-29"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Brian Soldano",
+   "canonical": "C1307",
+   "aliases": [
+    "C1795"
+   ],
+   "keys": [
+    "2023:184-18",
+    "2024:184-21",
+    "2026:184-20"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Boone Mcdermott",
+   "canonical": "C1333",
+   "aliases": [
+    "C1486"
+   ],
+   "keys": [
+    "2023:285-24",
+    "2024:285-14"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Yaraslau Slavikouski",
+   "canonical": "C1326",
+   "aliases": [
+    "C1485"
+   ],
+   "keys": [
+    "2023:285-06",
+    "2024:285-13",
+    "2025:285-16"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Owen Trephan",
+   "canonical": "C1327",
+   "aliases": [
+    "C1644"
+   ],
+   "keys": [
+    "2023:285-07",
+    "2024:285-08",
+    "2025:285-04"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Cooper Flynn",
+   "canonical": "C1343",
+   "aliases": [
+    "C1507",
+    "C1672"
+   ],
+   "keys": [
+    "2024:125-11",
+    "2025:125-19",
+    "2026:125-26"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Tyler Wells",
+   "canonical": "C1365",
+   "aliases": [
+    "C1708"
+   ],
+   "keys": [
+    "2024:133-20",
+    "2025:133-22",
+    "2026:141-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Nasir Bailey",
+   "canonical": "C1355",
+   "aliases": [
+    "C1701"
+   ],
+   "keys": [
+    "2024:133-07",
+    "2025:133-03",
+    "2026:141-07"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Caleb Rathjen",
+   "canonical": "C1393",
+   "aliases": [
+    "C1723"
+   ],
+   "keys": [
+    "2024:149-13",
+    "2026:149-14"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jordan Williams",
+   "canonical": "C1395",
+   "aliases": [
+    "C1546"
+   ],
+   "keys": [
+    "2024:149-20",
+    "2025:149-08"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Colton Washleski",
+   "canonical": "C1415",
+   "aliases": [
+    "C1748"
+   ],
+   "keys": [
+    "2024:157-30",
+    "2026:157-22"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Gaven Sax",
+   "canonical": "C1440",
+   "aliases": [
+    "C1600"
+   ],
+   "keys": [
+    "2024:174-14",
+    "2025:174-18"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Rocco Welsh",
+   "canonical": "C1439",
+   "aliases": [
+    "C1785"
+   ],
+   "keys": [
+    "2024:174-06",
+    "2026:184-01"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Jaden Bullock",
+   "canonical": "C1456",
+   "aliases": [
+    "C1792"
+   ],
+   "keys": [
+    "2024:184-12",
+    "2026:184-14"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Dylan Fishback",
+   "canonical": "C1455",
+   "aliases": [
+    "C1790"
+   ],
+   "keys": [
+    "2024:184-10",
+    "2025:184-15",
+    "2026:184-12"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Evan Bates",
+   "canonical": "C1482",
+   "aliases": [
+    "C1817"
+   ],
+   "keys": [
+    "2024:197-33",
+    "2025:197-16",
+    "2026:197-25"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Sam Mitchell",
+   "canonical": "C1479",
+   "aliases": [
+    "C1657"
+   ],
+   "keys": [
+    "2024:197-30",
+    "2025:285-30"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Zach Glazier",
+   "canonical": "C1469",
+   "aliases": [
+    "C1629"
+   ],
+   "keys": [
+    "2024:197-07",
+    "2025:197-14"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "David Szuba",
+   "canonical": "C1487",
+   "aliases": [
+    "C1828"
+   ],
+   "keys": [
+    "2024:285-18",
+    "2026:285-10"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Spencer Moore",
+   "canonical": "C1504",
+   "aliases": [
+    "C1665"
+   ],
+   "keys": [
+    "2025:125-14",
+    "2026:125-18"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Blake Boarman",
+   "canonical": "C1525",
+   "aliases": [
+    "C1692"
+   ],
+   "keys": [
+    "2025:133-20",
+    "2026:133-24"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Sean Spidle",
+   "canonical": "C1527",
+   "aliases": [
+    "C1690"
+   ],
+   "keys": [
+    "2025:133-23",
+    "2026:133-21"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Ethan Stiles",
+   "canonical": "C1549",
+   "aliases": [
+    "C1717"
+   ],
+   "keys": [
+    "2025:149-12",
+    "2026:149-07"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Isaac Dean",
+   "canonical": "C1610",
+   "aliases": [
+    "C1791"
+   ],
+   "keys": [
+    "2025:184-07",
+    "2026:184-13"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Remy Cotton",
+   "canonical": "C1640",
+   "aliases": [
+    "C1811"
+   ],
+   "keys": [
+    "2025:197-31",
+    "2026:197-15"
+   ],
+   "batch": "Oct 8 2026: 2015-2026 transfers (R10-R123)"
+  },
+  {
+   "name": "Chris Marshall",
+   "canonical": "C3167",
+   "aliases": [
+    "C4592"
+   ],
+   "keys": [
+    "1996:133-25",
+    "1997:141-25",
+    "1999:141-02",
+    "2000:141-07"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "JaMarr Billman",
+   "canonical": "C3673",
+   "aliases": [
+    "C4982"
+   ],
+   "keys": [
+    "1998:149-20",
+    "2001:149-07",
+    "2002:149-03"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Malik Elliott",
+   "canonical": "C3494",
+   "aliases": [
+    "C4980"
+   ],
+   "keys": [
+    "1998:149-14",
+    "2000:149-19",
+    "2001:149-30"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Tim Courtad",
+   "canonical": "C3601",
+   "aliases": [
+    "C5022"
+   ],
+   "keys": [
+    "1998:285-16",
+    "2000:285-09"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Billy Blunt",
+   "canonical": "C3767",
+   "aliases": [
+    "C5023"
+   ],
+   "keys": [
+    "1998:285-26",
+    "2001:285-07"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Matt Azevedo",
+   "canonical": "C3117",
+   "aliases": [
+    "C3438"
+   ],
+   "keys": [
+    "1999:125-16",
+    "2000:125-13",
+    "2001:133-07"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Nate Parker",
+   "canonical": "C3164",
+   "aliases": [
+    "C3818"
+   ],
+   "keys": [
+    "1999:133-30",
+    "2002:141-14"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Matt Goldstein",
+   "canonical": "C3187",
+   "aliases": [
+    "C3466"
+   ],
+   "keys": [
+    "1999:141-22",
+    "2000:141-10",
+    "2001:141-17"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Doug Cieleski",
+   "canonical": "C3257",
+   "aliases": [
+    "C3854"
+   ],
+   "keys": [
+    "1999:157-26",
+    "2000:157-16",
+    "2001:165-20",
+    "2002:157-32"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Skyler Holman",
+   "canonical": "C3434",
+   "aliases": [
+    "C3777"
+   ],
+   "keys": [
+    "2000:125-07",
+    "2002:125-03",
+    "2003:125-08"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Shane Cunanan",
+   "canonical": "C3479",
+   "aliases": [
+    "C3815"
+   ],
+   "keys": [
+    "2000:141-26",
+    "2001:141-18",
+    "2002:141-09",
+    "2003:141-15"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Rocky Smart",
+   "canonical": "C3520",
+   "aliases": [
+    "C3686"
+   ],
+   "keys": [
+    "2000:157-27",
+    "2001:157-10",
+    "2002:157-25",
+    "2003:157-28"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Steve Mocco",
+   "canonical": "C3925",
+   "aliases": [
+    "C4350"
+   ],
+   "keys": [
+    "2002:285-02",
+    "2003:285-01",
+    "2005:285-01",
+    "2006:285-02"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Mark McKnight",
+   "canonical": "C2958",
+   "aliases": [
+    "C4077"
+   ],
+   "keys": [
+    "2004:125-08",
+    "2005:125-31",
+    "2007:125-16",
+    "2008:125-21"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Chris Staylor",
+   "canonical": "C4086",
+   "aliases": [
+    "C4246"
+   ],
+   "keys": [
+    "2004:125-22",
+    "2005:125-24",
+    "2007:133-34"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Christian Smith",
+   "canonical": "C2807",
+   "aliases": [
+    "C4089"
+   ],
+   "keys": [
+    "2004:125-27",
+    "2007:125-31",
+    "2008:133-23",
+    "2009:133-18"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Matt Keller",
+   "canonical": "C4096",
+   "aliases": [
+    "C4381"
+   ],
+   "keys": [
+    "2004:133-09",
+    "2005:125-10",
+    "2006:133-08",
+    "2007:133-05"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Matt Storniolo",
+   "canonical": "C4131",
+   "aliases": [
+    "C4270"
+   ],
+   "keys": [
+    "2004:149-08",
+    "2005:149-04",
+    "2006:149-04",
+    "2007:149-02"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Greg Gifford",
+   "canonical": "C4202",
+   "aliases": [
+    "C4529"
+   ],
+   "keys": [
+    "2004:184-31",
+    "2006:184-19",
+    "2007:184-32"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Ode Blanc",
+   "canonical": "C2796",
+   "aliases": [
+    "C4248"
+   ],
+   "keys": [
+    "2005:125-32",
+    "2006:125-16",
+    "2007:125-09",
+    "2009:125-27"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Tim Hamer",
+   "canonical": "C4251",
+   "aliases": [
+    "C4481"
+   ],
+   "keys": [
+    "2005:133-13",
+    "2007:141-18"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Nate Galloway",
+   "canonical": "C4297",
+   "aliases": [
+    "C4493"
+   ],
+   "keys": [
+    "2005:157-31",
+    "2006:157-16",
+    "2007:157-18"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Joshua Weitzel",
+   "canonical": "C3052",
+   "aliases": [
+    "C4335"
+   ],
+   "keys": [
+    "2005:184-26",
+    "2007:174-26",
+    "2008:184-05"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Matt Koz",
+   "canonical": "C3074",
+   "aliases": [
+    "C4340"
+   ],
+   "keys": [
+    "2005:197-14",
+    "2007:285-14",
+    "2008:197-13"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Tyler Shovlin",
+   "canonical": "C4367",
+   "aliases": [
+    "C4462"
+   ],
+   "keys": [
+    "2005:285-31",
+    "2006:285-16"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Paul Donahoe",
+   "canonical": "C2783",
+   "aliases": [
+    "C2949"
+   ],
+   "keys": [
+    "2006:125-10",
+    "2007:125-06",
+    "2008:125-03",
+    "2009:125-01"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Chris Vondruska",
+   "canonical": "C4423",
+   "aliases": [
+    "C4508"
+   ],
+   "keys": [
+    "2006:165-17",
+    "2007:165-27"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Eric Albright",
+   "canonical": "C2408",
+   "aliases": [
+    "C4476"
+   ],
+   "keys": [
+    "2007:133-30",
+    "2010:149-21"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Daryl Cocozzo",
+   "canonical": "C2439",
+   "aliases": [
+    "C3000"
+   ],
+   "keys": [
+    "2007:141-21",
+    "2008:149-14",
+    "2010:157-23",
+    "2011:157-10"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Cyler Sanderson",
+   "canonical": "C2421",
+   "aliases": [
+    "C2854"
+   ],
+   "keys": [
+    "2007:149-11",
+    "2008:157-07",
+    "2009:157-09",
+    "2010:157-04"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Jonny Bonilla-Bowman",
+   "canonical": "C2856",
+   "aliases": [
+    "C4497"
+   ],
+   "keys": [
+    "2007:157-31",
+    "2008:157-13",
+    "2009:157-15"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Bubba Jenkins",
+   "canonical": "C2642",
+   "aliases": [
+    "C2835"
+   ],
+   "keys": [
+    "2007:157-14",
+    "2008:149-06",
+    "2009:149-02",
+    "2011:157-04"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Matt Cathell",
+   "canonical": "C2648",
+   "aliases": [
+    "C2847"
+   ],
+   "keys": [
+    "2008:149-29",
+    "2009:149-29",
+    "2011:157-28"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Dave Rella",
+   "canonical": "C2892",
+   "aliases": [
+    "C3032"
+   ],
+   "keys": [
+    "2008:165-21",
+    "2009:174-24"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Ryan Duke Burk",
+   "canonical": "C2498",
+   "aliases": [
+    "C3045"
+   ],
+   "keys": [
+    "2008:174-21",
+    "2009:174-21",
+    "2010:174-23"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Alex Caruso",
+   "canonical": "C2671",
+   "aliases": [
+    "C2891"
+   ],
+   "keys": [
+    "2008:174-15",
+    "2009:174-15",
+    "2011:174-27"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Brent Chriswell",
+   "canonical": "C2768",
+   "aliases": [
+    "C3054"
+   ],
+   "keys": [
+    "2008:184-09",
+    "2009:197-03",
+    "2012:197-28"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Joe Fagiano",
+   "canonical": "C2914",
+   "aliases": [
+    "C3083"
+   ],
+   "keys": [
+    "2008:197-28",
+    "2009:197-01"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Cayle Byers",
+   "canonical": "C2764",
+   "aliases": [
+    "C2919"
+   ],
+   "keys": [
+    "2008:197-20",
+    "2009:197-09",
+    "2012:197-05"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Ryan Flores",
+   "canonical": "C2699",
+   "aliases": [
+    "C2936"
+   ],
+   "keys": [
+    "2008:285-08",
+    "2009:285-10",
+    "2011:285-03",
+    "2012:285-33"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Andrew Howe",
+   "canonical": "C2203",
+   "aliases": [
+    "C2449"
+   ],
+   "keys": [
+    "2009:165-02",
+    "2010:165-01",
+    "2011:165-02",
+    "2014:174-02"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Ricardo Alcala",
+   "canonical": "C2581",
+   "aliases": [
+    "C2701"
+   ],
+   "keys": [
+    "2009:285-24",
+    "2010:285-21",
+    "2011:285-18"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Andrew Long",
+   "canonical": "C2311",
+   "aliases": [
+    "C2601"
+   ],
+   "keys": [
+    "2010:125-05",
+    "2011:133-03"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Ivan Lopouchanski",
+   "canonical": "C1935",
+   "aliases": [
+    "C2376"
+   ],
+   "keys": [
+    "2010:141-18",
+    "2011:149-14",
+    "2012:149-12",
+    "2013:149-10"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Mario Mason",
+   "canonical": "C2401",
+   "aliases": [
+    "C2632"
+   ],
+   "keys": [
+    "2010:149-12",
+    "2011:149-07",
+    "2012:149-15"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Barrett Abel",
+   "canonical": "C2399",
+   "aliases": [
+    "C2644"
+   ],
+   "keys": [
+    "2010:149-10",
+    "2011:157-18"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Joseph Booth",
+   "canonical": "C2193",
+   "aliases": [
+    "C2446"
+   ],
+   "keys": [
+    "2010:157-30",
+    "2014:165-09"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Tyler Caldwell",
+   "canonical": "C1991",
+   "aliases": [
+    "C2467"
+   ],
+   "keys": [
+    "2010:165-21",
+    "2011:165-03",
+    "2013:165-04",
+    "2014:165-02"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Travis Rutt",
+   "canonical": "C2226",
+   "aliases": [
+    "C2522"
+   ],
+   "keys": [
+    "2010:184-17",
+    "2011:184-04",
+    "2014:197-07"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Robert Jillard",
+   "canonical": "C2178",
+   "aliases": [
+    "C2597"
+   ],
+   "keys": [
+    "2011:125-30",
+    "2014:149-26"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Sean Boyle",
+   "canonical": "C1857",
+   "aliases": [
+    "C2245"
+   ],
+   "keys": [
+    "2011:125-15",
+    "2013:125-16",
+    "2015:125-05"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Stephen Dutton",
+   "canonical": "C2156",
+   "aliases": [
+    "C2626"
+   ],
+   "keys": [
+    "2011:141-28",
+    "2012:141-14",
+    "2014:141-13"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Corey Mock",
+   "canonical": "C2192",
+   "aliases": [
+    "C2650"
+   ],
+   "keys": [
+    "2011:157-33",
+    "2012:157-18",
+    "2014:165-06"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Peter Sturgeon",
+   "canonical": "C2706",
+   "aliases": [
+    "C2773"
+   ],
+   "keys": [
+    "2011:285-23",
+    "2012:285-15"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Nick Gwiazdowski",
+   "canonical": "C0298",
+   "aliases": [
+    "C2782"
+   ],
+   "keys": [
+    "2012:285-31",
+    "2014:285-02",
+    "2015:285-01",
+    "2016:285-01"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Eric Montoya",
+   "canonical": "C0040",
+   "aliases": [
+    "C1867"
+   ],
+   "keys": [
+    "2013:125-27",
+    "2015:133-27",
+    "2016:133-07",
+    "2017:133-07"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Nathan Kraisser",
+   "canonical": "C0050",
+   "aliases": [
+    "C1848"
+   ],
+   "keys": [
+    "2013:125-07",
+    "2014:125-29",
+    "2016:133-17",
+    "2017:125-16"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Sam Wheeler",
+   "canonical": "C0291",
+   "aliases": [
+    "C2038"
+   ],
+   "keys": [
+    "2013:174-28",
+    "2016:197-27"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Corey Keener",
+   "canonical": "C0061",
+   "aliases": [
+    "C0546"
+   ],
+   "keys": [
+    "2014:125-33",
+    "2016:133-28",
+    "2017:133-27",
+    "2018:133-22"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Dylan Cottrell",
+   "canonical": "C0155",
+   "aliases": [
+    "C2168"
+   ],
+   "keys": [
+    "2014:149-12",
+    "2016:157-23",
+    "2017:165-08"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Austin Matthews",
+   "canonical": "C0146",
+   "aliases": [
+    "C2189"
+   ],
+   "keys": [
+    "2014:157-27",
+    "2016:157-14",
+    "2017:165-12"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Blaise Butler",
+   "canonical": "C0201",
+   "aliases": [
+    "C2185"
+   ],
+   "keys": [
+    "2014:157-10",
+    "2015:174-05",
+    "2016:174-03"
+   ],
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  }
+ ],
+ "heldSplit": {
+  "_note": "Appearances that must NOT share a career (verified different people or pending evidence).",
+  "groups": [
+   {
+    "name": "Mike Castillo",
+    "keys": [
+     "2000:141-31",
+     "2001:141-20",
+     "2001:141-23"
+    ],
+    "why": "different people"
+   },
+   {
+    "name": "Matt Anderson",
+    "keys": [
+     "2000:165-35",
+     "2002:157-08",
+     "2004:149-23",
+     "2005:149-32"
+    ],
+    "why": "different people"
+   },
+   {
+    "name": "Ryan Adams",
+    "keys": [
+     "2004:285-25",
+     "2007:149-21",
+     "2008:149-15",
+     "2010:141-26"
+    ],
+    "why": "different people"
+   },
+   {
+    "name": "Mike Kessler",
+    "keys": [
+     "2006:149-24",
+     "2007:149-29",
+     "2009:157-28",
+     "2012:141-26"
+    ],
+    "why": "different people"
+   },
+   {
+    "name": "Ryan Goodman",
+    "keys": [
+     "2006:197-11",
+     "2007:197-29",
+     "2008:184-15",
+     "2009:157-31"
+    ],
+    "why": "different people"
+   },
+   {
+    "name": "Nick Smith",
+    "keys": [
+     "2008:285-23",
+     "2014:133-25"
+    ],
+    "why": "different people"
+   }
+  ]
+ }
+}

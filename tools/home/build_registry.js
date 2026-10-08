@@ -70,7 +70,11 @@ const everIssued = prev ? Object.keys(prev.careers).concat(Object.keys(prevAlias
 const used = new Set(); let next = 1; if (prev) next = 1 + Math.max(0, ...everIssued.map(id => +id.slice(1)));   // never reuse an ID, alias or live
 const careers = {}, keyToCareer = {}, idOrder = [];
 ordered.forEach(c => { let id = null;
-  if (prev) { for (const a of c) { const pid = prev.byKey[a.key]; if (pid && !used.has(pid)) { id = pid; break; } } }
+  // CANONICAL RULE (approved Oct 8 2026): when appearances that held different career IDs become one career, the FIRST-ISSUED
+  // (lowest-numbered) ID wins and the others become aliases. History was published forward from 2010 and later extended back,
+  // so a wrestler's earliest appearance does not always carry his oldest ID (e.g. Cyler Sanderson: C2421 for 2010 predates C2854).
+  if (prev) { const pids = [...new Set(c.map(a => prev.byKey[a.key]).filter(Boolean))].sort((x, y) => +x.slice(1) - +y.slice(1));
+    for (const pid of pids) if (!used.has(pid)) { id = pid; break; } }
   if (!id) id = 'C' + String(prev ? next++ : (idOrder.length + 1)).padStart(4, '0');
   used.add(id); idOrder.push(id);
   const pv = [...new Set(c.flatMap(a => [...(prov[a.key] || [])]))];
