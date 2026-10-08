@@ -1,5 +1,5 @@
 /* ============================================================================
-   OFFICIAL ALL-AMERICANS — the screen. Read-only: it only calls TCEngine.aaFor() and builds everything with textContent.
+   MASTER ALL-AMERICANS — the screen. Read-only: it only calls TCEngine.aaFor() and builds everything with textContent.
    Rows are clickable (Path to the Finals opens). MY PICKS' own All-Americans view is a different element and is not touched.
    ============================================================================ */
 (function () {
@@ -32,8 +32,8 @@
   function render() {
     var root = document.getElementById('oaa-root'), view = document.getElementById('off-aa-view'); if (!root || !view) return;
     clear(root);
-    var A = window.TCEngine && window.TCEngine.aaFor ? window.TCEngine.aaFor() : { mode: 'unavailable', text: 'OFFICIAL All-Americans are not available in this session.', model: null };
-    var head = el('div', 'os-head'); head.appendChild(el('span', 'os-badge', '🔒 OFFICIAL')); head.appendChild(el('div', 'os-title', 'OFFICIAL ALL-AMERICANS'));
+    var A = window.TCEngine && window.TCEngine.aaFor ? window.TCEngine.aaFor() : { mode: 'unavailable', text: 'MASTER All-Americans are not available in this session.', model: null };
+    var head = el('div', 'os-head'); head.appendChild(el('span', 'os-badge', '🔒 MASTER')); head.appendChild(el('div', 'os-title', 'MASTER ALL-AMERICANS'));
     head.appendChild(el('div', 'os-sub', 'Actual NCAA tournament — top-8 finishers, shown the moment each is clinched · not picks')); root.appendChild(head);
     var st = el('div', 'os-status os-status--' + A.mode, A.text); st.id = 'oaa-status'; st.setAttribute('role', 'status'); st.setAttribute('aria-live', 'polite'); root.appendChild(st);
     view.setAttribute('data-oaa-state', A.mode);

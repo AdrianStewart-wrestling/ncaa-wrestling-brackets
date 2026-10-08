@@ -83,7 +83,7 @@
           row.appendChild(people); rl.appendChild(row);
         });
         b.appendChild(rl);
-        b.appendChild(el('div', 'pp-road-note', 'Possible opponents narrow automatically as OFFICIAL results are recorded.'));
+        b.appendChild(el('div', 'pp-road-note', 'Possible opponents narrow automatically as results are recorded.'));
       } else b.appendChild(el('div', 'pp-road-off', road.reason || 'Championship road complete.'));
     }
 

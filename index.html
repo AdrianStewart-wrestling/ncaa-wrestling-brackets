@@ -502,9 +502,9 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
 <!-- LAYOUT: the three top-level sections. Each only calls existing functions; the context row below (#wtabs, or the
      History controls) is rebuilt by renderWeightTabs()/renderTopNav() for the active section. -->
 <nav class="topnav" id="topnav" aria-label="Tournament Central sections">
-  <button type="button" class="topnav-btn" data-mode="official" onclick="switchCentral()">2026 OFFICIAL</button>
+  <button type="button" class="topnav-btn" data-mode="official" onclick="switchCentral()">2026 MASTER</button>
   <button type="button" class="topnav-btn" data-mode="picks" onclick="chooseMode('picks')">MY BRACKET</button>
-  <button type="button" class="topnav-btn" data-mode="history" onclick="switchHistory()">NCAA HISTORY</button>
+  <button type="button" class="topnav-btn" data-mode="history" onclick="location.href='home.html#history'" title="Choose a championship year">NCAA HISTORY</button>
 </nav>
 
 <div class="wtabs" id="wtabs"></div>
@@ -553,7 +553,7 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
       <div class="picks-badge">MY BRACKET</div>
       <div class="scores-title">My Bracket — Projected Team Scores</div>
       <div class="scores-sub">Top 15 teams projected from YOUR picks · not actual tournament results</div>
-      <div class="picks-callout">These totals come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialScores()">🏆 OFFICIAL Scores</button>.</div>
+      <div class="picks-callout">These totals come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialScores()">🏆 MASTER Scores</button>.</div>
       <table class="lb-table" id="lb-table">
         <thead>
           <tr>
@@ -594,15 +594,15 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
   <div class="os-wrap">
     <div class="os-main">
       <div class="os-head">
-        <span class="os-badge">🔒 OFFICIAL</span>
-        <div class="os-title">OFFICIAL TEAM SCORES</div>
+        <span class="os-badge">🔒 MASTER</span>
+        <div class="os-title">MASTER TEAM SCORES</div>
         <div class="os-sub">Actual NCAA tournament results — not picks · placement points count the moment a finish is clinched</div>
       </div>
-      <div class="os-status os-status--loading" id="os-status" role="status" aria-live="polite">Loading official results…</div>
+      <div class="os-status os-status--loading" id="os-status" role="status" aria-live="polite">Loading tournament results…</div>
       <div id="os-notes"></div>
       <div class="os-table-wrap" id="os-table-wrap" hidden>
         <table class="os-table" id="os-table">
-          <caption>OFFICIAL TEAM SCORES · actual tournament</caption>
+          <caption>MASTER TEAM SCORES · actual tournament</caption>
           <thead><tr><th>Rank</th><th>Team</th><th>Total</th><th>Adv</th><th>Bonus</th><th>Place</th><th>Adj</th><th>AA</th></tr></thead>
           <tbody id="os-body"></tbody>
         </table>
@@ -621,7 +621,7 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
   <div class="picks-badge">MY BRACKET</div>
   <div class="aa-view-title">My Bracket — Projected All-Americans</div>
   <div class="aa-view-sub">Top 8 per weight projected from YOUR picks · not actual results</div>
-  <div class="picks-callout">These places come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialAA()">⭐ OFFICIAL All-Americans</button>.</div>
+  <div class="picks-callout">These places come from the winners <b>you</b> picked. For the real tournament, open <button type="button" class="picks-callout-btn" onclick="switchOfficialAA()">⭐ MASTER All-Americans</button>.</div>
   <div id="aa-grid-125-157"></div>
   <div id="aa-grid-165-285"></div>
 </div>
@@ -2186,19 +2186,19 @@ function renderModeBanner() {
   const left = mk('div', 'mb-left');
   const i = officialInfo;
   if (viewMode === 'official') {
-    left.appendChild(mk('span', 'mb-tag', 'OFFICIAL TOURNAMENT'));
+    left.appendChild(mk('span', 'mb-tag', '2026 MASTER'));
     left.appendChild(mk('span', 'mb-lock', operator.state === 'operator' ? '✎ Operator — recording enabled' : '🔒 Read-only'));
     if (operator.state === 'operator') left.appendChild(mk('span', 'mb-op', 'OPERATOR'));
     let status = '';
-    if (i.state === 'loading' && !i.loadedAt) status = 'Loading official results…';
-    else if (i.state === 'error') status = i.loadedAt ? 'Could not refresh — showing results from ' + t(i.loadedAt) : 'Official results are unavailable right now';
+    if (i.state === 'loading' && !i.loadedAt) status = 'Loading tournament results…';
+    else if (i.state === 'error') status = i.loadedAt ? 'Could not refresh — showing results from ' + t(i.loadedAt) : 'Tournament results are unavailable right now';
     else if (i.loadedAt) status = i.applied + ' result' + (i.applied === 1 ? '' : 's') + ' · updated ' + t(i.loadedAt);
     if (status) left.appendChild(mk('span', 'mb-status', status));
     if (i.loadedAt && i.legacyIgnored > 0) left.appendChild(mk('span', 'mb-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? '' : 's') + ' not shown'));
     if (i.loadedAt && i.problems && i.problems.length) left.appendChild(mk('span', 'mb-note', i.problems.length + ' record' + (i.problems.length === 1 ? '' : 's') + ' could not be applied'));
   } else {
     left.appendChild(mk('span', 'mb-tag', 'MY BRACKET'));
-    left.appendChild(mk('span', 'mb-status', 'Your own predictions — not official results'));
+    left.appendChild(mk('span', 'mb-status', 'Your own predictions — not the tournament results'));
   }
   b.appendChild(left);
   const right = mk('div', 'mb-right');
@@ -2225,7 +2225,7 @@ function applyOfficialDocs(snap) {
   officialInfo = Object.assign({}, built.info, { state: 'loaded', loadedAt: new Date(), loadedAtMs: Date.now() });
 }
 function officialLoadFailed(err) {
-  console.error('Official results could not be loaded:', err);
+  console.error('Tournament results could not be loaded:', err);
   officialInfo = Object.assign({}, officialInfo, { state: 'error', error: String((err && err.message) || err) });
   officialChanged();
 }
@@ -2823,7 +2823,7 @@ function renderScores() {
 
 function fmt(n){return n%1===0?n.toString():String(Math.round(n*100)/100);}   // 2 decimals max: halves unchanged ('98.5'), 1988-1994 quarter points shown exactly ('118.75')
 
-// ══════ OFFICIAL TEAM SCORES ══════
+// ══════ MASTER TEAM SCORES ══════
 // Reads ONLY the OFFICIAL book, through the pure model in official-scoring.js (the Phase 6b OG scoring model: normal advancement,
 // bonus, and placement points credited the moment a finish is CLINCHED). MY PICKS scoring above is untouched.
 // Nothing in this section writes anything anywhere: it recomputes from officialBook on every render, so Correct / Clear and
@@ -2850,20 +2850,20 @@ function renderOfficialScores() {
   const st = $('os-status'), tb = $('os-body'), more = $('os-more'), notes = $('os-notes'), wrap = $('os-table-wrap'), key = $('os-key');
   [st, tb, notes, key].forEach(clear); more.hidden = true; wrap.hidden = true;
   const hist = (viewMode === 'historical' && window.historicalYear) ? window.historicalYear : null;   // History reuses this whole view
-  const S = hist ? historicalViewStatus(hist) : officialViewStatus({ upper: 'SCORES', lower: 'scores', moduleOk: !!window.OfficialScoring, unavailable: 'OFFICIAL scoring is not available in this session.', failed: 'OFFICIAL scores could not be calculated.', calc: officialScoresModel,
-    live: (r, t, inf) => '● LIVE · ' + r.stats.records + ' official result' + (r.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(inf.loadedAt) });
+  const S = hist ? historicalViewStatus(hist) : officialViewStatus({ upper: 'SCORES', lower: 'scores', moduleOk: !!window.OfficialScoring, unavailable: 'MASTER scoring is not available in this session.', failed: 'MASTER scores could not be calculated.', calc: officialScoresModel,
+    live: (r, t, inf) => '● LIVE · ' + r.stats.records + ' result' + (r.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(inf.loadedAt) });
   const i = hist ? { legacyIgnored: 0, problems: [] } : officialInfo, res = S.res;
   const L = hist
-    ? { badge: '🕰️ HISTORY', title: hist.year + ' TEAM SCORES', sub: (res && res.subtitle) || 'Final NCAA results replayed from historical bout data · read-only · same scoring model as OFFICIAL', caption: hist.year + ' NCAA TEAM SCORES · historical' }
-    : { badge: '🔒 OFFICIAL', title: 'OFFICIAL TEAM SCORES', sub: 'Actual NCAA tournament results — not picks · placement points count the moment a finish is clinched', caption: 'OFFICIAL TEAM SCORES · actual tournament' };
+    ? { badge: '🕰️ HISTORY', title: hist.year + ' TEAM SCORES', sub: (res && res.subtitle) || 'Final NCAA results replayed from historical bout data · read-only · same scoring model as the 2026 Master', caption: hist.year + ' NCAA TEAM SCORES · historical' }
+    : { badge: '🔒 MASTER', title: 'MASTER TEAM SCORES', sub: 'Actual NCAA tournament results — not picks · placement points count the moment a finish is clinched', caption: 'MASTER TEAM SCORES · actual tournament' };
   [['.os-badge', L.badge], ['.os-title', L.title], ['.os-sub', L.sub], ['#os-table caption', L.caption]].forEach(([q, x]) => { const e = v.querySelector(q); if (e) e.textContent = x; });
   st.className = 'os-status os-status--' + S.mode; st.textContent = S.text; v.setAttribute('data-os-state', S.mode);
   if (!res) return;
 
-  if (i.legacyIgnored > 0) notes.appendChild(mk('div', 'os-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? ' is' : 's are') + ' not included in OFFICIAL scores.'));
+  if (i.legacyIgnored > 0) notes.appendChild(mk('div', 'os-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? ' is' : 's are') + ' not included in MASTER scores.'));
   const bad = (res.problems ? res.problems.length : 0) + ((i.problems && i.problems.length) || 0);
   if (bad) notes.appendChild(mk('div', 'os-note os-note--warn', bad + ' record' + (bad === 1 ? '' : 's') + ' could not be scored.'));
-  if (!res.teams.length) { notes.appendChild(mk('div', 'os-empty', 'No official results yet — scores appear as soon as the first result is recorded.')); }
+  if (!res.teams.length) { notes.appendChild(mk('div', 'os-empty', 'No results yet — scores appear as soon as the first result is recorded.')); }
   else {
     const OS = window.OfficialScoring, shown = officialScoresShowAll ? res.teams : OS.topRows(res.teams, 15);
     wrap.hidden = false;
@@ -2886,7 +2886,7 @@ function renderOfficialScores() {
   // the key is generated from the model's own tables, so it can never drift from the scoring
   if (hist && res && Array.isArray(res.keyLines)) { key.appendChild(mk('div', 'os-key-hdr', res.keyTitle || 'How these scores work')); res.keyLines.forEach(l => key.appendChild(mk('div', 'os-key-line', l))); return; }   // a history-layer model (1990-1995) explains its own rules
   const OS2 = window.OfficialScoring, names = { QF: 'Quarterfinal win', SF: 'Semifinal win', Final: 'Final win', BloodRound: 'Blood-round win', ConsQF: 'Con. quarterfinal win', ConsSF: 'Con. semifinal win', '3rd': '3rd-place win', '5th': '5th-place win', '7th': '7th-place win' };
-  key.appendChild(mk('div', 'os-key-hdr', hist ? 'How these scores work (same model as OFFICIAL)' : 'How OFFICIAL scores work'));
+  key.appendChild(mk('div', 'os-key-hdr', hist ? 'How these scores work (same model as the 2026 Master)' : 'How MASTER scores work'));
   key.appendChild(mk('div', 'os-key-line', 'Adv: 1 per championship win, ½ per consolation win. Bonus: Major Decision 1 · Tech Fall 1.5 · Fall / Forfeit / DQ 2.'));
   key.appendChild(mk('div', 'os-key-line', 'Place: counted the moment a finish is CLINCHED, not when the placement bout is wrestled. The Final adds only the step from 2nd to 1st.'));
   Object.keys(OS2.SCHEDULE).forEach(r => { const s = OS2.SCHEDULE[r]; const row = mk('div', 'os-key-row'); row.appendChild(mk('span', 'os-key-lbl', names[r] || r)); row.appendChild(mk('span', 'os-key-val', 'clinches ' + OS2.label(s[1]) + ' = ' + (OS2.PLACE_POINTS[s[1]] || 0))); key.appendChild(row); });
@@ -3118,13 +3118,13 @@ function officialViewStatus(c) {
   let mode, text, res = null;
   if (!officialCore || !c.moduleOk || i.state === 'disabled') { mode = 'unavailable'; text = c.unavailable; }
   else if (!hasData) {
-    if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · OFFICIAL ' + c.upper + ' UNAVAILABLE — no official results have been loaded on this device yet.'; }
-    else { mode = 'loading'; text = 'Loading official results…'; }
+    if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · MASTER ' + c.upper + ' UNAVAILABLE — no tournament results have been loaded on this device yet.'; }
+    else { mode = 'loading'; text = 'Loading tournament results…'; }
   } else {
     try { res = c.calc(); } catch (e) { console.error('Official ' + c.lower + ' could not be calculated:', e); res = null; }
     if (!res) { mode = 'unavailable'; text = c.failed; }
-    else if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · LAST KNOWN OFFICIAL ' + c.upper + ' · last refreshed ' + t(i.loadedAt); }
-    else if (i.state === 'loading') { mode = 'loading'; text = 'Refreshing… showing last known official ' + c.lower + ' · last refreshed ' + t(i.loadedAt); }
+    else if (i.state === 'error' || !online) { mode = 'offline'; text = 'OFFLINE · LAST KNOWN MASTER ' + c.upper + ' · last refreshed ' + t(i.loadedAt); }
+    else if (i.state === 'loading') { mode = 'loading'; text = 'Refreshing… showing last known results ' + c.lower + ' · last refreshed ' + t(i.loadedAt); }
     else { mode = 'live'; text = c.live(res, t, i); }
   }
   return { mode: mode, text: text, res: res };
@@ -3141,7 +3141,7 @@ function switchOfficialAA() {
 function renderOfficialAA() { if (window.OfficialAAView) window.OfficialAAView.render(); }
 function aaFor() {
   const S = officialViewStatus({ upper: 'ALL-AMERICANS', lower: 'All-Americans', moduleOk: !!(window.OfficialAA && window.OfficialPath && window.OfficialScoring),
-    unavailable: 'OFFICIAL All-Americans are not available in this session.', failed: 'OFFICIAL All-Americans could not be calculated.',
+    unavailable: 'MASTER All-Americans are not available in this session.', failed: 'MASTER All-Americans could not be calculated.',
     calc: () => { const sc = officialScoresModel(); return sc ? window.OfficialAA.compute(officialCore, officialBook, { weights: WLIST.slice(), floors: sc.floors, path: window.OfficialPath }) : null; },
     live: (r, t, inf) => '● LIVE · ' + r.totals.clinched + ' of ' + r.totals.of + ' All-Americans clinched · last refreshed ' + t(inf.loadedAt) });
   return { mode: S.mode, text: S.text, model: S.res };

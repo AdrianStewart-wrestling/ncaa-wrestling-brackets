@@ -35,7 +35,7 @@
       b.appendChild(chips);
       var brk = el('div', 'tp-breakdown', 'Adv ' + fmtN(t.adv) + ' · Bonus ' + fmtN(t.bonus) + ' · Place ' + fmtN(t.place) + ('adj' in t ? ' · Adj ' + (t.adj >= 0 ? '+' : '') + fmtN(t.adj) : '')); b.appendChild(brk);
       if (t.adjReason) b.appendChild(el('div', 'tp-reason', 'Adjustment: ' + t.adjReason));
-    } else b.appendChild(el('div', 'pp-empty', 'No official results yet for this team.'));
+    } else b.appendChild(el('div', 'pp-empty', 'No results yet for this team.'));
     if (!r.wrestlers.length) { b.appendChild(el('div', 'pp-empty', 'No wrestlers found for this school.')); return; }
     var ol = el('ol', 'pp-list tp-list');
     r.wrestlers.forEach(function (p) {

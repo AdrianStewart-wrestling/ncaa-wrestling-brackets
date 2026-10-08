@@ -158,7 +158,7 @@ const HistoryMode = (function () {
 
       if (typeof window.showHistoricalBracket !== 'function') throw new Error('showHistoricalBracket() is not available on this page.');
       window.showHistoricalBracket(Number(slot), built.core, built.book, Number(year));
-      setStatus(year + ' ' + HistoricalWeights.unit(weight) + ' — read-only historical bracket. No OFFICIAL or Firebase involvement.');
+      setStatus(year + ' ' + HistoricalWeights.unit(weight) + ' — read-only historical bracket. Separate from the 2026 Master; no live data.');
     }).catch(err => {
       if (mySeq !== loadSeq) return;
       fail(year, weight, 'Error: ' + err.message);
@@ -232,7 +232,7 @@ const HistoryMode = (function () {
       yearCache[year] = Y;
       if (typeof window.showHistoricalScores !== 'function') throw new Error('showHistoricalScores() is not available on this page.');
       window.showHistoricalScores(Y);
-      setStatus(year + ' team scores — read-only, all 10 weights replayed. No OFFICIAL or Firebase involvement.');
+      setStatus(year + ' team scores — read-only, all 10 weights replayed. Separate from the 2026 Master; no live data.');
     }).catch(err => {
       if (mySeq !== loadSeq) return;
       fail(year, 'team scores', 'Error: ' + err.message);

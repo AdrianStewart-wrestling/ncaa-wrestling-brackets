@@ -439,7 +439,7 @@
   function lookup(raw) {
     try {
       if (!state.lookupOK) {
-        setMessage('Bout lookup is switched off (official results are unavailable or failed their self-check). The weight tiles still work.', 'error');
+        setMessage('Bout lookup is switched off (results are unavailable or failed their self-check). The weight tiles still work.', 'error');
         renderCard(null);
         return { ok: false, code: 'disabled' };
       }
@@ -483,11 +483,11 @@
     var node = state.dom && state.dom.stat; if (!node) return;
     var info = window.TCEngine && window.TCEngine.officialAvailable() ? window.TCEngine.officialInfo() : null;
     var text = '';
-    if (!info) text = 'Official results are not available in this session.';
-    else if (info.state === 'loading' && !info.loadedAt) text = 'Loading official results…';
-    else if (info.state === 'error') text = info.loadedAt ? 'Could not refresh — showing official results from ' + info.loadedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.' : 'Official results are unavailable right now.';
-    else if (info.loadedAt) text = 'Source: OFFICIAL results — ' + info.applied + ' recorded · updated ' + info.loadedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.';
-    else text = 'Source: OFFICIAL results.';
+    if (!info) text = 'Tournament results are not available in this session.';
+    else if (info.state === 'loading' && !info.loadedAt) text = 'Loading tournament results…';
+    else if (info.state === 'error') text = info.loadedAt ? 'Could not refresh — showing results from ' + info.loadedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.' : 'Tournament results are unavailable right now.';
+    else if (info.loadedAt) text = 'Source: 2026 MASTER results — ' + info.applied + ' recorded · updated ' + info.loadedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.';
+    else text = 'Source: 2026 MASTER results.';
     node.textContent = text;
   }
 
@@ -619,7 +619,7 @@
     if (r) {
       if (r.ok) {
         var v = r.verify || {}, tt = v.totals || {};
-        box.appendChild(el('div', 'tc-imp-done', '✓ Imported and verified: ' + (v.applied != null ? v.applied : r.total) + ' results stored by wrestler' + (tt.teams ? ' · ' + tt.teams + ' teams · ' + fmtN(tt.total) + ' team points · ' + tt.aa + ' All-Americans' : '') + '. Open 🏆 OFFICIAL Scores to see the standings. You can now delete official-import-data.js.'));
+        box.appendChild(el('div', 'tc-imp-done', '✓ Imported and verified: ' + (v.applied != null ? v.applied : r.total) + ' results stored by wrestler' + (tt.teams ? ' · ' + tt.teams + ' teams · ' + fmtN(tt.total) + ' team points · ' + tt.aa + ' All-Americans' : '') + '. Open 🏆 MASTER Scores to see the standings. You can now delete official-import-data.js.'));
       } else {
         box.appendChild(el('div', 'tc-imp-bad', 'NOT COMPLETE — ' + (r.message || 'the import stopped.') + (r.errorCode ? ' (' + r.errorCode + ')' : '') + (r.verify && r.verify.issues && r.verify.issues.length ? ' Verification: ' + r.verify.issues.join(' ') : '')));
       }
@@ -848,7 +848,7 @@
     if (!operatorNow()) return;
     var box = el('div', 'tc-imp tc-adj');
     box.appendChild(el('h3', 'tc-imp-h', 'Team score adjustments'));
-    box.appendChild(el('p', 'tc-imp-p', 'A manually recorded team-point adjustment (e.g. a deduction), shown as a separate Adj column on OFFICIAL Team Scores. It never changes Adv / Bonus / Place — only Total.'));
+    box.appendChild(el('p', 'tc-imp-p', 'A manually recorded team-point adjustment (e.g. a deduction), shown as a separate Adj column on MASTER Team Scores. It never changes Adv / Bonus / Place — only Total.'));
     var sel = el('select', 'tc-adj-select'); var blank = el('option', '', 'Choose a team…'); blank.value = ''; sel.appendChild(blank);
     adjTeams().forEach(function (s) { var o = el('option', '', s); o.value = s; sel.appendChild(o); });
     sel.value = adjForm.school || '';                                // set AFTER the options exist: .selected on a detached <option> is not reliably honoured
@@ -913,7 +913,7 @@
     if (!operatorNow()) return;
     var box = el('div', 'tc-imp tc-ckpt');
     box.appendChild(el('h3', 'tc-imp-h', 'Historical checkpoint / test state'));
-    box.appendChild(el('p', 'tc-imp-p', ckpt.mode === 'start' ? 'Tournament Start removes all 640 OFFICIAL results so the site can be tested exactly as it will look before the first bout Thursday. Fully reversible with Restore Complete Tournament.' : 'Saturday Morning removes only the 100 Saturday-round results, keeping every Thursday and Friday result exactly as recorded.'));
+    box.appendChild(el('p', 'tc-imp-p', ckpt.mode === 'start' ? 'Tournament Start removes all 640 MASTER results so the site can be tested exactly as it will look before the first bout Thursday. Fully reversible with Restore Complete Tournament.' : 'Saturday Morning removes only the 100 Saturday-round results, keeping every Thursday and Friday result exactly as recorded.'));
     var modes = el('div', 'tc-imp-actions');
     var ms = el('button', 'tc-btn' + (ckpt.mode === 'sat' ? ' tc-btn--go' : ''), 'SATURDAY MORNING · KEEP 540'); ms.type = 'button'; ms.disabled = ckpt.busy; ms.addEventListener('click', function () { ckptSetMode('sat'); }); modes.appendChild(ms);
     var mt = el('button', 'tc-btn' + (ckpt.mode === 'start' ? ' tc-btn--go' : ''), 'TOURNAMENT START · KEEP 0'); mt.type = 'button'; mt.disabled = ckpt.busy; mt.addEventListener('click', function () { ckptSetMode('start'); }); modes.appendChild(mt);
@@ -939,8 +939,8 @@
     if (r) {
       if (!r.ok) box.appendChild(el('div', 'tc-imp-bad', 'NOT COMPLETE -- ' + (r.message || 'the operation stopped.')));
       else if (r.kind === 'restore') box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Restored ' + r.restored + ' results -- back to the complete 640-result tournament.'))));
-      else if (r.mode === 'start') box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Tournament-start checkpoint applied: removed ' + r.removed + ' results. OFFICIAL now reflects the pre-tournament state.'))));
-      else box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Checkpoint applied: removed ' + r.removed + ' Saturday results. OFFICIAL now reflects Friday night.'))));
+      else if (r.mode === 'start') box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Tournament-start checkpoint applied: removed ' + r.removed + ' results. MASTER now reflects the pre-tournament state.'))));
+      else box.appendChild(el('div', 'tc-imp-done', String.fromCharCode(10003) + ' ' + (r.message || ('Checkpoint applied: removed ' + r.removed + ' Saturday results. MASTER now reflects Friday night.'))));
     }
     slot.appendChild(box);
   }
@@ -980,7 +980,7 @@
     // --- quick bout lookup
     var sec2 = el('section', 'tc-section');
     var h2 = el('h2', 'tc-h', 'Quick Bout Lookup');
-    h2.appendChild(el('span', 'tc-src', 'OFFICIAL'));
+    h2.appendChild(el('span', 'tc-src', 'MASTER'));
     sec2.appendChild(h2);
 
     var form = el('form', 'tc-form');
@@ -1043,7 +1043,7 @@
 
     if (!state.lookupOK) {
       input.disabled = true; btnGo.disabled = true; btnClear.disabled = true;
-      var why = window.TCEngine.officialAvailable() ? 'the bout-number self-check failed (' + state.problems.slice(0, 3).join('; ') + ')' : 'official results are unavailable in this session';
+      var why = window.TCEngine.officialAvailable() ? 'the bout-number self-check failed (' + state.problems.slice(0, 3).join('; ') + ')' : 'tournament results are unavailable in this session';
       var bad = el('div', 'tc-msg tc-msg--error', 'Bout lookup is switched off: ' + why + '. The weight tiles still work.');
       sec2.insertBefore(bad, msg);
     }

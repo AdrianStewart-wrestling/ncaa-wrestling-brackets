@@ -12,7 +12,7 @@
   function pending(y) { return !!(window.HistoryMode && window.HistoryMode.scoringPending && window.HistoryMode.scoringPending(y)); }
   function fmtN(n) { return n % 1 === 0 ? String(n) : String(Math.round(n * 100) / 100); }   // halves unchanged; quarter points exact (1988-1994)
   var POINTS_TIP = 'Tournament Points are calculated by Tournament Central from the historical bout results (advancement, bonus and placement points). Team-level deductions are not attributable to individual wrestlers, so these can differ from official team totals.';
-  var COVERAGE = 'Covers the 1970–2026 NCAA Championships in Tournament Central (there were no 2020 Championships; 2012 completed results come from the WrestlingStats fallback, structure from the official NCAA draw; 1970–2009 bracket and results come from the WrestlingStats fallback, checked against the NCAA Records Book; 2009 bracket and results come from the WrestlingStats fallback). Appearances before 1970 are not included, so this may not be his complete NCAA career.';
+  var COVERAGE = 'Covers the 1970–2026 NCAA Championships in Tournament Central (there were no 2020 Championships; 2012 completed results come from a compiled championship bracket, structure from the official NCAA draw; 1970–2009 brackets and results come from compiled championship brackets, checked against the NCAA’s own published record). Appearances before 1970 are not included, so this may not be his complete NCAA career.';
 
   function ensureStyle() {
     if (document.getElementById('cp-style')) return;
