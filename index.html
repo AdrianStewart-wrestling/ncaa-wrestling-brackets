@@ -572,7 +572,7 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
     <div class="bh-intro"><div class="bh-h">Build Your Bracket</div><div class="bh-d">Pick the NCAA champion, and every place, at all 10 weights.</div></div>
     <div class="bh-steps">
       <div class="bh-step"><span class="bh-n">1</span><div><div class="bh-st">Pick winners</div><div class="bh-sd">Click a wrestler to advance him</div></div></div>
-      <div class="bh-step"><span class="bh-n">2</span><div><div class="bh-st">My Scores</div><div class="bh-sd">See your projected team standings</div></div></div>
+      <div class="bh-step"><span class="bh-n">2</span><div><div class="bh-st">Team Scores</div><div class="bh-sd">See your projected team standings</div></div></div>
       <div class="bh-step"><span class="bh-n">3</span><div><div class="bh-st">Submit</div><div class="bh-sd">Review and submit your entry</div></div></div>
     </div>
     <div class="bh-prog"><div class="bh-pl">Your progress</div><div class="bh-pv" id="bh-pv">0 / 10 <small><span class="bh-long">weight classes </span>fully picked</small></div><div class="bh-bar"><i id="bh-bar" style="width:0%"></i></div></div>
@@ -687,7 +687,7 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
       <div class="key-card">
         <div class="key-hdr">🏆 Leaderboard</div>
         <div class="key-row"><span class="key-lbl">Scoring</span><span class="key-val">1 / correct pick</span></div>
-        <div class="key-row"><span class="key-lbl">Source</span><span class="key-val">OfficialResults</span></div>
+        <div class="key-row"><span class="key-lbl">Source</span><span class="key-val">MASTER results</span></div>
         <div class="key-row"><span class="key-lbl">Refresh</span><span class="key-val"><button class="pm-btn" style="padding:4px 10px" onclick="refreshLeaderboard()">Refresh</button></span></div>
         <div class="key-row"><span class="key-lbl">Admin</span><span class="key-val"><button class="pm-btn" style="padding:4px 10px" onclick="adminRecomputeLeaderboard()">Recompute</button></span></div>
       </div>
@@ -714,8 +714,8 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
 
 <div id="results-modal">
   <div id="print-modal-box">
-    <h2>🏁 Submit Official Results</h2>
-    <p>Select which weight classes to send to the OfficialResults tab. Use the current bracket clicks as the official winners.</p>
+    <h2>🏁 Submit MASTER Results</h2>
+    <p>Select which weight classes to send to the MASTER results. Use the current bracket clicks as the MASTER winners.</p>
     <div class="pm-weight-grid" id="results-checks"></div>
     <div class="pm-row">
       <button class="pm-btn" onclick="resultsSelectAll()">Select All</button>
@@ -2132,7 +2132,7 @@ const CON_RND_NAMES   = ['Con. Rd 1','Con. Rd 2','Con. Rd 3','Con. Rd 4','Con. Q
 
 // LAYOUT: the context row under the top navigation, for the active section. Every button calls an EXISTING function.
 //  2026 OFFICIAL: OVERVIEW (Central) | 125..285 | TEAM SCORES | ALL-AMERICANS
-//  MY BRACKET:    125..285 | MY SCORES | MY ALL-AMERICANS | LEADERBOARD | SUBMIT  + small LOAD ENTRY / RESET
+//  MY BRACKET:    125..285 | TEAM SCORES (from my picks) | MY ALL-AMERICANS | LEADERBOARD | SUBMIT  + small LOAD ENTRY / RESET
 //  NCAA HISTORY:  no live weight row at all — only the History controls (#history-controls).
 function goWeight(w) { setViewMode(uiMode === 'picks' ? 'picks' : 'official'); switchW(w); }   // a weight in the active section
 function renderWeightTabs() {
@@ -2142,7 +2142,7 @@ function renderWeightTabs() {
   let html;
   if (uiMode === 'picks') {
     html = weightBtns
-      + tab('scores-tab', showScores, 'switchScores()', '🏆 MY SCORES')
+      + tab('scores-tab', showScores, 'switchScores()', '🏆 TEAM SCORES')
       + tab('aa-tab', showAA, 'switchAA()', '⭐ MY ALL-AMERICANS')
       + tab('lb-tab', showLeaderboard, 'openLeaderboard()', '🏅 LEADERBOARD')
       + tab('submit-tab', false, 'printBracket()', '📤 SUBMIT')
@@ -2378,7 +2378,7 @@ async function recordOfficial(req) {
   const fail = (code, message, extra) => Object.assign({ ok: false, code, message }, extra);
   if (!officialCore || !window.OfficialWriter) return fail('unavailable', 'Recording is not available in this session.');
   if (operator.state !== 'operator') return fail('not_operator', 'Sign in as an authorized operator to record results.');
-  if (officialInfo.state !== 'loaded') return fail('not_loaded', 'The official results are not up to date (no live connection). Press Refresh before recording.');
+  if (officialInfo.state !== 'loaded') return fail('not_loaded', 'The MASTER results are not up to date (no live connection). Press Refresh before recording.');
   if (recordSaving) return fail('busy', 'Another result is still saving. Please wait.');
   const built = window.OfficialWriter.buildRecordWrite(officialCore, officialBook, req, { email: operator.email, stamp: serverTimestamp() });
   if (!built.ok) return built;
@@ -2410,7 +2410,7 @@ async function changeOfficial(action, req) {
   const fail = (code, message, extra) => Object.assign({ ok: false, code, message }, extra);
   if (!officialCore || !window.OfficialWriter || !window.OfficialWriter.planChange) return fail('unavailable', 'Changing results is not available in this session.');
   if (operator.state !== 'operator') return fail('not_operator', 'Sign in as an authorized operator to change results.');
-  if (officialInfo.state !== 'loaded') return fail('not_loaded', 'The official results are not up to date (no live connection). Press Refresh before changing anything.');
+  if (officialInfo.state !== 'loaded') return fail('not_loaded', 'The MASTER results are not up to date (no live connection). Press Refresh before changing anything.');
   if (recordSaving) return fail('busy', 'Another save is still in progress. Please wait.');
   const plan = window.OfficialWriter.planChange(officialCore, officialBook, Object.assign({}, req, { action }), { email: operator.email, stamp: serverTimestamp() });
   if (!plan.ok) return plan;
@@ -3146,7 +3146,7 @@ async function checkpointApply(key) {
     const cp = picked.checkpoint, ids = new Set(cp.ids);
     const byId = {}; docs.forEach(d => { if (typeof d.data.boutId === 'number' && ids.has(d.data.boutId)) byId[d.data.boutId] = d; });
     const toRemove = cp.ids.filter(id => byId[id]);
-    if (!toRemove.length) return { ok: true, key: requested, removed: 0, message: requested === 'start' ? 'Already at tournament start (no official results to remove).' : 'Already at the Saturday-morning checkpoint (nothing to remove).' };
+    if (!toRemove.length) return { ok: true, key: requested, removed: 0, message: requested === 'start' ? 'Already at tournament start (no MASTER results to remove).' : 'Already at the Saturday-morning checkpoint (nothing to remove).' };
     const CHUNK = 8;
     for (let i = 0; i < toRemove.length; i += CHUNK) {
       const slice = toRemove.slice(i, i + CHUNK), batch = writeBatch(db);
@@ -3709,7 +3709,7 @@ async function submitOfficialResults(){
   const selected = [...document.querySelectorAll('#results-checks input:checked')].map(c => +c.value);
   if(!selected.length){ alert('Select at least one weight class.'); return; }
 
-  const adminPin = (prompt('Enter Admin PIN to submit official results:') || '').trim();
+  const adminPin = (prompt('Enter Admin PIN to submit MASTER results:') || '').trim();
   if(!adminPin){ alert('Results submission cancelled.'); return; }
 
   if(adminPin !== '4330381'){ alert('Incorrect admin PIN.'); return; }
@@ -3741,7 +3741,7 @@ async function submitOfficialResults(){
 
     await Promise.all(resultWrites);
     closeResultsModal();
-    alert(`Official results saved for ${selected.join(', ')}.\n\nRecomputing leaderboard...`);
+    alert(`MASTER results saved for ${selected.join(', ')}.\n\nRecomputing leaderboard...`);
 
     // ── Recompute leaderboard scores client-side ──────────
     try {
