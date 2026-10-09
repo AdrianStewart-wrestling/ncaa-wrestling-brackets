@@ -27,6 +27,9 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 .hdr-t{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--gold2);line-height:1}
 .hdr-s{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
 .hdr-sp{flex:1}
+.hdr-home{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;border-radius:4px;transition:opacity .15s}
+.hdr-home:hover .hdr-t{color:#f0c040}
+.hdr-home:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
 .rst-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;padding:5px 14px;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
 .rst-btn:hover{border-color:var(--gold2);color:var(--gold2)}
 
@@ -518,10 +521,12 @@ body:not(.ui-picks) .hdr-mobile-menu, body:not(.ui-picks) #mobile-drawer{display
 <body>
 
 <div class="hdr">
-  <div class="hdr-hex">🤼</div>
-  <div>
-    <div class="hdr-t">Tournament Central</div>
-  </div>
+  <a class="hdr-home" href="home.html" title="Back to home" aria-label="Tournament Central home">
+    <div class="hdr-hex">🤼</div>
+    <div>
+      <div class="hdr-t">Tournament Central</div>
+    </div>
+  </a>
   <div class="hdr-sp"></div>
 <!-- <button class="rst-btn" onclick="openResultsModal()">🏁 Submit Results</button> -->
 </div>
@@ -4226,6 +4231,7 @@ if (TC_DEEP_LINK) {
   .hdr-t { font-size: 14px !important; letter-spacing: 1.5px !important; }
   .hdr-s { font-size: 8px !important; letter-spacing: 1px !important; }
   .hdr { padding: 0 12px !important; gap: 8px !important; }
+  .hdr-home { gap: 8px; }
 
   /* Round paginator visibility */
   .mobile-round-nav { display: flex !important; }
