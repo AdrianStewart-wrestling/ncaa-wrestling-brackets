@@ -1,0 +1,6 @@
+R186  MERGE  C5246 -> C4612  Cary Kolat
+      C5246: 1993 134 Penn State (#4, 2nd), 1994 134 Penn State (#1, 3rd)
+      C4612: 1996 134 Lock Haven (#2, champion), 1997 142 Lock Haven (#1, champion)
+      Same person: transferred Penn State -> Lock Haven. Unique name in 1970-2026 data.
+      Canonical = first-issued ID (C4612); C5246 kept as alias (old links resolve).
+      Result: 9,884 -> 9,883 careers; 181 -> 182 aliases; 18,889 appearances unchanged.
