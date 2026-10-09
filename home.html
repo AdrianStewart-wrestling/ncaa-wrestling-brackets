@@ -77,12 +77,23 @@ h1 .l2{display:block;font-size:clamp(58px,10.6vw,156px);letter-spacing:.01em;mar
 
 /* 33 DEEP signature graphic is the whole hero at every width (it carries the title, bracket and mat).
    Shown whole at 16:9 so the pigtail (far left) and the tagline (bottom) are never cropped. */
-.hero{padding:0;aspect-ratio:16/9;max-height:92vh;background:var(--night)}
+.hero{padding:0;width:100%;height:min(56.25vw,92vh);background:#011022}   /* full width; image edges are #011022/#010e1e */
 .hero .crowd,.hero .beams,.hero .haze,.hero .rig,.hero::after{display:none}
 .hero .wrap{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .hero-shot{position:absolute;inset:0}
-.hero-shot img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;
+.hero-shot{display:flex;justify-content:center}
+/* the whole graphic, centred: fills the width on normal screens; on very wide ones (height-capped) it stays centred
+   and the bands either side are the image's own edge colour, so there is no visible seam */
+.hero-shot img{height:100%;width:auto;max-width:100%;object-fit:contain;
   -webkit-mask-image:linear-gradient(180deg,#000 90%,transparent 100%);mask-image:linear-gradient(180deg,#000 90%,transparent 100%)}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,#011022,#06142a 50%,#010e1e)}
+.hero-shot{z-index:1}
+/* very wide windows (the banner is height-capped, so bands appear either side): feather the image's left/right edges into the bands */
+@media (min-aspect-ratio:1636/1000){
+  .hero-shot img{
+    -webkit-mask-image:linear-gradient(180deg,#000 90%,transparent 100%),linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);-webkit-mask-composite:source-in;
+    mask-image:linear-gradient(180deg,#000 90%,transparent 100%),linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);mask-composite:intersect}
+}
 
 /* three doors */
 .doors{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:-4.4vw;position:relative;z-index:3}
