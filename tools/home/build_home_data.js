@@ -14,13 +14,18 @@ const check = (ok, msg) => { if (!ok) fails.push(msg); return ok; };
 // every championship with a data file (no hard-coded boundary): historical-data/resultsYYYY.js
 const YEARS = fs.readdirSync(path.join(ROOT, 'historical-data')).map(f => /^results(\d{4})\.js$/.exec(f)).filter(Boolean).map(m => +m[1]).sort((a, b) => a - b);
 const built = {}, years = [];
+const HELD = [];   // none: 1955 team scoring resolved Oct 12 2026   // team scoring not shown (historical-mode.js SCORING_PENDING)
 let bouts = 0;
 for (const y of YEARS) {
   const Y = H.buildYear(y); built[y] = Y;
   check(!Y.problems.length && !(Y.pendingCount || 0), `${y}: replay problems ${Y.problems.length}, pending ${Y.pendingCount || 0}`);
   bouts += Y.records.length;
   const top = Y.scores.teams[0];
-  years.push({ y, champ: top.school, tied: !!top.tied, weights: global.HistoricalWeights.classes(y).map(String),
+  // years whose team scoring is held (historical-mode.js SCORING_PENDING): the champion is the PUBLISHED one (summary page,
+  // "Team Champion ..."), never the unvalidated model's leader
+  const pub = HELD.includes(y) ? (/Team Champion\s+(.+?) - \d+/.exec(JSON.parse(fs.readFileSync(path.join(ROOT, 'tools', 'pre1999', 'extracted', 'x' + y + '.json'), 'utf8')).summary) || [])[1] : null;
+  if (HELD.includes(y)) check(!!pub, `${y}: no published team champion on the summary page`);
+  years.push({ y, champ: pub || top.school, tied: pub ? false : !!top.tied, weights: global.HistoricalWeights.classes(y).map(String),
                adj: Y.scores.teams.filter(t => t.adj).length });
 }
 check(years.length === YEARS.length && years.length > 0 && !YEARS.includes(2020), `championship list inconsistent: ${years.length} of ${YEARS.length}`);
@@ -31,8 +36,18 @@ const ERA_DEFS = [
   // 1970-1971 structure: finalist repechage (a distinct topology, not the 1972-1978 semifinalist wrestleback). Its scoring period is the
   // NCAA rule range 1970-1971; the label is the covered part of it ("1971" now, "1970-1971" once 1970 is covered).
   { id: 'eR', from: YEARS[0], to: 1971, name: 'Finalist repechage', sample: 1971,
-    shared: 'Six places are scored. Only wrestlers beaten by one of the two finalists wrestle back, each finalist\'s victims in his own chain, in the order he beat them (his R1 and R2 victims meet, or, if he came through a wrestle-in, his wrestle-in victim first meets his R1 victim; the winner then meets his QF victim, then his SF victim); the two chain winners wrestle for 3rd and the two chain losers for 5th. There is no 7th-place bout.',
+    shared: 'Six places are scored (four in 1950–1962). Only wrestlers beaten by one of the two finalists wrestle back, each finalist\'s victims in his own chain, in the order he beat them (his R1 and R2 victims meet, or, if he came through a wrestle-in, his wrestle-in victim first meets his R1 victim; the winner then meets his QF victim, then his SF victim); the two chain winners wrestle for 3rd and the two chain losers for 5th (in 1950–1962 the chain losers are unplaced). There is no 7th-place bout. In 1952 and 1953 the two chains were cross-bracketed (each mixes both semifinal halves; the printed seats are kept). Some 1950–1966 weights were 16-man draws with no first round; 1950–1951 had eight weight classes and 1966–1969 eleven.',
     periods: [
+      { from: 1950, to: 1954, text: 'places 6-4-2-1 (four places) and 1 point for a fall, default or forfeit; no advancement points at all (they begin in 1955); no bye points; every school scores. Reproduced from the NCAA Guides\' team scoring (the 1951 Guide prints 1950 by weight class).',
+        checks: [[0, /no advancement points before 1955/], [2, /Place: 6-4-2-1 \(four places/]] },
+      { from: 1955, to: 1955, text: 'places 7-5-3-1 (four places) and 1 point for a fall, default or forfeit. Advancement points begin (1955 NCAA Rule IX 1(b)): 1 per championship win beyond an initial round that contains byes, the final included, and 1 per repechage or 3rd-place win; a forfeit earns no advancement point. Reproduces all 38 team totals in the 1956 NCAA Guide.',
+        checks: [[0, /Rule IX 1\(b\)/], [2, /Place: 7-5-3-1 \(four places/]] },
+      { from: 1956, to: 1962, text: 'places 10-7-4-2 (four places); championship advancement 1 (none for the final) and repechage advancement 1 for each repechage win; a fall, default or forfeit earns 1 bonus point, with no bonus for a decision margin; no bye points; every school scores.',
+        checks: [[0, /1 per repechage win/], [0, /No bye points/], [1, /no bonus for a decision margin/], [2, /Place: 10-7-4-2 \(four places/], [2, /finalist repechage/]] },
+      { from: 1963, to: 1967, text: 'places 10-7-5-3-2-1; championship advancement 1 (none for the final; a wrestle-in win counts) and repechage advancement 1 for each repechage win; a fall, default or forfeit earns 1 bonus point, with no bonus for a decision margin; no bye points; every school scores.',
+        checks: [[0, /1 per repechage win/], [0, /No bye points/], [1, /no bonus for a decision margin/], [2, /Place: 10-7-5-3-2-1 \(six places/], [2, /finalist repechage/]] },
+      { from: 1968, to: 1969, text: 'places 12-9-7-5-3-1; championship advancement 1 (none for the final; a wrestle-in win counts) and repechage advancement 1 for each repechage win; a fall, default or forfeit earns 1 bonus point, with no bonus for a decision margin; no bye points; every school scores.',
+        checks: [[0, /1 per repechage win/], [0, /No bye points/], [1, /no bonus for a decision margin/], [2, /Place: 12-9-7-5-3-1 \(six places, NCAA rule from 1968/], [2, /finalist repechage/]] },
       { from: 1970, to: 1971, text: 'places 12-9-7-5-3-1; championship advancement 1 (none for the final) and repechage advancement 1 for each repechage win; a fall, default or forfeit earns 1 bonus point, with no bonus for a DQ or a decision margin; no bye points; every school scores.',
         checks: [[0, /1 per repechage win/], [0, /No bye points/], [1, /Bonus \(1970–1971 rules\)/], [1, /no bonus for a DQ or for a decision margin/], [2, /Place: 12-9-7-5-3-1 \(six places, 1970–1971/], [2, /finalist repechage/]] } ] },
   { id: 'e0', from: 1972, to: 1978, name: 'Six places, no 7th-place bout', sample: 1978,
@@ -127,7 +142,8 @@ for (const y of YEARS.filter(y => y <= 1995 && NCAA_TOP10_SETS[y])) {   // NCAA-
   const n = S.entries.filter(([g, c, v]) => tot[c] === v).length;
   exact += n; of += S.entries.length; perYear[y] = n; if (S.entries.length !== 10) perYearOf[y] = S.entries.length;
 }
-for (const y of YEARS.filter(y => y <= 1995 && !NCAA_TOP10_SETS[y])) {
+const SCORING_HELD = HELD;   // team scoring not shown (historical-mode.js SCORING_PENDING): not part of the validation figure
+for (const y of YEARS.filter(y => y <= 1995 && !NCAA_TOP10_SETS[y] && !SCORING_HELD.includes(y))) {
   const out = cp.execFileSync('node', [path.join(ROOT, 'tools', 'pre1999', 'tscore_wb.js'), String(y), path.join(ROOT, 'tools', 'pre1999', 'extracted', 'x' + y + '.json')], { encoding: 'utf8' });
   const m = /(\d+)\/(\d+) published top-ten totals exact/.exec(out); check(!!m, `${y}: no scoring validation line`);   // tied top tens can list more than 10 schools
   let n = m ? +m[1] : 0;
@@ -139,7 +155,7 @@ for (const y of YEARS.filter(y => y <= 1995 && !NCAA_TOP10_SETS[y])) {
   }
   if (m) { exact += n; of += +m[2]; perYear[y] = n; if (+m[2] !== 10) (perYearOf[y] = +m[2]); }
 }
-check(exact === 208 && of === 262, `scoring validation is ${exact}/${of}, expected 208/262 (the documented figure, ${YEARS[0]}-1995)`);
+check(exact === 416 && of === 473, `scoring validation is ${exact}/${of}, expected 416/473 (the documented figure, ${YEARS[0]}-1995: 1950-1954 add 55/56, 1955 10/10, 1956-1961 61/63, 1962-1969 82/82)`);
 
 // ---------------------------------------------------------------- Career registry size (read here, never by the homepage)
 const reg = (() => { const t = fs.readFileSync(path.join(ROOT, 'historical-careers.js'), 'utf8'); return JSON.parse(t.slice(t.indexOf('/*JSON*/') + 8, t.indexOf('/*END*/'))); })();
@@ -242,7 +258,7 @@ if (fails.length) { console.error('HOME DATA CHECKS FAILED (' + fails.length + '
 const DATA = {
   baseline: 'TC-' + YEARS[0] + '-' + YEARS[YEARS.length - 1],
   counts: { championships: years.length, first: YEARS[0], last: YEARS[YEARS.length - 1], bouts, careers, appearances,
-            validated: { exact, of, from: YEARS[0], to: 1995, perYear, perYearOf } },
+            validated: { exact, of, from: YEARS.find(y => !SCORING_HELD.includes(y)), to: 1995, perYear, perYearOf } },
   years, canceled: [{ y: 2020, note: 'Championships canceled' }], eras, exceptions, archives,
   sources: [
     { years: YEARS[0] + '–2009', text: 'Reconstructed bout by bout from compiled championship brackets and checked against the NCAA\u2019s own record: the official team scoring and top tens in the NCAA Wrestling Guides and Records Book. Where the NCAA\u2019s annual material supplies or corrects a result, both readings are recorded.' },
