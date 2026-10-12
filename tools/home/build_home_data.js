@@ -35,7 +35,11 @@ const norm = l => l.replace(/\(\d{4} NCAA rules\)/g, '');
 const ERA_DEFS = [
   // 1970-1971 structure: finalist repechage (a distinct topology, not the 1972-1978 semifinalist wrestleback). Its scoring period is the
   // NCAA rule range 1970-1971; the label is the covered part of it ("1971" now, "1970-1971" once 1970 is covered).
-  { id: 'eR', from: YEARS[0], to: 1971, name: 'Finalist repechage', sample: 1971,
+  // 1940: three places and a wrestle-back for TRUE SECOND (NCAA Rule 16, 1939-40 Official Wrestling Guide)
+  { id: 'eT', from: YEARS[0], to: 1940, name: 'Wrestle-back for true second', sample: 1940,
+    summary: ['Three places score 5-3-1, and each fall earns 1 more point (defaults and forfeits earn none); there are no advancement points.',
+              'The champion\u2019s beaten opponents wrestle back and their winner meets the runner-up for 2nd. If the runner-up wins, his own beaten opponents wrestle back for 3rd; if he loses, he is 3rd with no further bout.'] },
+  { id: 'eR', from: 1941, to: 1971, name: 'Finalist repechage', sample: 1971,
     shared: 'Six places are scored (four in 1941–1962). Only wrestlers beaten by one of the two finalists wrestle back, each finalist\'s victims in his own chain, in the order he beat them (his R1 and R2 victims meet, or, if he came through a wrestle-in, his wrestle-in victim first meets his R1 victim; the winner then meets his QF victim, then his SF victim); the two chain winners wrestle for 3rd and the two chain losers for 5th (in 1950–1962 the chain losers are unplaced). There is no 7th-place bout. In 1952 and 1953 the two chains were cross-bracketed (each mixes both semifinal halves; the printed seats are kept). Some 1950–1966 weights were 16-man draws with no first round; 1950–1951 had eight weight classes and 1966–1969 eleven.',
     periods: [
       { from: 1941, to: 1954, text: 'places 6-4-2-1 (four places) and 1 point for a fall, default or forfeit; no advancement points at all (they begin in 1955); no bye points; every school scores. Reproduced from the NCAA Guides\' team scoring (the 1951 Guide prints 1950 by weight class; the 1947 and 1948 Guides match 1946 and 1947).',
@@ -109,6 +113,7 @@ const eras = ERA_DEFS.map(e => {
            adjByYear: e.to > 1995 ? Object.fromEntries(yrs.map((y, i) => [y, adjTeams[i]])) : undefined };
 });
 // checks behind the era summaries
+check(/Place: 5-3-1 \(three places/.test(built[1940].scores.keyLines[2]) && /^Bonus: Fall 1 /.test(built[1940].scores.keyLines[1]) && /no point for a default or forfeit/.test(built[1940].scores.keyLines[1]) && /no advancement points/.test(built[1940].scores.keyLines[0]) && /runner-up/.test(built[1940].scores.keyLines[2]), 'era eT summary not supported by the 1940 rule text');
 check(/six places/.test(built[1978].scores.keyLines[2]) && /no 7th-place bout/.test(built[1978].scores.keyLines[2]) && /Major Decision \(8–11\) ½ · Superior Decision \(12\+\) ¾/.test(built[1978].scores.keyLines[1]) && /semifinalist/.test(built[1978].scores.keyLines[2]) && /No bye points/.test(built[1978].scores.keyLines[0]), 'era e0 summary not supported by the 1978 rule text');
 for (const y of YEARS.filter(y => y >= 1972 && y <= 1975)) check(/1972–1975 rules/.test(built[y].scores.keyLines[1]) && /Decision by 10 or more ½/.test(built[y].scores.keyLines[1]) && /no major or superior decision/.test(built[y].scores.keyLines[1]) && /six places/.test(built[y].scores.keyLines[2]) && /No bye points/.test(built[y].scores.keyLines[0]), `${y}: era e0 1972–1975 sub-period summary not supported by its rule text`);
 check(/1972–1975 rules/.test(built[1975].scores.keyLines[1]) && /Decision by 10 or more ½/.test(built[1975].scores.keyLines[1]) && /no major or superior decision/.test(built[1975].scores.keyLines[1]) && /six places/.test(built[1975].scores.keyLines[2]) && /No bye points/.test(built[1975].scores.keyLines[0]), 'era e0 (1975 period) summary not supported by the 1975 rule text');
@@ -155,7 +160,7 @@ for (const y of YEARS.filter(y => y <= 1995 && !NCAA_TOP10_SETS[y] && !SCORING_H
   }
   if (m) { exact += n; of += +m[2]; perYear[y] = n; if (+m[2] !== 10) (perYearOf[y] = +m[2]); }
 }
-check(exact === 465 && of === 528, `scoring validation is ${exact}/${of}, expected 465/528 (the documented figure, ${YEARS[0]}-1995: 1941-1949 add 49/55, 1950-1954 55/56, 1955 10/10, 1956-1961 61/63, 1962-1969 82/82)`);
+check(exact === 470 && of === 538, `scoring validation is ${exact}/${of}, expected 470/538 (the documented figure, ${YEARS[0]}-1995: 1940 adds 5/10, 1941-1949 49/55, 1950-1954 55/56, 1955 10/10, 1956-1961 61/63, 1962-1969 82/82)`);
 
 // ---------------------------------------------------------------- Career registry size (read here, never by the homepage)
 const reg = (() => { const t = fs.readFileSync(path.join(ROOT, 'historical-careers.js'), 'utf8'); return JSON.parse(t.slice(t.indexOf('/*JSON*/') + 8, t.indexOf('/*END*/'))); })();
