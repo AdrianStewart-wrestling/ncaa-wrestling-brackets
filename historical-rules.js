@@ -214,7 +214,8 @@ const HistoricalWrestlebackScoring = (function () {
   let Y7273 = false; const PLACE7273 = { 1: 12, 2: 9, 3: 7, 4: 5, 5: 3, 6: 1 };
   // 1962-1969 (WrestlingStats "NCAA Wrestling Rules for Scoring": 1956 10-7-4-2; 1963 10-7-5-3-2-1; 1968 12-9-7-5-3-1). Every
   // published 1962-1969 top-ten total reproduces with these tables and the 1970-1971 advancement and bonus rules (82 of 82).
-  let PRE70 = null; const PLACE62 = { 1: 10, 2: 7, 3: 4, 4: 2 }, PLACE6367 = { 1: 10, 2: 7, 3: 5, 4: 3, 5: 2, 6: 1 };
+  // 1955: 7-5-3-1 (WrestlingStats chronology, 1955); 1956-1962: 10-7-4-2
+  let PRE70 = null; const PLACE55 = { 1: 7, 2: 5, 3: 3, 4: 1 }, PLACE62 = { 1: 10, 2: 7, 3: 4, 4: 2 }, PLACE6367 = { 1: 10, 2: 7, 3: 5, 4: 3, 5: 2, 6: 1 };
   const worth = p => (PRE70 ? PRE70[p] : Y7273 ? PLACE7273[p] : PLACE[p]) || 0, label = p => p >= NONE ? 'none' : p === 1 ? '1st' : p === 2 ? '2nd' : p === 3 ? '3rd' : p + 'th';
   // 1985 bye rule on the replayed records: a wrestler whose first championship bout is R16 (printed R1 bye) and who wins it: +1;
   // an R2 loser whose first consolation bout is WB2 (his WB1 seat was a printed vacancy) and who wins it: +1/2.
@@ -236,7 +237,7 @@ const HistoricalWrestlebackScoring = (function () {
   function compute(year, records, schoolOf, schools, opts) {
     CON = CONS[(opts && opts.shape) || 'qf-wrestleback'] || CONS['qf-wrestleback'];
     Y7273 = Number(year) >= 1970 && Number(year) <= 1973;
-    PRE70 = Number(year) >= 1970 ? null : Number(year) <= 1962 ? PLACE62 : Number(year) <= 1967 ? PLACE6367 : PLACE7273;
+    PRE70 = Number(year) >= 1970 ? null : Number(year) <= 1955 ? PLACE55 : Number(year) <= 1962 ? PLACE62 : Number(year) <= 1967 ? PLACE6367 : PLACE7273;
     const Y60 = Number(year) < 1970;   // 1962-1969: the 1970-1971 advancement (champ 1 / repechage 1) and bonus (fall/forfeit/default 1) rules
     const sfShape = !!(opts && opts.shape === 'sf-wrestleback');
     const B = bonusTable(year), problems = [], events = [], byTeam = {}, floors = {}, schoolOfW = {};
@@ -321,7 +322,7 @@ const HistoricalWrestlebackScoring = (function () {
       y <= 1984 ? 'Bonus (1976–1984 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · no tech fall (none before 1985).' :
       y <= 1987 ? 'Bonus (1985–1987 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · Tech Fall 1.' :
       'Bonus (' + (y >= 1995 ? '1995 rules' : '1988–1994 rules') + '): Fall / Forfeit / Default / DQ ' + b.Fall + ' · Major Decision ' + b.MajDec + ' · ' + (y >= 1995 ? 'Match Termination (15+) ' : 'Tech Fall ') + b.TechFall + '.',
-      (opts && opts.shape === 'finalist-repechage-4') ? 'Place: 10-7-4-2 (four places, NCAA rule from 1956), counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost; the repechage C winners meet for 3rd and the C losers are unplaced: SF win clinches 2nd · Final 1st · repechage C win 4th · 3rd-place bout.' :
+      (opts && opts.shape === 'finalist-repechage-4') ? 'Place: ' + (y <= 1955 ? '7-5-3-1 (four places, NCAA rule from 1955)' : '10-7-4-2 (four places, NCAA rule from 1956)') + ', counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost; the repechage C winners meet for 3rd and the C losers are unplaced: SF win clinches 2nd · Final 1st · repechage C win 4th · 3rd-place bout.' :
       (opts && opts.shape === 'finalist-repechage-6' && y < 1970) ? 'Place: ' + (y >= 1968 ? '12-9-7-5-3-1 (six places, NCAA rule from 1968)' : '10-7-5-3-2-1 (six places, NCAA rule from 1963)') + ', counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost: QF win clinches 6th · SF win 2nd · Final 1st · repechage B win 6th · repechage C win 4th · 3rd- and 5th-place bouts.' :
       (opts && opts.shape === 'finalist-repechage-6') ? 'Place: 12-9-7-5-3-1 (six places, 1970–1971 NCAA rules), counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost: QF win clinches 6th · SF win 2nd · Final 1st · repechage B win 6th · repechage C win 4th · 3rd- and 5th-place bouts.' :
       (opts && opts.shape === 'sf-wrestleback-6' && y <= 1973) ? 'Place: 12-9-7-5-3-1 (six places, 1972–1973 NCAA rules), counted the moment a finish is clinched; only wrestlers beaten by a semifinalist wrestle back, and the two consolation-quarterfinal losers are eliminated unplaced (no 7th-place bout): QF win clinches 6th · SF win 2nd · Final 1st · consolation QF win 6th · consolation SF win 4th · 3rd- and 5th-place bouts.' :

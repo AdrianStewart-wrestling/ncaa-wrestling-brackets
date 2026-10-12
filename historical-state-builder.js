@@ -893,6 +893,12 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       const v = victimsOf(st, f), A = st.con[0][h], B = st.con[1][h], C = st.con[2][h];
       C.b = v[3];
       if (v[2] && v[2] !== 'BYE') B.b = v[2];
+      // 1955-1961: a victim printed as Bye in his repechage seat did not wrestle back (facts.repVacant) -- treated exactly like a bye
+      const vac = F.repVacant ? new Set(F.repVacant) : null;
+      if (vac) { if (v[0] && v[0] !== 'BYE' && vac.has(v[0].n)) v[0] = 'BYE'; if (v[1] && v[1] !== 'BYE' && vac.has(v[1].n)) { v[1] = 'BYE';
+        if (v[0] && v[0] !== 'BYE') { A.a = v[0]; A.b = null; A.w = 'a'; A.bye = true; B.a = v[0]; return; } } }
+      // 1955-1961 16-man draws: byes in both of the finalist's early rounds -- no A seat; his QF victim advances through B with no bout
+      if (v[0] === 'BYE' && v[1] === 'BYE' && F.draw16) { A.bye = true; if (v[2] && v[2] !== 'BYE') { B.a = null; B.w = 'b'; B.bye = true; C.a = v[2]; } return; }   // A: both seats printed Bye (drawn as BYE, not TBD)
       if (v[0] === 'BYE') { if (v[1] && v[1] !== 'BYE') { A.a = null; A.b = v[1]; A.w = 'b'; A.bye = true; B.a = v[1]; } }
       else {
         const pv = N ? wrestleInVictimOf(st, f) : null;
@@ -940,9 +946,11 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
     initProblems.forEach(x => problems.push(x));
     // every printed no-bout repechage seat must be one the finalist's R1 bye produces, and vice versa
-    const st = book.states[wt], got = st.con[0].map((m, h) => m.bye ? h + ':' + m[m.w].n : null).filter(Boolean);
+    const st = book.states[wt], got = st.con[0].map((m, h) => m.bye && m.w ? h + ':' + m[m.w].n : null).filter(Boolean);
     const want = (F.byes || []).filter(b => b.phase === 'repBye').map(b => b.chain + ':' + b.wrestler);
     if (JSON.stringify(got.slice().sort()) !== JSON.stringify(want.slice().sort())) problems.push('printed repechage byes ' + JSON.stringify(want) + ' != derived ' + JSON.stringify(got));
+    const gotB = st.con[1].map((m, h) => m.bye ? h + ':' + m[m.w].n : null).filter(Boolean), wantB = (F.byes || []).filter(b => b.phase === 'repByeB').map(b => b.chain + ':' + b.wrestler);
+    if (JSON.stringify(gotB.slice().sort()) !== JSON.stringify(wantB.slice().sort())) problems.push('printed repechage B byes ' + JSON.stringify(wantB) + ' != derived ' + JSON.stringify(gotB));
     return { ok: problems.length === 0, core, book, problems, wrestleback: true, repechage: true };
   }
   const api = { isWrestleback, shapeOf, build, boutNumbers, roundLabel, PATH_CON, RENDER_CON, SHAPES };
