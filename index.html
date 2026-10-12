@@ -2831,7 +2831,7 @@ function render() {
   });
   html+=champBox(st);
   html+=`</div>`;
-  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">${st.repechage?'⬇ Repechage — wrestlers beaten by the two finalists':'⬇ Consolation Bracket — Losers Drop Here'}</div><div class="line"></div></div>`;
+  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">${st.repCross?'⬇ Repechage — cross-bracketed, seats as printed':st.repechage?'⬇ Repechage — wrestlers beaten by the two finalists':'⬇ Consolation Bracket — Losers Drop Here'}</div><div class="line"></div></div>`;
   html+=`<div class="bgrid" style="align-items:flex-start">`;
   const cpHasData=st.conPigtail.a||st.conPigtail.b;
   if(multiPt){
@@ -2845,8 +2845,8 @@ html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top
   st.con.forEach((round,ri)=>{
     html+=`<div class="rcol"><div class="rhdr cc">${(st.conRoundNames||CON_RND_NAMES)[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
     const hasData=round.some(m=>m.a||m.b);
-    if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">Awaiting results…</div>`;}
-    else{round.forEach((m,mi)=>{const cap=st.repechage?`<div class="pl-lbl">${ri===0?'Beaten by ':'Chain of '}${(st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||'finalist'}</div>`:'';html+=`<div>${cap}${matchHTML(m,'con',ri,mi,'con')}</div>`;});}   // finalist repechage: one chain per finalist
+    if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">${round.every(m=>m.empty)?'No bouts (seats printed Bye)':'Awaiting results…'}</div>`;}   // m.empty: 1950s printed-seat repechage only
+    else{round.forEach((m,mi)=>{const cap=st.repCross?`<div class="pl-lbl">Chain ${mi+1}</div>`:st.repechage?`<div class="pl-lbl">${ri===0?'Beaten by ':'Chain of '}${(st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||'finalist'}</div>`:'';html+=`<div>${cap}${matchHTML(m,'con',ri,mi,'con')}</div>`;});}   // finalist repechage: one chain per finalist
     html+=`</div></div><div class="rconn"></div>`;
   });
   html+=`<div class="rcol"><div class="rhdr" style="color:#cd7f32">Place Matches</div><div style="display:flex;flex-direction:column;gap:10px">`;
