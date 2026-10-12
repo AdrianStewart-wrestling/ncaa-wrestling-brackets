@@ -247,6 +247,20 @@ const HistoricalWrestlebackScoring = (function () {
     const add = (s, cat, pts, src, r, round, who) => { if (!pts) return; const t = team(s); if (cat === 'Advancement') t.adv += pts; else if (cat === 'Bonus') t.bonus += pts; else t.place += pts;
       events.push({ school: s, wrestlerId: who, weight: r.weight, boutId: r.boutId, round, category: cat, points: pts, source: src }); };
     const floor = (w, p, s) => { schoolOfW[w] = s; if (floors[w] === undefined || p < floors[w]) floors[w] = p; };
+    // 1955 NCAA Rule IX, Section 1(b) (1955 Official NCAA Wrestling Guide, p. 62): "1 point shall be scored for each match won beyond an
+    // initial round which contains one or more byes. One point shall also be awarded for each bout won in the consolation third place
+    // eliminations and finals regardless of byes. Note -- In case of a forfeit the advancement point shall not be scored". Read
+    // literally: a win in the first round actually wrestled scores only if that round had no byes; every later championship win
+    // (the final included), every repechage win and the 3rd-place bout score 1; a forfeit (medical forfeit included) scores no
+    // advancement. Reproduces all 38 team totals in the 1956 Guide.
+    const adv1955 = r => { const p = String(r.key).split(':'), b = p[0], ri = +p[1];
+      if (r.resultType === 'FFT' || r.resultType === 'MedFFT') return 0;
+      if (b === 'con' || b === 'conPigtail' || b === 'p3') return 1;
+      if (b !== 'champ') return 0;
+      const HW = (typeof window !== 'undefined' && window.HistoricalWeights) || globalThis.HistoricalWeights, HS = (typeof window !== 'undefined' && window.HistoricalSeeds) || globalThis.HistoricalSeeds;
+      const f = ((HS && HS.facts && HS.facts[String(year)]) || {})[String(HW ? HW.labelOf(year, r.weight) : r.weight)] || {};
+      const init = f.draw16 ? 1 : 0, initByes = (f.byes || []).some(x => f.draw16 ? x.phase === 'r2' : (x.phase === 'r1' && !x.phantom));
+      return ri < init ? 0 : ri === init ? (initByes ? 0 : 1) : 1; };
     records.slice().sort((a, b) => (a.boutId - b.boutId) || (a.key < b.key ? -1 : 1)).forEach(r => {
       const round = roundOfKey(r.key); if (!round) { problems.push({ boutId: r.boutId, code: 'unknown_bout', message: 'unrecognised bout ' + r.key }); return; }
       const ws = schoolOf(r.winnerId); if (!ws) { problems.push({ boutId: r.boutId, code: 'unknown_wrestler', message: 'no school for ' + r.winnerId }); return; }
@@ -257,7 +271,7 @@ const HistoricalWrestlebackScoring = (function () {
       const y71 = Number(year) <= 1971;
       const bonus = y71 ? (({ Fall: 1, FFT: 1, MedFFT: 1, Default: 1 })[r.resultType] || 0) : y75 ? ((r.resultType === 'Dec' || r.resultType === 'MajDec') ? (m10 && (+m10[1] - +m10[2]) >= 10 ? 0.5 : 0) : ({ Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1 })[r.resultType]) : (sup ? B.SupDec : B[r.resultType]); if (typeof bonus !== 'number') problems.push({ boutId: r.boutId, code: 'unknown_result_type', message: 'unknown result type ' + r.resultType });
       add(ws, 'Bonus', bonus || 0, 'Rule ' + (Number(year) >= 1995 ? '1995' : Number(year) >= 1988 ? '1988' : Number(year) >= 1985 ? '1976/1985' : Number(year) >= 1976 ? '1976' : Y60 ? (Number(year) < 1955 ? '1950-1954' : Number(year) < 1962 ? '1955-1961' : '1962-1969') : y71 ? '1970-1971' : '1972-1975') + ': ' + (y75 && (r.resultType === 'Dec' || r.resultType === 'MajDec') ? 'Decision by 10 or more' : sup ? 'Superior decision' : r.resultType), r, round, r.winnerId);
-      add(ws, 'Advancement', Number(year) < 1955 ? 0 : ((Y7273 || Y60) && /^Cons/.test(round) && ADV[round] ? 1 : ADV[round]) || 0, Y60 ? 'Rule 1955 (champ 1 / repechage 1)' : Number(year) <= 1971 ? 'Rule 1970 (champ 1 / repechage 1)' : Y7273 ? 'Rule 1972 (champ 1 / cons 1)' : 'Rule 1974 (champ 1 / cons 1/2)', r, round, r.winnerId);
+      add(ws, 'Advancement', Number(year) < 1955 ? 0 : Number(year) === 1955 ? adv1955(r) : ((Y7273 || Y60) && /^Cons/.test(round) && ADV[round] ? 1 : ADV[round]) || 0, Y60 ? 'Rule 1955 (champ 1 / repechage 1)' : Number(year) <= 1971 ? 'Rule 1970 (champ 1 / repechage 1)' : Y7273 ? 'Rule 1972 (champ 1 / cons 1)' : 'Rule 1974 (champ 1 / cons 1/2)', r, round, r.winnerId);
       const sch = (opts && opts.shape === 'finalist-repechage-4' && (REP4[round] || SCHEDULE[round])) || (opts && opts.shape === 'finalist-repechage-6' && REP[round]) || (opts && opts.shape === 'sf-wrestleback-6' && SIX[round]) || SCHEDULE[round];
       if (sch) { const [entry, win, lose] = sch;
         // 1950-1961: a wrestler can reach a place bout through a printed bye (no clinching bout) -- his entry floor is then 'none'
@@ -315,6 +329,7 @@ const HistoricalWrestlebackScoring = (function () {
     const y = Number(year), b = bonusTable(y);
     const keyLines = [
       y < 1955 ? 'Adv: none -- no advancement points before 1955 (only placement and fall points score). No bye points.' :
+      y === 1955 ? 'Adv (1955 NCAA Rule IX 1(b)): 1 per championship win beyond an initial round that contains byes (the final included; a first-round win scores only where that round had no byes), 1 per repechage and 3rd-place win; no advancement point for a forfeit. No bye points.' :
       y < 1970 ? 'Adv: 1 per championship win (a wrestle-in win included) and 1 per repechage win (NCAA rules from 1955; the Final and the place bouts add none). No bye points.' :
       y <= 1971 ? 'Adv: 1 per championship win and 1 per repechage win (1970–1971 NCAA rules; the Final and the 3rd- and 5th-place bouts add none). No bye points.' :
       y <= 1973 ? 'Adv: 1 per championship win and 1 per consolation win (1972–1973 NCAA rules; placement bouts and the Final add none). No bye points.' :
