@@ -59,9 +59,9 @@
       li.appendChild(el('span', 'pp-mk', r.status === 'decided' ? (r.result === 'W' ? '✓' : '✗') : '→'));
       var main = el('span', 'pp-main');
       if (r.opponent) { var ob = el('button', 'pp-opp', r.opponent.name); ob.type = 'button'; ob.addEventListener('click', function () { openPanel(r.opponent.id); }); main.appendChild(ob); main.appendChild(el('span', 'pp-osc', r.opponent.school + (r.opponent.seed ? ' · #' + r.opponent.seed : ''))); }   // unseeded: school only (was '#null')
-      else main.appendChild(el('span', 'pp-tbd', r.status === 'decided' ? (/^Rep\. A$/.test(r.round) ? 'No bout: his finalist had a first-round bye' : 'No opponent (printed forfeit / bye)') : 'Opponent not decided yet'));   // decided with no opponent: 1981 printed vacancies; finalist-repechage no-bout seat (1970-1971)
+      else main.appendChild(el('span', 'pp-tbd', r.status === 'decided' ? (/^Rep\. A$/.test(r.round) ? 'No bout: his finalist had a first-round bye' : (m.year === 1940 && r.round === '3rd Place') ? 'No bout: 3rd place awarded (the runner-up lost the 2nd-place bout; printed “automatic”)' : (m.year === 1940 && /^(Wrestle-back|To the 3rd)/.test(r.round)) ? 'No bout: the seat opposite him was empty' : 'No opponent (printed forfeit / bye)') : 'Opponent not decided yet'));   // decided with no opponent: 1981 printed vacancies; finalist-repechage no-bout seat (1970-1971)
       li.appendChild(main);
-      li.appendChild(el('span', 'pp-res', r.status === 'decided' ? (r.opponent ? res(r) : (/^Rep\. A$/.test(r.round) ? 'Advanced' : 'Forfeit')) : 'Bout ' + r.boutId));
+      li.appendChild(el('span', 'pp-res', r.status === 'decided' ? (r.opponent ? res(r) : (/^Rep\. A$/.test(r.round) ? 'Advanced' : (m.year === 1940 && r.round === '3rd Place') ? 'Awarded' : (m.year === 1940 && /^(Wrestle-back|To the 3rd)/.test(r.round)) ? 'Advanced' : 'Forfeit')) : 'Bout ' + r.boutId));
       if (r.points) li.appendChild(el('span', 'pp-pt', '+' + fmtN(r.points)));
       ol.appendChild(li);
     });
@@ -103,7 +103,7 @@
     } else {
       var t = el('div', 'pp-out pp-out--' + o.code);
       if (o.code === 'champion') t.textContent = '🏆 NCAA Champion — beat ' + who(last.opponent) + ' in the final (' + res(last) + ')';
-      else if (o.code === 'placed') t.textContent = !last.opponent ? o.label + ' — by forfeit in the ' + last.round + ' (no opponent printed)' : o.label + (last.result === 'W' ? ' — beat ' : ' — lost to ') + who(last.opponent) + ' in the ' + last.round + ' (' + res(last) + ')';
+      else if (o.code === 'placed') t.textContent = !last.opponent ? (m.year === 1940 && last.round === '3rd Place' ? o.label + ' — awarded with no bout after losing the 2nd-place bout (printed “automatic”)' : o.label + ' — by forfeit in the ' + last.round + ' (no opponent printed)') : o.label + (last.result === 'W' ? ' — beat ' : ' — lost to ') + who(last.opponent) + ' in the ' + last.round + ' (' + res(last) + ')';
       else t.textContent = o.label + ' — lost to ' + who(last.opponent) + ' (' + res(last) + ')';
       b.appendChild(t);
     }

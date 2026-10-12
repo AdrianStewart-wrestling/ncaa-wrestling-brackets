@@ -2695,6 +2695,7 @@ function getLoser(m){return m&&m.w?m[m.w==='a'?'b':'a']:null;}
 
 function getAllAmericans(st) {
   const champFinal=st.champ[4][0];
+  if(st.trueSecond) return [{place:1,medal:'🥇',wr:st.champion},{place:2,medal:'🥈',wr:st.second||null},{place:3,medal:'🥉',wr:getWinner(st.place3)}];   // 1940: three places; 2nd is the 2nd-place bout winner
   return [
     {place:1,medal:'🥇',wr:st.champion},
     {place:2,medal:'🥈',wr:getLoser(champFinal)},
@@ -2755,7 +2756,7 @@ function champBox(st) {
     const nameHtml=wr?`<div class="aa-name">${wr.n}</div><div class="aa-school">${wr.s}</div>`:`<div class="aa-tbd">TBD</div>`;
     return `<div class="aa-row place-${place}"><div class="aa-medal">${medalDisplay}</div><div class="aa-info">${nameHtml}</div></div>`;
   }).join('');
-  const aaPanel=`<div class="aa-panel"><div class="aa-hdr"><div class="aa-hdr-t">All-Americans</div><div class="aa-hdr-s">Top 8 Finishers</div></div>${rows}</div>`;
+  const aaPanel=`<div class="aa-panel"><div class="aa-hdr"><div class="aa-hdr-t">All-Americans</div><div class="aa-hdr-s">${st.trueSecond?'Top 3 Finishers':'Top 8 Finishers'}</div></div>${rows}</div>`;
   return `<div class="cbox"><div>${champCard}</div>${aaPanel}</div>`;
 }
 
@@ -2831,7 +2832,7 @@ function render() {
   });
   html+=champBox(st);
   html+=`</div>`;
-  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">${st.repCross?'⬇ Repechage — cross-bracketed, seats as printed':st.repechage?'⬇ Repechage — wrestlers beaten by the two finalists':'⬇ Consolation Bracket — Losers Drop Here'}</div><div class="line"></div></div>`;
+  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">${st.trueSecond?'⬇ Wrestle-backs — for 2nd (the champion’s beaten opponents meet the runner-up) and for 3rd (the runner-up’s beaten opponents)':st.repCross?'⬇ Repechage — cross-bracketed, seats as printed':st.repechage?'⬇ Repechage — wrestlers beaten by the two finalists':'⬇ Consolation Bracket — Losers Drop Here'}</div><div class="line"></div></div>`;
   html+=`<div class="bgrid" style="align-items:flex-start">`;
   const cpHasData=st.conPigtail.a||st.conPigtail.b;
   if(multiPt){
@@ -2845,12 +2846,14 @@ html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top
   st.con.forEach((round,ri)=>{
     html+=`<div class="rcol"><div class="rhdr cc">${(st.conRoundNames||CON_RND_NAMES)[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
     const hasData=round.some(m=>m.a||m.b);
-    if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">${round.every(m=>m.empty)?'No bouts (seats printed Bye)':'Awaiting results…'}</div>`;}   // m.empty: 1950s printed-seat repechage only
-    else{round.forEach((m,mi)=>{const cap=st.repCross?`<div class="pl-lbl">Chain ${mi+1}</div>`:st.repechage?`<div class="pl-lbl">${ri===0?'Beaten by ':'Chain of '}${(st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||'finalist'}</div>`:'';html+=`<div>${cap}${matchHTML(m,'con',ri,mi,'con')}</div>`;});}   // finalist repechage: one chain per finalist
+    if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">${round.every(m=>m.empty)?(st.trueSecond?'No bout in this round':'No bouts (seats printed Bye)'):'Awaiting results…'}</div>`;}   // m.empty: 1950s printed-seat repechage only
+    else{round.forEach((m,mi)=>{if(st.trueSecond&&(ri===2&&mi===1||m.empty&&!m.a&&!m.b))return;   // 1940: the 3rd-place wrestle-back winner goes straight to the 3rd-place bout
+      const tsCap=st.trueSecond?`<div class="pl-lbl">${ri===2?'For 2nd · v the runner-up':(mi?'For 3rd · beaten by ':'For 2nd · beaten by ')+((st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||(mi?'the runner-up':'the champion'))}</div>`:null;
+      const cap=tsCap!==null?tsCap:st.repCross?`<div class="pl-lbl">Chain ${mi+1}</div>`:st.repechage?`<div class="pl-lbl">${ri===0?'Beaten by ':'Chain of '}${(st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||'finalist'}</div>`:'';html+=`<div>${cap}${matchHTML(m,'con',ri,mi,'con')}</div>`;});}   // finalist repechage: one chain per finalist
     html+=`</div></div><div class="rconn"></div>`;
   });
   html+=`<div class="rcol"><div class="rhdr" style="color:#cd7f32">Place Matches</div><div style="display:flex;flex-direction:column;gap:10px">`;
-  [{m:st.place3,bkt:'p3',lbl:'🥉 3rd Place',cls:'pm'},{m:st.place5,bkt:'p5',lbl:'5th Place',cls:'con'},{m:st.place7,bkt:'p7',lbl:'7th Place',cls:'con'}]
+  [{m:st.place3,bkt:'p3',lbl:st.place3.auto?'🥉 3rd Place — no bout (the runner-up lost the 2nd-place bout)':'🥉 3rd Place',cls:'pm'},{m:st.place5,bkt:'p5',lbl:'5th Place',cls:'con'},{m:st.place7,bkt:'p7',lbl:'7th Place',cls:'con'}]
     .forEach(({m,bkt,lbl,cls})=>{
       if(m.a||m.b){html+=`<div><div class="pl-lbl">${lbl}</div>${matchHTML(m,bkt,0,0,cls)}</div>`;}
     });

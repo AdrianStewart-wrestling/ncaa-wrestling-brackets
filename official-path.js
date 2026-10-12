@@ -91,6 +91,10 @@
       // on who later reached the final, so the core has no edge for it: continue to the next bout that actually holds him. On every other
       // topology a wrestler whose loss has no route never appears in a later bout, so this changes nothing there.
       if ((nxt === null || nxt === undefined) && !won) { visited[cur] = true; nxt = laterBoutOf(cur); }
+      // A printed-seat repechage (1940-1953) seats the winner by the print, not by the core's static route: when the routed bout does not
+      // hold him, continue to the next bout that does (a route that holds him -- every other topology -- is followed exactly as before).
+      if (nxt !== null && nxt !== undefined && descs[nxt] && !isMe(descs[nxt].a) && !isMe(descs[nxt].b)) { visited[cur] = true; nxt = laterBoutOf(cur); }
+      else if (won && nxt !== null && nxt !== undefined && core.printedSeats) { var alt = laterBoutOf(cur); if (alt !== null && alt < nxt) nxt = alt; }   // printed-seat wrestle-backs (1940-1953): the next bout he actually wrestled
       if (nxt === null || nxt === undefined) { terminal = { boutId: cur, key: d.key, won: won, champion: won && !!r.winnerIsChampion }; break; }
       visited[cur] = true;
       cur = nxt;
@@ -106,6 +110,12 @@
       else if (!terminal.won) outcome = { code: 'eliminated', place: null, label: 'Eliminated in ' + last.round, round: last.round };
       else { outcome = { code: 'competing', place: null, label: 'Competing', round: last.round }; problems.push('a win ended his path at ' + last.round); }
     } else outcome = { code: 'competing', place: null, label: last.status === 'pending' ? 'Competing — bout ready' : 'Competing — waiting for an opponent', round: last.round };
+
+    // 1940 (true second, three places): the final places come from the engine (the 2nd-place bout decides 2nd; a beaten runner-up is 3rd)
+    if (terminal && typeof core.finishOf === 'function') { var fp = core.finishOf(book, wrestlerId);
+      outcome = fp === 1 ? { code: 'champion', place: 1, label: 'NCAA Champion', round: last.round } : fp ? { code: 'placed', place: fp, label: 'Finished ' + ordinal(fp), round: last.round }
+        : { code: 'eliminated', place: null, label: 'Eliminated in ' + last.round, round: last.round };
+      problems = problems.filter(function (x) { return !/^a win ended his path/.test(x); }); }
 
     // ---- what is next (only while he is still in the tournament)
     var next = null;
