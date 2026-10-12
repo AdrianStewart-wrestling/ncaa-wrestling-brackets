@@ -2794,6 +2794,7 @@ function renderBracketHelp() {
 function render() {
   renderBracketHelp();
   const st=viewState(CW);
+  if(st&&st.olympic){renderOlympic(st);return;}   // 1948: Olympic bad-point rounds (no bracket)
   const MH=68, GAP=6;
   // Wrestle-in placement. OFFICIAL / MY PICKS (and 2019+ history, 33 seeds): #32/#33 winner feeds R1 slot 0,
   // con pre-match feeds Con R1 bout 4 -- the layout below has always assumed exactly that. Pre-2019 history:
@@ -2858,6 +2859,37 @@ html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top
       if(m.a||m.b){html+=`<div><div class="pl-lbl">${lbl}</div>${matchHTML(m,bkt,0,0,cls)}</div>`;}
     });
   html+=`</div></div></div>`;
+  document.getElementById('bkt').innerHTML=html;
+}
+
+// 1948 (Olympic year): the championships were wrestled under Olympic bad-point rules -- no bracket. Each round pairs the wrestlers
+// still in; the print gives each bout's bad points (winner 0 for a fall, 1 for a decision; loser 3, or 2 for a close decision).
+// Read-only view of the historical state built by historical-state-builder.js (buildOlympic): rounds, running totals, printed places.
+function renderOlympic(st){
+  const esc=t=>String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const res=m=>{const r=m.res||{};const t=r.resultType==='Fall'?'Fall'+(r.time?' '+r.time:''):r.resultType==='MedFFT'?(/^DEF|^DFT/.test(m.printed)?'Default':'Med. forfeit'):'Dec';return t;};
+  let html=`<div class="sec-hd sec-champ"><div class="line"></div><div class="lbl">Olympic bad-point rounds — no bracket</div><div class="line"></div></div>`;
+  html+=`<div style="font-size:12px;color:var(--t2);margin:0 4px 12px;line-height:1.5;max-width:900px">In 1948, an Olympic year, the NCAA wrestled under Olympic rules. Each round paired the wrestlers still in. A fall gave the winner 0 bad points and a decision 1; the loser took 3 (2 for a close decision). A wrestler was out once his bad points reached the limit, and the last men in decided the places. The numbers beside each name are that bout’s bad points and his running total, as printed.</div>`;
+  html+=`<div class="bgrid" style="align-items:flex-start">`;
+  st.rounds.forEach((R,ri)=>{
+    html+=`<div class="rcol"><div class="rhdr gc">Round ${ri+1}</div><div style="display:flex;flex-direction:column;gap:10px">`;
+    R.forEach((m,mi)=>{html+=`<div>${matchHTML(m,'bp',ri,mi,'')}<div class="pl-lbl" style="margin-top:3px">${esc(res(m))} · bad pts ${m.bpA}–${m.bpB} · totals ${m.totA}–${m.totB}</div></div>`;});
+    html+=`</div></div><div class="rconn"></div>`;
+  });
+  const P=Object.entries(st.placeOf).sort((a,b)=>a[1]-b[1]);
+  const W=n=>st.entrants.find(x=>x.n===n);
+  const champ=st.champion;
+  html+=`<div class="cbox"><div><div class="ccard"><div class="crn">🏆</div><div class="clbl">Champion</div><div class="cnm">${esc(champ?champ.n:'')}</div><div class="csc">${esc(champ?champ.s:'')}</div></div></div>`;
+  html+=`<div class="aa-panel"><div class="aa-hdr"><div class="aa-hdr-t">All-Americans</div><div class="aa-hdr-s">Top 4 Finishers (printed)</div></div>${P.map(([n,pl])=>{const w=W(n);return `<div class="aa-row place-${pl}"><div class="aa-medal">${['','🥇','🥈','🥉','4'][pl]}</div><div class="aa-info"><div class="aa-name">${esc(n)}</div><div class="aa-school">${esc(w?w.s:'')}</div></div></div>`;}).join('')}</div></div>`;
+  html+=`</div>`;
+  // standings: every entrant, his bad points round by round (as printed), total, and finish
+  const rows=st.entrants.map(w=>{const per=st.rounds.map(R=>{const m=R.find(x=>x.a===w||x.b===w);return m?(m.a===w?m.bpA:m.bpB):null;});
+    const tot=per.reduce((a,b)=>a+(b||0),0),pl=st.placeOf[w.n];return {w,per,tot,pl,last:st.lastRound[w.n]||0};});
+  rows.sort((a,b)=>(a.pl||99)-(b.pl||99)||b.last-a.last||a.tot-b.tot||(a.w.n<b.w.n?-1:1));
+  html+=`<div class="sec-hd sec-con"><div class="line"></div><div class="lbl">Bad points by round</div><div class="line"></div></div>`;
+  html+=`<div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12px;min-width:520px;margin:0 4px 20px"><thead><tr style="text-align:left;color:var(--t2)"><th style="padding:4px 8px">Wrestler</th><th style="padding:4px 8px">School</th>${st.rounds.map((R,ri)=>`<th style="padding:4px 6px;text-align:center">Rd ${ri+1}</th>`).join('')}<th style="padding:4px 6px;text-align:center">Total</th><th style="padding:4px 8px">Finish</th></tr></thead><tbody>`;
+  rows.forEach(r=>{html+=`<tr style="border-top:1px solid var(--line, rgba(128,128,128,.25))"><td style="padding:4px 8px"><span data-wid="${window.TournamentCore.wrestlerId(CW,r.w)}" role="button" tabindex="0" style="cursor:pointer;text-decoration:underline dotted">${esc(r.w.n)}</span></td><td style="padding:4px 8px">${esc(r.w.s)}</td>${r.per.map(v=>`<td style="padding:4px 6px;text-align:center">${v==null?'·':v}</td>`).join('')}<td style="padding:4px 6px;text-align:center;font-weight:600">${r.tot}</td><td style="padding:4px 8px">${r.pl?['','1st','2nd','3rd','4th'][r.pl]:'Out after round '+r.last}</td></tr>`;});
+  html+=`</tbody></table></div>`;
   document.getElementById('bkt').innerHTML=html;
 }
 

@@ -692,6 +692,11 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     'true-second-3': { repechage: true, trueSecond: true, noPlace7: true, noPlace5: true, con: [2, 2, 2], path: ['Wrestle-back QF', 'Wrestle-back SF', '2nd-place bout'], render: ['Wrestle-back QF', 'Wrestle-back SF', '2nd-place bout'],
       numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 571 + 2 * wi, qfStart: 341 + 4 * wi, c2Start: 591 + 2 * wi,
              c3Start: 611 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 631 + wi, final: 551 + wi }) }
+    ,
+    // olympic-bad-points (1948, Olympic year): no bracket. Every round pairs the wrestlers still in; each bout gives the winner 0 bad
+    // points (fall) or 1 (decision) and the loser 3 (2 for a close decision), as printed; a wrestler is out once his bad points reach
+    // the limit. Placings are the printed ones (facts.places). Built by buildOlympic below (its own read-only core).
+    'olympic-bad-points': { olympic: true, con: [], path: [], render: [], numbers: () => ({}) }
   };
   function shapeOf(year, label) { const f = factsOf(year, label); return f && SHAPES[f.consFormat] ? f.consFormat : null; }
   function isWrestleback(year, label) { return !!shapeOf(year, label); }
@@ -705,6 +710,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const problems = [], F = factsOf(year, label), SH = F && SHAPES[F.consFormat];
     if (!SH) return { ok: false, problems: ['no wrestleback facts for ' + year + '/' + label] };
     if (SH.repechage) return buildRepechage(resultData, year, label, slotWeight, F, SH);
+    if (SH.olympic) return buildOlympic(resultData, year, label, slotWeight, F);
     const rows = resultData.filter(r => String(r.weight) === String(label));
     const T = ((window.HistoricalSeeds.table || {})[String(year)] || {})[String(label)] || {};
     const WB = F.wb, N = rows.filter(r => r.round === 'Prelims').length, M = rows.filter(r => r.round === 'ConsPrelims').length;
@@ -851,6 +857,61 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
   // identity, never by name). A finalist's R1 bye makes A a no-bout advance for his R2 victim (no record, no points).
   // extraDependents: every R1-SF bout of half h lies on the path to that half's semifinal, so changing one changes (or removes)
   // the finalist and therefore chain h and the 3rd/5th-place bouts; the final changes no chain. Exact, not a superset.
+  // 1948: a read-only core over the printed rounds. It offers what History reads from a core (keys, boutIdOf, locate, describe,
+  // routes, toRecords, newBook, roundLabel, methodLabel, finishOf); there is nothing to record or correct. Wrestler ids are
+  // weight-entrant ("125-07"), the entrant number being the order of first appearance in the print (facts.entrants).
+  function buildOlympic(resultData, year, label, slotWeight, F) {
+    const problems = [], wt = Number(slotWeight), wi = WEIGHTS.indexOf(wt);
+    const rows = resultData.filter(r => String(r.weight) === String(label));
+    const parse = (typeof HistoricalStateBuilder !== 'undefined' ? HistoricalStateBuilder : window.HistoricalStateBuilder).parseResult;
+    const school = {}; rows.forEach(r => { school[r.winner] = r.winner_school; school[r.loser] = r.loser_school; });
+    const ent = F.entrants || [], W = {};
+    ent.forEach((n, i) => { W[n] = { n, s: school[n] || '', r: '', seed: i + 1, ds: 0 }; });
+    rows.forEach(r => [r.winner, r.loser].forEach(n => { if (!W[n]) problems.push(n + ' is not a printed entrant'); }));
+    const wid = x => window.TournamentCore.wrestlerId(wt, x);
+    const nR = rows.reduce((a, r) => Math.max(a, +String(r.round).replace(/\D/g, '')), 0);
+    const rounds = Array.from({ length: nR }, () => []), keys = [], byId = new Map(), idOf = new Map(), recs = [];
+    rows.slice().sort((a, b) => a.bout - b.bout).forEach(r => {
+      const ri = +String(r.round).replace(/\D/g, '') - 1, mi = rounds[ri].length, pr = parse(r.result);
+      if (!pr) { problems.push(r.round + ': could not parse "' + r.result + '"'); return; }
+      const m = { a: W[r.winner], b: W[r.loser], w: 'a', bpA: r.winner_bp, bpB: r.loser_bp, res: pr, printed: r.result };
+      rounds[ri].push(m); const key = 'bp:' + ri + ':' + mi, id = 1001 + 100 * ri + 10 * wi + mi;
+      keys.push(key); byId.set(id, { weight: wt, key, boutId: id }); idOf.set(key, id);
+      recs.push({ boutId: id, weight: wt, key, winnerId: wid(m.a), loserId: wid(m.b), resultType: pr.resultType, score: pr.score, time: pr.time, source: 'historical-replay', revision: 1 });
+    });
+    if (rounds.some(r => !r.length)) problems.push('a round with no bouts');
+    // running bad points (as printed) and the round in which each wrestler last wrestled
+    const total = {}, lastRound = {};
+    rounds.forEach((R, ri) => R.forEach(m => { [['a', m.bpA], ['b', m.bpB]].forEach(([k, bp]) => { const n = m[k].n; total[n] = (total[n] || 0) + bp; m[k === 'a' ? 'totA' : 'totB'] = total[n]; lastRound[n] = ri + 1; }); }));
+    const places = F.places || {}, placeOf = {}; Object.entries(places).forEach(([pl, n]) => { if (!W[n]) problems.push('placer ' + n + ' is not an entrant'); placeOf[n] = +pl; });
+    const mk = () => ({ a: null, b: null, w: null });
+    const first = rounds[0] || [], inR1 = new Set(first.flatMap(m => [m.a.n, m.b.n]));
+    const r1 = first.concat(ent.filter(n => !inR1.has(n)).map(n => ({ a: W[n], b: null, w: 'a', bye: true })));   // a first-round bye
+    const st = { olympic: true, champ: [r1].concat(rounds.slice(1)), rounds, con: [], pigtail: mk(), conPigtail: mk(), place3: mk(), place5: mk(), place7: mk(),
+      champion: W[places[1]] || null, noPlace5: true, noPlace7: true, entrants: ent.map(n => W[n]), total, lastRound, placeOf, pigtailSlot: null, conPigtailSlot: null };
+    const book = { states: { [wt]: st }, decisions: new Map(recs.map(r => [r.boutId, r])) };
+    const locate = id => byId.get(id) || null, matchAt = key => { const p = key.split(':'); return rounds[+p[1]][+p[2]]; };
+    const nextOf = (id, n) => { let best = null; byId.forEach((v, b) => { if (b <= id) return; const m = matchAt(v.key); if ((m.a.n === n || m.b.n === n) && (best === null || b < best)) best = b; }); return best; };
+    const core = {
+      version: 'olympic-1948', keys: keys.slice(), locate, boutIdOf: (w, k) => (Number(w) === wt ? idOf.get(k) || null : null),
+      newBook: () => book, toRecords: () => recs.map(r => Object.assign({}, r)), pending: () => [], selfCheck: () => ({ ok: true, problems: [] }),
+      describe: (bk, id) => { const loc = locate(id); if (!loc) return null; const m = matchAt(loc.key), p = loc.key.split(':');
+        const dw = x => ({ id: wid(x), name: x.n, school: x.s, seed: x.seed, record: '' });
+        return { boutId: id, weight: wt, key: loc.key, legacy: { bracket: 'Bad points', round: 'Round ' + (+p[1] + 1), roundIndex: +p[1], matchIndex: +p[2] }, status: 'decided',
+          a: dw(m.a), b: dw(m.b), winnerId: wid(m.a), winnerSlot: 'a', result: { resultType: m.res.resultType, score: m.res.score, time: m.res.time } }; },
+      routes: id => { const loc = locate(id); if (!loc) return { winnerTo: null, loserTo: null, winnerIsChampion: false }; const m = matchAt(loc.key);
+        return { winnerTo: nextOf(id, m.a.n), loserTo: nextOf(id, m.b.n), winnerIsChampion: false }; },
+      roundLabel: key => { const p = String(key).split(':'); return p[0] === 'bp' ? 'Round ' + (+p[1] + 1) : null; },
+      methodLabel: (key, res) => { const p = String(key).split(':'); if (p[0] !== 'bp') return null; const m = rounds[+p[1]][+p[2]];
+        const base = res.resultType === 'Fall' ? 'Fall' : res.resultType === 'Dec' || res.resultType === 'MajDec' ? 'Dec' : res.resultType === 'MedFFT' ? (/^DFT/.test(m.printed) || /^DEF/.test(m.printed) ? 'Default' : 'Med. forfeit') : res.resultType;
+        return 'Bad points ' + m.bpA + '–' + m.bpB + ' (winner–loser) · ' + base; },
+      finishOf: (bk, id) => { const x = ent.map(n => W[n]).find(y => wid(y) === id); return x && placeOf[x.n] ? placeOf[x.n] : null; },
+      olympic: true
+    };
+    // the printed placers must have wrestled in the last rounds; every bout's printed bad points must fit the result
+    rounds.forEach((R, ri) => R.forEach(m => { const ok = m.res.resultType === 'Fall' ? (m.bpA === 0 || m.bpA === 1) : (m.bpA === 0 || m.bpA === 1); if (!ok || !(m.bpB === 2 || m.bpB === 3)) problems.push('Round ' + (ri + 1) + ': bad points ' + m.bpA + '-' + m.bpB + ' do not fit ' + m.printed); }));
+    return { ok: problems.length === 0, core, book, problems, olympic: true };
+  }
   function buildRepechage(resultData, year, label, slotWeight, F, SH) {
     const problems = [];
     const rows = resultData.filter(r => String(r.weight) === String(label));

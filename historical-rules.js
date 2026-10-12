@@ -209,6 +209,7 @@ const HistoricalWrestlebackScoring = (function () {
   const CONS = { 'qf-wrestleback': ['ConsR1', 'ConsR2', 'ConsR3', 'ConsQF', 'ConsSF'], 'sf-wrestleback': ['ConsR1', 'ConsAA', 'ConsQF', 'ConsSF'], 'sf-wrestleback-6': ['ConsR1', 'ConsAA', 'ConsQF', 'ConsSF'], 'finalist-repechage-6': ['RepA', 'RepB', 'RepC'], 'finalist-repechage-4': ['RepA', 'RepB', 'RepC'], 'true-second-3': ['WbQF', 'WbSF', 'Second'] };
   let CON = CONS['qf-wrestleback'];
   function roundOfKey(key) { const p = String(key).split(':'), b = p[0], ri = +p[1];
+    if (b === 'bp') return 'Round ' + (ri + 1);   // 1948: Olympic bad-point rounds (no advancement, no bracket placement schedule)
     return b === 'pigtail' ? 'ChampPigtail' : b === 'conPigtail' ? 'ConsPigtail' : b === 'p3' ? '3rd' : b === 'p5' ? '5th' : b === 'p7' ? '7th' : b === 'champ' ? CHAMP[ri] : b === 'con' ? CON[ri] : null; }
   // 1970-1973 NCAA rules (approved): six places worth 12-9-7-5-3-1, and consolation/repechage advancement 1 (1974 onward: 16-12-9-7-5-3 and 1/2)
   let Y7273 = false; const PLACE7273 = { 1: 12, 2: 9, 3: 7, 4: 5, 5: 3, 6: 1 };
@@ -285,6 +286,15 @@ const HistoricalWrestlebackScoring = (function () {
         const ew = ent(r.winnerId); add(ws, 'Placement', worth(win) - worth(ew), 'Floor ' + label(ew) + ' -> ' + label(win), r, round, r.winnerId); floor(r.winnerId, win, ws);
         const ls = r.loserId ? schoolOf(r.loserId) : ''; if (ls) { const el = ent(r.loserId); add(ls, 'Placement', worth(lose) - worth(el), 'Floor ' + label(el) + ' -> ' + label(lose), r, round, r.loserId); floor(r.loserId, lose, ls); } }
     });
+    // 1948 (Olympic bad-point rounds): the printed placings (facts.places) score 6-4-2-1, credited at the wrestler's last bout
+    if (opts && opts.shape === 'olympic-bad-points') {
+      const HW = (typeof window !== 'undefined' && window.HistoricalWeights) || globalThis.HistoricalWeights, HS = (typeof window !== 'undefined' && window.HistoricalSeeds) || globalThis.HistoricalSeeds;
+      HW.slots(year).forEach(slot => { const f = ((HS.facts || {})[String(year)] || {})[String(HW.labelOf(year, slot))]; if (!f || !f.places) return;
+        Object.entries(f.places).forEach(([pl, n]) => { const k = (f.entrants || []).indexOf(n); if (k < 0) { problems.push({ code: 'unknown_placer', message: n }); return; }
+          const id = slot + '-' + String(k + 1).padStart(2, '0'), s = schoolOf(id); if (!s) { problems.push({ code: 'unknown_placer', message: id }); return; }
+          const last = records.filter(r => r.winnerId === id || r.loserId === id).sort((a, b) => b.boutId - a.boutId)[0];
+          add(s, 'Placement', worth(+pl), 'Printed place ' + label(+pl) + ' (Olympic bad-point rounds)', last || { weight: slot, boutId: null }, last ? roundOfKey(last.key) : null, id); floor(id, +pl, s); }); });
+    }
     // Bye points: the 1985 rule read EXACTLY as established and validated for 1996-2012 (HistoricalRules.byeCredits, unchanged):
     // in a weight with wrestle-ins the bracket counts as 64 lines (every non-wrestle-in entrant holds a first-round bye); otherwise
     // printed byes only. (byeCredits() below = the narrower printed-byes-only reading, kept for the sensitivity report.)
@@ -350,6 +360,7 @@ const HistoricalWrestlebackScoring = (function () {
       y <= 1984 ? 'Bonus (1976–1984 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · no tech fall (none before 1985).' :
       y <= 1987 ? 'Bonus (1985–1987 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · Tech Fall 1.' :
       'Bonus (' + (y >= 1995 ? '1995 rules' : '1988–1994 rules') + '): Fall / Forfeit / Default / DQ ' + b.Fall + ' · Major Decision ' + b.MajDec + ' · ' + (y >= 1995 ? 'Match Termination (15+) ' : 'Tech Fall ') + b.TechFall + '.',
+      (opts && opts.shape === 'olympic-bad-points') ? 'Place: 6-4-2-1 (four places, the NCAA team scoring of 1941–1954). 1948 was wrestled under Olympic bad-point rules: every round pairs the wrestlers still in, a fall gives the winner 0 bad points and a decision 1, the loser takes 3 (2 for a close decision), and a wrestler is out once his bad points reach the limit. The places are the printed ones and are credited at each placer’s last bout.' :
       (opts && opts.shape === 'true-second-3') ? 'Place: 5-3-1 (three places, NCAA Rule 16, 1939–40 Official Wrestling Guide), counted the moment a finish is secured. 2nd place is wrestled for: the champion’s beaten opponents wrestle back and the winner meets the runner-up; if the runner-up wins, the runner-up’s beaten opponents wrestle back and meet the 2nd-place loser for 3rd, and if he loses he is 3rd with no further bout. SF win secures 3rd · Final 1st · 2nd-place bout win 2nd · 3rd-place bout win 3rd.' :
       (opts && opts.shape === 'finalist-repechage-4') ? 'Place: ' + (y < 1955 ? '6-4-2-1 (four places, NCAA Guide team scoring 1941-1954)' : y <= 1955 ? '7-5-3-1 (four places, NCAA rule from 1955)' : '10-7-4-2 (four places, NCAA rule from 1956)') + ', counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost; the repechage C winners meet for 3rd and the C losers are unplaced: SF win clinches 2nd · Final 1st · repechage C win 4th · 3rd-place bout.' :
       (opts && opts.shape === 'finalist-repechage-6' && y < 1970) ? 'Place: ' + (y >= 1968 ? '12-9-7-5-3-1 (six places, NCAA rule from 1968)' : '10-7-5-3-2-1 (six places, NCAA rule from 1963)') + ', counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost: QF win clinches 6th · SF win 2nd · Final 1st · repechage B win 6th · repechage C win 4th · 3rd- and 5th-place bouts.' :

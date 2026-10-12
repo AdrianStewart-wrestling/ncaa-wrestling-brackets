@@ -102,7 +102,8 @@
       nx.appendChild(el('div', 'pp-next-s', 'If he wins: ' + m.next.ifWin.label + '  ·  If he loses: ' + m.next.ifLose.label)); b.appendChild(nx);
     } else {
       var t = el('div', 'pp-out pp-out--' + o.code);
-      if (o.code === 'champion') t.textContent = '🏆 NCAA Champion — beat ' + who(last.opponent) + ' in the final (' + res(last) + ')';
+      if (m.year === 1948 && (o.code === 'champion' || o.code === 'placed')) t.textContent = (o.code === 'champion' ? '🏆 NCAA Champion' : o.label) + ' — placed by Olympic bad-point rules after ' + last.round + ' (places as printed)';   // 1948: no final; places by bad points
+      else if (o.code === 'champion') t.textContent = '🏆 NCAA Champion — beat ' + who(last.opponent) + ' in the final (' + res(last) + ')';
       else if (o.code === 'placed') t.textContent = !last.opponent ? (m.year === 1940 && last.round === '3rd Place' ? o.label + ' — awarded with no bout after losing the 2nd-place bout (printed “automatic”)' : o.label + ' — by forfeit in the ' + last.round + ' (no opponent printed)') : o.label + (last.result === 'W' ? ' — beat ' : ' — lost to ') + who(last.opponent) + ' in the ' + last.round + ' (' + res(last) + ')';
       else t.textContent = o.label + ' — lost to ' + who(last.opponent) + ' (' + res(last) + ')';
       b.appendChild(t);
