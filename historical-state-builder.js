@@ -650,7 +650,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
    ============================================================================================================================ */
 (function () {
   const LINE_NO = [1,32,17,16,9,24,25,8,5,28,21,12,13,20,29,4,3,30,19,14,11,22,27,6,7,26,23,10,15,18,31,2];
-  const WEIGHTS = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
+  const WEIGHTS = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285, 300];   // 300: the 11th engine slot, used only by 11-weight years (1966-1969)
   const ORDER = ['Prelims', 'ChampR1', 'ConsPrelims', 'ChampR2', 'WbConsR1', 'SfConsR1', 'QuarterFinals', 'WbConsR2', 'SfConsR2', 'WbConsR3', 'SfConsR3', 'SemiFinals', 'RepConsP', 'RepConsA', 'RepConsB', 'RepConsC', 'WbConsR4', 'SfConsR4', 'WbConsR5', '7thPlace', '5thPlace', '3rdPlace', 'Finals'];
   const PATH_CON = ['Con R1', 'Con R2', 'Con R3', 'Con QF', 'Con SF'];                    // Path to the Finals labels (5 rounds)
   const RENDER_CON = ['Con. Rd 1', 'Con. Rd 2', 'Con. Rd 3', 'Con. Qtrs', 'Con. Semis'];  // bracket column headers (5 rounds)
@@ -675,6 +675,11 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     // (con[r][h], h = 0 top half / 1 bottom half): A = R1 victim v R2 victim, B = A winner v QF victim, C = B winner v SF victim;
     // C winners -> 3rd, C losers -> 5th; six places, no 7th-place bout. Routing is derived at replay time (buildRepechage).
     'finalist-repechage-6': { repechage: true, noPlace7: true, con: [2, 2, 2], path: ['Rep. A', 'Rep. B', 'Rep. C'], render: ['Repechage A', 'Repechage B', 'Repechage C'],
+      numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 2 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 2 * wi,
+             c3Start: 421 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) },
+    // finalist-repechage-4 (1962): the same repechage, but four places -- the C winners meet for 3rd (loser 4th); the two C losers
+    // are eliminated unplaced and there is no 5th-place bout.
+    'finalist-repechage-4': { repechage: true, noPlace7: true, noPlace5: true, con: [2, 2, 2], path: ['Rep. A', 'Rep. B', 'Rep. C'], render: ['Repechage A', 'Repechage B', 'Repechage C'],
       numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 261 + 2 * wi, qfStart: 341 + 4 * wi, c2Start: 381 + 2 * wi,
              c3Start: 421 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 541 + wi, final: 551 + wi }) }
   };
@@ -851,7 +856,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const W = n => { const f = fieldOf[n]; return f ? { n: f.n, s: f.s, r: '', seed: f.seed, ds: f.ds } : null; };
     const lineName = {}; Object.entries(F.lines).forEach(([n, L]) => { lineName[L] = n; });
     const byesR1 = (F.byes || []).filter(b => b.phase === 'r1');
-    const mk = (a, b) => ({ a, b, w: null }), states = {};
+    const mk = (a, b) => ({ a, b, w: null }), states = {}, initProblems = new Set();
     // championship wrestle-ins (1970): rows 'Prelims', each feeding one R1 seat (facts.feeds). N = 0 (1971) leaves every path below unchanged.
     const NP = N ? Math.max(N, 2) : 0;   // wrestle-in slots in the core; at least two so each chain has its own preliminary bout P
     function initBracket(wt) {
@@ -865,6 +870,14 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
         st.conPigtails = Array.from({ length: NP }, () => mk(null, null)); st.pigtail = st.pigtails[0]; st.conPigtail = st.conPigtails[0];
         st.pigtailSlots = st.pigtails.map((m, k) => feeds[k] ? feeds[k].slot : 0); st.conPigtailSlots = st.conPigtails.map((m, k) => k * 16); st.repPrelim = true; }
       byesR1.forEach(b => { const m = st.champ[0][b.slot]; m.a = W(b.wrestler); m.b = null; m.w = 'a'; m.bye = true; const nm = st.champ[1][b.slot >> 1]; if (b.slot % 2 === 0) nm.a = m.a; else nm.b = m.a; });
+      // 16-man draw (1962-1966, facts.draw16): every R1 seat above is a structural bye (no first round was wrestled); a printed 'Bye'
+      // line of the 16-man draw is a bye in the first round actually wrestled (facts.byes phase 'r2'): no bout, the wrestler advances.
+      if (F.draw16) { st.draw16 = true;
+        (F.byes || []).filter(b => b.phase === 'r2').forEach(b => { const m = st.champ[1][b.slot], side = m.a && m.a.n === b.wrestler ? 'a' : m.b && m.b.n === b.wrestler ? 'b' : null;
+          if (!side || m[side === 'a' ? 'b' : 'a']) { initProblems.add('printed 16-man bye for ' + b.wrestler + ' does not match the draw'); return; }
+          m.w = side; m.bye = true; st.champ[2][b.slot >> 1][b.slot % 2 ? 'b' : 'a'] = m[side]; }); }
+      if (SH.noPlace5) st.noPlace5 = true;
+      if (F.sixthVacant) st.place5Unplaced = F.sixthVacant.wrestler;   // printed blank 6th (1964 123): the 5th-place forfeit's loser is not placed
       states[wt] = st;
     }
     // a finalist's victims on his championship path: [R1, R2, QF, SF]; null = not decided, 'BYE' = printed R1 bye
@@ -895,14 +908,15 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       if (bracket === 'pigtail') { const f = feeds[ri]; if (f) st.champ[0][f.slot][f.side] = w; return; }   // the loser waits: only a finalist's wrestle-in victim wrestles back (via P)
       if (bracket === 'conPigtail') { if (ri < 2) st.con[0][ri].a = w; return; }                            // P winner -> A, side a (slots 0/1 = the two chains' P; any other wrestle-in slot is unused)
       if (bracket === 'champ') { if (ri < 4) st.champ[ri + 1][mi >> 1][mi % 2 ? 'b' : 'a'] = w; else st.champion = w; if (ri === 3) seedChain(st, mi); }
-      else if (bracket === 'con') { if (ri < 2) st.con[ri + 1][mi].a = w; else { st.place3[mi ? 'b' : 'a'] = w; st.place5[mi ? 'b' : 'a'] = l; } }
+      else if (bracket === 'con') { if (ri < 2) st.con[ri + 1][mi].a = w; else { st.place3[mi ? 'b' : 'a'] = w; if (!SH.noPlace5) st.place5[mi ? 'b' : 'a'] = l; } }
     }
     function extraDependents(ks) {
       const p = String(ks).split(':');
-      if (N && p[0] === 'pigtail') { const f = feeds[+p[1]]; if (!f) return []; const h = f.slot >> 3; return ['conPigtail:' + h + ':0', 'con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0', 'p5:0:0']; }
+      const P5 = SH.noPlace5 ? [] : ['p5:0:0'];
+      if (N && p[0] === 'pigtail') { const f = feeds[+p[1]]; if (!f) return []; const h = f.slot >> 3; return ['conPigtail:' + h + ':0', 'con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0'].concat(P5); }
       if (p[0] !== 'champ') return [];
       const ri = +p[1], mi = +p[2]; if (ri > 3) return [];
-      const h = mi >> (3 - ri); return (N ? ['conPigtail:' + h + ':0'] : []).concat(['con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0', 'p5:0:0']);
+      const h = mi >> (3 - ri); return (N ? ['conPigtail:' + h + ':0'] : []).concat(['con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0']).concat(P5);
     }
     const adapter = { weights: [Number(slotWeight)], pigtailCount: NP, boutNumbers: w => SH.numbers(WEIGHTS.indexOf(Number(w))), newState: wt => { initBracket(wt); return states[wt]; },
       applyPick, extraDependents, roundNames: { champ: ['Round 1', 'Rd of 16', 'Quarterfinals', 'Semifinals', 'Finals'], con: SH.render } };
@@ -924,6 +938,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       else if (pr.notPrinted) notPrinted.add(c.key);
     });
     const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
+    initProblems.forEach(x => problems.push(x));
     // every printed no-bout repechage seat must be one the finalist's R1 bye produces, and vice versa
     const st = book.states[wt], got = st.con[0].map((m, h) => m.bye ? h + ':' + m[m.w].n : null).filter(Boolean);
     const want = (F.byes || []).filter(b => b.phase === 'repBye').map(b => b.chain + ':' + b.wrestler);

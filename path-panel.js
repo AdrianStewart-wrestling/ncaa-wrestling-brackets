@@ -49,7 +49,11 @@
     if (m.aa === true) chips.appendChild(el('span', 'pp-chip pp-chip--aa', '★ All-American')); b.appendChild(chips);
 
     var ol = el('ol', 'pp-list');
+    // 1960s 16-man draws (HistoricalSeeds.facts draw16): the structural first-round bye is not a round he wrestled -- no row for it
+    var d16 = (function () { try { var F = window.HistoricalSeeds && window.HistoricalSeeds.facts, lb = window.HistoricalWeights ? window.HistoricalWeights.labelOf(m.year, w.weight) : w.weight;
+      return !!(m.year && F && F[String(m.year)] && F[String(m.year)][String(lb)] && F[String(m.year)][String(lb)].draw16); } catch (e) { return false; } })();
     m.journey.forEach(function (r) {
+      if (d16 && r.round === 'R32' && !r.opponent && r.status === 'decided') return;
       var cls = r.status === 'decided' ? (r.result === 'W' ? 'pp-row pp-w' : 'pp-row pp-l') : (r.status === 'pending' ? 'pp-row pp-now' : 'pp-row pp-wait');
       var li = el('li', cls); li.appendChild(el('span', 'pp-rd', r.round));
       li.appendChild(el('span', 'pp-mk', r.status === 'decided' ? (r.result === 'W' ? '✓' : '✗') : '→'));

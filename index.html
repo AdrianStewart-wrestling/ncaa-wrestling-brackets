@@ -2704,7 +2704,7 @@ function getAllAmericans(st) {
     {place:6,medal:'6', wr:getLoser(st.place5)},
     {place:7,medal:'7', wr:getWinner(st.place7)},
     {place:8,medal:'8', wr:getLoser(st.place7)},
-  ].filter(x=>!(st.noPlace7&&x.place>6));   // six-place historical years (1972-1978)
+  ].filter(x=>!(st.noPlace7&&x.place>6)&&!(st.noPlace5&&x.place>4)&&!(st.place5Unplaced&&x.place===6));   // six-place historical years (1963-1978); four places in 1962; a printed blank 6th (1964 123)
 }
 
 const MEDALS = ['','🥇','🥈','🥉','','','','',''];
@@ -2816,8 +2816,10 @@ function render() {
   html+=`<div class="rcol"><div class="rhdr gc" style="color:var(--gold);opacity:.7">Pigtail</div><div style="display:flex;flex-direction:column;"><div style="margin-top:${ptSlot*(MH+GAP)}px;margin-bottom:${GAP}px;">${matchHTML(st.pigtail,'pigtail',0,0,'pt')}</div></div></div>`;
   html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top:${ptSlot*(MH+GAP)+MH/2-6}px;"><div style="font-size:10px;color:var(--gold);opacity:.5;">→</div></div>`;
   }
+  const d16=hist&&st.draw16;   // 1960s 16-man draw: no first round was wrestled -- the structural R1 bye column is not drawn
   st.champ.forEach((round,ri)=>{
-    const sp=Math.pow(2,ri);
+    if(d16&&ri===0)return;
+    const sp=Math.pow(2,d16?ri-1:ri);
     html+=`<div class="rcol"><div class="rhdr gc">${CHAMP_RND_NAMES[ri]}</div><div>`;
     round.forEach((m,mi)=>{
       const mt=mi===0?(sp-1)*(MH+GAP)/2:(sp-1)*(MH+GAP);
@@ -3269,7 +3271,9 @@ function histSeedView(obj, year) {
     const pd = lm && window.HistoricalRules.placeDeltaOf ? window.HistoricalRules.placeDeltaOf(year, lm[1]) : 0;   // year-scoped placement table (1999-2000)
     if (pd && obj.points.placeDelta === undefined) { obj.points.placeDelta = pd; obj.points.total = (obj.points.total || 0) + pd; if (typeof obj.points.place === 'number') obj.points.place += pd; } }
   const nk = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
-  const maps = {}; const mapFor = w => { if (!maps[w]) { const m = {}; const t = (T[String(year)] || {})[String(w)] || {}; Object.keys(t).forEach(k => { m[nk(k)] = t[k]; }); maps[w] = m; } return maps[w]; };
+  // a mapped year's table is keyed by the printed label (1962-1965 print a 157 class that is not the engine's 157 slot)
+  const tkey = w => (window.HistoricalWeights && window.HistoricalWeights.isMapped(year)) ? window.HistoricalWeights.labelOf(year, w) : w;
+  const maps = {}; const mapFor = w => { if (!maps[w]) { const m = {}; const t = (T[String(year)] || {})[String(tkey(w))] || {}; Object.keys(t).forEach(k => { m[nk(k)] = t[k]; }); maps[w] = m; } return maps[w]; };
   const walk = o => { if (!o || typeof o !== 'object') return; if (Array.isArray(o)) { o.forEach(walk); return; }
     if (typeof o.seed === 'number' && typeof o.name === 'string' && typeof o.id === 'string') { const m = /(\d{3})-\d{2}$/.exec(o.id); if (m) o.seed = mapFor(Number(m[1]))[nk(o.name)] || null; }
     Object.keys(o).forEach(k => { if (o[k] && typeof o[k] === 'object') walk(o[k]); }); };

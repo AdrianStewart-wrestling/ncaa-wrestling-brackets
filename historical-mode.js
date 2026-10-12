@@ -23,12 +23,15 @@
    Sources: the WrestlingStats 1996, 1997 and 1998 compiled brackets (weight-class pages 118 ... 275). */
 const HistoricalWeights = (function () {
   const MODERN = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
-  const CLASSES = { 1970: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1971: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1972: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1973: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1974: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1975: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1976: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1977: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1978: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1979: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1980: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1980: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1981: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1981: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1982: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1983: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1984: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1985: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1986: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1987: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1988: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1989: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1990: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1991: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1992: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1993: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1994: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1995: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
+  // 1966-1969 printed ELEVEN weight classes: the 11th maps onto engine slot 300, which no other year uses (every 10-class year is unchanged).
+  const ALL = MODERN.concat([300]);
+  const CLASSES = { 1962: [115, 123, 130, 137, 147, 157, 167, 177, 191, 'UNL'], 1963: [115, 123, 130, 137, 147, 157, 167, 177, 191, 'UNL'], 1964: [115, 123, 130, 137, 147, 157, 167, 177, 191, 'UNL'], 1965: [115, 123, 130, 137, 147, 157, 167, 177, 191, 'UNL'], 1966: [115, 123, 130, 137, 145, 152, 160, 167, 177, 191, 'UNL'], 1967: [115, 123, 130, 137, 145, 152, 160, 167, 177, 191, 'UNL'], 1968: [115, 123, 130, 137, 145, 152, 160, 167, 177, 191, 'UNL'], 1969: [115, 123, 130, 137, 145, 152, 160, 167, 177, 191, 'UNL'], 1970: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1971: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1972: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1973: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1974: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1975: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1976: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1977: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1978: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1979: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1980: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1980: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1981: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1981: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1982: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1983: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1984: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1985: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1986: [118, 126, 134, 142, 150, 158, 167, 177, 190, 'UNL'], 1987: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1988: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1989: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1990: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1991: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1992: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1993: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1994: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1995: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1996: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1997: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275], 1998: [118, 126, 134, 142, 150, 158, 167, 177, 190, 275] };
   const of = year => CLASSES[Number(year)] || MODERN;
   return {
     classes: of,                                                                  // labels for a year, lightest first
-    labelOf(year, slot) { const i = MODERN.indexOf(Number(slot)); return i < 0 ? Number(slot) : of(year)[i]; },
-    slotOf(year, label) { const i = of(year).findIndex(l => String(l) === String(label)); return i < 0 ? Number(label) : MODERN[i]; },   // string compare: 1986 heavyweight label is 'UNL'
+    labelOf(year, slot) { const i = ALL.indexOf(Number(slot)); const l = i < 0 ? undefined : of(year)[i]; return l === undefined ? Number(slot) : l; },
+    slotOf(year, label) { const i = of(year).findIndex(l => String(l) === String(label)); return i < 0 ? Number(label) : ALL[i]; },   // string compare: 1986 heavyweight label is 'UNL'
+    slots: year => of(year).length === 11 ? ALL.slice() : MODERN.slice(),       // engine slots for a year, lightest first (10, or 11 for 1966-1969)
     isMapped: year => !!CLASSES[Number(year)],
     // Text for a weight label: numbers keep their unit exactly as before ('118 lbs' / 'the 118 lb bracket'); 'UNL' (unlimited, pre-1987) shows as printed.
     unit: label => /^\d+$/.test(String(label)) ? label + ' lbs' : String(label),
@@ -48,7 +51,7 @@ const HistoricalWeights = (function () {
     aliasSeeds(year) {
       const T = window.HistoricalSeeds && window.HistoricalSeeds.table && window.HistoricalSeeds.table[String(year)];
       if (!T || !CLASSES[Number(year)]) return;
-      of(year).forEach((label, i) => { if (T[String(label)] && !T[String(MODERN[i])]) T[String(MODERN[i])] = T[String(label)]; });
+      of(year).forEach((label, i) => { if (T[String(label)] && !T[String(ALL[i])]) T[String(ALL[i])] = T[String(label)]; });
     }
   };
 })();
@@ -62,7 +65,7 @@ const HistoryMode = (function () {
   const HISTORY_DATA_BASE_URL = './historical-data/';
 
   const SCORING_PENDING = new Set([]);   // none: 1985-1987 rules approved Oct 6 2026 (history-layer model)   // years whose team-scoring rule is awaiting approval (none: 1990-1995 approved Oct 6 2026, history-layer model)
-  const AVAILABLE_YEARS = [1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1980,1981,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
+  const AVAILABLE_YEARS = [1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1980,1981,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025,2026]; // matches the frozen validation matrix
 
   let initialized = false;
 
@@ -172,14 +175,14 @@ const HistoryMode = (function () {
   }
 
   // ---- HISTORICAL TEAM SCORES: data preparation only (no scoring code here) ---------------------------------------
-  // Builds ALL 10 weights of one year with the frozen adapter + frozen builder (one isolated TournamentCore per weight;
+  // Builds ALL the weights (10; 11 in 1966-1969) of one year with the frozen adapter + frozen builder (one isolated TournamentCore per weight;
   // wrestler ids are weight-prefixed and bout ids are per-weight, so they never collide). index.html feeds the combined
   // records to the EXISTING OfficialScoring.compute() and draws them with the EXISTING scores / team-detail / Path UI.
   // Read-only: nothing here touches officialBook, officialCore, states (MY PICKS), or Firebase.
   const yearCache = {};   // year -> built year (only successful builds are cached; the source data is static)
 
   function buildYear(year, resultData) {
-    const TC = window.TournamentCore, weights = (window.BoutModel && window.BoutModel.WEIGHT_ORDER) || [];
+    const TC = window.TournamentCore, weights = HistoricalWeights.slots(year);   // == BoutModel.WEIGHT_ORDER for every 10-class year
     const Y = { year: Number(year), weights: [], cores: {}, books: {}, schoolOf: {}, idsBySchool: {}, records: [], problems: [],
                 adjustments: (window.HistoricalAdjustments && window.HistoricalAdjustments.forYear(year)) || null };
     HistoricalWeights.aliasSeeds(year);
@@ -224,7 +227,7 @@ const HistoryMode = (function () {
     const year = document.getElementById('hist-year').value;
     if (SCORING_PENDING.has(Number(year))) { setStatus(year + ' team scores are not shown yet: the ' + year + ' scoring rules (quarterfinal-wrestleback era) are awaiting review. Brackets, Path to the Finals and NCAA Career are available.', true); return; }
     const mySeq = ++loadSeq;
-    setStatus('Building ' + year + ' team scores (all 10 weights)…');
+    setStatus('Building ' + year + ' team scores (all ' + HistoricalWeights.classes(year).length + ' weights)…');
     const ready = yearCache[year] ? Promise.resolve(yearCache[year]) : loadYearData(year).then(data => {
       if (typeof HistoricalAdapter === 'undefined') throw new Error('historical-adapter.js did not load.');
       if (typeof HistoricalStateBuilder === 'undefined') throw new Error('historical-state-builder.js did not load.');
@@ -232,14 +235,15 @@ const HistoryMode = (function () {
     });
     ready.then(Y => {
       if (mySeq !== loadSeq) return;
-      if (Y.problems.length || Y.weights.length !== 10) {
-        fail(year, 'team scores', year + ' team scores could not be built: ' + (Y.problems.join('; ') || 'not all 10 weights are available'));
+      const NW = HistoricalWeights.classes(year).length;   // 10, or 11 (1966-1969)
+      if (Y.problems.length || Y.weights.length !== NW) {
+        fail(year, 'team scores', year + ' team scores could not be built: ' + (Y.problems.join('; ') || 'not all ' + NW + ' weights are available'));
         return;
       }
       yearCache[year] = Y;
       if (typeof window.showHistoricalScores !== 'function') throw new Error('showHistoricalScores() is not available on this page.');
       window.showHistoricalScores(Y);
-      setStatus(year + ' team scores — read-only, all 10 weights replayed. Separate from the 2026 Master; no live data.');
+      setStatus(year + ' team scores — read-only, all ' + NW + ' weights replayed. Separate from the 2026 Master; no live data.');
     }).catch(err => {
       if (mySeq !== loadSeq) return;
       fail(year, 'team scores', 'Error: ' + err.message);
@@ -265,7 +269,8 @@ const HistoryMode = (function () {
     if (yearCache[k]) return Promise.resolve(yearCache[k]);
     return loadYearData(k).then(data => {
       const Y = buildYear(k, data);
-      if (Y.problems.length || Y.weights.length !== 10) throw new Error(k + ' could not be built: ' + (Y.problems.join('; ') || 'not all 10 weights are available'));
+      const NW = HistoricalWeights.classes(k).length;   // 10, or 11 (1966-1969)
+      if (Y.problems.length || Y.weights.length !== NW) throw new Error(k + ' could not be built: ' + (Y.problems.join('; ') || 'not all ' + NW + ' weights are available'));
       yearCache[k] = Y; return Y;
     });
   }
