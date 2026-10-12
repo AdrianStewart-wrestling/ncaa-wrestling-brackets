@@ -28,7 +28,7 @@ const apps = JSON.parse(fs.readFileSync(path.join(HERE, 'appearances.json'), 'ut
 const SAFILE = JSON.parse(fs.readFileSync(path.join(HERE, 'school_aliases.json'), 'utf8'));
 // school_aliases.json: { "aliases": { "Printed": "Canonical", ... }, "scoped": { "Printed": { "to": "Canonical", "years": [..], "why": ".." } } }
 const SA = SAFILE.aliases, SCOPED = SAFILE.scoped || {};
-const W = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285], wi = w => W.indexOf(w);
+const W = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285, 300], wi = w => W.indexOf(w);   // 300: the 11th class of 1966-1969 (engine slot)
 const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[`'’.,]/g, '').toLowerCase().replace(/[^a-z]+/g, ' ').trim().replace(/ (jr|sr|ii|iii|iv)$/, '').trim();
 const canon = (s, year) => { const sc = SCOPED[s]; if (sc && sc.years.includes(year)) return sc.to; return SA[s] || s; };
 const byKey = {}; apps.forEach(a => { a.canon = canon(a.school, a.year); byKey[a.key] = a; });
@@ -39,9 +39,20 @@ const P = {}; const find = k => P[k] === k ? k : (P[k] = find(P[k])); const unio
 apps.forEach(a => P[a.key] = a.key);
 const prov = {}; const addProv = (k, p) => { (prov[k] = prov[k] || new Set()).add(p); };
 
+// Weight move in classes. Same-size ladders (every year pair from 1970 on, and within 1962-1965 / 1966-1969): engine-slot index
+// difference, exactly as before. Across a ladder change (10 classes <-> the 11 of 1966-1969) the earlier class is projected onto the
+// later year's ladder (nearest class by pounds; 'UNL' = heaviest), so 1969 167 -> 1970 158 is one class down, not two.
+const LADDER = {}; apps.forEach(a => { (LADDER[a.year] = LADDER[a.year] || new Set()).add(String(a.label)); });
+const lb = l => String(l) === 'UNL' ? 9999 : Number(l);
+Object.keys(LADDER).forEach(y => { LADDER[y] = [...LADDER[y]].sort((x, z) => lb(x) - lb(z)); });
+const classMove = (a, b) => {
+  if (LADDER[a.year].length === LADDER[b.year].length) return wi(b.weight) - wi(a.weight);
+  const L = LADDER[b.year]; let p = 0; L.forEach((l, i) => { if (Math.abs(lb(l) - lb(a.label)) < Math.abs(lb(L[p]) - lb(a.label))) p = i; });
+  return L.indexOf(String(b.label)) - p; };
+
 // 1) AUTOMATIC rule
 const plausible = g => { const ys = g.map(a => a.year); if (ys.length !== new Set(ys).size) return false; if (ys[ys.length - 1] - ys[0] > 6) return false;
-  for (let j = 1; j < g.length; j++) { const dw = wi(g[j].weight) - wi(g[j - 1].weight); if (dw > 2 || dw < -1) return false; } return true; };
+  for (let j = 1; j < g.length; j++) { const dw = classMove(g[j - 1], g[j]); if (dw > 2 || dw < -1) return false; } return true; };
 const groups = {}; apps.forEach(a => { const k = norm(a.name) + '|' + a.canon; (groups[k] = groups[k] || []).push(a); });
 Object.values(groups).forEach(g => { g.sort((x, y) => x.year - y.year); if (g.length < 2 || !plausible(g)) return; for (let j = 1; j < g.length; j++) union(g[0].key, g[j].key); g.forEach(a => addProv(a.key, 'auto')); });
 

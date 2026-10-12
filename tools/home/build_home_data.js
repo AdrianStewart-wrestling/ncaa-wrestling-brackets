@@ -36,9 +36,9 @@ const ERA_DEFS = [
   // 1970-1971 structure: finalist repechage (a distinct topology, not the 1972-1978 semifinalist wrestleback). Its scoring period is the
   // NCAA rule range 1970-1971; the label is the covered part of it ("1971" now, "1970-1971" once 1970 is covered).
   { id: 'eR', from: YEARS[0], to: 1971, name: 'Finalist repechage', sample: 1971,
-    shared: 'Six places are scored (four in 1950–1962). Only wrestlers beaten by one of the two finalists wrestle back, each finalist\'s victims in his own chain, in the order he beat them (his R1 and R2 victims meet, or, if he came through a wrestle-in, his wrestle-in victim first meets his R1 victim; the winner then meets his QF victim, then his SF victim); the two chain winners wrestle for 3rd and the two chain losers for 5th (in 1950–1962 the chain losers are unplaced). There is no 7th-place bout. In 1952 and 1953 the two chains were cross-bracketed (each mixes both semifinal halves; the printed seats are kept). Some 1950–1966 weights were 16-man draws with no first round; 1950–1951 had eight weight classes and 1966–1969 eleven.',
+    shared: 'Six places are scored (four in 1941–1962). Only wrestlers beaten by one of the two finalists wrestle back, each finalist\'s victims in his own chain, in the order he beat them (his R1 and R2 victims meet, or, if he came through a wrestle-in, his wrestle-in victim first meets his R1 victim; the winner then meets his QF victim, then his SF victim); the two chain winners wrestle for 3rd and the two chain losers for 5th (in 1950–1962 the chain losers are unplaced). There is no 7th-place bout. In 1952 and 1953 the two chains were cross-bracketed (each mixes both semifinal halves; the printed seats are kept). Some 1950–1966 weights were 16-man draws with no first round; 1950–1951 had eight weight classes and 1966–1969 eleven.',
     periods: [
-      { from: 1950, to: 1954, text: 'places 6-4-2-1 (four places) and 1 point for a fall, default or forfeit; no advancement points at all (they begin in 1955); no bye points; every school scores. Reproduced from the NCAA Guides\' team scoring (the 1951 Guide prints 1950 by weight class).',
+      { from: 1941, to: 1954, text: 'places 6-4-2-1 (four places) and 1 point for a fall, default or forfeit; no advancement points at all (they begin in 1955); no bye points; every school scores. Reproduced from the NCAA Guides\' team scoring (the 1951 Guide prints 1950 by weight class; the 1947 and 1948 Guides match 1946 and 1947).',
         checks: [[0, /no advancement points before 1955/], [2, /Place: 6-4-2-1 \(four places/]] },
       { from: 1955, to: 1955, text: 'places 7-5-3-1 (four places) and 1 point for a fall, default or forfeit. Advancement points begin (1955 NCAA Rule IX 1(b)): 1 per championship win beyond an initial round that contains byes, the final included, and 1 per repechage or 3rd-place win; a forfeit earns no advancement point. Reproduces all 38 team totals in the 1956 NCAA Guide.',
         checks: [[0, /Rule IX 1\(b\)/], [2, /Place: 7-5-3-1 \(four places/]] },
@@ -155,7 +155,7 @@ for (const y of YEARS.filter(y => y <= 1995 && !NCAA_TOP10_SETS[y] && !SCORING_H
   }
   if (m) { exact += n; of += +m[2]; perYear[y] = n; if (+m[2] !== 10) (perYearOf[y] = +m[2]); }
 }
-check(exact === 416 && of === 473, `scoring validation is ${exact}/${of}, expected 416/473 (the documented figure, ${YEARS[0]}-1995: 1950-1954 add 55/56, 1955 10/10, 1956-1961 61/63, 1962-1969 82/82)`);
+check(exact === 465 && of === 528, `scoring validation is ${exact}/${of}, expected 465/528 (the documented figure, ${YEARS[0]}-1995: 1941-1949 add 49/55, 1950-1954 55/56, 1955 10/10, 1956-1961 61/63, 1962-1969 82/82)`);
 
 // ---------------------------------------------------------------- Career registry size (read here, never by the homepage)
 const reg = (() => { const t = fs.readFileSync(path.join(ROOT, 'historical-careers.js'), 'utf8'); return JSON.parse(t.slice(t.indexOf('/*JSON*/') + 8, t.indexOf('/*END*/'))); })();
