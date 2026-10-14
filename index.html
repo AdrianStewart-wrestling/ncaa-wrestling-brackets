@@ -5,7 +5,7 @@
 <script>/* Front door: the bare site URL shows the homepage (home.html). Any URL with a query string (?view=..., ?ops=1, ...) opens Tournament Central as before. */ if (!location.search) location.replace('home.html' + location.hash); /* MASTER PAGE: before first paint. Operator page = ?ops=1 (master.html). MASTER shows on the operator page, or for everyone once site-config.js publicMaster is true. */ (function () { var ops = /[?&](ops|master)=1(&|$)/.test(location.search), pub = !!(window.TC_CONFIG && window.TC_CONFIG.publicMaster), h = document.documentElement; h.classList.toggle('no-ops', !ops); h.classList.toggle('no-master', !(ops || pub)); })();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tournament Central</title>
+<title>33 Deep · NCAA Wrestling</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -24,7 +24,7 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--t1);displa
 
 /* HEADER */
 .hdr{background:linear-gradient(90deg,#1a1f2e,#2c2408,#1a1f2e);border-bottom:2px solid var(--gold);height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;flex-shrink:0;box-shadow:0 2px 16px rgba(201,168,76,.15)}
-.hdr-hex{width:32px;height:32px;background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.hdr-hex{width:32px;height:32px;background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-family:'Arial Black',Arial,sans-serif;font-weight:900;color:#071226}   /* 33 Deep badge (Oct 2026) */
 .hdr-t{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--gold2);line-height:1}
 .hdr-s{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
 .hdr-sp{flex:1}
@@ -530,10 +530,10 @@ html.no-ops .ops-only{display:none !important}
 <body>
 
 <div class="hdr">
-  <a class="hdr-home" href="home.html" title="Back to home" aria-label="Tournament Central home">
-    <div class="hdr-hex">🤼</div>
+  <a class="hdr-home" href="home.html" title="Back to home" aria-label="33 Deep home">
+    <div class="hdr-hex">33</div>
     <div>
-      <div class="hdr-t">Tournament Central</div>
+      <div class="hdr-t">33 Deep</div>
     </div>
   </a>
   <div class="hdr-sp"></div>
