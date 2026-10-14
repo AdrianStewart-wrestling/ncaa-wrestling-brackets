@@ -1,0 +1,7849 @@
+{
+ "source": "NCAA 1994.pdf",
+ "summary": "64th NCAA Wrestling Tournament 1994\n3/17/1994 to 3/19/1994 at North Carolina\nTeam Champion Oklahoma State - 94.75 Points\nOutstanding Wrestler: Pat Smith - Oklahoma State Gorriaran Award: Rob Sintobin - Clarion\nTop Ten Team Scores Number of Individual Champs in parentheses.\n1 Oklahoma State 94.75 (3) 6 North Carolina 39 (1)\n2 Iowa 76.5 (2) 7 Clemson 37.75 (1)\n3 Penn State 57 (1) 8 Oklahoma 36\n4 Oregon State 49.5 8 Arizona State 36\n5 Michigan 41 10 Iowa State 32.75\nChampions and Place Winners Wrestler's seed in brackets, [US] indicates unseeeded.\n118 1st: Sam Henson [1] - Clemson (2-2 TB) 2nd: Eric Akin [2] - Iowa State\n3rd: Brett Bingham [11] - Boise State (5-1) 4th: Kevin Roberts [12] - Oregon\n5th: Matt Hanutke [4] - Wisconsin (6-2) 6th: Scott Gonyo [7] - Nebraska\n7th: Mike Mena [9] - Iowa (5-3) 8th: Pete Rinella [US] - Bloomsburg\n126 1st: David Hirsch [3] - Cornell (2-1) 2nd: Jody Staylor [5] - Old Dominion\n3rd: Sanshiro Abe [2] - Penn State (11-5) 4th: Shawn Enright [12] - Ohio University\n5th: Jeff McGinness [4] - Iowa (4-3) 6th: Dave Nieradka [9] - Oregon State\n7th: Nick Purler [1] - Oklahoma State (9-3) 8th: Chris Russo [7] - Indiana\n134 1st: T.J. Jaworsky [2] - North Carolina (12-4) 2nd: Babak Mohammadi [5] - Oregon State\n3rd: Cary Kolat [1] - Penn State (WBF 5:49) 4th: Steve St. John [6] - Arizona State\n5th: Mike Krafchick [US] - Virginia (6-6 TB) 6th: Steve Krouse [US] - Lock Haven\n7th: Eric Kimble [9] - Ohio University (WFT) 8th: Derek Mountsier [7] - Iowa State\n142 1st: Alan Fried [1] - Oklahoma State (15-6) 2nd: Gerry Abas [2] - Fresno State\n3rd: Dunyasha Yetts [3] - Ohio State (5-4) 4th: Charlie Branch [5] - Virginia Military\n5th: Steve Marianetti [4] - Illinois (6-0) 6th: Daryl Weber [US] - Iowa\n7th: John Hughes [9] - Penn State (7-2) 8th: Gordon Cashen [US] - Central Michigan\n150 1st: Lincoln McIlravy [1] - Iowa (8-3) 2nd: Brian Harper [6] - Michigan\n3rd: Jake Gaier [3] - Cal Poly-SLO (14-5) 4th: Jacob Newby [4] - Oklahoma State\n5th: Terry Watts [US] - Fresno State (6-5) 6th: Jeff Theiler [5] - Arizona State\n7th: Chad Bailey [10] - Bloomsburg (3-0) 8th: Scott Petche [9] - Indiana\n158 1st: Pat Smith [1] - Oklahoma State (5-3) 2nd: Sean Bormet [2] - Michigan\n3rd: Earl Walker [5] - Boston University (4-3) 4th: Dan Alar [9] - Oregon State\n5th: Markus Mollica [3] - Arizona State (7-5) 6th: Aaron Moran [US] - Purdue\n7th: Joe Williams [7] - Iowa (4-2) 8th: Dan Wirnsberger [4] - Michigan State\n167 1st: Mark Branch [US] - Oklahoma State (4-2) 2nd: Laszlo Molnar [US] - Cal State-Fullerton\n3rd: Shaon Fry [1] - Missouri (5-2) 4th: Rich Catalano [8] - Pittsburgh\n5th: Jason Leonard [6] - Oklahoma (7-2) 6th: Brett Colombini [9] - Minnesota\n7th: Rick Hepp [4] - Lehigh (11-3) 8th: Stan Banks [US] - North Carolina\n177 1st: Dean Morrison [2] - West Virginia (3-2) 2nd: Reese Andy [US] - Wyoming\n3rd: Brad Gibson [3] - Minnesota (3-0) 4th: Dave Malacek [6] - Northern Iowa\n5th: Les Gutches [1] - Oregon State (13-6) 6th: Shane Camera [4] - North Carolina\n7th: Jesse Rawls [US] - Michigan (11-3) 8th: Bob Ferraro [12] - Bucknell\n190 1st: Joel Sharratt [3] - Iowa (3-2) 2nd: Andy Foster [1] - Oklahoma\n3rd: Tim Morrissey [7] - Clemson (6-4) 4th: Emilio Collins [5] - Michigan State\n5th: Keith Davison [2] - Wisconsin (11-3) 6th: Dan Troupe [4] - Iowa State\n7th: J.J. McGrew [6] - Oklahoma State (7-5) 8th: Bryan Stout [10] - Clarion\n275 1st: Kerry McCoy [1] - Penn State (7-4) 2nd: Justin Greenlee [2] - Northern Iowa\n3rd: Tony Vaughn [6] - Purdue (WBF 6:11) 4th: Rob Sintobin [US] - Clarion\n5th: Dan Hicks [8] - Navy (4-1) 6th: John Kading [US] - Oklahoma\n7th: Josh Feldman [12] - Virginia Tech (8-2) 8th: Justin Harty [9] - North Carolina\nCompiled by wrestlingstats.com",
+ "weights": [
+  {
+   "index": 0,
+   "problems": [],
+   "weight": "118",
+   "lines": [
+    {
+     "name": "Chad Billy",
+     "school": "West Virginia",
+     "seed": null,
+     "y": 57.142518342983465,
+     "printed": "Chad Billy, West Virginia"
+    },
+    {
+     "name": "Kevin Roberts",
+     "school": "Oregon",
+     "seed": 12,
+     "y": 72.14251234298348,
+     "printed": "Kevin Roberts, Oregon [12]"
+    },
+    {
+     "name": "Kelvin Jackson",
+     "school": "Michigan State",
+     "seed": 5,
+     "y": 87.1425063429835,
+     "printed": "Kelvin Jackson, Michigan State [5]"
+    },
+    {
+     "name": "Willie Carpenter",
+     "school": "Brown",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Willie Carpenter, Brown"
+    },
+    {
+     "name": "David Morgan",
+     "school": "Morgan State",
+     "seed": null,
+     "y": 117.14249434298353,
+     "printed": "David Morgan, Morgan State"
+    },
+    {
+     "name": "Shannon Gregory",
+     "school": "Northern Illinois",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Shannon Gregory, Northern Illinois"
+    },
+    {
+     "name": "Matt Hanutke",
+     "school": "Wisconsin",
+     "seed": 4,
+     "y": 147.26248229498356,
+     "printed": "Matt Hanutke, Wisconsin [4]"
+    },
+    {
+     "name": "Pete Rinella",
+     "school": "Bloomsburg",
+     "seed": null,
+     "y": 162.26247629498351,
+     "printed": "Pete Rinella, Bloomsburg"
+    },
+    {
+     "name": "Mike Mena",
+     "school": "Iowa",
+     "seed": 9,
+     "y": 177.26247029498353,
+     "printed": "Mike Mena, Iowa [9]"
+    },
+    {
+     "name": "Tom Sinacore",
+     "school": "Old Dominion",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "Tom Sinacore, Old Dominion"
+    },
+    {
+     "name": "Gary Baker",
+     "school": "Pennsylvania",
+     "seed": null,
+     "y": 207.2624582949835,
+     "printed": "Gary Baker, Pennsylvania"
+    },
+    {
+     "name": "Danny Felix",
+     "school": "Arizona State",
+     "seed": 8,
+     "y": 222.26245229498352,
+     "printed": "Danny Felix, Arizona State [8]"
+    },
+    {
+     "name": "Sam Henson",
+     "school": "Clemson",
+     "seed": 1,
+     "y": 237.26244629498353,
+     "printed": "Sam Henson, Clemson [1]"
+    },
+    {
+     "name": "Jeff Mirabella",
+     "school": "Northwestern",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Jeff Mirabella, Northwestern"
+    },
+    {
+     "name": "Dan Finacchio",
+     "school": "Rider",
+     "seed": null,
+     "y": 267.2624342949835,
+     "printed": "Dan Finacchio, Rider"
+    },
+    {
+     "name": "Brad Silimperi",
+     "school": "Lock Haven",
+     "seed": null,
+     "y": 282.2624282949835,
+     "printed": "Brad Silimperi, Lock Haven"
+    },
+    {
+     "name": "Sam Lopez",
+     "school": "Fresno State",
+     "seed": null,
+     "y": 303.2629198947835,
+     "printed": "Sam Lopez, Fresno State"
+    },
+    {
+     "name": "Eric Akin",
+     "school": "Iowa State",
+     "seed": 2,
+     "y": 318.26291389478354,
+     "printed": "Eric Akin, Iowa State [2]"
+    },
+    {
+     "name": "Lindsay Durlacher",
+     "school": "Illinois",
+     "seed": null,
+     "y": 333.2629078947835,
+     "printed": "Lindsay Durlacher, Illinois"
+    },
+    {
+     "name": "Jason Laflin",
+     "school": "Tennessee-Chattanooga",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "Jason Laflin, Tennessee-Chattanooga"
+    },
+    {
+     "name": "Scott Gonyo",
+     "school": "Nebraska",
+     "seed": 7,
+     "y": 363.2628958947835,
+     "printed": "Scott Gonyo, Nebraska [7]"
+    },
+    {
+     "name": "Brandon Paulson",
+     "school": "Minnesota",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Brandon Paulson, Minnesota"
+    },
+    {
+     "name": "Bobby Soto",
+     "school": "Cal State-Bakersfield",
+     "seed": null,
+     "y": 393.3828838467835,
+     "printed": "Bobby Soto, Cal State-Bakersfield"
+    },
+    {
+     "name": "Sheldon Thomas",
+     "school": "Clarion",
+     "seed": 10,
+     "y": 408.3828778467835,
+     "printed": "Sheldon Thomas, Clarion [10]"
+    },
+    {
+     "name": "Matt Finacchio",
+     "school": "George Mason",
+     "seed": null,
+     "y": 423.38287184678353,
+     "printed": "Matt Finacchio, George Mason"
+    },
+    {
+     "name": "Derek Moscovic",
+     "school": "Indiana",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Derek Moscovic, Indiana"
+    },
+    {
+     "name": "David Land",
+     "school": "Maryland",
+     "seed": 3,
+     "y": 453.3828598467835,
+     "printed": "David Land, Maryland [3]"
+    },
+    {
+     "name": "Jason Gibble",
+     "school": "Millersville",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Jason Gibble, Millersville"
+    },
+    {
+     "name": "Ty Moore",
+     "school": "North Carolina",
+     "seed": 6,
+     "y": 483.38284784678353,
+     "printed": "Ty Moore, North Carolina [6]"
+    },
+    {
+     "name": "Jeff Cervone",
+     "school": "Syracuse",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Jeff Cervone, Syracuse"
+    },
+    {
+     "name": "Brett Bingham",
+     "school": "Boise State",
+     "seed": 11,
+     "y": 513.3828358467836,
+     "printed": "Brett Bingham, Boise State [11]"
+    },
+    {
+     "name": "Erik Gustafson",
+     "school": "Eastern Illinois",
+     "seed": null,
+     "y": 528.3828298467834,
+     "printed": "Erik Gustafson, Eastern Illinois"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "winnerLine": 1,
+     "loserLine": 0,
+     "printed": "12-0"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 3,
+     "loserLine": 2,
+     "printed": "7-5 OT"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 4,
+     "loserLine": 5,
+     "printed": "7-3"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 6,
+     "loserLine": 7,
+     "printed": "6-3"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 8,
+     "loserLine": 9,
+     "printed": "14-10"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 11,
+     "loserLine": 10,
+     "printed": "3-3 TB"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "TF 16-0, 2:59"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 14,
+     "loserLine": 15,
+     "printed": "7-1"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 17,
+     "loserLine": 16,
+     "printed": "Fall 3:47"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 19,
+     "loserLine": 18,
+     "printed": "TF 20-5, 6:41"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 20,
+     "loserLine": 21,
+     "printed": "9-2"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 23,
+     "loserLine": 22,
+     "printed": "13-4"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "11-3"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "8-7"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 29,
+     "loserLine": 28,
+     "printed": "TF 20-3, 7:00"
+    },
+    {
+     "slot": 15,
+     "winnerLine": 30,
+     "loserLine": 31,
+     "printed": "DFT 4:41"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 1,
+     "loserLine": 3,
+     "printed": "5-4"
+    },
+    {
+     "winnerLine": 6,
+     "loserLine": 4,
+     "printed": "6-3"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 11,
+     "printed": "6-4"
+    },
+    {
+     "winnerLine": 12,
+     "loserLine": 14,
+     "printed": "TF 21-2, 7:00"
+    },
+    {
+     "winnerLine": 17,
+     "loserLine": 19,
+     "printed": "TF 19-3, 6:50"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 23,
+     "printed": "13-8"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 24,
+     "printed": "9-6"
+    },
+    {
+     "winnerLine": 30,
+     "loserLine": 29,
+     "printed": "Fall 2:45"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 1,
+     "loserLine": 6,
+     "printed": "3-1"
+    },
+    {
+     "winnerLine": 12,
+     "loserLine": 8,
+     "printed": "1-0"
+    },
+    {
+     "winnerLine": 17,
+     "loserLine": 20,
+     "printed": "9-1"
+    },
+    {
+     "winnerLine": 30,
+     "loserLine": 26,
+     "printed": "6-2"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 12,
+     "loserLine": 1,
+     "printed": "18-6"
+    },
+    {
+     "winnerLine": 17,
+     "loserLine": 30,
+     "printed": "2-1"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 12,
+     "loserLine": 17,
+     "printed": "2-2 TB"
+    }
+   ],
+   "pigtails": [
+    {
+     "winner": {
+      "name": "Sam Henson",
+      "school": "Clemson"
+     },
+     "loser": {
+      "name": "Eric Smith",
+      "school": "Seton Hall"
+     },
+     "printed": "TF 15-0, 3:30"
+    }
+   ],
+   "consPigtails": [
+    {
+     "winner": {
+      "name": "Jeff Mirabella",
+      "school": "Northwestern"
+     },
+     "loser": {
+      "name": "Eric Smith",
+      "school": "Seton Hall"
+     },
+     "printed": "TF 20-5, 6:00"
+    }
+   ],
+   "consRaw": {
+    "c1in": [
+     "Billy, West Virginia",
+     "Carpenter, Brown",
+     "Rinella, Bloomsburg",
+     "Morgan, Morgan State",
+     "Sinacore, Old Dominion",
+     "Felix, Arizona State",
+     "Mirabella, Northwestern",
+     "Finacchio, Rider",
+     "Lopez, Fresno State",
+     "Laflin, Tennessee-Chattanooga",
+     "Paulson, Minnesota",
+     "Thomas, Clarion",
+     "Gibble, Millersville",
+     "Finacchio, George Mason",
+     "Gustafson, Eastern Illinois",
+     "Cervone, Syracuse"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Rinella 9-4",
+     "Land, Maryland",
+     "Finacchio 9-7",
+     "Gonyo, Nebraska",
+     "Thomas 12-5",
+     "Mena, Iowa",
+     "Gibble 7-2",
+     "Hanutke, Wisconsin"
+    ],
+    "c3res": [
+     "Rinella 7-6",
+     "Gonyo 6-4",
+     "Mena 6-2",
+     "Hanutke 3-2"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Gonyo 9-7",
+     "Roberts, Oregon",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Hanutke 3-1",
+     "Bingham, Boise State"
+    ],
+    "c5res": [
+     "118 Consolation Bracket",
+     "Brett Bingham, Boise State 5-1",
+     "Matt Hanutke, Wisconsin 6-2",
+     "Mike Mena, Iowa 5-3"
+    ],
+    "sfdrop": [
+     "Kevin Roberts, Oregon",
+     "Scott Gonyo, Nebraska",
+     "Pete Rinella, Bloomsburg"
+    ],
+    "place": [
+     "Roberts 2-1",
+     "Bingham 4-1"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Billy, West Virginia"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Carpenter 8-4"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "118 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Carpenter, Brown"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Rinella 9-4"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Rinella, Bloomsburg"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Rinella 7-6"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Rinella 7-4"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Morgan, Morgan State"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Land, Maryland"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Sinacore, Old Dominion"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Gonyo 9-7"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Sinacore 6-3"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Roberts 2-1"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Felix, Arizona State"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Roberts, Oregon"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Finacchio 9-7"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Mirabella, Northwestern"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Gonyo 6-4"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Finacchio 8-3"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Brett Bingham, Boise State 5-1"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Finacchio, Rider"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Gonyo, Nebraska"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Kevin Roberts, Oregon"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Lopez, Fresno State"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Matt Hanutke, Wisconsin 6-2"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Lopez 3-1"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Scott Gonyo, Nebraska"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Laflin, Tennessee-Chattanooga"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Mike Mena, Iowa 5-3"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Thomas 12-5"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Pete Rinella, Bloomsburg"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Paulson, Minnesota"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Mena 6-2"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Thomas 9-3"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Thomas, Clarion"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Mena, Iowa"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Gibble, Millersville"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Hanutke 3-1"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Gibble Fall 2:29"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Bingham 4-1"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Bingham, Boise State"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Finacchio, George Mason"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Gibble 7-2"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Gustafson, Eastern Illinois"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Hanutke 3-2"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Cervone Med FFT"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Cervone, Syracuse"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Hanutke, Wisconsin"
+    }
+   ]
+  },
+  {
+   "index": 1,
+   "problems": [],
+   "weight": "126",
+   "lines": [
+    {
+     "name": "Jody Staylor",
+     "school": "Old Dominion",
+     "seed": 5,
+     "y": 57.142518342983465,
+     "printed": "Jody Staylor, Old Dominion [5]"
+    },
+    {
+     "bye": true,
+     "y": 72.14251234298348,
+     "printed": "Bye"
+    },
+    {
+     "name": "Shawn Enright",
+     "school": "Ohio University",
+     "seed": 12,
+     "y": 87.1425063429835,
+     "printed": "Shawn Enright, Ohio University [12]"
+    },
+    {
+     "name": "Dan Smith",
+     "school": "Boston University",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Dan Smith, Boston University"
+    },
+    {
+     "name": "Jeff McGinness",
+     "school": "Iowa",
+     "seed": 4,
+     "y": 117.14249434298353,
+     "printed": "Jeff McGinness, Iowa [4]"
+    },
+    {
+     "name": "Jason Solomon",
+     "school": "Northern Illinois",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Jason Solomon, Northern Illinois"
+    },
+    {
+     "name": "Jeff Maes",
+     "school": "Cal State-Fullerton",
+     "seed": null,
+     "y": 147.26248229498356,
+     "printed": "Jeff Maes, Cal State-Fullerton"
+    },
+    {
+     "name": "Matt Whitmer",
+     "school": "Edinboro",
+     "seed": null,
+     "y": 162.26247629498351,
+     "printed": "Matt Whitmer, Edinboro"
+    },
+    {
+     "name": "Nick Purler",
+     "school": "Oklahoma State",
+     "seed": 1,
+     "y": 177.26247029498353,
+     "printed": "Nick Purler, Oklahoma State [1]"
+    },
+    {
+     "name": "Tad Yeager",
+     "school": "Northwestern",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "Tad Yeager, Northwestern"
+    },
+    {
+     "name": "Nick Zinkin",
+     "school": "Fresno State",
+     "seed": null,
+     "y": 207.2624582949835,
+     "printed": "Nick Zinkin, Fresno State"
+    },
+    {
+     "name": "Jeff Stepanic",
+     "school": "Navy",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "Jeff Stepanic, Navy"
+    },
+    {
+     "name": "Tim Harris",
+     "school": "Minnesota",
+     "seed": 8,
+     "y": 237.26244629498353,
+     "printed": "Tim Harris, Minnesota [8]"
+    },
+    {
+     "name": "Corey Padovano",
+     "school": "Drexel",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Corey Padovano, Drexel"
+    },
+    {
+     "name": "Randy Reidler",
+     "school": "Bloomsburg",
+     "seed": null,
+     "y": 267.2624342949835,
+     "printed": "Randy Reidler, Bloomsburg"
+    },
+    {
+     "name": "Dave Nieradka",
+     "school": "Oregon State",
+     "seed": 9,
+     "y": 282.2624282949835,
+     "printed": "Dave Nieradka, Oregon State [9]"
+    },
+    {
+     "name": "Chris Russo",
+     "school": "Indiana",
+     "seed": 7,
+     "y": 303.2629198947835,
+     "printed": "Chris Russo, Indiana [7]"
+    },
+    {
+     "name": "Mike Kendall",
+     "school": "North Carolina",
+     "seed": null,
+     "y": 318.26291389478354,
+     "printed": "Mike Kendall, North Carolina"
+    },
+    {
+     "name": "Dantae Smith",
+     "school": "Morgan State",
+     "seed": 10,
+     "y": 333.2629078947835,
+     "printed": "Dantae Smith, Morgan State [10]"
+    },
+    {
+     "name": "Steve Baer",
+     "school": "Nebraska",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "Steve Baer, Nebraska"
+    },
+    {
+     "name": "Sanshiro Abe",
+     "school": "Penn State",
+     "seed": 2,
+     "y": 363.2628958947835,
+     "printed": "Sanshiro Abe, Penn State [2]"
+    },
+    {
+     "name": "Jeff Duque",
+     "school": "Syracuse",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Jeff Duque, Syracuse"
+    },
+    {
+     "name": "Andy Gardner",
+     "school": "Illinois State",
+     "seed": null,
+     "y": 393.3828838467835,
+     "printed": "Andy Gardner, Illinois State"
+    },
+    {
+     "name": "Mike Norton",
+     "school": "North Carolina State",
+     "seed": null,
+     "y": 408.3828778467835,
+     "printed": "Mike Norton, North Carolina State"
+    },
+    {
+     "name": "Chris Jensen",
+     "school": "Oregon",
+     "seed": null,
+     "y": 423.38287184678353,
+     "printed": "Chris Jensen, Oregon"
+    },
+    {
+     "name": "Bobby Crawford",
+     "school": "Clarion",
+     "seed": 11,
+     "y": 438.3828658467835,
+     "printed": "Bobby Crawford, Clarion [11]"
+    },
+    {
+     "name": "Shawn Harrison",
+     "school": "Oklahoma",
+     "seed": 6,
+     "y": 453.3828598467835,
+     "printed": "Shawn Harrison, Oklahoma [6]"
+    },
+    {
+     "name": "Demond Betts",
+     "school": "Michigan State",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Demond Betts, Michigan State"
+    },
+    {
+     "name": "Dom DiSabato",
+     "school": "Ohio State",
+     "seed": null,
+     "y": 483.38284784678353,
+     "printed": "Dom DiSabato, Ohio State"
+    },
+    {
+     "name": "David Barden",
+     "school": "Tennessee-Chattanooga",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "David Barden, Tennessee-Chattanooga"
+    },
+    {
+     "bye": true,
+     "y": 513.3828358467836,
+     "printed": "Bye"
+    },
+    {
+     "name": "David Hirsch",
+     "school": "Cornell",
+     "seed": 3,
+     "y": 528.3828298467834,
+     "printed": "David Hirsch, Cornell [3]"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "bye": true,
+     "winnerLine": 0,
+     "printed": "Jody Staylor"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "12-2"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 4,
+     "loserLine": 5,
+     "printed": "16-5"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 6,
+     "loserLine": 7,
+     "printed": "7-2"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 8,
+     "loserLine": 9,
+     "printed": "10-4"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 11,
+     "loserLine": 10,
+     "printed": "7-2"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "6-3"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 15,
+     "loserLine": 14,
+     "printed": "13-8"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 16,
+     "loserLine": 17,
+     "printed": "6-4 OT"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 19,
+     "loserLine": 18,
+     "printed": "12-8"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 20,
+     "loserLine": 21,
+     "printed": "17-6"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 23,
+     "loserLine": 22,
+     "printed": "8-3"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "17-11"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "8-5"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 29,
+     "loserLine": 28,
+     "printed": "6-5"
+    },
+    {
+     "slot": 15,
+     "bye": true,
+     "winnerLine": 31,
+     "printed": "David Hirsch"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 0,
+     "loserLine": 2,
+     "printed": "17-3"
+    },
+    {
+     "winnerLine": 4,
+     "loserLine": 6,
+     "printed": "11-6"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 11,
+     "printed": "9-3"
+    },
+    {
+     "winnerLine": 15,
+     "loserLine": 12,
+     "printed": "4-3"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 19,
+     "printed": "6-4"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 23,
+     "printed": "10-4"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 24,
+     "printed": "Fall 6:15"
+    },
+    {
+     "winnerLine": 31,
+     "loserLine": 29,
+     "printed": "11-6"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 0,
+     "loserLine": 4,
+     "printed": "4-1"
+    },
+    {
+     "winnerLine": 15,
+     "loserLine": 8,
+     "printed": "2-1"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 16,
+     "printed": "8-2"
+    },
+    {
+     "winnerLine": 31,
+     "loserLine": 26,
+     "printed": "4-3"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 0,
+     "loserLine": 15,
+     "printed": "1-1 TB"
+    },
+    {
+     "winnerLine": 31,
+     "loserLine": 20,
+     "printed": "6-4 OT"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 31,
+     "loserLine": 0,
+     "printed": "2-1"
+    }
+   ],
+   "pigtails": [],
+   "consPigtails": [],
+   "consRaw": {
+    "c1in": [
+     "Bye",
+     "Enright, Ohio University",
+     "Solomon, Northern Illinois",
+     "Maes, Cal State-Fullerton",
+     "Yeager, Northwestern",
+     "Stepanic, Navy",
+     "Reidler, Bloomsburg",
+     "Harris, Minnesota",
+     "Kendall, North Carolina",
+     "Baer, Nebraska",
+     "Duque, Syracuse",
+     "Norton, North Carolina State",
+     "Betts, Michigan State",
+     "Jensen, Oregon",
+     "Bye",
+     "Barden, Tennessee-Chattanoog"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Enright 14-4",
+     "Harrison, Oklahoma",
+     "Yeager 12-9",
+     "Russo, Indiana",
+     "Baer 6-3",
+     "Purler, Oklahoma State",
+     "Jensen 6-1",
+     "McGinness, Iowa"
+    ],
+    "c3res": [
+     "Enright Fall 1:58",
+     "Russo 8-6",
+     "Purler 9-3",
+     "McGinness 6-1"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Enright 5-4",
+     "Nieradka, Oregon State",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "McGinness 9-4",
+     "Abe, Penn State"
+    ],
+    "c5res": [
+     "126 Consolation Bracket",
+     "Sanshiro Abe, Penn State 11-5",
+     "Jeff McGinness, Iowa 4-3",
+     "Nick Purler, Oklahoma State 9-3"
+    ],
+    "sfdrop": [
+     "Shawn Enright, Ohio University",
+     "Dave Nieradka, Oregon State",
+     "Chris Russo, Indiana"
+    ],
+    "place": [
+     "Enright 7-5",
+     "Abe 5-3"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Bye"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Enright"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "126 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Enright, Ohio University"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Enright 14-4"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Solomon, Northern Illinois"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Enright Fall 1:58"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Solomon 6-4"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Maes, Cal State-Fullerton"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Harrison, Oklahoma"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Yeager, Northwestern"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Enright 5-4"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Yeager 11-10"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Enright 7-5"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Stepanic, Navy"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Nieradka, Oregon State"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Yeager 12-9"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Reidler, Bloomsburg"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Russo 8-6"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Reidler Fall 3:21"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Sanshiro Abe, Penn State 11-5"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Harris, Minnesota"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Russo, Indiana"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Shawn Enright, Ohio University"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Kendall, North Carolina"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Jeff McGinness, Iowa 4-3"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Baer 4-3"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Dave Nieradka, Oregon State"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Baer, Nebraska"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Nick Purler, Oklahoma State 9-3"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Baer 6-3"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Chris Russo, Indiana"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Duque, Syracuse"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Purler 9-3"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Norton 10-4"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Norton, North Carolina State"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Purler, Oklahoma State"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Betts, Michigan State"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "McGinness 9-4"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Jensen 6-4"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Abe 5-3"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Abe, Penn State"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Jensen, Oregon"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Jensen 6-1"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Bye"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "McGinness 6-1"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Barden"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Barden, Tennessee-Chattanoog"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "McGinness, Iowa"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "problems": [],
+   "weight": "134",
+   "lines": [
+    {
+     "name": "David Ross",
+     "school": "Southwest Missouri",
+     "seed": null,
+     "y": 57.142518342983465,
+     "printed": "David Ross, Southwest Missouri"
+    },
+    {
+     "name": "Babak Mohammadi",
+     "school": "Oregon State",
+     "seed": 5,
+     "y": 72.14251234298348,
+     "printed": "Babak Mohammadi, Oregon State [5]"
+    },
+    {
+     "name": "Dorian Hager",
+     "school": "West Virginia",
+     "seed": 12,
+     "y": 87.1425063429835,
+     "printed": "Dorian Hager, West Virginia [12]"
+    },
+    {
+     "name": "Alex Coriano",
+     "school": "Purdue",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Alex Coriano, Purdue"
+    },
+    {
+     "name": "DeWayne Zinkin",
+     "school": "Fresno State",
+     "seed": 4,
+     "y": 117.14249434298353,
+     "printed": "DeWayne Zinkin, Fresno State [4]"
+    },
+    {
+     "name": "Scott Reyna",
+     "school": "Oklahoma State",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Scott Reyna, Oklahoma State"
+    },
+    {
+     "name": "Ryan Nunamaker",
+     "school": "North Carolina State",
+     "seed": null,
+     "y": 147.26248229498356,
+     "printed": "Ryan Nunamaker, North Carolina State"
+    },
+    {
+     "name": "Chris Berglin",
+     "school": "Minnesota",
+     "seed": null,
+     "y": 162.26247629498351,
+     "printed": "Chris Berglin, Minnesota"
+    },
+    {
+     "name": "Eric Kimble",
+     "school": "Ohio University",
+     "seed": 9,
+     "y": 177.26247029498353,
+     "printed": "Eric Kimble, Ohio University [9]"
+    },
+    {
+     "name": "Tony DeSouza",
+     "school": "Cal State-Bakersfield",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "Tony DeSouza, Cal State-Bakersfield"
+    },
+    {
+     "name": "Tony Pariano",
+     "school": "Northwestern",
+     "seed": 8,
+     "y": 207.2624582949835,
+     "printed": "Tony Pariano, Northwestern [8]"
+    },
+    {
+     "name": "Andy Showalter",
+     "school": "Northern Iowa",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "Andy Showalter, Northern Iowa"
+    },
+    {
+     "name": "Cary Kolat",
+     "school": "Penn State",
+     "seed": 1,
+     "y": 237.26244629498353,
+     "printed": "Cary Kolat, Penn State [1]"
+    },
+    {
+     "name": "Paul Collier",
+     "school": "Brown",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Paul Collier, Brown"
+    },
+    {
+     "name": "Joey Heckel",
+     "school": "Oklahoma",
+     "seed": null,
+     "y": 267.2624342949835,
+     "printed": "Joey Heckel, Oklahoma"
+    },
+    {
+     "name": "John Richey",
+     "school": "Pittsburgh",
+     "seed": null,
+     "y": 282.2624282949835,
+     "printed": "John Richey, Pittsburgh"
+    },
+    {
+     "name": "Jason Nase",
+     "school": "Rider",
+     "seed": null,
+     "y": 303.2629198947835,
+     "printed": "Jason Nase, Rider"
+    },
+    {
+     "name": "Derek Mountsier",
+     "school": "Iowa State",
+     "seed": 7,
+     "y": 318.26291389478354,
+     "printed": "Derek Mountsier, Iowa State [7]"
+    },
+    {
+     "name": "Jay Michael",
+     "school": "Ohio State",
+     "seed": 10,
+     "y": 333.2629078947835,
+     "printed": "Jay Michael, Ohio State [10]"
+    },
+    {
+     "name": "Bryce Bochy",
+     "school": "Wyoming",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "Bryce Bochy, Wyoming"
+    },
+    {
+     "name": "T.J. Jaworsky",
+     "school": "North Carolina",
+     "seed": 2,
+     "y": 363.2628958947835,
+     "printed": "T.J. Jaworsky, North Carolina [2]"
+    },
+    {
+     "name": "Jay Jackson",
+     "school": "Stanford",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Jay Jackson, Stanford"
+    },
+    {
+     "name": "Charlie Morgan",
+     "school": "Morgan State",
+     "seed": null,
+     "y": 393.3828838467835,
+     "printed": "Charlie Morgan, Morgan State"
+    },
+    {
+     "name": "Mike Yancosky",
+     "school": "Cornell",
+     "seed": null,
+     "y": 408.3828778467835,
+     "printed": "Mike Yancosky, Cornell"
+    },
+    {
+     "name": "Frank Velazquez",
+     "school": "Nebraska",
+     "seed": 3,
+     "y": 423.38287184678353,
+     "printed": "Frank Velazquez, Nebraska [3]"
+    },
+    {
+     "name": "Mike Krafchick",
+     "school": "Virginia",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Mike Krafchick, Virginia"
+    },
+    {
+     "name": "Jon Vaughn",
+     "school": "Illinois",
+     "seed": null,
+     "y": 453.3828598467835,
+     "printed": "Jon Vaughn, Illinois"
+    },
+    {
+     "name": "Steve Krouse",
+     "school": "Lock Haven",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Steve Krouse, Lock Haven"
+    },
+    {
+     "name": "Steve St. John",
+     "school": "Arizona State",
+     "seed": 6,
+     "y": 483.38284784678353,
+     "printed": "Steve St. John, Arizona State [6]"
+    },
+    {
+     "name": "Erik Saunders",
+     "school": "Seton Hall",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Erik Saunders, Seton Hall"
+    },
+    {
+     "name": "Ron Pieper",
+     "school": "Wisconsin",
+     "seed": 11,
+     "y": 513.3828358467836,
+     "printed": "Ron Pieper, Wisconsin [11]"
+    },
+    {
+     "name": "Ed Moore",
+     "school": "Franklin & Marshall",
+     "seed": null,
+     "y": 528.3828298467834,
+     "printed": "Ed Moore, Franklin & Marshall"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "winnerLine": 1,
+     "loserLine": 0,
+     "printed": "Fall 4:39"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "21-16"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 4,
+     "loserLine": 5,
+     "printed": "4-3 TB"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 7,
+     "loserLine": 6,
+     "printed": "11-3"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 8,
+     "loserLine": 9,
+     "printed": "18-9"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 10,
+     "loserLine": 11,
+     "printed": "3-1"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "16-6"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 15,
+     "loserLine": 14,
+     "printed": "16-5"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 17,
+     "loserLine": 16,
+     "printed": "Fall 2:32"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 18,
+     "loserLine": 19,
+     "printed": "Fall 4:44"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 20,
+     "loserLine": 21,
+     "printed": "6-0"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 23,
+     "loserLine": 22,
+     "printed": "10-2"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 25,
+     "loserLine": 24,
+     "printed": "6-3"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 27,
+     "loserLine": 26,
+     "printed": "6-4"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 28,
+     "loserLine": 29,
+     "printed": "8-6 OT"
+    },
+    {
+     "slot": 15,
+     "winnerLine": 30,
+     "loserLine": 31,
+     "printed": "13-7"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 1,
+     "loserLine": 2,
+     "printed": "23-10"
+    },
+    {
+     "winnerLine": 4,
+     "loserLine": 7,
+     "printed": "5-5 TB"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 10,
+     "printed": "12-5"
+    },
+    {
+     "winnerLine": 12,
+     "loserLine": 15,
+     "printed": "13-5"
+    },
+    {
+     "winnerLine": 17,
+     "loserLine": 18,
+     "printed": "4-3"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 23,
+     "printed": "5-0"
+    },
+    {
+     "winnerLine": 27,
+     "loserLine": 25,
+     "printed": "4-3"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 30,
+     "printed": "17-7"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 1,
+     "loserLine": 4,
+     "printed": "3-2"
+    },
+    {
+     "winnerLine": 12,
+     "loserLine": 8,
+     "printed": "6-1"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 17,
+     "printed": "DFT 0:01"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 27,
+     "printed": "7-3"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 1,
+     "loserLine": 12,
+     "printed": "6-4 OT"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 28,
+     "printed": "4-1"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 20,
+     "loserLine": 1,
+     "printed": "12-4"
+    }
+   ],
+   "pigtails": [
+    {
+     "winner": {
+      "name": "Cary Kolat",
+      "school": "Penn State"
+     },
+     "loser": {
+      "name": "Willie Stravino",
+      "school": "George Mason"
+     },
+     "printed": "12-10"
+    }
+   ],
+   "consPigtails": [
+    {
+     "winner": {
+      "name": "Paul Collier",
+      "school": "Brown"
+     },
+     "loser": {
+      "name": "Willie Stravino",
+      "school": "George Mason"
+     },
+     "printed": "TF 17-1, 3:02"
+    }
+   ],
+   "consRaw": {
+    "c1in": [
+     "Ross, Southwest Missouri",
+     "Hager, West Virginia",
+     "Reyna, Oklahoma State",
+     "Berglin, Minnesota",
+     "DeSouza, Cal State-Bakersfield",
+     "Pariano, Northwestern",
+     "Collier, Brown",
+     "Richey, Pittsburgh",
+     "Nase, Rider",
+     "Michael, Ohio State",
+     "Jackson, Stanford",
+     "Yancosky, Cornell",
+     "Vaughn, Illinois",
+     "Krafchick, Virginia",
+     "Saunders, Seton Hall",
+     "Pieper, Wisconsin"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Reyna Fall 3:32",
+     "Krouse, Lock Haven",
+     "Pariano 6-1",
+     "Mountsier, Iowa State",
+     "Jackson 6-2",
+     "Kimble, Ohio University",
+     "Krafchick 7-4",
+     "Zinkin, Fresno State"
+    ],
+    "c3res": [
+     "Krouse 4-2",
+     "Mountsier 4-2 OT",
+     "Kimble 8-3",
+     "Krafchick 5-4"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Krouse DFT 0:29",
+     "Kolat, Penn State",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Krafchick 4-3",
+     "St. John, Arizona State"
+    ],
+    "c5res": [
+     "134 Consolation Bracket",
+     "Cary Kolat, Penn State Fall 5:49",
+     "Mike Krafchick, Virginia 6-6 TB"
+    ],
+    "sfdrop": [
+     "Steve St. John, Arizona State",
+     "Steve Krouse, Lock Haven",
+     "Eric Kimble, Ohio University Med FFT",
+     "Derek Mountsier, Iowa State"
+    ],
+    "place": [
+     "Kolat 10-0",
+     "St. John 6-5"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Ross, Southwest Missouri"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Ross 8-4"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "134 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Hager, West Virginia"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Reyna Fall 3:32"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Reyna, Oklahoma State"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Krouse 4-2"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Reyna 5-2"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Berglin, Minnesota"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Krouse, Lock Haven"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "DeSouza, Cal State-Bakersfield"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Krouse DFT 0:29"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Pariano 5-2"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Kolat 10-0"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Pariano, Northwestern"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Kolat, Penn State"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Pariano 6-1"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Collier, Brown"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Mountsier 4-2 OT"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Richey Fall 7:19 OT"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Cary Kolat, Penn State Fall 5:49"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Richey, Pittsburgh"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Mountsier, Iowa State"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Steve St. John, Arizona State"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Nase, Rider"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Mike Krafchick, Virginia 6-6 TB"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Nase 5-3 OT"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Steve Krouse, Lock Haven"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Michael, Ohio State"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Eric Kimble, Ohio University Med FFT"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Jackson 6-2"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Derek Mountsier, Iowa State"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Jackson, Stanford"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Kimble 8-3"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Jackson 1-0"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Yancosky, Cornell"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Kimble, Ohio University"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Vaughn, Illinois"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Krafchick 4-3"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Krafchick 7-2"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "St. John 6-5"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "St. John, Arizona State"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Krafchick, Virginia"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Krafchick 7-4"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Saunders, Seton Hall"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Krafchick 5-4"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Saunders 5-4"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Pieper, Wisconsin"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Zinkin, Fresno State"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "problems": [],
+   "weight": "142",
+   "lines": [
+    {
+     "name": "Cory Sonnen",
+     "school": "Oregon",
+     "seed": 12,
+     "y": 57.142518342983465,
+     "printed": "Cory Sonnen, Oregon [12]"
+    },
+    {
+     "name": "Dan Covatta",
+     "school": "Duke",
+     "seed": null,
+     "y": 72.14251234298348,
+     "printed": "Dan Covatta, Duke"
+    },
+    {
+     "name": "Charlie Branch",
+     "school": "Virginia Military",
+     "seed": 5,
+     "y": 87.1425063429835,
+     "printed": "Charlie Branch, Virginia Military [5]"
+    },
+    {
+     "name": "Joe Daubach",
+     "school": "Eastern Illinois",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Joe Daubach, Eastern Illinois"
+    },
+    {
+     "name": "Denny Orr",
+     "school": "Liberty",
+     "seed": null,
+     "y": 117.14249434298353,
+     "printed": "Denny Orr, Liberty"
+    },
+    {
+     "name": "Jeff Dalrymple",
+     "school": "Air Force",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Jeff Dalrymple, Air Force"
+    },
+    {
+     "name": "Gordon Cashen",
+     "school": "Central Michigan",
+     "seed": null,
+     "y": 147.26248229498356,
+     "printed": "Gordon Cashen, Central Michigan"
+    },
+    {
+     "name": "Steve Marianetti",
+     "school": "Illinois",
+     "seed": 4,
+     "y": 162.26247629498351,
+     "printed": "Steve Marianetti, Illinois [4]"
+    },
+    {
+     "name": "John Hughes",
+     "school": "Penn State",
+     "seed": 9,
+     "y": 177.26247029498353,
+     "printed": "John Hughes, Penn State [9]"
+    },
+    {
+     "name": "Jason Gregersen",
+     "school": "Wyoming",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "Jason Gregersen, Wyoming"
+    },
+    {
+     "name": "Kenny Liddell",
+     "school": "Missouri",
+     "seed": 8,
+     "y": 207.2624582949835,
+     "printed": "Kenny Liddell, Missouri [8]"
+    },
+    {
+     "name": "Alex Lombardo",
+     "school": "Rutgers",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "Alex Lombardo, Rutgers"
+    },
+    {
+     "name": "Ken Workman",
+     "school": "Cal State-Fullerton",
+     "seed": null,
+     "y": 237.26244629498353,
+     "printed": "Ken Workman, Cal State-Fullerton"
+    },
+    {
+     "name": "Tim Novak",
+     "school": "Northern Iowa",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Tim Novak, Northern Iowa"
+    },
+    {
+     "name": "Andy Trevino",
+     "school": "Indiana",
+     "seed": null,
+     "y": 267.2624342949835,
+     "printed": "Andy Trevino, Indiana"
+    },
+    {
+     "name": "Alan Fried",
+     "school": "Oklahoma State",
+     "seed": 1,
+     "y": 282.2624282949835,
+     "printed": "Alan Fried, Oklahoma State [1]"
+    },
+    {
+     "name": "Francis Dunn",
+     "school": "Rider",
+     "seed": null,
+     "y": 303.2629198947835,
+     "printed": "Francis Dunn, Rider"
+    },
+    {
+     "name": "Jamie Kyriazis",
+     "school": "Syracuse",
+     "seed": 10,
+     "y": 318.26291389478354,
+     "printed": "Jamie Kyriazis, Syracuse [10]"
+    },
+    {
+     "name": "Daryl Weber",
+     "school": "Iowa",
+     "seed": null,
+     "y": 333.2629078947835,
+     "printed": "Daryl Weber, Iowa"
+    },
+    {
+     "name": "John Krause",
+     "school": "Southwest Missouri",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "John Krause, Southwest Missouri"
+    },
+    {
+     "name": "Eric Jamerson",
+     "school": "Boston University",
+     "seed": null,
+     "y": 363.2628958947835,
+     "printed": "Eric Jamerson, Boston University"
+    },
+    {
+     "name": "Pat Morrissey",
+     "school": "Cal Poly-SLO",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Pat Morrissey, Cal Poly-SLO"
+    },
+    {
+     "name": "Josh Miller",
+     "school": "North Carolina",
+     "seed": null,
+     "y": 393.3828838467835,
+     "printed": "Josh Miller, North Carolina"
+    },
+    {
+     "name": "Gerry Abas",
+     "school": "Fresno State",
+     "seed": 2,
+     "y": 408.3828778467835,
+     "printed": "Gerry Abas, Fresno State [2]"
+    },
+    {
+     "name": "Dunyasha Yetts",
+     "school": "Ohio State",
+     "seed": 3,
+     "y": 423.38287184678353,
+     "printed": "Dunyasha Yetts, Ohio State [3]"
+    },
+    {
+     "name": "Joe Calhoun",
+     "school": "Ohio University",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Joe Calhoun, Ohio University"
+    },
+    {
+     "name": "Rick Jeletic",
+     "school": "Duquesne",
+     "seed": null,
+     "y": 453.3828598467835,
+     "printed": "Rick Jeletic, Duquesne"
+    },
+    {
+     "name": "Matt Blair",
+     "school": "West Virginia",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Matt Blair, West Virginia"
+    },
+    {
+     "name": "Shannyn Gillespie",
+     "school": "Lock Haven",
+     "seed": 11,
+     "y": 483.38284784678353,
+     "printed": "Shannyn Gillespie, Lock Haven [11]"
+    },
+    {
+     "name": "Ryan Lord",
+     "school": "Wisconsin",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Ryan Lord, Wisconsin"
+    },
+    {
+     "name": "Justin Ware",
+     "school": "Nebraska",
+     "seed": 6,
+     "y": 513.3828358467836,
+     "printed": "Justin Ware, Nebraska [6]"
+    },
+    {
+     "name": "Tony Evans",
+     "school": "Boise State",
+     "seed": null,
+     "y": 528.3828298467834,
+     "printed": "Tony Evans, Boise State"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "winnerLine": 1,
+     "loserLine": 0,
+     "printed": "6-4"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "11-4"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 5,
+     "loserLine": 4,
+     "printed": "7-5"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 7,
+     "loserLine": 6,
+     "printed": "11-3"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 8,
+     "loserLine": 9,
+     "printed": "10-6"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 10,
+     "loserLine": 11,
+     "printed": "13-5"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "5-4"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 15,
+     "loserLine": 14,
+     "printed": "20-9"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 17,
+     "loserLine": 16,
+     "printed": "13-5"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 18,
+     "loserLine": 19,
+     "printed": "4-0"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 21,
+     "loserLine": 20,
+     "printed": "3-1"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 23,
+     "loserLine": 22,
+     "printed": "11-8"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "8-3"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 27,
+     "loserLine": 26,
+     "printed": "14-9"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 28,
+     "loserLine": 29,
+     "printed": "9-4"
+    },
+    {
+     "slot": 15,
+     "winnerLine": 31,
+     "loserLine": 30,
+     "printed": "14-11"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 2,
+     "loserLine": 1,
+     "printed": "8-3"
+    },
+    {
+     "winnerLine": 7,
+     "loserLine": 5,
+     "printed": "Fall 5:44"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 10,
+     "printed": "6-4"
+    },
+    {
+     "winnerLine": 15,
+     "loserLine": 12,
+     "printed": "19-8"
+    },
+    {
+     "winnerLine": 18,
+     "loserLine": 17,
+     "printed": "5-3"
+    },
+    {
+     "winnerLine": 23,
+     "loserLine": 21,
+     "printed": "5-2"
+    },
+    {
+     "winnerLine": 24,
+     "loserLine": 27,
+     "printed": "11-6"
+    },
+    {
+     "winnerLine": 31,
+     "loserLine": 28,
+     "printed": "8-5"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 2,
+     "loserLine": 7,
+     "printed": "4-2"
+    },
+    {
+     "winnerLine": 15,
+     "loserLine": 8,
+     "printed": "14-4"
+    },
+    {
+     "winnerLine": 23,
+     "loserLine": 18,
+     "printed": "8-6"
+    },
+    {
+     "winnerLine": 24,
+     "loserLine": 31,
+     "printed": "Fall 5:23"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 15,
+     "loserLine": 2,
+     "printed": "12-4"
+    },
+    {
+     "winnerLine": 23,
+     "loserLine": 24,
+     "printed": "7-5 TB"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 15,
+     "loserLine": 23,
+     "printed": "15-6"
+    }
+   ],
+   "pigtails": [
+    {
+     "winner": {
+      "name": "Ken Workman",
+      "school": "Cal State-Fullerton"
+     },
+     "loser": {
+      "name": "Troy Charney",
+      "school": "North Carolina State"
+     },
+     "printed": "8-2"
+    },
+    {
+     "winner": {
+      "name": "Gordon Cashen",
+      "school": "Central Michigan"
+     },
+     "loser": {
+      "name": "Greg Rosenbaum",
+      "school": "Drexel"
+     },
+     "printed": "17-6"
+    },
+    {
+     "winner": {
+      "name": "Daryl Weber",
+      "school": "Iowa"
+     },
+     "loser": {
+      "name": "Dan Carcelli",
+      "school": "Cleveland State"
+     },
+     "printed": "Fall 7:25 OT"
+    }
+   ],
+   "consPigtails": [
+    {
+     "winner": {
+      "name": "Dan Carcelli",
+      "school": "Cleveland State"
+     },
+     "loser": {
+      "name": "John Krause",
+      "school": "Southwest Missouri"
+     },
+     "printed": "11-7"
+    }
+   ],
+   "consRaw": {
+    "c1in": [
+     "Daubach, Eastern Illinois",
+     "Covatta, Duke",
+     "Cashen, Central Michigan",
+     "Dalrymple, Air Force",
+     "Gregersen, Wyoming",
+     "Liddell, Missouri",
+     "Trevino, Indiana",
+     "Workman, Cal State-Fullerton",
+     "Carcelli, Cleveland State",
+     "Kyriazis, Syracuse",
+     "Miller, North Carolina",
+     "Morrissey, Cal Poly-SLO",
+     "Calhoun, Ohio University",
+     "Blair, West Virginia",
+     "Ware, Nebraska",
+     "Gillespie, Lock Haven"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Cashen TF 16-1, 4:06",
+     "Evans, Boise State",
+     "Liddell Med FFT",
+     "Weber, Iowa",
+     "Morrissey 5-2",
+     "Hughes, Penn State",
+     "Calhoun 11-7",
+     "Marianetti, Illinois"
+    ],
+    "c3res": [
+     "Cashen 7-5",
+     "Weber 3-2",
+     "Hughes 9-5",
+     "Marianetti 8-3"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Weber 5-2",
+     "Branch, Virginia Military",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Marianetti 3-2",
+     "Yetts, Ohio State"
+    ],
+    "c5res": [
+     "142 Consolation Bracket",
+     "Dunyasha Yetts, Ohio State 5-4",
+     "Steve Marianetti, Illinois 6-0",
+     "John Hughes, Penn State 7-2"
+    ],
+    "sfdrop": [
+     "Charlie Branch, Virginia Military",
+     "Daryl Weber, Iowa",
+     "Gordon Cashen, Central Michigan"
+    ],
+    "place": [
+     "Branch 1-0",
+     "Yetts 5-2"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Daubach, Eastern Illinois"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Covatta 4-2"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "142 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Covatta, Duke"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Cashen TF 16-1, 4:06"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Cashen, Central Michigan"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Cashen 7-5"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Cashen Fall 3:55"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Dalrymple, Air Force"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Evans, Boise State"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Gregersen, Wyoming"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Weber 5-2"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Liddell 3-2"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Branch 1-0"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Liddell, Missouri"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Branch, Virginia Military"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Liddell Med FFT"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Trevino, Indiana"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Weber 3-2"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Trevino 7-6"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Dunyasha Yetts, Ohio State 5-4"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Workman, Cal State-Fullerton"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Weber, Iowa"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Charlie Branch, Virginia Military"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Carcelli, Cleveland State"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Steve Marianetti, Illinois 6-0"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Carcelli Fall 1:08"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Daryl Weber, Iowa"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Kyriazis, Syracuse"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "John Hughes, Penn State 7-2"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Morrissey 5-2"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Gordon Cashen, Central Michigan"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Miller, North Carolina"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Hughes 9-5"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Morrissey Fall 3:53"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Morrissey, Cal Poly-SLO"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Hughes, Penn State"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Calhoun, Ohio University"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Marianetti 3-2"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Calhoun 9-3"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Yetts 5-2"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Yetts, Ohio State"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Blair, West Virginia"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Calhoun 11-7"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Ware, Nebraska"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Marianetti 8-3"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Gillespie 11-10"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Gillespie, Lock Haven"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Marianetti, Illinois"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "problems": [],
+   "weight": "150",
+   "lines": [
+    {
+     "name": "Jeremy Ingram",
+     "school": "Virginia Military",
+     "seed": null,
+     "y": 57.142518342983465,
+     "printed": "Jeremy Ingram, Virginia Military"
+    },
+    {
+     "name": "Jeff Theiler",
+     "school": "Arizona State",
+     "seed": 5,
+     "y": 72.14251234298348,
+     "printed": "Jeff Theiler, Arizona State [5]"
+    },
+    {
+     "name": "Joey Gilbert",
+     "school": "Boise State",
+     "seed": 12,
+     "y": 87.1425063429835,
+     "printed": "Joey Gilbert, Boise State [12]"
+    },
+    {
+     "name": "Steve Best",
+     "school": "Wisconsin",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Steve Best, Wisconsin"
+    },
+    {
+     "name": "Keith Taylor",
+     "school": "West Virginia",
+     "seed": null,
+     "y": 117.14249434298353,
+     "printed": "Keith Taylor, West Virginia"
+    },
+    {
+     "name": "Shilo Mathill",
+     "school": "Wyoming",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Shilo Mathill, Wyoming"
+    },
+    {
+     "name": "Russ Hughes",
+     "school": "Penn State",
+     "seed": null,
+     "y": 147.26248229498356,
+     "printed": "Russ Hughes, Penn State"
+    },
+    {
+     "name": "Jacob Newby",
+     "school": "Oklahoma State",
+     "seed": 4,
+     "y": 162.26247629498351,
+     "printed": "Jacob Newby, Oklahoma State [4]"
+    },
+    {
+     "name": "Charlie Becks",
+     "school": "Ohio State",
+     "seed": null,
+     "y": 177.26247029498353,
+     "printed": "Charlie Becks, Ohio State"
+    },
+    {
+     "name": "Ted Hickey",
+     "school": "Southwest Missouri",
+     "seed": 8,
+     "y": 192.2624642949835,
+     "printed": "Ted Hickey, Southwest Missouri [8]"
+    },
+    {
+     "name": "Scott Petche",
+     "school": "Indiana",
+     "seed": 9,
+     "y": 207.2624582949835,
+     "printed": "Scott Petche, Indiana [9]"
+    },
+    {
+     "name": "Dave DiSora",
+     "school": "East Stroudsburg",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "Dave DiSora, East Stroudsburg"
+    },
+    {
+     "name": "Rangi Smart",
+     "school": "Air Force",
+     "seed": null,
+     "y": 237.26244629498353,
+     "printed": "Rangi Smart, Air Force"
+    },
+    {
+     "name": "Jude Arena",
+     "school": "James Madison",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Jude Arena, James Madison"
+    },
+    {
+     "name": "Lincoln McIlravy",
+     "school": "Iowa",
+     "seed": 1,
+     "y": 267.2624342949835,
+     "printed": "Lincoln McIlravy, Iowa [1]"
+    },
+    {
+     "name": "Pete Ventresca",
+     "school": "Lock Haven",
+     "seed": null,
+     "y": 282.2624282949835,
+     "printed": "Pete Ventresca, Lock Haven"
+    },
+    {
+     "name": "Jamie St. John",
+     "school": "Syracuse",
+     "seed": 7,
+     "y": 303.2629198947835,
+     "printed": "Jamie St. John, Syracuse [7]"
+    },
+    {
+     "name": "Todd Sacksteder",
+     "school": "Missouri",
+     "seed": null,
+     "y": 318.26291389478354,
+     "printed": "Todd Sacksteder, Missouri"
+    },
+    {
+     "name": "Doug Bonshak",
+     "school": "Rider",
+     "seed": null,
+     "y": 333.2629078947835,
+     "printed": "Doug Bonshak, Rider"
+    },
+    {
+     "name": "Chad Bailey",
+     "school": "Bloomsburg",
+     "seed": 10,
+     "y": 348.2629018947835,
+     "printed": "Chad Bailey, Bloomsburg [10]"
+    },
+    {
+     "name": "Terry Watts",
+     "school": "Fresno State",
+     "seed": null,
+     "y": 363.2628958947835,
+     "printed": "Terry Watts, Fresno State"
+    },
+    {
+     "name": "Tod Surmon",
+     "school": "Stanford",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Tod Surmon, Stanford"
+    },
+    {
+     "name": "Willy Short",
+     "school": "Minnesota",
+     "seed": 2,
+     "y": 393.3828838467835,
+     "printed": "Willy Short, Minnesota [2]"
+    },
+    {
+     "name": "James Spillman",
+     "school": "Northern Illinois",
+     "seed": null,
+     "y": 408.3828778467835,
+     "printed": "James Spillman, Northern Illinois"
+    },
+    {
+     "name": "Tom Shifflet",
+     "school": "Edinboro",
+     "seed": 11,
+     "y": 423.38287184678353,
+     "printed": "Tom Shifflet, Edinboro [11]"
+    },
+    {
+     "name": "Kit Kiser",
+     "school": "California PA",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Kit Kiser, California PA"
+    },
+    {
+     "name": "Brian Harper",
+     "school": "Michigan",
+     "seed": 6,
+     "y": 453.3828598467835,
+     "printed": "Brian Harper, Michigan [6]"
+    },
+    {
+     "name": "Temoer Terry",
+     "school": "Nebraska",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Temoer Terry, Nebraska"
+    },
+    {
+     "name": "Jake Gaier",
+     "school": "Cal Poly-SLO",
+     "seed": 3,
+     "y": 483.38284784678353,
+     "printed": "Jake Gaier, Cal Poly-SLO [3]"
+    },
+    {
+     "name": "Jason Hawk",
+     "school": "Rutgers",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Jason Hawk, Rutgers"
+    },
+    {
+     "name": "Brent Shiver",
+     "school": "Northwestern",
+     "seed": null,
+     "y": 513.3828358467836,
+     "printed": "Brent Shiver, Northwestern"
+    },
+    {
+     "name": "Ken Lacure",
+     "school": "Toledo",
+     "seed": null,
+     "y": 528.3828298467834,
+     "printed": "Ken Lacure, Toledo"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "winnerLine": 1,
+     "loserLine": 0,
+     "printed": "3-0"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "11-5"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 5,
+     "loserLine": 4,
+     "printed": "3-1"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 7,
+     "loserLine": 6,
+     "printed": "11-1"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 9,
+     "loserLine": 8,
+     "printed": "5-3"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 10,
+     "loserLine": 11,
+     "printed": "4-2"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "6-5"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 14,
+     "loserLine": 15,
+     "printed": "28-16"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 16,
+     "loserLine": 17,
+     "printed": "5-4 TB"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 19,
+     "loserLine": 18,
+     "printed": "5-3"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 20,
+     "loserLine": 21,
+     "printed": "9-3"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 22,
+     "loserLine": 23,
+     "printed": "DFT 4:00"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "4-2"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "12-3"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 29,
+     "loserLine": 28,
+     "printed": "8-8 TB"
+    },
+    {
+     "slot": 15,
+     "winnerLine": 30,
+     "loserLine": 31,
+     "printed": "20-8"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 2,
+     "loserLine": 1,
+     "printed": "9-6"
+    },
+    {
+     "winnerLine": 7,
+     "loserLine": 5,
+     "printed": "8-4"
+    },
+    {
+     "winnerLine": 9,
+     "loserLine": 10,
+     "printed": "12-0"
+    },
+    {
+     "winnerLine": 14,
+     "loserLine": 12,
+     "printed": "19-7"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 19,
+     "printed": "8-2"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 22,
+     "printed": "6-4 OT"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 24,
+     "printed": "4-3"
+    },
+    {
+     "winnerLine": 29,
+     "loserLine": 30,
+     "printed": "7-4"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 7,
+     "loserLine": 2,
+     "printed": "12-3"
+    },
+    {
+     "winnerLine": 14,
+     "loserLine": 9,
+     "printed": "10-4"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 16,
+     "printed": "8-1"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 29,
+     "printed": "8-2"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 14,
+     "loserLine": 7,
+     "printed": "13-2"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 20,
+     "printed": "9-6"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 14,
+     "loserLine": 26,
+     "printed": "8-3"
+    }
+   ],
+   "pigtails": [
+    {
+     "winner": {
+      "name": "Rangi Smart",
+      "school": "Air Force"
+     },
+     "loser": {
+      "name": "Chris Jordan",
+      "school": "Virginia"
+     },
+     "printed": "9-5"
+    },
+    {
+     "winner": {
+      "name": "Willy Short",
+      "school": "Minnesota"
+     },
+     "loser": {
+      "name": "Kyle Kuykendall",
+      "school": "Appalachian State"
+     },
+     "printed": "7-3"
+    },
+    {
+     "winner": {
+      "name": "Joey Gilbert",
+      "school": "Boise State"
+     },
+     "loser": {
+      "name": "Doug Kjeldgaard",
+      "school": "Northern Iowa"
+     },
+     "printed": "10-3"
+    },
+    {
+     "winner": {
+      "name": "Tom Shifflet",
+      "school": "Edinboro"
+     },
+     "loser": {
+      "name": "Adam Kantor",
+      "school": "Boston University"
+     },
+     "printed": "8-2"
+    },
+    {
+     "winner": {
+      "name": "Russ Hughes",
+      "school": "Penn State"
+     },
+     "loser": {
+      "name": "Mike Mammon",
+      "school": "Clemson"
+     },
+     "printed": "9-4"
+    },
+    {
+     "winner": {
+      "name": "Doug Bonshak",
+      "school": "Rider"
+     },
+     "loser": {
+      "name": "Dean Moscovic",
+      "school": "North Carolina"
+     },
+     "printed": "7-6"
+    },
+    {
+     "winner": {
+      "name": "Charlie Becks",
+      "school": "Ohio State"
+     },
+     "loser": {
+      "name": "Chris Bono",
+      "school": "Iowa State"
+     },
+     "printed": "9-7"
+    }
+   ],
+   "consPigtails": [
+    {
+     "winner": {
+      "name": "Steve Best",
+      "school": "Wisconsin"
+     },
+     "loser": {
+      "name": "Doug Kjeldgaard",
+      "school": "Northern Iowa"
+     },
+     "printed": "4-2"
+    }
+   ],
+   "consRaw": {
+    "c1in": [
+     "Best, Wisconsin",
+     "Theiler, Arizona State",
+     "Hughes, Penn State",
+     "Mathill, Wyoming",
+     "Becks, Ohio State",
+     "Petche, Indiana",
+     "Ventresca, Lock Haven",
+     "Smart, Air Force",
+     "Sacksteder, Missouri",
+     "Bailey, Bloomsburg",
+     "Surmon, Stanford",
+     "Short, Minnesota",
+     "Terry, Nebraska",
+     "Shifflet, Edinboro",
+     "Gaier, Cal Poly-SLO",
+     "Shiver, Northwestern"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Theiler 14-3",
+     "Hawk, Rutgers",
+     "Petche 5-3",
+     "St. John, Syracuse",
+     "Bailey 7-4",
+     "Hickey, Southwest Missouri",
+     "Gaier 9-2",
+     "Gilbert, Boise State"
+    ],
+    "c3res": [
+     "Theiler 11-6",
+     "Petche 9-2",
+     "Bailey 4-0",
+     "Gaier 7-3"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Theiler 10-2",
+     "Newby, Oklahoma State",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Gaier 10-3",
+     "Watts, Fresno State"
+    ],
+    "c5res": [
+     "150 Consolation Bracket",
+     "Jake Gaier, Cal Poly-SLO 14-5",
+     "Terry Watts, Fresno State 6-5",
+     "Chad Bailey, Bloomsburg 3-0"
+    ],
+    "sfdrop": [
+     "Jacob Newby, Oklahoma State",
+     "Jeff Theiler, Arizona State",
+     "Scott Petche, Indiana"
+    ],
+    "place": [
+     "Newby 3-2",
+     "Gaier 8-6"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Best, Wisconsin"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Theiler 14-2"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "150 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Theiler, Arizona State"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Theiler 14-3"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Hughes, Penn State"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Theiler 11-6"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Hughes 7-3"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Mathill, Wyoming"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Hawk, Rutgers"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Becks, Ohio State"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Theiler 10-2"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Petche 10-5"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Newby 3-2"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Petche, Indiana"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Newby, Oklahoma State"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Petche 5-3"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Ventresca, Lock Haven"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Petche 9-2"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Smart 5-3"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Jake Gaier, Cal Poly-SLO 14-5"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Smart, Air Force"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "St. John, Syracuse"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Jacob Newby, Oklahoma State"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Sacksteder, Missouri"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Terry Watts, Fresno State 6-5"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Bailey 4-2"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Jeff Theiler, Arizona State"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Bailey, Bloomsburg"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Chad Bailey, Bloomsburg 3-0"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Bailey 7-4"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Scott Petche, Indiana"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Surmon, Stanford"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Bailey 4-0"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Surmon 6-2"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Short, Minnesota"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Hickey, Southwest Missouri"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Terry, Nebraska"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Gaier 10-3"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Terry 14-4"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Gaier 8-6"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Watts, Fresno State"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Shifflet, Edinboro"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Gaier 9-2"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Gaier, Cal Poly-SLO"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Gaier 7-3"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Gaier 6-4"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Shiver, Northwestern"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Gilbert, Boise State"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "problems": [],
+   "weight": "158",
+   "lines": [
+    {
+     "name": "Derek Burgert",
+     "school": "Pittsburgh",
+     "seed": null,
+     "y": 57.142518342983465,
+     "printed": "Derek Burgert, Pittsburgh"
+    },
+    {
+     "name": "Evan Dolan",
+     "school": "Rider",
+     "seed": null,
+     "y": 72.14251234298348,
+     "printed": "Evan Dolan, Rider"
+    },
+    {
+     "name": "Dan Wirnsberger",
+     "school": "Michigan State",
+     "seed": 4,
+     "y": 87.1425063429835,
+     "printed": "Dan Wirnsberger, Michigan State [4]"
+    },
+    {
+     "name": "Matt Marciniak",
+     "school": "Army",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Matt Marciniak, Army"
+    },
+    {
+     "name": "Earl Walker",
+     "school": "Boston University",
+     "seed": 5,
+     "y": 117.14249434298353,
+     "printed": "Earl Walker, Boston University [5]"
+    },
+    {
+     "name": "Barry Weldon",
+     "school": "Iowa State",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Barry Weldon, Iowa State"
+    },
+    {
+     "name": "Dante Winslow",
+     "school": "Virginia Tech",
+     "seed": 12,
+     "y": 147.26248229498356,
+     "printed": "Dante Winslow, Virginia Tech [12]"
+    },
+    {
+     "name": "Aaron Moran",
+     "school": "Purdue",
+     "seed": null,
+     "y": 162.26247629498351,
+     "printed": "Aaron Moran, Purdue"
+    },
+    {
+     "name": "Tim Winterstein",
+     "school": "Virginia",
+     "seed": null,
+     "y": 177.26247029498353,
+     "printed": "Tim Winterstein, Virginia"
+    },
+    {
+     "name": "Jim Prendergast",
+     "school": "Southwest Missouri",
+     "seed": 8,
+     "y": 192.2624642949835,
+     "printed": "Jim Prendergast, Southwest Missouri [8]"
+    },
+    {
+     "name": "Dan Alar",
+     "school": "Oregon State",
+     "seed": 9,
+     "y": 207.2624582949835,
+     "printed": "Dan Alar, Oregon State [9]"
+    },
+    {
+     "name": "Kevin Wilmot",
+     "school": "Wisconsin",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "Kevin Wilmot, Wisconsin"
+    },
+    {
+     "name": "Jason Kraft",
+     "school": "Nebraska",
+     "seed": null,
+     "y": 237.26244629498353,
+     "printed": "Jason Kraft, Nebraska"
+    },
+    {
+     "name": "John McClain",
+     "school": "Indiana",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "John McClain, Indiana"
+    },
+    {
+     "name": "Pat Smith",
+     "school": "Oklahoma State",
+     "seed": 1,
+     "y": 267.2624342949835,
+     "printed": "Pat Smith, Oklahoma State [1]"
+    },
+    {
+     "name": "Jim Andrassy",
+     "school": "Kent State",
+     "seed": null,
+     "y": 282.2624282949835,
+     "printed": "Jim Andrassy, Kent State"
+    },
+    {
+     "name": "Neal Mason",
+     "school": "Cal Poly-SLO",
+     "seed": null,
+     "y": 303.2629198947835,
+     "printed": "Neal Mason, Cal Poly-SLO"
+    },
+    {
+     "name": "Scott Goodale",
+     "school": "Lock Haven",
+     "seed": 10,
+     "y": 318.26291389478354,
+     "printed": "Scott Goodale, Lock Haven [10]"
+    },
+    {
+     "name": "Joe Williams",
+     "school": "Iowa",
+     "seed": 7,
+     "y": 333.2629078947835,
+     "printed": "Joe Williams, Iowa [7]"
+    },
+    {
+     "name": "Mike Collins",
+     "school": "Missouri",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "Mike Collins, Missouri"
+    },
+    {
+     "name": "Jeff Liberman",
+     "school": "Syracuse",
+     "seed": null,
+     "y": 363.2628958947835,
+     "printed": "Jeff Liberman, Syracuse"
+    },
+    {
+     "name": "Mike Migliaccio",
+     "school": "Miami Ohio",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Mike Migliaccio, Miami Ohio"
+    },
+    {
+     "name": "Ken Porter",
+     "school": "California PA",
+     "seed": null,
+     "y": 393.3828838467835,
+     "printed": "Ken Porter, California PA"
+    },
+    {
+     "name": "Sean Bormet",
+     "school": "Michigan",
+     "seed": 2,
+     "y": 408.3828778467835,
+     "printed": "Sean Bormet, Michigan [2]"
+    },
+    {
+     "name": "Markus Mollica",
+     "school": "Arizona State",
+     "seed": 3,
+     "y": 423.38287184678353,
+     "printed": "Markus Mollica, Arizona State [3]"
+    },
+    {
+     "name": "Darrious Hill",
+     "school": "Morgan State",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Darrious Hill, Morgan State"
+    },
+    {
+     "name": "Pete Maggio",
+     "school": "Illinois State",
+     "seed": null,
+     "y": 453.3828598467835,
+     "printed": "Pete Maggio, Illinois State"
+    },
+    {
+     "name": "Frederick Barber",
+     "school": "Virginia Military",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Frederick Barber, Virginia Military"
+    },
+    {
+     "name": "Zac Taylor",
+     "school": "Minnesota",
+     "seed": null,
+     "y": 483.38284784678353,
+     "printed": "Zac Taylor, Minnesota"
+    },
+    {
+     "name": "Vic Bernardino",
+     "school": "Franklin & Marshall",
+     "seed": 11,
+     "y": 498.3828418467835,
+     "printed": "Vic Bernardino, Franklin & Marshall [11]"
+    },
+    {
+     "name": "Tony Robie",
+     "school": "Edinboro",
+     "seed": 6,
+     "y": 513.3828358467836,
+     "printed": "Tony Robie, Edinboro [6]"
+    },
+    {
+     "name": "Marc Taylor",
+     "school": "North Carolina",
+     "seed": null,
+     "y": 528.3828298467834,
+     "printed": "Marc Taylor, North Carolina"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "winnerLine": 0,
+     "loserLine": 1,
+     "printed": "9-8"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "3-2"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 4,
+     "loserLine": 5,
+     "printed": "5-4"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 7,
+     "loserLine": 6,
+     "printed": "6-5"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 9,
+     "loserLine": 8,
+     "printed": "Fall 2:13"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 10,
+     "loserLine": 11,
+     "printed": "12-2"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "4-2"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 14,
+     "loserLine": 15,
+     "printed": "TF 23-8, 6:41"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 17,
+     "loserLine": 16,
+     "printed": "6-2"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 18,
+     "loserLine": 19,
+     "printed": "12-10"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 21,
+     "loserLine": 20,
+     "printed": "5-4"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 23,
+     "loserLine": 22,
+     "printed": "15-5"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "12-5"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "12-3"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 29,
+     "loserLine": 28,
+     "printed": "2-1"
+    },
+    {
+     "slot": 15,
+     "winnerLine": 30,
+     "loserLine": 31,
+     "printed": "7-1"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 2,
+     "loserLine": 0,
+     "printed": "5-2"
+    },
+    {
+     "winnerLine": 4,
+     "loserLine": 7,
+     "printed": "15-2"
+    },
+    {
+     "winnerLine": 10,
+     "loserLine": 9,
+     "printed": "2-1"
+    },
+    {
+     "winnerLine": 14,
+     "loserLine": 12,
+     "printed": "TF 26-10, 7:00"
+    },
+    {
+     "winnerLine": 18,
+     "loserLine": 17,
+     "printed": "11-10"
+    },
+    {
+     "winnerLine": 23,
+     "loserLine": 21,
+     "printed": "4-0"
+    },
+    {
+     "winnerLine": 24,
+     "loserLine": 26,
+     "printed": "15-6"
+    },
+    {
+     "winnerLine": 30,
+     "loserLine": 29,
+     "printed": "8-5"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 4,
+     "loserLine": 2,
+     "printed": "3-2"
+    },
+    {
+     "winnerLine": 14,
+     "loserLine": 10,
+     "printed": "14-3"
+    },
+    {
+     "winnerLine": 23,
+     "loserLine": 18,
+     "printed": "5-0"
+    },
+    {
+     "winnerLine": 24,
+     "loserLine": 30,
+     "printed": "6-4"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 14,
+     "loserLine": 4,
+     "printed": "6-2"
+    },
+    {
+     "winnerLine": 23,
+     "loserLine": 24,
+     "printed": "6-5"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 14,
+     "loserLine": 23,
+     "printed": "5-3"
+    }
+   ],
+   "pigtails": [
+    {
+     "winner": {
+      "name": "Jason Kraft",
+      "school": "Nebraska"
+     },
+     "loser": {
+      "name": "Andy Fitzpatrick",
+      "school": "Bloomsburg"
+     },
+     "printed": "11-5"
+    },
+    {
+     "winner": {
+      "name": "Joe Williams",
+      "school": "Iowa"
+     },
+     "loser": {
+      "name": "Jeremy Potvin",
+      "school": "Air Force"
+     },
+     "printed": "TF 29-11, 6:58"
+    }
+   ],
+   "consPigtails": [
+    {
+     "winner": {
+      "name": "Mike Collins",
+      "school": "Missouri"
+     },
+     "loser": {
+      "name": "Jeremy Potvin",
+      "school": "Air Force"
+     },
+     "printed": "8-5"
+    }
+   ],
+   "consRaw": {
+    "c1in": [
+     "Marciniak, Army",
+     "Burgert, Pittsburgh",
+     "Weldon, Iowa State",
+     "Moran, Purdue",
+     "Wilmot, Wisconsin",
+     "Prendergast, Southwest Missou",
+     "Andrassy, Kent State",
+     "Kraft, Nebraska",
+     "Collins, Missouri",
+     "Goodale, Lock Haven",
+     "Porter, California PA",
+     "Migliaccio, Miami Ohio",
+     "Hill, Morgan State",
+     "Maggio, Illinois State",
+     "Taylor, North Carolina",
+     "Bernardino, Franklin & Marshall"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Moran 6-5",
+     "Robie, Edinboro",
+     "Andrassy Fall 5:22",
+     "Williams, Iowa",
+     "Collins 3-0",
+     "Alar, Oregon State",
+     "Taylor 8-3",
+     "Wirnsberger, Michigan State"
+    ],
+    "c3res": [
+     "Moran 9-4",
+     "Williams Fall 5:57",
+     "Alar 14-6",
+     "Wirnsberger 4-2"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Moran Fall 1:59",
+     "Walker, Boston University",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Alar Fall 5:59",
+     "Mollica, Arizona State"
+    ],
+    "c5res": [
+     "158 Consolation Bracket",
+     "Earl Walker, Boston University 4-3",
+     "Markus Mollica, Arizona State 7-5",
+     "Joe Williams, Iowa 4-2"
+    ],
+    "sfdrop": [
+     "Dan Alar, Oregon State",
+     "Aaron Moran, Purdue",
+     "Dan Wirnsberger, Michigan State"
+    ],
+    "place": [
+     "Walker 10-2",
+     "Alar 6-3"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Marciniak, Army"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Marciniak 3-1"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "158 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Burgert, Pittsburgh"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Moran 6-5"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Weldon, Iowa State"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Moran 9-4"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Moran 3-1"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Moran, Purdue"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Robie, Edinboro"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Wilmot, Wisconsin"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Moran Fall 1:59"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Prendergast 13-4"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Walker 10-2"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Prendergast, Southwest Missou"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Walker, Boston University"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Andrassy Fall 5:22"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Andrassy, Kent State"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Williams Fall 5:57"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Andrassy Fall 3:29"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Earl Walker, Boston University 4-3"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Kraft, Nebraska"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Williams, Iowa"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Dan Alar, Oregon State"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Collins, Missouri"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Markus Mollica, Arizona State 7-5"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Collins 9-4"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Aaron Moran, Purdue"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Goodale, Lock Haven"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Joe Williams, Iowa 4-2"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Collins 3-0"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Dan Wirnsberger, Michigan State"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Porter, California PA"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Alar 14-6"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Porter 7-6"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Migliaccio, Miami Ohio"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Alar, Oregon State"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Hill, Morgan State"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Alar Fall 5:59"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Hill 14-10"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Alar 6-3"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Mollica, Arizona State"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Maggio, Illinois State"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Taylor 8-3"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Taylor, North Carolina"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Wirnsberger 4-2"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Taylor 5-3"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Bernardino, Franklin & Marshall"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Wirnsberger, Michigan State"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "problems": [],
+   "weight": "167",
+   "lines": [
+    {
+     "name": "Rick Hepp",
+     "school": "Lehigh",
+     "seed": 4,
+     "y": 57.142518342983465,
+     "printed": "Rick Hepp, Lehigh [4]"
+    },
+    {
+     "bye": true,
+     "y": 72.14251234298348,
+     "printed": "Bye"
+    },
+    {
+     "name": "Laszlo Molnar",
+     "school": "Cal State-Fullerton",
+     "seed": null,
+     "y": 87.1425063429835,
+     "printed": "Laszlo Molnar, Cal State-Fullerton"
+    },
+    {
+     "name": "Matt Orton",
+     "school": "Southwest Missouri",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Matt Orton, Southwest Missouri"
+    },
+    {
+     "name": "Rohan Gardner",
+     "school": "Northwestern",
+     "seed": 12,
+     "y": 117.14249434298353,
+     "printed": "Rohan Gardner, Northwestern [12]"
+    },
+    {
+     "name": "Marcus Hutchins",
+     "school": "SUNY-Buffalo",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Marcus Hutchins, SUNY-Buffalo"
+    },
+    {
+     "name": "Barry Jarvis",
+     "school": "Miami Ohio",
+     "seed": null,
+     "y": 147.26248229498356,
+     "printed": "Barry Jarvis, Miami Ohio"
+    },
+    {
+     "name": "Chris Kwortnik",
+     "school": "North Carolina State",
+     "seed": 5,
+     "y": 162.26247629498351,
+     "printed": "Chris Kwortnik, North Carolina State [5]"
+    },
+    {
+     "name": "Shaon Fry",
+     "school": "Missouri",
+     "seed": 1,
+     "y": 177.26247029498353,
+     "printed": "Shaon Fry, Missouri [1]"
+    },
+    {
+     "name": "J.J. Stanbro",
+     "school": "Clarion",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "J.J. Stanbro, Clarion"
+    },
+    {
+     "name": "Bryan Matusic",
+     "school": "Penn State",
+     "seed": null,
+     "y": 207.2624582949835,
+     "printed": "Bryan Matusic, Penn State"
+    },
+    {
+     "name": "Brett Machovina",
+     "school": "Air Force",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "Brett Machovina, Air Force"
+    },
+    {
+     "name": "Rich Catalano",
+     "school": "Pittsburgh",
+     "seed": 8,
+     "y": 237.26244629498353,
+     "printed": "Rich Catalano, Pittsburgh [8]"
+    },
+    {
+     "name": "Charles Burton",
+     "school": "Boise State",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Charles Burton, Boise State"
+    },
+    {
+     "name": "Brett Colombini",
+     "school": "Minnesota",
+     "seed": 9,
+     "y": 267.2624342949835,
+     "printed": "Brett Colombini, Minnesota [9]"
+    },
+    {
+     "name": "Steve Elicker",
+     "school": "East Stroudsburg",
+     "seed": null,
+     "y": 282.2624282949835,
+     "printed": "Steve Elicker, East Stroudsburg"
+    },
+    {
+     "name": "Jeremy McKean",
+     "school": "Fresno State",
+     "seed": 10,
+     "y": 303.2629198947835,
+     "printed": "Jeremy McKean, Fresno State [10]"
+    },
+    {
+     "bye": true,
+     "y": 318.26291389478354,
+     "printed": "Bye"
+    },
+    {
+     "name": "Chris Studer",
+     "school": "Boston University",
+     "seed": 7,
+     "y": 333.2629078947835,
+     "printed": "Chris Studer, Boston University [7]"
+    },
+    {
+     "name": "Chad Biggert",
+     "school": "Michigan",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "Chad Biggert, Michigan"
+    },
+    {
+     "name": "Chad Renner",
+     "school": "Oregon State",
+     "seed": 2,
+     "y": 363.2628958947835,
+     "printed": "Chad Renner, Oregon State [2]"
+    },
+    {
+     "name": "Mark Branch",
+     "school": "Oklahoma State",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Mark Branch, Oklahoma State"
+    },
+    {
+     "name": "Jim Brasco",
+     "school": "Duquesne",
+     "seed": null,
+     "y": 393.3828838467835,
+     "printed": "Jim Brasco, Duquesne"
+    },
+    {
+     "name": "Brandon Slay",
+     "school": "Pennsylvania",
+     "seed": null,
+     "y": 408.3828778467835,
+     "printed": "Brandon Slay, Pennsylvania"
+    },
+    {
+     "name": "Ray Brinzer",
+     "school": "Iowa",
+     "seed": 3,
+     "y": 423.38287184678353,
+     "printed": "Ray Brinzer, Iowa [3]"
+    },
+    {
+     "name": "Stan Banks",
+     "school": "North Carolina",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Stan Banks, North Carolina"
+    },
+    {
+     "name": "Greg Satchell",
+     "school": "Old Dominion",
+     "seed": null,
+     "y": 453.3828598467835,
+     "printed": "Greg Satchell, Old Dominion"
+    },
+    {
+     "name": "John Koss",
+     "school": "West Virginia",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "John Koss, West Virginia"
+    },
+    {
+     "name": "Jason Leonard",
+     "school": "Oklahoma",
+     "seed": 6,
+     "y": 483.38284784678353,
+     "printed": "Jason Leonard, Oklahoma [6]"
+    },
+    {
+     "name": "Shomari Rozier",
+     "school": "Appalachian State",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Shomari Rozier, Appalachian State"
+    },
+    {
+     "bye": true,
+     "y": 513.3828358467836,
+     "printed": "Bye"
+    },
+    {
+     "name": "Ken Bauer",
+     "school": "Edinboro",
+     "seed": 11,
+     "y": 528.3828298467834,
+     "printed": "Ken Bauer, Edinboro [11]"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "bye": true,
+     "winnerLine": 0,
+     "printed": "Rick Hepp"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "3-2"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 4,
+     "loserLine": 5,
+     "printed": "10-7"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 7,
+     "loserLine": 6,
+     "printed": "7-0"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 8,
+     "loserLine": 9,
+     "printed": "7-4"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 11,
+     "loserLine": 10,
+     "printed": "14-3"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "Fall 3:48"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 14,
+     "loserLine": 15,
+     "printed": "7-3"
+    },
+    {
+     "slot": 8,
+     "bye": true,
+     "winnerLine": 16,
+     "printed": "Jeremy McKean"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 18,
+     "loserLine": 19,
+     "printed": "6-4"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 21,
+     "loserLine": 20,
+     "printed": "12-2"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 22,
+     "loserLine": 23,
+     "printed": "10-5"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "10-4"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "TF 24-9, 6:02"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 28,
+     "loserLine": 29,
+     "printed": "Fall 2:59"
+    },
+    {
+     "slot": 15,
+     "bye": true,
+     "winnerLine": 31,
+     "printed": "Ken Bauer"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 2,
+     "loserLine": 0,
+     "printed": "9-7 OT"
+    },
+    {
+     "winnerLine": 7,
+     "loserLine": 4,
+     "printed": "Fall 3:34"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 11,
+     "printed": "5-0"
+    },
+    {
+     "winnerLine": 12,
+     "loserLine": 14,
+     "printed": "4-2"
+    },
+    {
+     "winnerLine": 18,
+     "loserLine": 16,
+     "printed": "5-3 OT"
+    },
+    {
+     "winnerLine": 21,
+     "loserLine": 22,
+     "printed": "8-5"
+    },
+    {
+     "winnerLine": 24,
+     "loserLine": 26,
+     "printed": "19-7"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 31,
+     "printed": "6-5"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 2,
+     "loserLine": 7,
+     "printed": "2-1"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 12,
+     "printed": "6-1"
+    },
+    {
+     "winnerLine": 21,
+     "loserLine": 18,
+     "printed": "8-3"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 24,
+     "printed": "12-4"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 2,
+     "loserLine": 8,
+     "printed": "5-4"
+    },
+    {
+     "winnerLine": 21,
+     "loserLine": 28,
+     "printed": "9-2"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 21,
+     "loserLine": 2,
+     "printed": "4-2"
+    }
+   ],
+   "pigtails": [],
+   "consPigtails": [],
+   "consRaw": {
+    "c1in": [
+     "Orton, Southwest Missouri",
+     "Hepp, Lehigh",
+     "Jarvis, Miami Ohio",
+     "Gardner, Northwestern",
+     "Stanbro, Clarion",
+     "Machovina, Air Force",
+     "Burton, Boise State",
+     "Colombini, Minnesota",
+     "Biggert, Michigan",
+     "McKean, Fresno State",
+     "Renner, Oregon State",
+     "Brasco, Duquesne",
+     "Banks, North Carolina",
+     "Satchell, Old Dominion",
+     "Rozier, Appalachian State",
+     "Bauer, Edinboro"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Hepp Fall 4:47",
+     "Brinzer, Iowa",
+     "Colombini 5-2",
+     "Studer, Boston University",
+     "McKean 8-6 OT",
+     "Catalano, Pittsburgh",
+     "Banks 4-2 OT",
+     "Kwortnik, North Carolina State"
+    ],
+    "c3res": [
+     "Hepp 14-8",
+     "Colombini 7-3",
+     "Catalano 5-1",
+     "Banks 4-3"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Colombini 6-3",
+     "Fry, Missouri",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Catalano 9-4",
+     "Leonard, Oklahoma"
+    ],
+    "c5res": [
+     "167 Consolation Bracket",
+     "Shaon Fry, Missouri 5-2",
+     "Jason Leonard, Oklahoma 7-2",
+     "Rick Hepp, Lehigh 11-3"
+    ],
+    "sfdrop": [
+     "Rich Catalano, Pittsburgh",
+     "Brett Colombini, Minnesota",
+     "Stan Banks, North Carolina"
+    ],
+    "place": [
+     "Fry 2-1",
+     "Catalano Fall 4:17"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Orton, Southwest Missouri"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Hepp 9-3"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "167 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Hepp, Lehigh"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Hepp Fall 4:47"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Jarvis, Miami Ohio"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Hepp 14-8"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Gardner 3-1"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Gardner, Northwestern"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Brinzer, Iowa"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Stanbro, Clarion"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Colombini 6-3"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Stanbro Fall 3:56"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Fry 2-1"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Machovina, Air Force"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Fry, Missouri"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Colombini 5-2"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Burton, Boise State"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Colombini 7-3"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Colombini 8-1"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Shaon Fry, Missouri 5-2"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Colombini, Minnesota"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Studer, Boston University"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Rich Catalano, Pittsburgh"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Biggert, Michigan"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Jason Leonard, Oklahoma 7-2"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "McKean 3-1"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Brett Colombini, Minnesota"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "McKean, Fresno State"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Rick Hepp, Lehigh 11-3"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "McKean 8-6 OT"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Stan Banks, North Carolina"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Renner, Oregon State"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Catalano 5-1"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Renner 17-5"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Brasco, Duquesne"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Catalano, Pittsburgh"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Banks, North Carolina"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Catalano 9-4"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Banks DFT 3:43"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Catalano Fall 4:17"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Leonard, Oklahoma"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Satchell, Old Dominion"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Banks 4-2 OT"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Rozier, Appalachian State"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Banks 4-3"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Bauer Fall 3:34"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Bauer, Edinboro"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Kwortnik, North Carolina State"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "problems": [],
+   "weight": "177",
+   "lines": [
+    {
+     "name": "Paschal Duru",
+     "school": "Cal State-Bakersfield",
+     "seed": null,
+     "y": 57.142518342983465,
+     "printed": "Paschal Duru, Cal State-Bakersfield"
+    },
+    {
+     "name": "Shane Camera",
+     "school": "North Carolina",
+     "seed": 4,
+     "y": 72.14251234298348,
+     "printed": "Shane Camera, North Carolina [4]"
+    },
+    {
+     "name": "John Drosos",
+     "school": "Harvard",
+     "seed": null,
+     "y": 87.1425063429835,
+     "printed": "John Drosos, Harvard"
+    },
+    {
+     "name": "Roger Williams",
+     "school": "Northwestern",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Roger Williams, Northwestern"
+    },
+    {
+     "name": "Quincey Clark",
+     "school": "Oklahoma",
+     "seed": 5,
+     "y": 117.14249434298353,
+     "printed": "Quincey Clark, Oklahoma [5]"
+    },
+    {
+     "name": "Mike Geurin",
+     "school": "Lock Haven",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Mike Geurin, Lock Haven"
+    },
+    {
+     "name": "Erich Harvey",
+     "school": "Michigan State",
+     "seed": null,
+     "y": 147.26248229498356,
+     "printed": "Erich Harvey, Michigan State"
+    },
+    {
+     "name": "Bob Ferraro",
+     "school": "Bucknell",
+     "seed": 12,
+     "y": 162.26247629498351,
+     "printed": "Bob Ferraro, Bucknell [12]"
+    },
+    {
+     "name": "Greg Stiltner",
+     "school": "Iowa",
+     "seed": 9,
+     "y": 177.26247029498353,
+     "printed": "Greg Stiltner, Iowa [9]"
+    },
+    {
+     "name": "Reese Andy",
+     "school": "Wyoming",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "Reese Andy, Wyoming"
+    },
+    {
+     "name": "Dan Payne",
+     "school": "Clarion",
+     "seed": 8,
+     "y": 207.2624582949835,
+     "printed": "Dan Payne, Clarion [8]"
+    },
+    {
+     "name": "Ryan Tobin",
+     "school": "Nebraska",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "Ryan Tobin, Nebraska"
+    },
+    {
+     "name": "Josh Henson",
+     "school": "James Madison",
+     "seed": null,
+     "y": 237.26244629498353,
+     "printed": "Josh Henson, James Madison"
+    },
+    {
+     "name": "Richard Murry",
+     "school": "Eastern Illinois",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Richard Murry, Eastern Illinois"
+    },
+    {
+     "name": "Les Gutches",
+     "school": "Oregon State",
+     "seed": 1,
+     "y": 267.2624342949835,
+     "printed": "Les Gutches, Oregon State [1]"
+    },
+    {
+     "name": "Jesse Rawls",
+     "school": "Michigan",
+     "seed": null,
+     "y": 282.2624282949835,
+     "printed": "Jesse Rawls, Michigan"
+    },
+    {
+     "name": "Doug Zembiec",
+     "school": "Navy",
+     "seed": 7,
+     "y": 303.2629198947835,
+     "printed": "Doug Zembiec, Navy [7]"
+    },
+    {
+     "name": "Troy Sintobin",
+     "school": "Kent State",
+     "seed": null,
+     "y": 318.26291389478354,
+     "printed": "Troy Sintobin, Kent State"
+    },
+    {
+     "name": "Pat Lynch",
+     "school": "Arizona State",
+     "seed": 10,
+     "y": 333.2629078947835,
+     "printed": "Pat Lynch, Arizona State [10]"
+    },
+    {
+     "name": "Steve Tenney",
+     "school": "North Carolina State",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "Steve Tenney, North Carolina State"
+    },
+    {
+     "name": "Robbie Steger",
+     "school": "Iowa State",
+     "seed": null,
+     "y": 363.2628958947835,
+     "printed": "Robbie Steger, Iowa State"
+    },
+    {
+     "name": "Seth Meyerson",
+     "school": "Appalachian State",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Seth Meyerson, Appalachian State"
+    },
+    {
+     "name": "Dean Morrison",
+     "school": "West Virginia",
+     "seed": 2,
+     "y": 393.3828838467835,
+     "printed": "Dean Morrison, West Virginia [2]"
+    },
+    {
+     "name": "Ray Baldwin",
+     "school": "Slippery Rock",
+     "seed": null,
+     "y": 408.3828778467835,
+     "printed": "Ray Baldwin, Slippery Rock"
+    },
+    {
+     "name": "Travis Gittins",
+     "school": "Oklahoma State",
+     "seed": 11,
+     "y": 423.38287184678353,
+     "printed": "Travis Gittins, Oklahoma State [11]"
+    },
+    {
+     "name": "Steve Rusk",
+     "school": "Illinois",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Steve Rusk, Illinois"
+    },
+    {
+     "name": "Dave Malacek",
+     "school": "Northern Iowa",
+     "seed": 6,
+     "y": 453.3828598467835,
+     "printed": "Dave Malacek, Northern Iowa [6]"
+    },
+    {
+     "name": "Matt Sprague",
+     "school": "Oregon",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Matt Sprague, Oregon"
+    },
+    {
+     "name": "Brad Gibson",
+     "school": "Minnesota",
+     "seed": 3,
+     "y": 483.38284784678353,
+     "printed": "Brad Gibson, Minnesota [3]"
+    },
+    {
+     "name": "Romy O'Daniel",
+     "school": "Army",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Romy O'Daniel, Army"
+    },
+    {
+     "name": "Kesner Dufresne",
+     "school": "Seton Hall",
+     "seed": null,
+     "y": 513.3828358467836,
+     "printed": "Kesner Dufresne, Seton Hall"
+    },
+    {
+     "name": "Jason Robison",
+     "school": "Edinboro",
+     "seed": null,
+     "y": 528.3828298467834,
+     "printed": "Jason Robison, Edinboro"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "winnerLine": 1,
+     "loserLine": 0,
+     "printed": "3-1 OT"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 3,
+     "loserLine": 2,
+     "printed": "5-2"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 5,
+     "loserLine": 4,
+     "printed": "12-10 OT"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 7,
+     "loserLine": 6,
+     "printed": "5-4"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 9,
+     "loserLine": 8,
+     "printed": "8-6"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 10,
+     "loserLine": 11,
+     "printed": "9-6"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "11-5"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 14,
+     "loserLine": 15,
+     "printed": "3-1"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 16,
+     "loserLine": 17,
+     "printed": "5-4"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 18,
+     "loserLine": 19,
+     "printed": "10-8"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 20,
+     "loserLine": 21,
+     "printed": "10-5"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 22,
+     "loserLine": 23,
+     "printed": "9-4"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "10-3"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "8-0"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 28,
+     "loserLine": 29,
+     "printed": "TF 18-3, 7:00"
+    },
+    {
+     "slot": 15,
+     "winnerLine": 31,
+     "loserLine": 30,
+     "printed": "10-8"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 1,
+     "loserLine": 3,
+     "printed": "8-3"
+    },
+    {
+     "winnerLine": 7,
+     "loserLine": 5,
+     "printed": "5-3"
+    },
+    {
+     "winnerLine": 9,
+     "loserLine": 10,
+     "printed": "7-3"
+    },
+    {
+     "winnerLine": 14,
+     "loserLine": 12,
+     "printed": "16-4"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 18,
+     "printed": "10-6"
+    },
+    {
+     "winnerLine": 22,
+     "loserLine": 20,
+     "printed": "11-5"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 24,
+     "printed": "9-7"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 31,
+     "printed": "7-3"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 1,
+     "loserLine": 7,
+     "printed": "5-5 TB"
+    },
+    {
+     "winnerLine": 9,
+     "loserLine": 14,
+     "printed": "Fall 1:39"
+    },
+    {
+     "winnerLine": 22,
+     "loserLine": 16,
+     "printed": "8-6"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 26,
+     "printed": "4-1"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 9,
+     "loserLine": 1,
+     "printed": "3-2"
+    },
+    {
+     "winnerLine": 22,
+     "loserLine": 28,
+     "printed": "9-7"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 22,
+     "loserLine": 9,
+     "printed": "3-2"
+    }
+   ],
+   "pigtails": [
+    {
+     "winner": {
+      "name": "Josh Henson",
+      "school": "James Madison"
+     },
+     "loser": {
+      "name": "Rob Reaves",
+      "school": "Citadel"
+     },
+     "printed": "7-6"
+    },
+    {
+     "winner": {
+      "name": "Pat Lynch",
+      "school": "Arizona State"
+     },
+     "loser": {
+      "name": "Mike Jenson",
+      "school": "Rider"
+     },
+     "printed": "11-6"
+    }
+   ],
+   "consPigtails": [],
+   "consRaw": {
+    "c1in": [
+     "Duru, Cal State-Bakersfield",
+     "Williams, Northwestern",
+     "Harvey, Michigan State",
+     "Geurin, Lock Haven",
+     "Stiltner, Iowa",
+     "Payne, Clarion",
+     "Rawls, Michigan",
+     "Henson, James Madison",
+     "Sintobin, Kent State",
+     "Lynch, Arizona State",
+     "Baldwin, Slippery Rock",
+     "Steger, Iowa State",
+     "Sprague, Oregon",
+     "Gittins, Oklahoma State",
+     "O'Daniel, Army",
+     "Robison, Edinboro"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Duru 6-5",
+     "Malacek, Northern Iowa",
+     "Rawls 8-1",
+     "Zembiec, Navy",
+     "Lynch Fall 1:59",
+     "Gutches, Oregon State",
+     "Gittins 4-1",
+     "Ferraro, Bucknell"
+    ],
+    "c3res": [
+     "Malacek 5-0",
+     "Rawls 8-3",
+     "Gutches 10-2",
+     "Ferraro 12-5"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Malacek 8-1",
+     "Camera, North Carolina",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Gutches 11-3",
+     "Gibson, Minnesota"
+    ],
+    "c5res": [
+     "177 Consolation Bracket",
+     "Brad Gibson, Minnesota 3-0",
+     "Les Gutches, Oregon State 13-6",
+     "Jesse Rawls, Michigan 11-3"
+    ],
+    "sfdrop": [
+     "Dave Malacek, Northern Iowa",
+     "Shane Camera, North Carolina",
+     "Bob Ferraro, Bucknell"
+    ],
+    "place": [
+     "Malacek 6-3",
+     "Gibson 8-5"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Duru, Cal State-Bakersfield"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Duru 9-6"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "177 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Williams, Northwestern"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Duru 6-5"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Harvey, Michigan State"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Malacek 5-0"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Harvey 7-6"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Geurin, Lock Haven"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Malacek, Northern Iowa"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Stiltner, Iowa"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Malacek 8-1"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Stiltner 8-5"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Malacek 6-3"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Payne, Clarion"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Camera, North Carolina"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Rawls 8-1"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Rawls, Michigan"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Rawls 8-3"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Rawls 7-4"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Brad Gibson, Minnesota 3-0"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Henson, James Madison"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Zembiec, Navy"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Dave Malacek, Northern Iowa"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Sintobin, Kent State"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Les Gutches, Oregon State 13-6"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Lynch 5-3"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Shane Camera, North Carolina"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Lynch, Arizona State"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Jesse Rawls, Michigan 11-3"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Lynch Fall 1:59"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Bob Ferraro, Bucknell"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Baldwin, Slippery Rock"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Gutches 10-2"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Baldwin 19-8"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Steger, Iowa State"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Gutches, Oregon State"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Sprague, Oregon"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Gutches 11-3"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Gittins 10-4"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Gibson 8-5"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Gibson, Minnesota"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Gittins, Oklahoma State"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Gittins 4-1"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "O'Daniel, Army"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Ferraro 12-5"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "O'Daniel Fall 2:24"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Robison, Edinboro"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Ferraro, Bucknell"
+    }
+   ]
+  },
+  {
+   "index": 8,
+   "problems": [],
+   "weight": "190",
+   "lines": [
+    {
+     "name": "Dan Troupe",
+     "school": "Iowa State",
+     "seed": 4,
+     "y": 57.142518342983465,
+     "printed": "Dan Troupe, Iowa State [4]"
+    },
+    {
+     "bye": true,
+     "y": 72.14251234298348,
+     "printed": "Bye"
+    },
+    {
+     "name": "Greg Wise",
+     "school": "Navy",
+     "seed": null,
+     "y": 87.1425063429835,
+     "printed": "Greg Wise, Navy"
+    },
+    {
+     "name": "Rich Evans",
+     "school": "Drexel",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Rich Evans, Drexel"
+    },
+    {
+     "name": "Jason Loukides",
+     "school": "Edinboro",
+     "seed": 12,
+     "y": 117.14249434298353,
+     "printed": "Jason Loukides, Edinboro [12]"
+    },
+    {
+     "name": "Dwayne Buth",
+     "school": "Cal State-Fullerton",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Dwayne Buth, Cal State-Fullerton"
+    },
+    {
+     "name": "Emilio Collins",
+     "school": "Michigan State",
+     "seed": 5,
+     "y": 147.26248229498356,
+     "printed": "Emilio Collins, Michigan State [5]"
+    },
+    {
+     "name": "Eric Bloch",
+     "school": "Illinois State",
+     "seed": null,
+     "y": 162.26247629498351,
+     "printed": "Eric Bloch, Illinois State"
+    },
+    {
+     "name": "Tony Llanusa",
+     "school": "North Carolina",
+     "seed": null,
+     "y": 177.26247029498353,
+     "printed": "Tony Llanusa, North Carolina"
+    },
+    {
+     "name": "Vince Crum",
+     "school": "Citadel",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "Vince Crum, Citadel"
+    },
+    {
+     "name": "Pat Guire",
+     "school": "California-Davis",
+     "seed": null,
+     "y": 207.2624582949835,
+     "printed": "Pat Guire, California-Davis"
+    },
+    {
+     "name": "Andy Foster",
+     "school": "Oklahoma",
+     "seed": 1,
+     "y": 222.26245229498352,
+     "printed": "Andy Foster, Oklahoma [1]"
+    },
+    {
+     "name": "Aaron Bruce",
+     "school": "Liberty",
+     "seed": 9,
+     "y": 237.26244629498353,
+     "printed": "Aaron Bruce, Liberty [9]"
+    },
+    {
+     "name": "Darren Andy",
+     "school": "Minnesota",
+     "seed": null,
+     "y": 252.26244029498355,
+     "printed": "Darren Andy, Minnesota"
+    },
+    {
+     "name": "Tyrone Howard",
+     "school": "Bloomsburg",
+     "seed": 8,
+     "y": 267.2624342949835,
+     "printed": "Tyrone Howard, Bloomsburg [8]"
+    },
+    {
+     "name": "Brady Harrison",
+     "school": "Indiana",
+     "seed": null,
+     "y": 282.2624282949835,
+     "printed": "Brady Harrison, Indiana"
+    },
+    {
+     "name": "Tim Morrissey",
+     "school": "Clemson",
+     "seed": 7,
+     "y": 303.2629198947835,
+     "printed": "Tim Morrissey, Clemson [7]"
+    },
+    {
+     "bye": true,
+     "y": 318.26291389478354,
+     "printed": "Bye"
+    },
+    {
+     "name": "Paul Fitzpatrick",
+     "school": "Brown",
+     "seed": null,
+     "y": 333.2629078947835,
+     "printed": "Paul Fitzpatrick, Brown"
+    },
+    {
+     "name": "Bryan Stout",
+     "school": "Clarion",
+     "seed": 10,
+     "y": 348.2629018947835,
+     "printed": "Bryan Stout, Clarion [10]"
+    },
+    {
+     "name": "Darrin Vincent",
+     "school": "Boston University",
+     "seed": null,
+     "y": 363.2628958947835,
+     "printed": "Darrin Vincent, Boston University"
+    },
+    {
+     "name": "Doug Joseph",
+     "school": "Duquesne",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Doug Joseph, Duquesne"
+    },
+    {
+     "name": "Keith Davison",
+     "school": "Wisconsin",
+     "seed": 2,
+     "y": 393.3828838467835,
+     "printed": "Keith Davison, Wisconsin [2]"
+    },
+    {
+     "name": "Lonny Rivera",
+     "school": "Toledo",
+     "seed": null,
+     "y": 408.3828778467835,
+     "printed": "Lonny Rivera, Toledo"
+    },
+    {
+     "name": "Jassen Froehlich",
+     "school": "Cal State-Bakersfield",
+     "seed": 11,
+     "y": 423.38287184678353,
+     "printed": "Jassen Froehlich, Cal State-Bakersfield [11]"
+    },
+    {
+     "name": "Lance Pelton",
+     "school": "Illinois",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Lance Pelton, Illinois"
+    },
+    {
+     "name": "J.J. McGrew",
+     "school": "Oklahoma State",
+     "seed": 6,
+     "y": 453.3828598467835,
+     "printed": "J.J. McGrew, Oklahoma State [6]"
+    },
+    {
+     "name": "Rico Garcia",
+     "school": "New Mexico",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Rico Garcia, New Mexico"
+    },
+    {
+     "name": "Joel Sharratt",
+     "school": "Iowa",
+     "seed": 3,
+     "y": 483.38284784678353,
+     "printed": "Joel Sharratt, Iowa [3]"
+    },
+    {
+     "name": "Dan Madson",
+     "school": "North Carolina State",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Dan Madson, North Carolina State"
+    },
+    {
+     "bye": true,
+     "y": 513.3828358467836,
+     "printed": "Bye"
+    },
+    {
+     "name": "Jim Ferguson",
+     "school": "Rutgers",
+     "seed": null,
+     "y": 528.3828298467834,
+     "printed": "Jim Ferguson, Rutgers"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "bye": true,
+     "winnerLine": 0,
+     "printed": "Dan Troupe"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "8-6"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 4,
+     "loserLine": 5,
+     "printed": "5-2"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 6,
+     "loserLine": 7,
+     "printed": "16-4"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 8,
+     "loserLine": 9,
+     "printed": "12-5"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 11,
+     "loserLine": 10,
+     "printed": "16-2"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 12,
+     "loserLine": 13,
+     "printed": "10-4"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 14,
+     "loserLine": 15,
+     "printed": "3-1"
+    },
+    {
+     "slot": 8,
+     "bye": true,
+     "winnerLine": 16,
+     "printed": "Tim Morrissey"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 19,
+     "loserLine": 18,
+     "printed": "11-0"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 20,
+     "loserLine": 21,
+     "printed": "3-1"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 22,
+     "loserLine": 23,
+     "printed": "12-6"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "7-1"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "TF 20-5, 6:40"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 28,
+     "loserLine": 29,
+     "printed": "TF 28-13, 6:16"
+    },
+    {
+     "slot": 15,
+     "bye": true,
+     "winnerLine": 31,
+     "printed": "Jim Ferguson"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 0,
+     "loserLine": 2,
+     "printed": "7-3"
+    },
+    {
+     "winnerLine": 6,
+     "loserLine": 4,
+     "printed": "3-1"
+    },
+    {
+     "winnerLine": 11,
+     "loserLine": 8,
+     "printed": "Fall 4:47"
+    },
+    {
+     "winnerLine": 14,
+     "loserLine": 12,
+     "printed": "10-5"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 19,
+     "printed": "4-3"
+    },
+    {
+     "winnerLine": 22,
+     "loserLine": 20,
+     "printed": "18-7"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 24,
+     "printed": "7-3"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 31,
+     "printed": "Fall 4:27"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 6,
+     "loserLine": 0,
+     "printed": "8-5"
+    },
+    {
+     "winnerLine": 11,
+     "loserLine": 14,
+     "printed": "7-6"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 22,
+     "printed": "8-1"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 26,
+     "printed": "3-2"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 11,
+     "loserLine": 6,
+     "printed": "8-3"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 16,
+     "printed": "3-1"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 28,
+     "loserLine": 11,
+     "printed": "3-2"
+    }
+   ],
+   "pigtails": [],
+   "consPigtails": [],
+   "consRaw": {
+    "c1in": [
+     "Bye",
+     "Wise, Navy",
+     "Bloch, Illinois State",
+     "Loukides, Edinboro",
+     "Guire, California-Davis",
+     "Llanusa, North Carolina",
+     "Harrison, Indiana",
+     "Bruce, Liberty",
+     "Bye",
+     "Stout, Clarion",
+     "Rivera, Toledo",
+     "Vincent, Boston University",
+     "Garcia, New Mexico",
+     "Froehlich, Cal State-Bakersfield",
+     "Madson, North Carolina State",
+     "Ferguson, Rutgers"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "Loukides 5-2",
+     "McGrew, Oklahoma State",
+     "Harrison Fall 3:59",
+     "Davison, Wisconsin",
+     "Stout 13-0",
+     "Howard, Bloomsburg",
+     "Madson 5-4",
+     "Troupe, Iowa State"
+    ],
+    "c3res": [
+     "McGrew 5-3",
+     "Davison 13-4",
+     "Stout 3-2",
+     "Troupe 8-3"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Davison 5-3",
+     "Collins, Michigan State",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Troupe 2-1",
+     "Morrissey, Clemson"
+    ],
+    "c5res": [
+     "190 Consolation Bracket",
+     "Tim Morrissey, Clemson 6-4",
+     "Keith Davison, Wisconsin 11-3",
+     "J.J. McGrew, Oklahoma State 7-5"
+    ],
+    "sfdrop": [
+     "Emilio Collins, Michigan State",
+     "Dan Troupe, Iowa State",
+     "Bryan Stout, Clarion"
+    ],
+    "place": [
+     "Collins 7-4",
+     "Morrissey 10-0"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Bye"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "Wise"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "190 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "Wise, Navy"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "Loukides 5-2"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Bloch, Illinois State"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "McGrew 5-3"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Loukides 7-4"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Loukides, Edinboro"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "McGrew, Oklahoma State"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Guire, California-Davis"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Davison 5-3"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Guire Fall 2:35"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Collins 7-4"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Llanusa, North Carolina"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Collins, Michigan State"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Harrison Fall 3:59"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Harrison, Indiana"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Davison 13-4"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Harrison 10-9"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Tim Morrissey, Clemson 6-4"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Bruce, Liberty"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Davison, Wisconsin"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Emilio Collins, Michigan State"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Bye"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Keith Davison, Wisconsin 11-3"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Stout"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "Dan Troupe, Iowa State"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Stout, Clarion"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "J.J. McGrew, Oklahoma State 7-5"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Stout 13-0"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Bryan Stout, Clarion"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Rivera, Toledo"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Stout 3-2"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Vincent 4-3"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Vincent, Boston University"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Howard, Bloomsburg"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Garcia, New Mexico"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Troupe 2-1"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Froehlich 8-0"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Morrissey 10-0"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Morrissey, Clemson"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Froehlich, Cal State-Bakersfield"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Madson 5-4"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Madson, North Carolina State"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Troupe 8-3"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Madson Fall 4:38"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Ferguson, Rutgers"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Troupe, Iowa State"
+    }
+   ]
+  },
+  {
+   "index": 9,
+   "problems": [],
+   "weight": "275",
+   "lines": [
+    {
+     "name": "Josh Feldman",
+     "school": "Virginia Tech",
+     "seed": 12,
+     "y": 57.142518342983465,
+     "printed": "Josh Feldman, Virginia Tech [12]"
+    },
+    {
+     "bye": true,
+     "y": 72.14251234298348,
+     "printed": "Bye"
+    },
+    {
+     "name": "Steve King",
+     "school": "Michigan",
+     "seed": 5,
+     "y": 87.1425063429835,
+     "printed": "Steve King, Michigan [5]"
+    },
+    {
+     "name": "Darin Priesendorf",
+     "school": "Fresno State",
+     "seed": null,
+     "y": 102.14250034298354,
+     "printed": "Darin Priesendorf, Fresno State"
+    },
+    {
+     "name": "Keith Turner",
+     "school": "Clemson",
+     "seed": null,
+     "y": 117.14249434298353,
+     "printed": "Keith Turner, Clemson"
+    },
+    {
+     "name": "Joe Yanis",
+     "school": "Hofstra",
+     "seed": null,
+     "y": 132.26248829498354,
+     "printed": "Joe Yanis, Hofstra"
+    },
+    {
+     "name": "Vito Maurici",
+     "school": "Indiana",
+     "seed": 4,
+     "y": 147.26248229498356,
+     "printed": "Vito Maurici, Indiana [4]"
+    },
+    {
+     "name": "John Kading",
+     "school": "Oklahoma",
+     "seed": null,
+     "y": 162.26247629498351,
+     "printed": "John Kading, Oklahoma"
+    },
+    {
+     "name": "Kerry McCoy",
+     "school": "Penn State",
+     "seed": 1,
+     "y": 177.26247029498353,
+     "printed": "Kerry McCoy, Penn State [1]"
+    },
+    {
+     "name": "Chris Kleckner",
+     "school": "Boston University",
+     "seed": null,
+     "y": 192.2624642949835,
+     "printed": "Chris Kleckner, Boston University"
+    },
+    {
+     "name": "Kevin Langley",
+     "school": "Cal State-Bakersfield",
+     "seed": null,
+     "y": 207.2624582949835,
+     "printed": "Kevin Langley, Cal State-Bakersfield"
+    },
+    {
+     "name": "George Parker",
+     "school": "Oklahoma State",
+     "seed": null,
+     "y": 222.26245229498352,
+     "printed": "George Parker, Oklahoma State"
+    },
+    {
+     "name": "Rick Burlenski",
+     "school": "Ohio State",
+     "seed": null,
+     "y": 237.26244629498353,
+     "printed": "Rick Burlenski, Ohio State"
+    },
+    {
+     "name": "Dan Hicks",
+     "school": "Navy",
+     "seed": 8,
+     "y": 252.26244029498355,
+     "printed": "Dan Hicks, Navy [8]"
+    },
+    {
+     "name": "Reynold Gardner",
+     "school": "Oregon State",
+     "seed": null,
+     "y": 267.2624342949835,
+     "printed": "Reynold Gardner, Oregon State"
+    },
+    {
+     "name": "Justin Harty",
+     "school": "North Carolina",
+     "seed": 9,
+     "y": 282.2624282949835,
+     "printed": "Justin Harty, North Carolina [9]"
+    },
+    {
+     "name": "Justin Greenlee",
+     "school": "Northern Iowa",
+     "seed": 2,
+     "y": 303.2629198947835,
+     "printed": "Justin Greenlee, Northern Iowa [2]"
+    },
+    {
+     "name": "Chris Anderson",
+     "school": "Oregon",
+     "seed": null,
+     "y": 318.26291389478354,
+     "printed": "Chris Anderson, Oregon"
+    },
+    {
+     "name": "Jim Howard",
+     "school": "West Virginia",
+     "seed": null,
+     "y": 333.2629078947835,
+     "printed": "Jim Howard, West Virginia"
+    },
+    {
+     "name": "Nick Hall",
+     "school": "Old Dominion",
+     "seed": null,
+     "y": 348.2629018947835,
+     "printed": "Nick Hall, Old Dominion"
+    },
+    {
+     "name": "Jeff Walter",
+     "school": "Wisconsin",
+     "seed": 10,
+     "y": 363.2628958947835,
+     "printed": "Jeff Walter, Wisconsin [10]"
+    },
+    {
+     "name": "Mark Wysong",
+     "school": "Virginia Military",
+     "seed": null,
+     "y": 378.2628898947835,
+     "printed": "Mark Wysong, Virginia Military"
+    },
+    {
+     "name": "Jeremy Lay",
+     "school": "Missouri",
+     "seed": 7,
+     "y": 393.3828838467835,
+     "printed": "Jeremy Lay, Missouri [7]"
+    },
+    {
+     "name": "Bill Sjolinder",
+     "school": "Army",
+     "seed": null,
+     "y": 408.3828778467835,
+     "printed": "Bill Sjolinder, Army"
+    },
+    {
+     "name": "Billy Pierce",
+     "school": "Minnesota",
+     "seed": 3,
+     "y": 423.38287184678353,
+     "printed": "Billy Pierce, Minnesota [3]"
+    },
+    {
+     "name": "Joey Allen",
+     "school": "Pennsylvania",
+     "seed": null,
+     "y": 438.3828658467835,
+     "printed": "Joey Allen, Pennsylvania"
+    },
+    {
+     "name": "Rob Sintobin",
+     "school": "Clarion",
+     "seed": null,
+     "y": 453.3828598467835,
+     "printed": "Rob Sintobin, Clarion"
+    },
+    {
+     "name": "Scott Durieux",
+     "school": "Ohio University",
+     "seed": null,
+     "y": 468.3828538467835,
+     "printed": "Scott Durieux, Ohio University"
+    },
+    {
+     "name": "Tony Vaughn",
+     "school": "Purdue",
+     "seed": 6,
+     "y": 483.38284784678353,
+     "printed": "Tony Vaughn, Purdue [6]"
+    },
+    {
+     "name": "Wally Wickline",
+     "school": "Duquesne",
+     "seed": null,
+     "y": 498.3828418467835,
+     "printed": "Wally Wickline, Duquesne"
+    },
+    {
+     "bye": true,
+     "y": 513.3828358467836,
+     "printed": "Bye"
+    },
+    {
+     "name": "Tolly Thompson",
+     "school": "Nebraska",
+     "seed": 11,
+     "y": 528.3828298467834,
+     "printed": "Tolly Thompson, Nebraska [11]"
+    }
+   ],
+   "calibration": {
+    "drawLineX": 78.1,
+    "dx": 23
+   },
+   "r1": [
+    {
+     "slot": 0,
+     "bye": true,
+     "winnerLine": 0,
+     "printed": "Josh Feldman"
+    },
+    {
+     "slot": 1,
+     "winnerLine": 2,
+     "loserLine": 3,
+     "printed": "5-2"
+    },
+    {
+     "slot": 2,
+     "winnerLine": 4,
+     "loserLine": 5,
+     "printed": "7-5 OT"
+    },
+    {
+     "slot": 3,
+     "winnerLine": 7,
+     "loserLine": 6,
+     "printed": "3-2"
+    },
+    {
+     "slot": 4,
+     "winnerLine": 8,
+     "loserLine": 9,
+     "printed": "3-0"
+    },
+    {
+     "slot": 5,
+     "winnerLine": 10,
+     "loserLine": 11,
+     "printed": "7-2"
+    },
+    {
+     "slot": 6,
+     "winnerLine": 13,
+     "loserLine": 12,
+     "printed": "5-3"
+    },
+    {
+     "slot": 7,
+     "winnerLine": 15,
+     "loserLine": 14,
+     "printed": "10-8"
+    },
+    {
+     "slot": 8,
+     "winnerLine": 16,
+     "loserLine": 17,
+     "printed": "4-1"
+    },
+    {
+     "slot": 9,
+     "winnerLine": 19,
+     "loserLine": 18,
+     "printed": "6-2"
+    },
+    {
+     "slot": 10,
+     "winnerLine": 20,
+     "loserLine": 21,
+     "printed": "Fall 5:34"
+    },
+    {
+     "slot": 11,
+     "winnerLine": 22,
+     "loserLine": 23,
+     "printed": "8-2"
+    },
+    {
+     "slot": 12,
+     "winnerLine": 24,
+     "loserLine": 25,
+     "printed": "DSQ 6:08"
+    },
+    {
+     "slot": 13,
+     "winnerLine": 26,
+     "loserLine": 27,
+     "printed": "Fall 1:02"
+    },
+    {
+     "slot": 14,
+     "winnerLine": 28,
+     "loserLine": 29,
+     "printed": "Fall 2:17"
+    },
+    {
+     "slot": 15,
+     "bye": true,
+     "winnerLine": 31,
+     "printed": "Tolly Thompson"
+    }
+   ],
+   "r2": [
+    {
+     "winnerLine": 0,
+     "loserLine": 2,
+     "printed": "5-4 TB"
+    },
+    {
+     "winnerLine": 7,
+     "loserLine": 4,
+     "printed": "10-3"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 10,
+     "printed": "16-6"
+    },
+    {
+     "winnerLine": 13,
+     "loserLine": 15,
+     "printed": "7-3"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 19,
+     "printed": "Fall 4:22"
+    },
+    {
+     "winnerLine": 20,
+     "loserLine": 22,
+     "printed": "1-1 TB"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 24,
+     "printed": "5-4"
+    },
+    {
+     "winnerLine": 28,
+     "loserLine": 31,
+     "printed": "3-1 OT"
+    }
+   ],
+   "qf": [
+    {
+     "winnerLine": 7,
+     "loserLine": 0,
+     "printed": "5-3 OT"
+    },
+    {
+     "winnerLine": 8,
+     "loserLine": 13,
+     "printed": "3-1"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 20,
+     "printed": "4-2"
+    },
+    {
+     "winnerLine": 26,
+     "loserLine": 28,
+     "printed": "Fall 0:47"
+    }
+   ],
+   "sf": [
+    {
+     "winnerLine": 8,
+     "loserLine": 7,
+     "printed": "10-3"
+    },
+    {
+     "winnerLine": 16,
+     "loserLine": 26,
+     "printed": "Fall 2:13"
+    }
+   ],
+   "final": [
+    {
+     "winnerLine": 8,
+     "loserLine": 16,
+     "printed": "7-4"
+    }
+   ],
+   "pigtails": [],
+   "consPigtails": [],
+   "consRaw": {
+    "c1in": [
+     "Bye",
+     "King, Michigan",
+     "Maurici, Indiana",
+     "Turner, Clemson",
+     "Kleckner, Boston University",
+     "Langley, Cal State-Bakersfield",
+     "Burlenski, Ohio State",
+     "Harty, North Carolina",
+     "Anderson, Oregon",
+     "Hall, Old Dominion",
+     "Wysong, Virginia Military",
+     "Lay, Missouri",
+     "Durieux, Ohio University",
+     "Pierce, Minnesota",
+     "Wickline, Duquesne",
+     "Thompson, Nebraska"
+    ],
+    "c1res": [],
+    "r2drop": [],
+    "c2res": [
+     "King 2-1 TB",
+     "Vaughn, Purdue",
+     "Harty 3-1",
+     "Walter, Wisconsin",
+     "Lay 3-1",
+     "Hicks, Navy",
+     "Thompson 4-2",
+     "Feldman, Virginia Tech"
+    ],
+    "c3res": [
+     "Vaughn 5-1 OT",
+     "Harty 2-1",
+     "Hicks 2-1",
+     "Feldman 6-3"
+    ],
+    "qfdrop": [],
+    "c4res": [
+     "Vaughn 11-3",
+     "Kading, Oklahoma",
+     "Third Place:",
+     "Fourth Place:",
+     "Fifth Place:",
+     "Sixth Place:",
+     "Seventh Place:",
+     "Eighth Place:",
+     "Hicks 4-2",
+     "Sintobin, Clarion"
+    ],
+    "c5res": [
+     "275 Consolation Bracket",
+     "Tony Vaughn, Purdue Fall 6:11",
+     "Dan Hicks, Navy 4-1",
+     "Josh Feldman, Virginia Tech 8-2"
+    ],
+    "sfdrop": [
+     "Rob Sintobin, Clarion",
+     "John Kading, Oklahoma",
+     "Justin Harty, North Carolina"
+    ],
+    "place": [
+     "Vaughn 5-3",
+     "Sintobin 7-3"
+    ],
+    "c6res": []
+   },
+   "consWords": [
+    {
+     "x": 51,
+     "y": 60.1,
+     "t": "Bye"
+    },
+    {
+     "x": 171,
+     "y": 78.1,
+     "t": "King"
+    },
+    {
+     "x": 537,
+     "y": 79.7,
+     "t": "275 Consolation Bracket"
+    },
+    {
+     "x": 51,
+     "y": 93.1,
+     "t": "King, Michigan"
+    },
+    {
+     "x": 270,
+     "y": 105.1,
+     "t": "King 2-1 TB"
+    },
+    {
+     "x": 51,
+     "y": 120.1,
+     "t": "Maurici, Indiana"
+    },
+    {
+     "x": 387,
+     "y": 132.3,
+     "t": "Vaughn 5-1 OT"
+    },
+    {
+     "x": 171,
+     "y": 138.3,
+     "t": "Maurici DFT 3:16"
+    },
+    {
+     "x": 51,
+     "y": 156.3,
+     "t": "Turner, Clemson"
+    },
+    {
+     "x": 270,
+     "y": 159.3,
+     "t": "Vaughn, Purdue"
+    },
+    {
+     "x": 51,
+     "y": 186.3,
+     "t": "Kleckner, Boston University"
+    },
+    {
+     "x": 480,
+     "y": 183.3,
+     "t": "Vaughn 11-3"
+    },
+    {
+     "x": 171,
+     "y": 204.3,
+     "t": "Kleckner 4-1"
+    },
+    {
+     "x": 593,
+     "y": 201.3,
+     "t": "Vaughn 5-3"
+    },
+    {
+     "x": 51,
+     "y": 222.3,
+     "t": "Langley, Cal State-Bakersfield"
+    },
+    {
+     "x": 486,
+     "y": 219.3,
+     "t": "Kading, Oklahoma"
+    },
+    {
+     "x": 270,
+     "y": 234.3,
+     "t": "Harty 3-1"
+    },
+    {
+     "x": 51,
+     "y": 252.3,
+     "t": "Burlenski, Ohio State"
+    },
+    {
+     "x": 387,
+     "y": 258.3,
+     "t": "Harty 2-1"
+    },
+    {
+     "x": 171,
+     "y": 270.3,
+     "t": "Harty 4-0"
+    },
+    {
+     "x": 489,
+     "y": 279.5,
+     "t": "Third Place:"
+    },
+    {
+     "x": 543,
+     "y": 279.5,
+     "t": "Tony Vaughn, Purdue Fall 6:11"
+    },
+    {
+     "x": 51,
+     "y": 288.3,
+     "t": "Harty, North Carolina"
+    },
+    {
+     "x": 270,
+     "y": 288.3,
+     "t": "Walter, Wisconsin"
+    },
+    {
+     "x": 483,
+     "y": 297.5,
+     "t": "Fourth Place:"
+    },
+    {
+     "x": 543,
+     "y": 297.5,
+     "t": "Rob Sintobin, Clarion"
+    },
+    {
+     "x": 51,
+     "y": 315.3,
+     "t": "Anderson, Oregon"
+    },
+    {
+     "x": 491,
+     "y": 315.5,
+     "t": "Fifth Place:"
+    },
+    {
+     "x": 543,
+     "y": 315.5,
+     "t": "Dan Hicks, Navy 4-1"
+    },
+    {
+     "x": 171,
+     "y": 333.3,
+     "t": "Hall 2-1"
+    },
+    {
+     "x": 489,
+     "y": 333.5,
+     "t": "Sixth Place:"
+    },
+    {
+     "x": 543,
+     "y": 333.5,
+     "t": "John Kading, Oklahoma"
+    },
+    {
+     "x": 51,
+     "y": 352.0,
+     "t": "Hall, Old Dominion"
+    },
+    {
+     "x": 478,
+     "y": 351.5,
+     "t": "Seventh Place:"
+    },
+    {
+     "x": 543,
+     "y": 351.5,
+     "t": "Josh Feldman, Virginia Tech 8-2"
+    },
+    {
+     "x": 270,
+     "y": 366.3,
+     "t": "Lay 3-1"
+    },
+    {
+     "x": 485,
+     "y": 369.5,
+     "t": "Eighth Place:"
+    },
+    {
+     "x": 543,
+     "y": 369.5,
+     "t": "Justin Harty, North Carolina"
+    },
+    {
+     "x": 51,
+     "y": 381.3,
+     "t": "Wysong, Virginia Military"
+    },
+    {
+     "x": 387,
+     "y": 390.3,
+     "t": "Hicks 2-1"
+    },
+    {
+     "x": 171,
+     "y": 399.4,
+     "t": "Lay Fall 5:36"
+    },
+    {
+     "x": 51,
+     "y": 418.0,
+     "t": "Lay, Missouri"
+    },
+    {
+     "x": 270,
+     "y": 417.4,
+     "t": "Hicks, Navy"
+    },
+    {
+     "x": 51,
+     "y": 447.4,
+     "t": "Durieux, Ohio University"
+    },
+    {
+     "x": 480,
+     "y": 444.4,
+     "t": "Hicks 4-2"
+    },
+    {
+     "x": 171,
+     "y": 465.4,
+     "t": "Pierce 5-4 TB"
+    },
+    {
+     "x": 593,
+     "y": 462.4,
+     "t": "Sintobin 7-3"
+    },
+    {
+     "x": 486,
+     "y": 480.4,
+     "t": "Sintobin, Clarion"
+    },
+    {
+     "x": 51,
+     "y": 484.1,
+     "t": "Pierce, Minnesota"
+    },
+    {
+     "x": 270,
+     "y": 498.4,
+     "t": "Thompson 4-2"
+    },
+    {
+     "x": 51,
+     "y": 513.4,
+     "t": "Wickline, Duquesne"
+    },
+    {
+     "x": 387,
+     "y": 522.4,
+     "t": "Feldman 6-3"
+    },
+    {
+     "x": 171,
+     "y": 531.4,
+     "t": "Thompson Fall 4:57"
+    },
+    {
+     "x": 51,
+     "y": 550.1,
+     "t": "Thompson, Nebraska"
+    },
+    {
+     "x": 270,
+     "y": 549.4,
+     "t": "Feldman, Virginia Tech"
+    }
+   ]
+  }
+ ],
+ "problems": []
+}

@@ -22,7 +22,7 @@ async def main():
             async def route(r):
                 u = r.request.url; await r.fulfill(status=200, content_type='application/javascript', body=APP if 'firebase-app' in u else FS if 'firestore' in u else AUTH)
             await pg.route('https://www.gstatic.com/**', route); await pg.route('https://fonts.googleapis.com/**', lambda r: r.fulfill(status=200, body=''))
-            if block_data: await pg.route('**/home-data.js', lambda r: r.fulfill(status=404, body=''))
+            if block_data: await pg.route('**/home-data.js*', lambda r: r.fulfill(status=404, body=''))
             return pg
         pg = await page(); await pg.goto(BASE + 'home.html'); await pg.wait_for_timeout(900)
         files = sorted(set(u.split('/')[-1].split('?')[0] for u in pg.reqs if u.startswith(BASE)))

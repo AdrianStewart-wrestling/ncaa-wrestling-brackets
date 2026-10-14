@@ -206,7 +206,7 @@ const HistoricalWrestlebackScoring = (function () {
   // clinches nothing (the C losers are unplaced); a C win reaches the 3rd-place bout and so clinches 4th
   const REP4 = { QF: [NONE, NONE, NONE], SF: [NONE, 2, NONE], RepA: [NONE, NONE, NONE], RepB: [NONE, NONE, NONE], RepC: [NONE, 4, NONE] };
   // consolation round names per shape: 1986-1995 (qf) 5 rounds, AA clinched in round 3; 1972-1985 (sf) 4 rounds, AA clinched in round 2 ('ConsAA')
-  const CONS = { 'qf-wrestleback': ['ConsR1', 'ConsR2', 'ConsR3', 'ConsQF', 'ConsSF'], 'sf-wrestleback': ['ConsR1', 'ConsAA', 'ConsQF', 'ConsSF'], 'sf-wrestleback-6': ['ConsR1', 'ConsAA', 'ConsQF', 'ConsSF'], 'finalist-repechage-6': ['RepA', 'RepB', 'RepC'], 'finalist-repechage-4': ['RepA', 'RepB', 'RepC'], 'true-second-3': ['WbQF', 'WbSF', 'Second'] };
+  const CONS = { 'qf-wrestleback': ['ConsR1', 'ConsR2', 'ConsR3', 'ConsQF', 'ConsSF'], 'sf-wrestleback': ['ConsR1', 'ConsAA', 'ConsQF', 'ConsSF'], 'sf-wrestleback-6': ['ConsR1', 'ConsAA', 'ConsQF', 'ConsSF'], 'finalist-repechage-6': ['RepA', 'RepB', 'RepC'], 'finalist-repechage-4': ['RepA', 'RepB', 'RepC'], 'true-second-3': ['WbQF', 'WbSF', 'Second'], 'true-second-3p': ['WbR1', 'WbQF', 'WbSF', 'Second'] };
   let CON = CONS['qf-wrestleback'];
   function roundOfKey(key) { const p = String(key).split(':'), b = p[0], ri = +p[1];
     if (b === 'bp') return 'Round ' + (ri + 1);   // 1948: Olympic bad-point rounds (no advancement, no bracket placement schedule)
@@ -244,7 +244,7 @@ const HistoricalWrestlebackScoring = (function () {
     PRE70 = Number(year) >= 1970 ? null : Number(year) <= 1940 ? PLACE40 : Number(year) <= 1954 ? PLACE50 : Number(year) <= 1955 ? PLACE55 : Number(year) <= 1962 ? PLACE62 : Number(year) <= 1967 ? PLACE6367 : PLACE7273;
     const Y60 = Number(year) < 1970;   // 1962-1969: the 1970-1971 advancement (champ 1 / repechage 1) and bonus (fall/forfeit/default 1) rules
     const sfShape = !!(opts && opts.shape === 'sf-wrestleback');
-    const TS3 = (opts && opts.shape === 'true-second-3') ? { SF: 3, Final: 1, Second: 2, '3rd': 3 } : null;   // 1940: the best place each win secures; a loss never lowers a secured place
+    const TS3 = (opts && (opts.shape === 'true-second-3' || opts.shape === 'true-second-3p')) ? { SF: 3, Final: 1, Second: 2, '3rd': 3 } : null;   // 1940: the best place each win secures; a loss never lowers a secured place
     const B = bonusTable(year), problems = [], events = [], byTeam = {}, floors = {}, schoolOfW = {};
     const team = s => byTeam[s] || (byTeam[s] = { school: s, adv: 0, bonus: 0, place: 0 });
     (schools || []).forEach(s => { s = String(s || '').trim(); if (s) team(s); });
@@ -273,8 +273,8 @@ const HistoricalWrestlebackScoring = (function () {
       const y75 = Number(year) >= 1972 && Number(year) <= 1975, m10 = /^(\d+)-(\d+)/.exec(String(r.score || ''));
       // 1970-1971 NCAA tournament rule (approved): 1 for a fall, default or forfeit only -- no DQ bonus, no decision bonus
       const y71 = Number(year) <= 1971;
-      const bonus = Number(year) <= 1940 ? (r.resultType === 'Fall' ? 1 : 0) : y71 ? (({ Fall: 1, FFT: 1, MedFFT: 1, Default: 1 })[r.resultType] || 0) : y75 ? ((r.resultType === 'Dec' || r.resultType === 'MajDec') ? (m10 && (+m10[1] - +m10[2]) >= 10 ? 0.5 : 0) : ({ Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1 })[r.resultType]) : (sup ? B.SupDec : B[r.resultType]); if (typeof bonus !== 'number') problems.push({ boutId: r.boutId, code: 'unknown_result_type', message: 'unknown result type ' + r.resultType });
-      add(ws, 'Bonus', bonus || 0, 'Rule ' + (Number(year) >= 1995 ? '1995' : Number(year) >= 1988 ? '1988' : Number(year) >= 1985 ? '1976/1985' : Number(year) >= 1976 ? '1976' : Y60 ? (Number(year) < 1955 ? '1950-1954' : Number(year) < 1962 ? '1955-1961' : '1962-1969') : y71 ? '1970-1971' : '1972-1975') + ': ' + (y75 && (r.resultType === 'Dec' || r.resultType === 'MajDec') ? 'Decision by 10 or more' : sup ? 'Superior decision' : r.resultType), r, round, r.winnerId);
+      const bonus = (Number(year) < 1940 && opts && opts.shape === 'olympic-bad-points') ? 0 : Number(year) < 1940 ? (({ Fall: 1, FFT: 1, MedFFT: 1, Default: 1 })[r.resultType] || 0) : Number(year) <= 1940 ? (r.resultType === 'Fall' ? 1 : 0) : y71 ? (({ Fall: 1, FFT: 1, MedFFT: 1, Default: 1 })[r.resultType] || 0) : y75 ? ((r.resultType === 'Dec' || r.resultType === 'MajDec') ? (m10 && (+m10[1] - +m10[2]) >= 10 ? 0.5 : 0) : ({ Fall: 1, FFT: 1, MedFFT: 1, Default: 1, DQ: 1 })[r.resultType]) : (sup ? B.SupDec : B[r.resultType]); if (typeof bonus !== 'number') problems.push({ boutId: r.boutId, code: 'unknown_result_type', message: 'unknown result type ' + r.resultType });
+      add(ws, 'Bonus', bonus || 0, Number(year) < 1940 ? 'Rule (Official Wrestling Guide 1927-1939): ' + (r.resultType === 'Fall' ? 'Fall' : 'Default/forfeit (counts as a fall)') : 'Rule ' + (Number(year) >= 1995 ? '1995' : Number(year) >= 1988 ? '1988' : Number(year) >= 1985 ? '1976/1985' : Number(year) >= 1976 ? '1976' : Y60 ? (Number(year) < 1955 ? '1950-1954' : Number(year) < 1962 ? '1955-1961' : '1962-1969') : y71 ? '1970-1971' : '1972-1975') + ': ' + (y75 && (r.resultType === 'Dec' || r.resultType === 'MajDec') ? 'Decision by 10 or more' : sup ? 'Superior decision' : r.resultType), r, round, r.winnerId);
       add(ws, 'Advancement', Number(year) < 1955 ? 0 : Number(year) === 1955 ? adv1955(r) : ((Y7273 || Y60) && /^Cons/.test(round) && ADV[round] ? 1 : ADV[round]) || 0, Y60 ? 'Rule 1955 (champ 1 / repechage 1)' : Number(year) <= 1971 ? 'Rule 1970 (champ 1 / repechage 1)' : Y7273 ? 'Rule 1972 (champ 1 / cons 1)' : 'Rule 1974 (champ 1 / cons 1/2)', r, round, r.winnerId);
       if (TS3) { const tgt = TS3[round], cur = floors[r.winnerId] === undefined ? NONE : floors[r.winnerId];
         if (tgt && tgt < cur) { add(ws, 'Placement', worth(tgt) - worth(cur), 'Floor ' + label(cur) + ' -> ' + label(tgt), r, round, r.winnerId); floor(r.winnerId, tgt, ws); }
@@ -290,10 +290,10 @@ const HistoricalWrestlebackScoring = (function () {
     if (opts && opts.shape === 'olympic-bad-points') {
       const HW = (typeof window !== 'undefined' && window.HistoricalWeights) || globalThis.HistoricalWeights, HS = (typeof window !== 'undefined' && window.HistoricalSeeds) || globalThis.HistoricalSeeds;
       HW.slots(year).forEach(slot => { const f = ((HS.facts || {})[String(year)] || {})[String(HW.labelOf(year, slot))]; if (!f || !f.places) return;
-        Object.entries(f.places).forEach(([pl, n]) => { const k = (f.entrants || []).indexOf(n); if (k < 0) { problems.push({ code: 'unknown_placer', message: n }); return; }
+        Object.entries(f.places).forEach(([pl, ns]) => [].concat(ns).forEach(n => { const k = (f.entrants || []).indexOf(n); if (k < 0) { problems.push({ code: 'unknown_placer', message: n }); return; }
           const id = slot + '-' + String(k + 1).padStart(2, '0'), s = schoolOf(id); if (!s) { problems.push({ code: 'unknown_placer', message: id }); return; }
           const last = records.filter(r => r.winnerId === id || r.loserId === id).sort((a, b) => b.boutId - a.boutId)[0];
-          add(s, 'Placement', worth(+pl), 'Printed place ' + label(+pl) + ' (Olympic bad-point rounds)', last || { weight: slot, boutId: null }, last ? roundOfKey(last.key) : null, id); floor(id, +pl, s); }); });
+          add(s, 'Placement', worth(+pl), 'Printed place ' + label(+pl) + ' (Olympic bad-point rounds)', last || { weight: slot, boutId: null }, last ? roundOfKey(last.key) : null, id); floor(id, +pl, s); })); });
     }
     // Bye points: the 1985 rule read EXACTLY as established and validated for 1996-2012 (HistoricalRules.byeCredits, unchanged):
     // in a weight with wrestle-ins the bracket counts as 64 lines (every non-wrestle-in entrant holds a first-round bye); otherwise
@@ -303,6 +303,9 @@ const HistoricalWrestlebackScoring = (function () {
       const after = records.filter(r => r.winnerId === id).sort((a, b) => a.boutId - b.boutId)[0] || firstBout[id];
       add(s, 'Advancement', pts, 'Bye (1985 rule; 1996-2012 reading)', after, roundOfKey(after.key), id); });
     // a placement decided by a printed bye (1981 source exceptions): placement credit only -- no bout, no advancement, no bonus
+    if (TS3 && Number(year) < 1940) ((opts && opts.byePlacements) || []).forEach(bp => { const s = schoolOf(bp.id), tgt = TS3[bp.round]; if (!s || !tgt) return;   // printed "Second: X" / "Third: X" with no bout
+      const cur = floors[bp.id] === undefined ? NONE : floors[bp.id]; if (tgt >= cur) return;
+      add(s, 'Placement', worth(tgt) - worth(cur), 'Printed place with no bout: ' + label(cur) + ' -> ' + label(tgt), { weight: null, boutId: null }, bp.round, bp.id); floor(bp.id, tgt, s); });
     ((opts && opts.byePlacements && !TS3 && opts.byePlacements) || []).forEach(bp => {   // 1940: a beaten runner-up's automatic 3rd was secured by his semifinal win
  const s = schoolOf(bp.id), sch = SCHEDULE[bp.round]; if (!s || !sch) return;
       const t = team(s); t.place += worth(sch[1]) - worth(sch[0]); events.push({ school: s, wrestlerId: bp.id, weight: null, boutId: null, round: bp.round, category: 'Placement', points: worth(sch[1]) - worth(sch[0]), source: 'Printed placement by forfeit/bye (no bout): ' + label(sch[0]) + ' -> ' + label(sch[1]) }); floor(bp.id, sch[1], s);
@@ -328,7 +331,7 @@ const HistoricalWrestlebackScoring = (function () {
     // 1962-1969 (PENDING APPROVAL, Oct 12 2026): a wrestler who loses a bout by forfeit (plain forfeit; medical forfeits and injury defaults
     // excluded) earns no placement points and is not placed. Evidence: 1964 123, Don Neff forfeited his repechage C bout and the 5th-place
     // bout; the print leaves 6th blank, and the NCAA Guide's complete 1964 team scoring (Colo. St. Col. 8) has no 6th-place point for him.
-    if (Y60) {
+    if (Y60 && Number(year) >= 1940) {   // not before 1940: the Guides' 1928-1939 place points keep a wrestler who then lost by forfeit (1938 135)
       const done = new Set();
       records.forEach(r => { if (!r.loserId || r.resultType !== 'FFT' || done.has(r.loserId)) return;
         const placed = events.filter(e => e.wrestlerId === r.loserId && e.category === 'Placement').reduce((a, e) => a + e.points, 0);
@@ -352,6 +355,8 @@ const HistoricalWrestlebackScoring = (function () {
       y <= 1973 ? 'Adv: 1 per championship win and 1 per consolation win (1972–1973 NCAA rules; placement bouts and the Final add none). No bye points.' :
       y <= 1984 ? 'Adv: 1 per championship win, ½ per consolation win (placement bouts and the Final add none). No bye points (the bye rule begins in 1985).' :
       'Adv: 1 per championship win, ½ per consolation win (placement bouts and the Final add none). Byes: a bye counts as an advancement when the wrestler wins his next bout (1985 rule; in weights with wrestle-ins every other entrant holds a first-round bye).',
+      (y < 1940 && opts && opts.shape === 'olympic-bad-points') ? 'Bonus: none -- the 1936 printed team totals are place points only (no point for a fall).' :
+      y < 1940 ? 'Bonus: Fall 1, and a default or forfeit counts as a fall (NCAA Rule XVI, Official Wrestling Guides 1927–1939: "one additional point shall be awarded for each fall"; the Guides\u2019 rulings credit a won default as a fall) · no bonus for a decision, time advantage or referee\u2019s decision.' :
       y <= 1940 ? 'Bonus: Fall 1 (NCAA Rule 16, 1939–40: "one additional point shall be awarded for each fall") · no point for a default or forfeit · no bonus for a decision margin.' :
       y < 1955 ? 'Bonus: Fall / Default / Forfeit 1 · no bonus for a decision margin · no tech fall.' :
       y < 1970 ? 'Bonus: Fall / Default / Forfeit 1 · no bonus for a decision margin (no major or superior decision existed) · no tech fall.' :
@@ -360,7 +365,9 @@ const HistoricalWrestlebackScoring = (function () {
       y <= 1984 ? 'Bonus (1976–1984 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · no tech fall (none before 1985).' :
       y <= 1987 ? 'Bonus (1985–1987 rules): Fall / Forfeit / Default / DQ 1 · Major Decision (8–11) ½ · Superior Decision (12+) ¾ · Tech Fall 1.' :
       'Bonus (' + (y >= 1995 ? '1995 rules' : '1988–1994 rules') + '): Fall / Forfeit / Default / DQ ' + b.Fall + ' · Major Decision ' + b.MajDec + ' · ' + (y >= 1995 ? 'Match Termination (15+) ' : 'Tech Fall ') + b.TechFall + '.',
+      (opts && opts.shape === 'olympic-bad-points' && y < 1940) ? 'Place: 5-3-1, 4th 0 (the NCAA 5-3-1 rule; it reproduces every printed 1936 team total). 1936 was the Semi-Final American Olympic Tryouts, wrestled under Olympic bad-point rules: every round pairs the wrestlers still in, a fall gives the winner 0 bad points and a decision 1, the loser takes 3 (2 for a split decision), and a wrestler is out once he has more than 5 bad points; the last men in wrestle for the places. Four places (the top four went on to the final Olympic tryouts); the places are the printed ones, including a printed tie for 4th at 158.' :
       (opts && opts.shape === 'olympic-bad-points') ? 'Place: 6-4-2-1 (four places, the NCAA team scoring of 1941–1954). 1948 was wrestled under Olympic bad-point rules: every round pairs the wrestlers still in, a fall gives the winner 0 bad points and a decision 1, the loser takes 3 (2 for a close decision), and a wrestler is out once his bad points reach the limit. The places are the printed ones and are credited at each placer’s last bout.' :
+      (opts && (opts.shape === 'true-second-3' || opts.shape === 'true-second-3p') && y < 1940) ? 'Place: 5-3-1 (three places, NCAA Rule XVI, Official Wrestling Guides 1927–1939), counted the moment a finish is secured. 2nd place is wrestled for: the champion’s beaten opponents wrestle back and the winner meets the runner-up; if the runner-up wins, the runner-up’s beaten opponents wrestle back and meet the 2nd-place loser for 3rd, and if he loses he is 3rd with no further bout. Where the print gives a 2nd or 3rd with no bout, that place is awarded as printed. SF win secures 3rd · Final 1st · 2nd-place bout win 2nd · 3rd-place bout win 3rd.' :
       (opts && opts.shape === 'true-second-3') ? 'Place: 5-3-1 (three places, NCAA Rule 16, 1939–40 Official Wrestling Guide), counted the moment a finish is secured. 2nd place is wrestled for: the champion’s beaten opponents wrestle back and the winner meets the runner-up; if the runner-up wins, the runner-up’s beaten opponents wrestle back and meet the 2nd-place loser for 3rd, and if he loses he is 3rd with no further bout. SF win secures 3rd · Final 1st · 2nd-place bout win 2nd · 3rd-place bout win 3rd.' :
       (opts && opts.shape === 'finalist-repechage-4') ? 'Place: ' + (y < 1955 ? '6-4-2-1 (four places, NCAA Guide team scoring 1941-1954)' : y <= 1955 ? '7-5-3-1 (four places, NCAA rule from 1955)' : '10-7-4-2 (four places, NCAA rule from 1956)') + ', counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost; the repechage C winners meet for 3rd and the C losers are unplaced: SF win clinches 2nd · Final 1st · repechage C win 4th · 3rd-place bout.' :
       (opts && opts.shape === 'finalist-repechage-6' && y < 1970) ? 'Place: ' + (y >= 1968 ? '12-9-7-5-3-1 (six places, NCAA rule from 1968)' : '10-7-5-3-2-1 (six places, NCAA rule from 1963)') + ', counted the moment a finish is clinched; only wrestlers beaten by a finalist wrestle back (finalist repechage), entering at the round in which they lost: QF win clinches 6th · SF win 2nd · Final 1st · repechage B win 6th · repechage C win 4th · 3rd- and 5th-place bouts.' :

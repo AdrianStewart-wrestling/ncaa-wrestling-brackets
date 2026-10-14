@@ -657,6 +657,17 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
   const RENDER_CON = ['Con. Rd 1', 'Con. Rd 2', 'Con. Rd 3', 'Con. Qtrs', 'Con. Semis'];  // bracket column headers (5 rounds)
   const norm = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
   function factsOf(year, label) { const F = typeof window !== 'undefined' && window.HistoricalSeeds && window.HistoricalSeeds.facts; return (F && F[String(year)] && F[String(year)][String(label)]) || null; }
+  // 1928-1939 prints: the result as printed, in words ("TA 3:10" = a decision on 3:10 of time advantage; "RD" = referee's decision;
+  // DFT / WDF = default; WBF = won by fall). The engine reads every one as a decision, fall, default or forfeit.
+  function printedLabel(p, res) { const s = String(p || '').trim(), t = s.match(/\d+:\d\d/), ot = /\bOT\b/.test(s) ? ' (overtime)' : '';
+    if (/^TA\b/.test(s) || /\bTA$/.test(s)) return 'Dec, time adv.' + (t ? ' ' + t[0] : '') + ot;
+    if (/^RD\b/.test(s)) return "Referee's decision" + ot;
+    if (/^Dec\b/.test(s)) return 'Dec' + ot;
+    if (/^(Fall|WBF)\b/.test(s)) return 'Fall' + (t ? ' ' + t[0] : '') + ot;
+    if (/^(DFT|WDF|DEF)\b/.test(s)) return 'Default' + (t ? ' ' + t[0] : '');
+    if (/^Med FFT$/.test(s)) return 'Med. forfeit';
+    if (/^FFT$/.test(s)) return 'Forfeit';
+    return null; }
   // Two historical shapes share this module; everything shape-specific is in SHAPES (the qf entries reproduce the original code exactly).
   //   qf-wrestleback (1986-1995): consolation 8-4-4-2-2; QF losers enter round 3, SF losers round 5.
   //   sf-wrestleback (1972-1985): consolation 4-4-2-2 (only wrestlers beaten by a SEMIFINALIST); QF losers enter round 2, SF losers round 4.
@@ -692,6 +703,14 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     'true-second-3': { repechage: true, trueSecond: true, noPlace7: true, noPlace5: true, con: [2, 2, 2], path: ['Wrestle-back QF', 'Wrestle-back SF', '2nd-place bout'], render: ['Wrestle-back QF', 'Wrestle-back SF', '2nd-place bout'],
       numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 571 + 2 * wi, qfStart: 341 + 4 * wi, c2Start: 591 + 2 * wi,
              c3Start: 611 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 481 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 631 + wi, final: 551 + wi }) }
+    ,
+    // true-second-3p (1935): the same wrestle-back for true second with ONE MORE round first. In a 32-line draw the champion can have
+    // beaten five men; his first-round and second-round victims meet first (printed "WRB Eighth-Final"), the winner meets his
+    // quarterfinal victim, and so on. Seats as printed (facts.repSeats.P / A / B / C). Used for every weight of a year that needs it,
+    // so a year's consolation rounds keep one numbering; a weight with no eighth-final simply shows that round empty.
+    'true-second-3p': { repechage: true, trueSecond: true, noPlace7: true, noPlace5: true, con: [2, 2, 2, 2], path: ['Wrestle-back R1', 'Wrestle-back QF', 'Wrestle-back SF', '2nd-place bout'], render: ['Wrestle-back R1', 'Wrestle-back QF', 'Wrestle-back SF', '2nd-place bout'],
+      numbers: wi => ({ pigtail: 1 + wi, r1Start: 11 + 16 * wi, r2Start: 171 + 8 * wi, preCons: 251 + wi, c1Start: 571 + 2 * wi, qfStart: 341 + 4 * wi, c2Start: 591 + 2 * wi,
+             c3Start: 611 + 2 * wi, semiStart: 461 + 2 * wi, c4Start: 651 + 2 * wi, cQtrsStart: 501 + 2 * wi, cSemisStart: 511 + 2 * wi, seventh: 521 + wi, fifth: 531 + wi, third: 631 + wi, final: 551 + wi }) }
     ,
     // olympic-bad-points (1948, Olympic year): no bracket. Every round pairs the wrestlers still in; each bout gives the winner 0 bad
     // points (fall) or 1 (decision) and the loser 3 (2 for a close decision), as printed; a wrestler is out once his bad points reach
@@ -883,7 +902,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     // running bad points (as printed) and the round in which each wrestler last wrestled
     const total = {}, lastRound = {};
     rounds.forEach((R, ri) => R.forEach(m => { [['a', m.bpA], ['b', m.bpB]].forEach(([k, bp]) => { const n = m[k].n; total[n] = (total[n] || 0) + bp; m[k === 'a' ? 'totA' : 'totB'] = total[n]; lastRound[n] = ri + 1; }); }));
-    const places = F.places || {}, placeOf = {}; Object.entries(places).forEach(([pl, n]) => { if (!W[n]) problems.push('placer ' + n + ' is not an entrant'); placeOf[n] = +pl; });
+    const places = F.places || {}, placeOf = {}; Object.entries(places).forEach(([pl, ns]) => [].concat(ns).forEach(n => { if (!W[n]) problems.push('placer ' + n + ' is not an entrant'); placeOf[n] = +pl; }));   // an array = a printed tie (1936 158, 4th)
     const mk = () => ({ a: null, b: null, w: null });
     const first = rounds[0] || [], inR1 = new Set(first.flatMap(m => [m.a.n, m.b.n]));
     const r1 = first.concat(ent.filter(n => !inR1.has(n)).map(n => ({ a: W[n], b: null, w: 'a', bye: true })));   // a first-round bye
@@ -893,7 +912,7 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const locate = id => byId.get(id) || null, matchAt = key => { const p = key.split(':'); return rounds[+p[1]][+p[2]]; };
     const nextOf = (id, n) => { let best = null; byId.forEach((v, b) => { if (b <= id) return; const m = matchAt(v.key); if ((m.a.n === n || m.b.n === n) && (best === null || b < best)) best = b; }); return best; };
     const core = {
-      version: 'olympic-1948', keys: keys.slice(), locate, boutIdOf: (w, k) => (Number(w) === wt ? idOf.get(k) || null : null),
+      version: 'olympic-' + year, keys: keys.slice(), locate, boutIdOf: (w, k) => (Number(w) === wt ? idOf.get(k) || null : null),
       newBook: () => book, toRecords: () => recs.map(r => Object.assign({}, r)), pending: () => [], selfCheck: () => ({ ok: true, problems: [] }),
       describe: (bk, id) => { const loc = locate(id); if (!loc) return null; const m = matchAt(loc.key), p = loc.key.split(':');
         const dw = x => ({ id: wid(x), name: x.n, school: x.s, seed: x.seed, record: '' });
@@ -976,19 +995,26 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     function byName(st, n) { if (!n) return null; for (const r of st.champ) for (const m of r) for (const x of [m.a, m.b]) if (x && x.n === n) return x; return null; }
     function seedPrinted(st) {
       if (st.repSeated || !st.champ[3][0].w || !st.champ[3][1].w) return; st.repSeated = true; const R = F.repSeats;
-      for (let h = 0; h < 2; h++) { const A = st.con[0][h], B = st.con[1][h], C = st.con[2][h];
-        A.a = byName(st, R.A[h][0]); A.b = byName(st, R.A[h][1]); B.b = byName(st, R.B[h]); C.b = byName(st, R.C[h]);
+      for (let h = 0; h < 2; h++) { const K = st.con.length - 3, A = st.con[K][h], B = st.con[K + 1][h], C = st.con[K + 2][h];
+        if (K) { st.con[0][h].a = byName(st, R.P[h][0]); st.con[0][h].b = byName(st, R.P[h][1]); }   // true-second-3p: the extra first round
+        if (!K || (!R.P[h][0] && !R.P[h][1])) A.a = byName(st, R.A[h][0]); A.b = byName(st, R.A[h][1]); B.b = byName(st, R.B[h]); C.b = byName(st, R.C[h]);   // no first round printed: both QF seats as printed
         if (!F.repCross && !SH.trueSecond) st.repFinalist[h] = st.champ[3][h][st.champ[3][h].w]; }
       settle(st);
     }
     function settle(st) {
-      for (let h = 0; h < 2; h++) for (let r = 0; r < 3; r++) { const m = st.con[r][h]; if (m.w || m.empty) continue;
+      const L = st.con.length - 1;
+      for (let h = 0; h < 2; h++) for (let r = 0; r <= L; r++) { const m = st.con[r][h]; if (m.w || m.empty) continue;
         const prev = r ? st.con[r - 1][h] : null, ready = !prev || prev.w || prev.empty; if (!ready) break;
         const n = (m.a ? 1 : 0) + (m.b ? 1 : 0);
         if (n === 2) break;
         if (n === 0) { m.empty = true; m.bye = true; continue; }
         m.w = m.a ? 'a' : 'b'; m.bye = true; const w = m[m.w];
-        if (r < 2) st.con[r + 1][h].a = w; else if (SH.trueSecond) { if (h === 1) st.place3.a = w; } else st.place3[h ? 'b' : 'a'] = w; }
+        if (r < L) st.con[r + 1][h].a = w; else if (SH.trueSecond) { if (h === 1) st.place3.a = w; else if (Number(year) < 1940) { st.second = w; st.secondBye = true; } } else st.place3[h ? 'b' : 'a'] = w; }
+      // pre-1940 (printed "Second: X" / "Third: X" with no bout): once 2nd is settled and the 3rd-place wrestle-back is resolved, a 3rd-place
+      // bout with only one wrestler is awarded to him (no bout) -- the 2nd-place bout was not wrestled, or no wrestle-back for 3rd was printed
+      if (SH.trueSecond && Number(year) < 1940 && st.second && !st.place3.w) { const c3 = st.con[L][1], done3 = c3.w || c3.empty, p3 = st.place3;
+        const one = (p3.a ? 1 : 0) + (p3.b ? 1 : 0);
+        if (one === 1 && ((p3.a && st.secondBye) || (p3.b && done3))) { p3.w = p3.a ? 'a' : 'b'; p3.bye = true; p3.awarded = true; } }
     }
     function seedChain(st, h) {
       if (F.repSeats) { seedPrinted(st); return; }
@@ -1018,17 +1044,18 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       if (bracket === 'pigtail') { const f = feeds[ri]; if (f) st.champ[0][f.slot][f.side] = w; return; }   // the loser waits: only a finalist's wrestle-in victim wrestles back (via P)
       if (bracket === 'conPigtail') { if (ri < 2) st.con[0][ri].a = w; return; }                            // P winner -> A, side a (slots 0/1 = the two chains' P; any other wrestle-in slot is unused)
       if (bracket === 'champ') { if (ri < 4) st.champ[ri + 1][mi >> 1][mi % 2 ? 'b' : 'a'] = w; else { st.champion = w; if (SH.trueSecond) st.repFinalist = [w, l]; } if (ri === 3) seedChain(st, mi); if (st.laterByes && ri < 3) laterByes(st); }
-      else if (bracket === 'con' && SH.trueSecond && ri === 2 && mi === 0) {   // 1940 second-place bout: winner 2nd; a beaten runner-up is 3rd with no bout
-        st.second = w; const ru = st.con[2][0].b;   // the runner-up's printed seat
+      else if (bracket === 'con' && SH.trueSecond && ri === st.con.length - 1 && mi === 0) {   // 1940 second-place bout: winner 2nd; a beaten runner-up is 3rd with no bout
+        st.second = w; const ru = st.con[ri][0].b;   // the runner-up's printed seat
         if (l === ru) { st.place3.a = l; st.place3.b = null; st.place3.w = 'a'; st.place3.bye = true; st.place3.auto = true; } else st.place3.b = l; settle(st); }
-      else if (bracket === 'con') { if (ri < 2) st.con[ri + 1][mi].a = w; else { st.place3[mi ? 'b' : 'a'] = w; if (!SH.noPlace5) st.place5[mi ? 'b' : 'a'] = l; } if (F.repSeats) settle(st); }
+      else if (bracket === 'con') { if (ri < st.con.length - 1) st.con[ri + 1][mi].a = w; else { st.place3[mi ? 'b' : 'a'] = w; if (!SH.noPlace5) st.place5[mi ? 'b' : 'a'] = l; } if (F.repSeats) settle(st); }
     }
     function extraDependents(ks) {
       const p = String(ks).split(':');
       const P5 = SH.noPlace5 ? [] : ['p5:0:0'];
       if (N && p[0] === 'pigtail') { const f = feeds[+p[1]]; if (!f) return []; const h = f.slot >> 3; return ['conPigtail:' + h + ':0', 'con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0'].concat(P5); }
-      if (F.repSeats && p[0] === 'champ') return +p[1] > 3 ? [] : ['con:0:0', 'con:0:1', 'con:1:0', 'con:1:1', 'con:2:0', 'con:2:1', 'p3:0:0'];
-      if (F.repSeats && p[0] === 'con') return ['con:0:0', 'con:0:1', 'con:1:0', 'con:1:1', 'con:2:0', 'con:2:1', 'p3:0:0'].filter(k => k !== ks);
+      const CK = SH.con.length === 4 ? ['con:0:0', 'con:0:1', 'con:1:0', 'con:1:1', 'con:2:0', 'con:2:1', 'con:3:0', 'con:3:1', 'p3:0:0'] : ['con:0:0', 'con:0:1', 'con:1:0', 'con:1:1', 'con:2:0', 'con:2:1', 'p3:0:0'];
+      if (F.repSeats && p[0] === 'champ') return +p[1] > 3 ? [] : CK;
+      if (F.repSeats && p[0] === 'con') return CK.filter(k => k !== ks);
       if (p[0] !== 'champ') return [];
       const ri = +p[1], mi = +p[2]; if (ri > 3) return [];
       const h = mi >> (3 - ri); return (N ? ['conPigtail:' + h + ':0'] : []).concat(['con:0:' + h, 'con:1:' + h, 'con:2:' + h, 'p3:0:0']).concat(P5);
@@ -1038,11 +1065,11 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
     const core = N ? window.HistoricalCore.create(adapter) : window.TournamentCore.create(adapter);
     if (F.repSeats) core.printedSeats = true;   // official-path.js: a wrestle-back winner goes to the next bout he actually wrestled
     core.roundLabel = key => { const p = String(key).split(':');
-      if (SH.trueSecond && p[0] === 'con') return +p[1] === 2 ? (+p[2] ? 'To the 3rd-place bout' : '2nd-place bout') : SH.path[+p[1]] + (+p[2] ? ' (for 3rd)' : ' (for 2nd)');   // 1940
+      if (SH.trueSecond && p[0] === 'con') return +p[1] === SH.con.length - 1 ? (+p[2] ? 'To the 3rd-place bout' : '2nd-place bout') : SH.path[+p[1]] + (+p[2] ? ' (for 3rd)' : ' (for 2nd)');   // 1940
       return p[0] === 'con' ? (SH.path[+p[1]] || null) : (N && p[0] === 'conPigtail') ? 'Rep. P' : null; };
     // 1970-1971 NCAA rule: no decision bonus of any kind -- every decision is a plain decision. Structurally implied bouts show as not printed.
-    const notPrinted = new Set();
-    if (Number(year) <= 1971) core.methodLabel = (key, res) => notPrinted.has(key) ? 'Result not printed' : (res && (res.resultType === 'Dec' || res.resultType === 'MajDec')) ? 'Dec' : null;
+    const notPrinted = new Set(), printedOf = new Map();
+    if (Number(year) <= 1971) core.methodLabel = (key, res) => notPrinted.has(key) ? 'Result not printed' : (Number(year) < 1940 && printedOf.has(key)) ? (printedLabel(printedOf.get(key), res) || 'Dec') : (res && (res.resultType === 'Dec' || res.resultType === 'MajDec')) ? 'Dec' : null;
     const book = core.newBook(), wt = Number(slotWeight);
     const pending = () => core.keys.map(k => core.boutIdOf(wt, k)).filter(Boolean).map(id => core.describe(book, id)).filter(d => d && d.status === 'pending');
     const parse = (typeof HistoricalStateBuilder !== 'undefined' ? HistoricalStateBuilder : window.HistoricalStateBuilder).parseResult;
@@ -1054,16 +1081,24 @@ if (typeof module === 'object' && module.exports) module.exports = HistoricalSta
       const res = core.record(book, { boutId: c.boutId, winnerId: norm(c.a.name) === norm(r.winner) ? c.a.id : c.b.id, resultType: pr.resultType, score: pr.score, time: pr.time, source: 'historical-replay' });
       if (!res.ok) problems.push(r.round + ': ' + r.winner + ' vs ' + r.loser + ' -- ' + (res.message || res.code));
       else if (pr.notPrinted) notPrinted.add(c.key);
+      else if (r.printed !== undefined) printedOf.set(c.key, r.printed);
     });
     const left = pending(); if (left.length && !problems.length) problems.push(left.length + ' bout(s) left pending');
     initProblems.forEach(x => problems.push(x));
     // every printed no-bout repechage seat must be one the finalist's R1 bye produces, and vice versa
     const st = book.states[wt], got = F.repSeats ? [] : st.con[0].map((m, h) => m.bye && m.w ? h + ':' + m[m.w].n : null).filter(Boolean);
     if (F.repSeats) { const gotS = [], wantS = (F.byes || []).filter(b => b.phase === 'repSeatBye').map(b => b.round + ':' + b.chain + ':' + b.wrestler);
-      st.con.forEach((r, ri) => r.forEach((m, h) => { if (m.bye && m.w) gotS.push(['repA', 'repB', 'repC'][ri] + ':' + h + ':' + m[m.w].n); }));
+      st.con.forEach((r, ri) => r.forEach((m, h) => { if (m.bye && m.w && !(SH.trueSecond && Number(year) < 1940 && ri === st.con.length - 1)) gotS.push((st.con.length === 4 ? ['repP', 'repA', 'repB', 'repC'] : ['repA', 'repB', 'repC'])[ri] + ':' + h + ':' + m[m.w].n); }));
       if (JSON.stringify(gotS.sort()) !== JSON.stringify(wantS.sort())) problems.push('printed repechage seat byes ' + JSON.stringify(wantS) + ' != derived ' + JSON.stringify(gotS)); }
     if (SH.trueSecond) { const wantA = (F.byes || []).filter(b => b.phase === 'thirdAuto').map(b => b.wrestler), gotA = st.place3.auto && st.place3.w ? [st.place3[st.place3.w].n] : [];
       if (JSON.stringify(wantA) !== JSON.stringify(gotA)) problems.push('printed automatic 3rd ' + JSON.stringify(wantA) + ' != derived ' + JSON.stringify(gotA));
+      if (Number(year) < 1940) {   // pre-1940 prints: a 2nd or 3rd awarded with no bout ("Second: X" / "Third: X")
+        const want2 = (F.byes || []).filter(b => b.phase === 'secondAward').map(b => b.wrestler), got2 = st.secondBye && st.second ? [st.second.n] : [];
+        const want3 = (F.byes || []).filter(b => b.phase === 'thirdAward').map(b => b.wrestler), got3 = st.place3.awarded && st.place3.w ? [st.place3[st.place3.w].n] : [];
+        if (JSON.stringify(want2) !== JSON.stringify(got2)) problems.push('printed no-bout 2nd ' + JSON.stringify(want2) + ' != derived ' + JSON.stringify(got2));
+        if (JSON.stringify(want3) !== JSON.stringify(got3)) problems.push('printed no-bout 3rd ' + JSON.stringify(want3) + ' != derived ' + JSON.stringify(got3));
+        if (!st.second || !st.place3.w) problems.push('places not complete: 2nd ' + (st.second ? st.second.n : '-') + ', 3rd ' + (st.place3.w ? st.place3[st.place3.w].n : '-'));
+        core.secondAwarded = !!st.secondBye; }
       // final places (three): the champion, the 2nd-place bout winner, the 3rd-place bout winner or the beaten runner-up (no bout)
       core.finishOf = (bk, id) => { const s2 = bk.states[wt]; const idOf = x => x ? window.TournamentCore.wrestlerId(wt, x) : null;
         if (idOf(s2.champion) === id) return 1; if (idOf(s2.second) === id) return 2; if (s2.place3.w && idOf(s2.place3[s2.place3.w]) === id) return 3; return null; }; }

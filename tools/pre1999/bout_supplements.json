@@ -1,0 +1,8 @@
+{
+ "_note": "Bout-specific SOURCE SUPPLEMENTS: bouts the primary WrestlingStats bracket omits but a contemporaneous official source prints explicitly. Not corrections and not inferred bouts. Each entry applies only to its exact year/weight/wrestlers. Approved Oct 6 2026.",
+ "supplements": [
+  { "year": "1981", "weight": "134", "phase": "pigtail", "winner": "Jim Gibbons", "loser": "Cliff Porter", "loserSchool": "Oregon", "printed": "Fall 7:09",
+    "source": "NCAA annual \"1982 NCAA Wrestling\" (55th edition; 1981 Division I results), 134-pound class, PRELIMINARY ROUND: \"Gibbons (Iowa State) pinned Porter (Oregon), 7:09\" -- https://nwhof.org/guides/45",
+    "evidence": "WrestlingStats 1981 omits this preliminary bout (its wrestle-in page lists three). The NCAA annual agrees with WrestlingStats on the other three 134 preliminary bouts (Baza d. Whelan 18-9, Newcome d. Moser 9-7, Grunwald d. Kriebel 7-5) and on Clar Anderson's relevant championship results (pinned Rosenstein, d. Landrum 17-3, d. Selmon by forfeit). The supplemented bout explains the otherwise unexplained Bower-Porter consolation wrestle-in under the normal semifinalist-wrestleback routing: semifinalist Jim Gibbons beat Porter (wrestle-in) and Bower (R1), so those two meet for his pre-R2 consolation seat. The annual prints the surname only; the winner is Jim Gibbons -- the Iowa State 134 entrant on the WrestlingStats draw line (the annual's first-round 'Gibbons (Iowa State) pinned Bower (Augustana, S.D.), 2:29' is the bracket's R1 Jim Gibbons def. Mark Bower, Fall 2:29)." }
+ ]
+}

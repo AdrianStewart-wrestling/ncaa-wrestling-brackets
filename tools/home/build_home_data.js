@@ -25,7 +25,8 @@ for (const y of YEARS) {
   // "Team Champion ..."), never the unvalidated model's leader
   const pub = HELD.includes(y) ? (/Team Champion\s+(.+?) - \d+/.exec(JSON.parse(fs.readFileSync(path.join(ROOT, 'tools', 'pre1999', 'extracted', 'x' + y + '.json'), 'utf8')).summary) || [])[1] : null;
   if (HELD.includes(y)) check(!!pub, `${y}: no published team champion on the summary page`);
-  years.push({ y, champ: pub || top.school, tied: pub ? false : !!top.tied, weights: global.HistoricalWeights.classes(y).map(String),
+  const coChamps = Y.scores.teams.filter(t => t.total === top.total).map(t => t.school);   // a tie for 1st (1933): every co-champion is named
+  years.push({ y, champ: pub || (top.tied ? coChamps.join(' and ') : top.school), tied: pub ? false : !!top.tied, weights: global.HistoricalWeights.classes(y).map(String),
                adj: Y.scores.teams.filter(t => t.adj).length });
 }
 check(years.length === YEARS.length && years.length > 0 && !YEARS.includes(2020), `championship list inconsistent: ${years.length} of ${YEARS.length}`);
@@ -36,13 +37,22 @@ const ERA_DEFS = [
   // 1970-1971 structure: finalist repechage (a distinct topology, not the 1972-1978 semifinalist wrestleback). Its scoring period is the
   // NCAA rule range 1970-1971; the label is the covered part of it ("1971" now, "1970-1971" once 1970 is covered).
   // 1940: three places and a wrestle-back for TRUE SECOND (NCAA Rule 16, 1939-40 Official Wrestling Guide)
-  { id: 'eT', from: YEARS[0], to: 1940, name: 'Wrestle-back for true second', sample: 1940,
-    summary: ['Three places score 5-3-1, and each fall earns 1 more point (defaults and forfeits earn none); there are no advancement points.',
-              'The champion\u2019s beaten opponents wrestle back and their winner meets the runner-up for 2nd. If the runner-up wins, his own beaten opponents wrestle back for 3rd; if he loses, he is 3rd with no further bout.'] },
-  // 1948 (Olympic year): Olympic bad-point rounds, no bracket; scored like 1941-1954 (6-4-2-1, 1 per fall / default / forfeit)
-  { id: 'eO', from: 1948, to: 1948, name: 'Olympic bad points (no bracket)', sample: 1948,
-    summary: ['Every round paired the wrestlers still in; a fall cost the winner 0 bad points and a decision 1, the loser took 3 (2 for a close decision), and a wrestler was out once his bad points reached the limit.',
-              'The printed places score 6-4-2-1, and a fall, default or forfeit earns 1 point, as in 1941–1954.'] },
+  // 1928-1940: three places and a wrestle-back for TRUE SECOND (NCAA Rule XVI / 16, Official Wrestling Guides 1927-1940). 1936 is an Olympic year (era eO).
+  { id: 'eT', from: YEARS[0], to: 1940, except: [1936], name: 'Wrestle-back for true second', sample: 1940,
+    shared: 'Three places score 5-3-1; there are no advancement points. The champion\u2019s beaten opponents wrestle back and their winner meets the runner-up for 2nd. If the runner-up wins, his own beaten opponents wrestle back for 3rd; if he loses, he is 3rd with no further bout. Where a 1928–1939 print gives a 2nd or 3rd with no bout, it is awarded as printed.',
+    periods: [
+      { from: 1928, to: 1939, text: 'a fall earns 1 point, and a won default or forfeit counts as a fall (Official Wrestling Guides 1927–1939). No team scores were published for 1928, and 1933\u2019s team title was unofficial.',
+        checks: [[0, /no advancement points/], [1, /a default or forfeit counts as a fall/], [2, /Place: 5-3-1 \(three places, NCAA Rule XVI/]] },
+      { from: 1940, to: 1940, text: 'a fall earns 1 point; defaults and forfeits earn none (NCAA Rule 16, 1939–40 Official Wrestling Guide).',
+        checks: [[0, /no advancement points/], [1, /no point for a default or forfeit/], [2, /Place: 5-3-1 \(three places, NCAA Rule 16/]] } ] },
+  // Olympic years (1936, 1948): Olympic bad-point rounds, no bracket
+  { id: 'eO', from: 1936, to: 1948, except: [1937, 1938, 1939, 1940, 1941, 1942, 1946, 1947], label: '1936, 1948', name: 'Olympic bad points (no bracket)', sample: 1948,
+    shared: 'Olympic years. Every round paired the wrestlers still in; a fall cost the winner 0 bad points and a decision 1, the loser took 3 (2 for a close or split decision), and a wrestler was out once his bad points passed the limit. The places are the printed ones.',
+    periods: [
+      { from: 1936, to: 1936, text: 'the printed places score 5-3-1 (4th scores nothing) and no point is added for a fall; this reproduces every printed team total. The 1936 championships were the Semi-Final American Olympic Tryouts.',
+        checks: [[0, /no advancement points/], [1, /^Bonus: none/], [2, /Place: 5-3-1, 4th 0/]] },
+      { from: 1948, to: 1948, text: 'the printed places score 6-4-2-1, and a fall, default or forfeit earns 1 point, as in 1941–1954.',
+        checks: [[0, /no advancement points/], [1, /^Bonus: Fall \/ Default \/ Forfeit 1/], [2, /Place: 6-4-2-1 \(four places/]] } ] },
   { id: 'eR', from: 1941, to: 1971, except: [1948], name: 'Finalist repechage', sample: 1971,
     shared: 'Six places are scored (four in 1941–1962). Only wrestlers beaten by one of the two finalists wrestle back, each finalist\'s victims in his own chain, in the order he beat them (his R1 and R2 victims meet, or, if he came through a wrestle-in, his wrestle-in victim first meets his R1 victim; the winner then meets his QF victim, then his SF victim); the two chain winners wrestle for 3rd and the two chain losers for 5th (in 1950–1962 the chain losers are unplaced). There is no 7th-place bout. In 1952 and 1953 the two chains were cross-bracketed (each mixes both semifinal halves; the printed seats are kept). Some 1950–1966 weights were 16-man draws with no first round; 1950–1951 had eight weight classes and 1966–1969 eleven.',
     periods: [
@@ -114,11 +124,16 @@ const eras = ERA_DEFS.map(e => {
              'Adj: reconciliation to the published NCAA final team total, shown only where it differs from the bout-by-bout calculation, with its reason and source.'];
   }
   const adjTeams = yrs.map(y => years.find(r => r.y === y).adj);
-  return { id: e.id, from: e.from, to: e.to, name: e.name, sample: e.sample, summary: e.summary, rules, years: yrs.length,
+  // the legend / panel label: the covered years, written as ranges ("1928–1940"; "1936, 1948" for the Olympic years)
+  const label = e.label;   // only an era of separate years names them ("1936, 1948"); every other era shows its range
+  return { id: e.id, from: e.from, to: e.to, label, name: e.name, sample: e.sample, summary: e.summary, rules, years: yrs.length,
            adjByYear: e.to > 1995 ? Object.fromEntries(yrs.map((y, i) => [y, adjTeams[i]])) : undefined };
 });
 // checks behind the era summaries
 check(/Place: 6-4-2-1 \(four places/.test(built[1948].scores.keyLines[2]) && /Olympic bad-point rules/.test(built[1948].scores.keyLines[2]) && /no advancement points/.test(built[1948].scores.keyLines[0]) && /^Bonus: Fall \/ Default \/ Forfeit 1/.test(built[1948].scores.keyLines[1]), 'era eO summary not supported by the 1948 rule text');
+check(/Place: 5-3-1, 4th 0/.test(built[1936].scores.keyLines[2]) && /Olympic bad-point rules/.test(built[1936].scores.keyLines[2]) && /^Bonus: none/.test(built[1936].scores.keyLines[1]) && built[1936].scores.teams[0].school === 'Oklahoma' && built[1936].scores.teams[0].total === 14, 'era eO 1936 summary not supported by the 1936 rule text');
+check(/Place: 5-3-1 \(three places, NCAA Rule XVI/.test(built[1930].scores.keyLines[2]) && /a default or forfeit counts as a fall/.test(built[1930].scores.keyLines[1]) && /runner-up/.test(built[1930].scores.keyLines[2]), 'era eT 1928-1939 summary not supported by the 1930 rule text');
+check(built[1933].scores.teams[0].total === built[1933].scores.teams[1].total && ['Iowa State', 'Oklahoma State'].every(s => built[1933].scores.teams.slice(0, 2).some(t => t.school === s)), '1933: the printed unofficial co-champions (Oklahoma State and Iowa State) are not tied');
 check(/Place: 5-3-1 \(three places/.test(built[1940].scores.keyLines[2]) && /^Bonus: Fall 1 /.test(built[1940].scores.keyLines[1]) && /no point for a default or forfeit/.test(built[1940].scores.keyLines[1]) && /no advancement points/.test(built[1940].scores.keyLines[0]) && /runner-up/.test(built[1940].scores.keyLines[2]), 'era eT summary not supported by the 1940 rule text');
 check(/six places/.test(built[1978].scores.keyLines[2]) && /no 7th-place bout/.test(built[1978].scores.keyLines[2]) && /Major Decision \(8–11\) ½ · Superior Decision \(12\+\) ¾/.test(built[1978].scores.keyLines[1]) && /semifinalist/.test(built[1978].scores.keyLines[2]) && /No bye points/.test(built[1978].scores.keyLines[0]), 'era e0 summary not supported by the 1978 rule text');
 for (const y of YEARS.filter(y => y >= 1972 && y <= 1975)) check(/1972–1975 rules/.test(built[y].scores.keyLines[1]) && /Decision by 10 or more ½/.test(built[y].scores.keyLines[1]) && /no major or superior decision/.test(built[y].scores.keyLines[1]) && /six places/.test(built[y].scores.keyLines[2]) && /No bye points/.test(built[y].scores.keyLines[0]), `${y}: era e0 1972–1975 sub-period summary not supported by its rule text`);
@@ -154,7 +169,11 @@ for (const y of YEARS.filter(y => y <= 1995 && NCAA_TOP10_SETS[y])) {   // NCAA-
   exact += n; of += S.entries.length; perYear[y] = n; if (S.entries.length !== 10) perYearOf[y] = S.entries.length;
 }
 const SCORING_HELD = HELD;   // team scoring not shown (historical-mode.js SCORING_PENDING): not part of the validation figure
+const CARRIED = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools', 'home', 'validation_carried.json'), 'utf8'));
 for (const y of YEARS.filter(y => y <= 1995 && !NCAA_TOP10_SETS[y] && !SCORING_HELD.includes(y))) {
+  if (!fs.existsSync(path.join(ROOT, 'tools', 'pre1999', 'extracted', 'x' + y + '.json'))) {   // no summary extract here: the figure carried from the baseline
+    const c = CARRIED.years[y]; check(!!c, `${y}: no summary extract and no carried validation figure`); if (!c) continue;
+    exact += c.exact; of += c.of; perYear[y] = c.exact; if (c.of !== 10) perYearOf[y] = c.of; continue; }
   const out = cp.execFileSync('node', [path.join(ROOT, 'tools', 'pre1999', 'tscore_wb.js'), String(y), path.join(ROOT, 'tools', 'pre1999', 'extracted', 'x' + y + '.json')], { encoding: 'utf8' });
   const m = /(\d+)\/(\d+) published top-ten totals exact/.exec(out); check(!!m, `${y}: no scoring validation line`);   // tied top tens can list more than 10 schools
   let n = m ? +m[1] : 0;
@@ -166,7 +185,7 @@ for (const y of YEARS.filter(y => y <= 1995 && !NCAA_TOP10_SETS[y] && !SCORING_H
   }
   if (m) { exact += n; of += +m[2]; perYear[y] = n; if (+m[2] !== 10) (perYearOf[y] = +m[2]); }
 }
-check(exact === 477 && of === 549, `scoring validation is ${exact}/${of}, expected 477/549 (the documented figure, ${YEARS[0]}-1995: 1940 adds 5/10, 1941-1949 49/55, 1948 7/11, 1950-1954 55/56, 1955 10/10, 1956-1961 61/63, 1962-1969 82/82)`);
+check(exact === 550 && of === 651, `scoring validation is ${exact}/${of}, expected 550/651 (the documented figure, ${YEARS[0]}-1995: 1928-1939 add 73/102 (1928 and 1933 published no top ten), 1940 adds 5/10, 1941-1949 49/55, 1948 7/11, 1950-1954 55/56, 1955 10/10, 1956-1961 61/63, 1962-1969 82/82)`);
 
 // ---------------------------------------------------------------- Career registry size (read here, never by the homepage)
 const reg = (() => { const t = fs.readFileSync(path.join(ROOT, 'historical-careers.js'), 'utf8'); return JSON.parse(t.slice(t.indexOf('/*JSON*/') + 8, t.indexOf('/*END*/'))); })();

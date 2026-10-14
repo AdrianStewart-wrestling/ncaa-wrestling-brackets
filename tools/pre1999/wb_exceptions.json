@@ -1,0 +1,42 @@
+{
+ "_note": "Source-specific exceptions for the 1990-1995 quarterfinal-wrestleback consolation. Each entry lets assemble_wb.py accept the WB1 pairing EXACTLY AS PRINTED when it differs from the normal rule (each quarterfinalist's pre-R2 victim vs his R2 victim). The printed pairing is preserved, every seat must still be an eligible wrestler (defeated by a quarterfinalist) used exactly once, and the replay must reproduce the printed results and placers. Recorded in each bout's provenance.",
+ "1991:118": "WrestlingStats 1991 118 consolation prints WB1 as the two quarterfinalists' R1 victims against each other and their R2 victims against each other (Thackthay v Smith; Casey v Grubbs) instead of each quarterfinalist's R1 v R2 victim. Preserved as printed (approved Oct 6 2026); whether this was the actual 1991 pairing or a compilation error cannot be determined from this source.",
+ "1986:118": {
+  "note": "WrestlingStats 1986 118 consolation prints WB1 pair 0 as \"Brown, Brigham Young\" (Chris Brown, BYU). By the bracket's own results the quarterfinal-wrestleback rule would seat Steve Brown (Eastern Michigan), quarterfinalist Jim Martin's R1 victim; Chris Brown's R1 conqueror did not reach the quarterfinals. Preserved as printed (approved Oct 6 2026): the printed bracket is coherent (each wrestler once), the seat's bout ('Ainscough 5-4') was lost and the loser never appears again, and the published placers are reproduced. Whether the print's school label or the seat is the compilation error cannot be determined from this source.",
+  "allowRuleIneligibleR1Losers": true
+ },
+ "1982:190": {
+  "note": "WrestlingStats 1982 190 consolation round 2 prints the second quarterfinal-loser seat as \"Young, Augustana SD\" (Mark Young, who lost in R1 to Mike Potts, a non-semifinalist) instead of quarterfinal loser Gerry Volm (Rider), who does not appear in the printed consolation at all. Preserved as printed (approved Oct 6 2026): Wrestling.Guru profile 75837 (Mark Young) records 1982 \u00b7 190 \u00b7 Consi 8 #2 -- Mark Young L Greg Hawkins (Oklahoma State), DEC 2-6, matching the printed seat and the printed result 'Hawkins 6-2'. The historical routing mechanism that placed Young there is NOT established (not a different 1982 rule: every other 1982-1985 weight follows the semifinalist rule); this is a source-specific routing exception only. Volm exits after his quarterfinal, as printed.",
+  "sc2Entry": {
+   "printed": "Young, Augustana SD",
+   "wrestler": "Mark Young",
+   "unseatedQfLoser": "Gerry Volm"
+  }
+ },
+ "1981:134": {
+  "note": "WrestlingStats 1981 134: Clar Anderson won his quarterfinal by forfeit over Johnnie Selmon. The printed consolation shows Selmon's quarterfinal-loser seat as Bye AND both first-round consolation seats of Anderson's pair as 'Bye / Bye'. Those seats belong to Anderson's R1 and R2 victims (Rosenstein, Landrum), who are structurally eligible under the semifinalist-wrestleback rule but ABSENT from the printed wrestleback; the source gives no reason. Represented exactly as printed (approved Oct 6 2026): the vacant seats propagate as byes ('Baza FFT' in round 3 = advanced with no opponent; 7th place 'Randy Lewis, Iowa FFT' / summary '(WFT)' = placed 7th with no opponent; no 8th place). No consolation bouts, wins or losses are manufactured for the absent wrestlers. Source-specific; not a general routing rule.",
+  "printedVacancies": true,
+  "printedForfeitBonus": [
+   {
+    "round": "seventh",
+    "wrestler": "Randy Lewis",
+    "printed": "Iowa FFT",
+    "summary": "7th: Randy Lewis [3] - Iowa (WFT)",
+    "note": "Approved Oct 6 2026: Lewis's printed 7th-place WFT (bracket 'Randy Lewis, Iowa FFT'; summary '(WFT)') is a historical scoring event worth the era's 1-point forfeit bonus. No opponent, no 8th place and no bout are created; Path still reads 'No opponent (printed forfeit / bye)'."
+   }
+  ]
+ },
+ "1981:190": {
+  "note": "WrestlingStats 1981 190: Joe Atiyeh forfeited his quarterfinal to Geno Savegnago; his quarterfinal-loser seat is printed 'Bye' and that round-2 result is printed 'Milligan FFT'. Represented exactly as printed (approved Oct 6 2026): Henry Milligan advances past the vacant seat with no opponent (printed 'FFT' preserved); no bout is manufactured for Atiyeh. Source-specific; not a general routing rule.",
+  "printedVacancies": true
+ },
+ "1975:167": {
+  "pigtailDirectSeat": {
+   "semifinalist": "Jeff Callard",
+   "seated": "Jim McDuffie",
+   "absent": "Fred Nix",
+   "absentNote": "Eligible to wrestle back (R1 loser to semifinalist Jeff Callard). The tournament structure called for Nix and Jim McDuffie (Callard's wrestle-in victim) to resolve one consolation seat, but no available source documents a bout or the reason Nix did not appear. Unexplained absence; no bout is recorded."
+  },
+  "note": "Approved conservative record (Oct 2026): WrestlingStats prints no 167 consolation wrestle-in and seats Jim McDuffie directly in Callard's first-round consolation seat. McDuffie occupies that seat exactly as printed; no McDuffie-Nix bout is created and no advancement point is awarded. The 1976 NCAA Guide prints no consolation rounds. Hofstra's published 16.5 vs reconstructed 16 is an accepted residual; the missing wrestle-off is a plausible explanation, not proof that a bout occurred."
+ }
+}

@@ -1,0 +1,114 @@
+{
+ "note": "Published top-ten validation for 1940-1969, carried from the live home-data.js (baseline TC-1940-2026) because the 1940-1969 summary extracts (tools/pre1999/extracted/x1940-x1969.json) are not in this working copy. Valid only while those years replay identically to that baseline (regression 2026-10-14: all 83 years 1940-2026, every bout record and team total identical).",
+ "from": "TC-1940-2026",
+ "years": {
+  "1940": {
+   "exact": 5,
+   "of": 10
+  },
+  "1941": {
+   "exact": 6,
+   "of": 12
+  },
+  "1942": {
+   "exact": 10,
+   "of": 10
+  },
+  "1946": {
+   "exact": 11,
+   "of": 11
+  },
+  "1947": {
+   "exact": 11,
+   "of": 11
+  },
+  "1948": {
+   "exact": 7,
+   "of": 11
+  },
+  "1949": {
+   "exact": 11,
+   "of": 11
+  },
+  "1950": {
+   "exact": 11,
+   "of": 12
+  },
+  "1951": {
+   "exact": 10,
+   "of": 10
+  },
+  "1952": {
+   "exact": 11,
+   "of": 11
+  },
+  "1953": {
+   "exact": 13,
+   "of": 13
+  },
+  "1954": {
+   "exact": 10,
+   "of": 10
+  },
+  "1955": {
+   "exact": 10,
+   "of": 10
+  },
+  "1956": {
+   "exact": 10,
+   "of": 10
+  },
+  "1957": {
+   "exact": 9,
+   "of": 11
+  },
+  "1958": {
+   "exact": 11,
+   "of": 11
+  },
+  "1959": {
+   "exact": 10,
+   "of": 10
+  },
+  "1960": {
+   "exact": 11,
+   "of": 11
+  },
+  "1961": {
+   "exact": 10,
+   "of": 10
+  },
+  "1962": {
+   "exact": 10,
+   "of": 10
+  },
+  "1963": {
+   "exact": 10,
+   "of": 10
+  },
+  "1964": {
+   "exact": 10,
+   "of": 10
+  },
+  "1965": {
+   "exact": 12,
+   "of": 12
+  },
+  "1966": {
+   "exact": 10,
+   "of": 10
+  },
+  "1967": {
+   "exact": 10,
+   "of": 10
+  },
+  "1968": {
+   "exact": 10,
+   "of": 10
+  },
+  "1969": {
+   "exact": 10,
+   "of": 10
+  }
+ }
+}

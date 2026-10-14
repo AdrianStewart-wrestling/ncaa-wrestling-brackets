@@ -1,0 +1,453 @@
+{
+ "_note": "Researched, BOUT-SPECIFIC winner resolutions for consolation bouts the primary source (WrestlingStats compiled bracket) cannot resolve: the printed result names a surname shared by both wrestlers and the winner is never named again. NOT a rule: an entry applies only when year, weight, round, BOTH wrestlers' full names and the printed text all match exactly, and only to that bout. The printed result is preserved; the external source is used solely to identify the winner. Approved Oct 6 2026; research supplied by the site owner (the profile pages could not be retrieved from the build environment).",
+ "resolutions": [
+  {
+   "year": "1993",
+   "weight": "275",
+   "phase": "wb1",
+   "between": [
+    "Adam Green",
+    "Darrick Green"
+   ],
+   "printed": "Green 8-7",
+   "winner": "Adam Green",
+   "evidence": "Wrestling.Guru individual profile of Darrick Green (Central Michigan), wrestler_id 28886, records the 1993 NCAA consolation match as a loss to Adam Green (Pennsylvania), DEC 7-8.",
+   "source": "Wrestling.Guru, wrestler profile 28886 (Darrick Green)"
+  },
+  {
+   "year": "1988",
+   "weight": "275",
+   "phase": "wb2",
+   "between": [
+    "Todd Seiler",
+    "Randy Seiler"
+   ],
+   "printed": "Seiler 3-3, 3-3 Cr",
+   "winner": "Todd Seiler",
+   "evidence": "Wrestling.Guru individual profile of Todd Seiler (Wisconsin), wrestler_id 105176, records Todd defeating Randy in their 1988 NCAA consolation meeting. Name spelling follows the primary source (WrestlingStats: 'Randy Seiler', Lake Superior); Wrestling.Guru spells the surname 'Sieler'.",
+   "source": "Wrestling.Guru, wrestler profile 105176 (Todd Seiler)"
+  },
+  {
+   "year": "1986",
+   "weight": "167",
+   "phase": "wb2",
+   "between": [
+    "Bryan Wilson",
+    "Tad Wilson"
+   ],
+   "printed": "Wilson 10-2",
+   "winner": "Tad Wilson",
+   "evidence": "Wrestling.Guru individual profile of Tad Wilson (North Carolina), wrestler_id 102061, records 1986 \u00b7 167 \u00b7 Consi 8 #1: Tad Wilson def. Bryan Wilson (Wyoming), MD 10-2, then Tad losing to Darryl Pope 5-6 -- matching the downstream position of the unidentified 'Wilson' in the primary bracket (WB3: Pope 6-5).",
+   "source": "Wrestling.Guru, wrestler profile 102061 (Tad Wilson)"
+  },
+  {
+   "year": "1979",
+   "weight": "158",
+   "phase": "wb1",
+   "between": [
+    "Doug Oliver",
+    "Roye Oliver"
+   ],
+   "printed": "Oliver 7-4",
+   "winner": "Roye Oliver",
+   "evidence": "Bout-specific resolution (approved Oct 2026): Roye Oliver later reaches the 7th-place bout (Stewart d. Roye Oliver 6-0), which Doug Oliver could not after losing this bout. Not a general same-surname rule.",
+   "source": "bracket progression (WrestlingStats 1979)"
+  }
+ ],
+ "seatCorrections": [
+  {
+   "year": "1983",
+   "weight": "190",
+   "location": "sc4-drop",
+   "printed": "Bauman, Boise State",
+   "seat": "Jim Baumgardner",
+   "reason": "Source/compilation error in the printed consolation seat: the semifinal-loser drop slot is printed 'Bauman, Boise State' (John Bauman, Boise State, is a different, real 1983 190 entrant -- this is NOT a spelling normalization).",
+   "evidence": "Three independent elements of the same WrestlingStats 1983 source: (1) the bracket's semifinal progression requires the semifinal loser, Jim Baumgardner (Oregon State, #5; lost 5-2 to Mike Mann), to enter this consolation position; (2) the subsequent result is printed 'Baumgardner 4-3'; (3) the placement line and the tournament summary both list Jim Baumgardner, Oregon State, #5 as 4th.",
+   "approved": "Oct 6 2026"
+  },
+  {
+   "year": "1976",
+   "weight": "158",
+   "location": "sc1",
+   "seat_index": 2,
+   "printed": "Martin, Oklahoma State",
+   "seat": "Terry Martin",
+   "reason": "Source/compilation error in the printed consolation seat (approved): WrestlingStats prints \"Martin, Oklahoma State\" (Paul Martin, Oklahoma State, lost his R2 bout to non-semifinalist Turner Jackson and was not eligible to wrestle back); the eligible wrestler is Terry Martin (Oklahoma), beaten in R1 by semifinalist Lee Kemp.",
+   "evidence": "The WrestlingStats draw prints \"Terry Martin, Oklahoma\" and \"Paul Martin, Oklahoma State [4]\"; the 1977 NCAA Official Wrestling Guide (Guide 40) prints, first round, \"Kemp (Wisconsin) d. Martin (Oklahoma) 6-0\", second round \"Jackson d. Martin 5-4\", and in the Big Eight results \"P. Martin (OS) ... T. Martin (O)\"."
+  },
+  {
+   "year": "1975",
+   "weight": "142",
+   "location": "consPigtailLoser",
+   "printedWinner": "Bruce Randall",
+   "printedLoser": "Alan Housner - Purdue",
+   "printed": "10-2",
+   "seat": "Guy Bercier",
+   "seatSchool": "Boston University",
+   "provenance": "SOURCE CORRECTION (approved, Oct 2026). The source prints this consolation wrestle-in as \"Randall 10-2\" over \"Alan Housner - Purdue\". Housner is structurally impossible: per the 1976 NCAA Official Wrestling Guide (Guide 39) he pinned Bercier in the preliminaries, beat Randall (R1) and Casper (R2), won his quarterfinal and lost his semifinal, remaining on the championship side through the semifinal. Guy Bercier (Boston University) is identified BY BRACKET TOPOLOGY ONLY as the sole eligible opponent (Housner's only other pre-R2 victim). The winner (Randall) and the result 10-2 are retained AS PRINTED; the 10-2 score is NOT independently confirmed as a Randall-Bercier result."
+  }
+ ],
+ "_note_seatCorrections": "Seat-specific source corrections: apply only when year, weight, location and the EXACT printed seat text all match, and only if the corrected wrestler is the one the bracket structure requires in that seat. The printed text is preserved in provenance. Location 'sc1' (first-round consolation seat) targets the seat by its index and places the wrestler by exact record name (no school-prefix matching). Location 'consPigtailLoser' (1975) replaces the loser of one printed consolation wrestle-in, matched by exact printed winner, printed loser (name - school) and printed result.",
+ "placementScoreSupplements": [
+  {
+   "year": "1980",
+   "weight": "126",
+   "phase": "fifth",
+   "printedBracket": "4-",
+   "summaryPrinted": "5th: Byron McGlathery [2] - Tennessee-Chattanooga (4-1)",
+   "score": "4-1",
+   "note": "Internal source supplement (approved Oct 6 2026): the bracket's 5th-place line is cut off as \"4-\"; the same WrestlingStats 1980 PDF's summary page prints \"5th: Byron McGlathery [2] - Tennessee-Chattanooga (4-1)\". Score taken from the summary page; both printed forms preserved. Independent support: NCAA annual \"1981 NCAA Wrestling\" (54th Annual Guide; 1980 Division I results) -- https://nwhof.org/guides/44, 126-pound FINALS: \"(5th place) McGlathery d. Giustizia, 4-1\"."
+  }
+ ],
+ "_note_placementScoreSupplements": "A placement result truncated in the bracket but printed in full on the same PDF's summary page: exact year/weight/placement/printed fragment; both texts kept in provenance.",
+ "boutOverrides": [
+  {
+   "year": "1980",
+   "weight": "126",
+   "phase": "consPre",
+   "winner": "Gary Bohay",
+   "loser": "Alan Reto",
+   "printed": "",
+   "kind": "resultNotPrinted",
+   "stored": "WIN-NP",
+   "note": "WIN -- result not printed (approved Oct 6 2026): the WrestlingStats 1980 consolation wrestle-in page prints only the winner's surname (\"Bohay\") -- no score, time or result type. NCAA annual \"1981 NCAA Wrestling\" (54th Annual Guide; 1980 Division I results) -- https://nwhof.org/guides/44 was checked: it prints no consolation rounds, so it does not supply this result. Stored as an explicit not-printed win: consolation advancement only, zero bonus; displayed \"Win (result not printed)\". Scoped to this bout only."
+  },
+  {
+   "year": "1980",
+   "weight": "142",
+   "phase": "consPre",
+   "winner": "Mike Hogan",
+   "loser": "Joe Galli",
+   "printed": "",
+   "kind": "resultNotPrinted",
+   "stored": "WIN-NP",
+   "note": "WIN -- result not printed (approved Oct 6 2026): the WrestlingStats 1980 consolation wrestle-in page prints only the winner's surname (\"Hogan\") -- no score, time or result type. NCAA annual \"1981 NCAA Wrestling\" (54th Annual Guide; 1980 Division I results) -- https://nwhof.org/guides/44 was checked: it prints no consolation rounds, so it does not supply this result. Stored as an explicit not-printed win: consolation advancement only, zero bonus; displayed \"Win (result not printed)\". Scoped to this bout only."
+  },
+  {
+   "year": "1980",
+   "weight": "150",
+   "phase": "consPre",
+   "winner": "Fred Boss",
+   "loser": "Tom Elcott",
+   "printed": "",
+   "kind": "resultNotPrinted",
+   "stored": "WIN-NP",
+   "note": "WIN -- result not printed (approved Oct 6 2026): the WrestlingStats 1980 consolation wrestle-in page prints only the winner's surname (\"Boss\") -- no score, time or result type. NCAA annual \"1981 NCAA Wrestling\" (54th Annual Guide; 1980 Division I results) -- https://nwhof.org/guides/44 was checked: it prints no consolation rounds, so it does not supply this result. Stored as an explicit not-printed win: consolation advancement only, zero bonus; displayed \"Win (result not printed)\". Scoped to this bout only."
+  },
+  {
+   "year": "1980",
+   "weight": "150",
+   "phase": "pigtail",
+   "winner": "Joe Solorio",
+   "loser": "Mike Bond",
+   "printed": "Fall 4:28",
+   "kind": "sourceCorrection",
+   "stored": "Default 4:28",
+   "note": "SOURCE CORRECTION (approved Oct 6 2026): WrestlingStats prints \"Fall 4:28\"; the contemporaneous NCAA annual \"1981 NCAA Wrestling\" (54th Annual Guide; 1980 Division I results) -- https://nwhof.org/guides/44, 150-pound PRELIMINARY ROUND, prints \"Solario (Arizona State) won by default over Bond (Pittsburgh) 4:28\". Result adopted from the annual: Default, 4:28. Fall and default carry the same one-point bonus under the 1976-1984 model, so team scoring is unchanged."
+  },
+  {
+   "year": "1980",
+   "weight": "126",
+   "phase": "pigtail",
+   "winner": "Bryan Evans",
+   "loser": "Eddie Baza",
+   "printed": "12-3",
+   "kind": "sourceNote",
+   "note": "Source difference recorded, not applied (approved Oct 6 2026): WrestlingStats prints 12-3 (retained); NCAA annual \"1981 NCAA Wrestling\" (54th Annual Guide; 1980 Division I results) -- https://nwhof.org/guides/44, 126-pound PRELIMINARY ROUND, prints \"Evans (Oklahoma) d. Baza (San Jose State), 13-3\". Both are major decisions: no classification or scoring difference."
+  },
+  {
+   "year": "1980",
+   "weight": "126",
+   "phase": "pigtail",
+   "winner": "Jerry Kelly",
+   "loser": "Sam Edwards",
+   "printed": "Fall 3:11",
+   "kind": "sourceNote",
+   "note": "Source difference recorded, not applied (approved Oct 6 2026): WrestlingStats prints \"Fall 3:11\" (retained); NCAA annual \"1981 NCAA Wrestling\" (54th Annual Guide; 1980 Division I results) -- https://nwhof.org/guides/44, 126-pound PRELIMINARY ROUND, prints \"Kelly (Oklahoma State) pinned Edwards (Cornell) 5:11\". The fall times conflict; neither is chosen without further evidence."
+  },
+  {
+   "year": "1979",
+   "weight": "UNL",
+   "phase": "r1",
+   "winner": "Tim Payne",
+   "loser": "Craig Schoene",
+   "printed": "12-1",
+   "kind": "sourceCorrection",
+   "stored": "Dec 2-1",
+   "note": "SOURCE CORRECTION (approved Oct 2026): WrestlingStats prints \"12-1\"; the contemporary 1980 NCAA Official Wrestling Guide (Guide 43), heavyweight first round, prints \"Payne (Cleveland State) d. Schoene 2-1\". The NCAA Guide controls: a 2-1 decision (no bonus). \"12-1\" preserved here as the conflicting source text."
+  },
+  {
+   "year": "1979",
+   "weight": "UNL",
+   "phase": "r1",
+   "winner": "Tom Waldon",
+   "loser": "Mindell Tyson",
+   "printed": "DSQ",
+   "kind": "sourceNote",
+   "note": "Name variant recorded, not applied (approved Oct 2026): WrestlingStats prints \"Tom Waldon\" (kept as the wrestler record and Career identity); the 1980 NCAA Official Wrestling Guide (Guide 43) prints \"Walden (Iowa State) d. Tyson (East Carolina), disq.\" To be resolved only if another primary source or appearance establishes the spelling."
+  },
+  {
+   "year": "1978",
+   "weight": "167",
+   "phase": "r2",
+   "winner": "Jim Weir",
+   "loser": "Colin Kilrain",
+   "printed": "7-7, 4-4 Cr F",
+   "kind": "sourceCorrection",
+   "stored": "DEF",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"7-7, 4-4 Cr F\"; the contemporary 1979 NCAA Official Wrestling Guide (Guide 42), 167-pound second round, prints \"Kilrain defaulted to Weir\". The NCAA Guide controls: a default. The printed text is preserved here."
+  },
+  {
+   "year": "1977",
+   "weight": "158",
+   "phase": "fifth",
+   "winner": "Keith Stearns",
+   "loser": "John Althans",
+   "printed": "5-1",
+   "kind": "sourceNote",
+   "note": "Name variant recorded, not applied (approved): WrestlingStats prints \"Keith Stearns\" (kept as the wrestler record and Career identity; the 1979 NCAA Guide also prints \"Stearns\", and he links to 1978 under that spelling); the 1978 NCAA Official Wrestling Guide (Guide 41) 1977 place-winner table prints \"Stearnes\"."
+  },
+  {
+   "year": "1977",
+   "weight": "190",
+   "phase": "third",
+   "winner": "Don McCorkel",
+   "loser": "Bob Bragg",
+   "printed": "6-0",
+   "kind": "sourceNote",
+   "note": "Name variant recorded, not applied (approved): WrestlingStats prints \"Don McCorkel\" (kept as the wrestler record and Career identity); the 1978 NCAA Official Wrestling Guide (Guide 41) 1977 place-winner table prints \"McCorkle\"."
+  },
+  {
+   "year": "1976",
+   "weight": "118",
+   "phase": "r2",
+   "winner": "Randy Batten",
+   "loser": "Mike Boucher",
+   "printed": "16-4",
+   "kind": "sourceCorrection",
+   "stored": "Dec 10-4",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"16-4\"; the contemporary 1977 NCAA Official Wrestling Guide (Guide 40), 118-pound second round, prints \"Batten d. Boucher 10-4\" (confirmed from the page image). The NCAA Guide controls: a 10-4 plain decision. \"16-4\" preserved here."
+  },
+  {
+   "year": "1975",
+   "weight": "134",
+   "phase": "final",
+   "winner": "Mike Frick",
+   "loser": "Brian Beatson",
+   "printed": "10-5",
+   "kind": "sourceCorrection",
+   "stored": "Dec 4-1",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"10-5\"; the contemporary 1976 NCAA Official Wrestling Guide (Guide 39) prints \"FINALS-Frick d. Beatson 4-1\" (confirmed from the page image). The NCAA Guide controls. \"10-5\" preserved here."
+  },
+  {
+   "year": "1975",
+   "weight": "142",
+   "phase": "r1",
+   "winner": "Steve Sanderson",
+   "loser": "John Trudgeon",
+   "printed": "10-1",
+   "kind": "sourceCorrection",
+   "stored": "Dec 9-7",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"10-1\"; the contemporary 1976 NCAA Official Wrestling Guide (Guide 39) prints \"Sanderson d. Trudgeon 9-7\" (confirmed from the page image). The NCAA Guide controls. \"10-1\" preserved here."
+  },
+  {
+   "year": "1975",
+   "weight": "142",
+   "phase": "r1",
+   "winner": "Alan Housner",
+   "loser": "Bruce Randall",
+   "printed": "8-3",
+   "kind": "sourceCorrection",
+   "stored": "Dec 8-2",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"8-3\"; the contemporary 1976 NCAA Official Wrestling Guide (Guide 39) prints \"FIRST ROUND-Housner d. Randall (Kansas St.) 8-2\" (confirmed from the page image). The NCAA Guide controls. \"8-3\" preserved here."
+  },
+  {
+   "year": "1975",
+   "weight": "158",
+   "phase": "r2",
+   "winner": "John Janiak",
+   "loser": "Mark Evenhus",
+   "printed": "15-2",
+   "kind": "sourceCorrection",
+   "stored": "MD 18-2",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"15-2\"; the contemporary 1976 NCAA Official Wrestling Guide (Guide 39) prints \"SECOND ROUND-... Janiak d. Evenhus 18-2\" (confirmed from the page image). The NCAA Guide controls. \"15-2\" preserved here."
+  },
+  {
+   "year": "1975",
+   "weight": "190",
+   "phase": "r1",
+   "winner": "Rich Calderon",
+   "loser": "Bill Bailey",
+   "printed": "3-1",
+   "kind": "sourceCorrection",
+   "stored": "Dec 5-1",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"3-1\"; the contemporary 1976 NCAA Official Wrestling Guide (Guide 39) prints \"Calderon d. Bailey (Pittsburgh) 5-1\" (confirmed from the page image). The NCAA Guide controls. \"3-1\" preserved here."
+  },
+  {
+   "year": "1974",
+   "weight": "158",
+   "phase": "r1",
+   "winner": "Ken Wilson",
+   "loser": "Dennis O'Neil",
+   "printed": "14-2",
+   "kind": "sourceCorrection",
+   "stored": "Dec 14-7",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"14-2\"; the contemporary 1975 NCAA Official Wrestling Guide (Guide 38) prints \"Wilson (Syracuse) d. O'Neil (Bowling Green) 14-7\" (confirmed from the page image). The NCAA Guide controls. \"14-2\" preserved here."
+  },
+  {
+   "year": "1974",
+   "weight": "126",
+   "phase": "r1",
+   "winner": "Tim Cysewski",
+   "loser": "Grant Kusuno",
+   "printed": "14-2",
+   "kind": "sourceCorrection",
+   "stored": "MD 14-4",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"14-2\"; the contemporary 1975 NCAA Official Wrestling Guide (Guide 38) prints \"Cysewski (Iowa) d. Kusuno (Colorado) 14-4\" (confirmed from the page image). The NCAA Guide controls. \"14-2\" preserved here."
+  },
+  {
+   "year": "1974",
+   "weight": "158",
+   "phase": "r1",
+   "winner": "Jody Smith",
+   "loser": "Kaare Papenfuse",
+   "printed": "6-1",
+   "kind": "sourceCorrection",
+   "stored": "Dec 1-0 TB",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"6-1\"; the contemporary 1975 NCAA Official Wrestling Guide (Guide 38) prints \"Smith d. Papenfuse (Washington) 2-2, 1-0\" (confirmed from the page image). The NCAA Guide controls. \"6-1\" preserved here."
+  },
+  {
+   "year": "1974",
+   "weight": "158",
+   "phase": "r2",
+   "winner": "Jerry Villecco",
+   "loser": "Tyrone Neal",
+   "printed": "16-2",
+   "kind": "sourceNote",
+   "note": "Kept as printed (approved): the 1975 NCAA Official Wrestling Guide (Guide 38) text layer reads \"Villecco d. Neal 18-2\", but that line was not confirmed from the page image. The printed 16-2 stands; both scores earn the same 1972-75 bonus (decision by 10 or more)."
+  },
+  {
+   "year": "1974",
+   "weight": "150",
+   "phase": "sf",
+   "winner": "Bob Holland",
+   "loser": "Mike Waller",
+   "printed": "1-1, 0-0 RD",
+   "kind": "sourceNote",
+   "note": "Kept as printed (approved): the 1975 NCAA Official Wrestling Guide (Guide 38) text layer reads \"Holland d. Waller 1-1 1-1 ?D\" (overtime score and referee's-decision type unclear), but that line was not confirmed from the page image. The printed result stands; either reading is a plain decision with no bonus."
+  },
+  {
+   "year": "1972",
+   "weight": "UNL",
+   "phase": "sf",
+   "winner": "Greg Wojciechowski",
+   "loser": "Wayne Karney",
+   "printed": "5-5, 1-1 R",
+   "kind": "sourceCorrection",
+   "stored": "Dec 1-1 UTB",
+   "note": "NOTATION INTERPRETATION (approved): WrestlingStats prints \"5-5, 1-1 R\" (truncated). The 1973 NCAA Official Wrestling Guide (Guide 36), 1972 heavyweight semifinals, prints \"Wojciechowski d. Karney 5-5, 1-1 UD\": a unanimous referee's decision after regulation 5-5 and overtime 1-1. The score is unchanged; the printed text is preserved here."
+  },
+  {
+   "year": "1971",
+   "weight": "167",
+   "phase": "r1",
+   "winner": "John Caccia",
+   "loser": "Bob Kuhn",
+   "printed": "806",
+   "kind": "sourceCorrection",
+   "stored": "Dec 8-6",
+   "note": "SOURCE CORRECTION (approved): WrestlingStats prints \"806\" (a typesetting slip for the hyphen); the result is 8-6, a plain decision (1970-1971 rules: no decision bonus). The printed text is preserved here."
+  },
+  {
+   "year": "1970",
+   "weight": "134",
+   "phase": "r1",
+   "winner": "Steve Garner",
+   "loser": "Pete Medley",
+   "printed": "RD",
+   "kind": "interpretation",
+   "stored": "Dec UTB",
+   "note": "NOTATION INTERPRETATION (approved): the source prints only \"RD\" -- a referee's decision after overtime; the score is not printed and is not derived. Stored as a referee's decision with no score (Dec UTB) (1970-1971 rules: no decision bonus)."
+  },
+  {
+   "year": "1970",
+   "weight": "177",
+   "phase": "pigtail",
+   "winner": "Ray Ritacco",
+   "loser": "Therlon Harris",
+   "printed": "RD",
+   "kind": "interpretation",
+   "stored": "Dec UTB",
+   "note": "NOTATION INTERPRETATION (approved): the source prints only \"RD\"; the 1971 NCAA Official Wrestling Guide (Guide 34) prints \"Ritacco (Army) d. Harris (Michigan) RD, OT\" -- a referee's decision after overtime, score not printed. Stored as a referee's decision with no score (Dec UTB)."
+  }
+ ],
+ "_note_boutOverrides": "Bout-specific overrides applied by gen_js_sf.py: exact year/weight/phase/winner/loser/printed text. kind resultNotPrinted (stored WIN-NP), sourceCorrection (stored value replaced; printed kept), sourceNote (provenance only).",
+ "seedSupplements": [
+  {
+   "year": "1980",
+   "weight": "126",
+   "wrestler": "Byron McGlathery",
+   "seed": 2,
+   "note": "Display correction (approved Oct 6 2026): the WrestlingStats 1980 bracket prints no seed on Byron McGlathery's draw line (seed #2 otherwise unprinted at 126); the same PDF's summary page prints \"5th: Byron McGlathery [2] - Tennessee-Chattanooga (4-1)\". Seed #2 taken from the summary page; the bracket's missing seed is preserved here. Display only: seeds affect neither scoring nor routing."
+  }
+ ],
+ "_note_seedSupplements": "A seed the bracket line omits but the same PDF's summary page prints: exact year/weight/wrestler, applied only if the bracket prints no seed for him.",
+ "nameVariants": [
+  {
+   "year": "1979",
+   "weight": "167",
+   "place": "6",
+   "record": "Mike Abrams",
+   "alternate": "Michael Abrams",
+   "school": "Grand Valley State",
+   "note": "Identity variant (approved Oct 2026): the bracket prints \"Mike Abrams\" (the record and display name); the summary page prints \"Michael Abrams\" (alternate source name). Same wrestler for placer validation and Career identity; neither source text is rewritten."
+  },
+  {
+   "year": "1976",
+   "weight": "142",
+   "place": "1",
+   "record": "Brad Smith (Iowa)",
+   "alternate": "Brad Smith",
+   "school": "Iowa",
+   "note": "Summary page prints \"Brad Smith\"; record name is the approved year-scoped disambiguation."
+  },
+  {
+   "year": "1976",
+   "weight": "142",
+   "place": "4",
+   "record": "Brad Smith (Toledo)",
+   "alternate": "Brad Smith",
+   "school": "Toledo",
+   "note": "Summary page prints \"Brad Smith\"; record name is the approved year-scoped disambiguation."
+  }
+ ],
+ "_note_nameVariants": "Approved identity variants between two printings of the same source (exact year/weight/place/names). Used by the placer audit and recorded in the weight's facts; never a general name-normalization rule.",
+ "recordNames": [
+  {
+   "year": "1976",
+   "weight": "142",
+   "printed": "Brad Smith",
+   "school": "Iowa",
+   "record": "Brad Smith (Iowa)",
+   "note": "Year-scoped record name (approved): two different wrestlers printed \"Brad Smith\" in the 1976 142 bracket (Iowa #6, champion; Toledo, unseeded, 4th). The suffix is an application disambiguator, not part of the printed name."
+  },
+  {
+   "year": "1976",
+   "weight": "142",
+   "printed": "Brad Smith",
+   "school": "Toledo",
+   "record": "Brad Smith (Toledo)",
+   "note": "Year-scoped record name (approved): see Brad Smith (Iowa). Career: linked to his existing 1977 Career identity C8498 by an explicit decision."
+  },
+  {
+   "year": "1973",
+   "weight": "UNL",
+   "printed": "Jay Achteroff",
+   "school": "Notre Dame",
+   "record": "Jay Achterhoff",
+   "note": "Spelling (approved): the contemporary 1974 NCAA Official Wrestling Guide (Guide 37) prints \"Achterhoff (Notre Dame)\" and controls the record; WrestlingStats prints \"Jay Achteroff\" (documented secondary spelling).",
+   "provenanceNote": "Name spelling (approved): the record follows the 1974 NCAA Official Wrestling Guide (Guide 37), which prints \"Getty (Penn St.) d. Achterhoff (Notre Dame) 5-1\"; WrestlingStats prints \"Jay Achteroff\" (secondary spelling, preserved here)."
+  }
+ ],
+ "_note_recordNames": "Approved year-scoped record names for identically named wrestlers within one weight: exact year/weight/printed name/school. The printed name is kept (base) and used for matching printed text; never a general renaming rule."
+}

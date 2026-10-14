@@ -2679,7 +2679,7 @@ function slotHTML(m, which, bkt, ri, mi) {
   const pathAttrs=((viewMode==='official'||viewMode==='historical')&&window.TournamentCore)?` data-wid="${window.TournamentCore.wrestlerId(CW,wr)}" role="button" tabindex="0" aria-label="Path to the Finals: ${String(wr.n).trim().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}"`:'';
   return `<div class="${cls}" ${onclick} ${title}${pathAttrs}>
     <span class="sl-sd">${seedStr}</span>
-    <span class="sl-nm"><span class="fn">${fn}</span> <strong>${ln||fn}</strong></span>
+    <span class="sl-nm">${ln?`<span class="fn">${fn}</span> `:''}<strong>${ln||fn}</strong></span>
     <span class="sl-sc">${wr.s||''}</span>
     ${swapHint}
   </div>`;
@@ -2848,13 +2848,13 @@ html+=`<div class="rconn" style="display:flex;align-items:flex-start;padding-top
     html+=`<div class="rcol"><div class="rhdr cc">${(st.conRoundNames||CON_RND_NAMES)[ri]}</div><div style="display:flex;flex-direction:column;gap:${GAP}px">`;
     const hasData=round.some(m=>m.a||m.b);
     if(!hasData){html+=`<div style="min-width:168px;padding:10px 8px;font-size:9px;color:var(--t3);font-style:italic">${round.every(m=>m.empty)?(st.trueSecond?'No bout in this round':'No bouts (seats printed Bye)'):'Awaiting results…'}</div>`;}   // m.empty: 1950s printed-seat repechage only
-    else{round.forEach((m,mi)=>{if(st.trueSecond&&(ri===2&&mi===1||m.empty&&!m.a&&!m.b))return;   // 1940: the 3rd-place wrestle-back winner goes straight to the 3rd-place bout
-      const tsCap=st.trueSecond?`<div class="pl-lbl">${ri===2?'For 2nd · v the runner-up':(mi?'For 3rd · beaten by ':'For 2nd · beaten by ')+((st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||(mi?'the runner-up':'the champion'))}</div>`:null;
+    else{round.forEach((m,mi)=>{if(st.trueSecond&&(ri===st.con.length-1&&mi===1||m.empty&&!m.a&&!m.b))return;   // 1940: the 3rd-place wrestle-back winner goes straight to the 3rd-place bout
+      const tsCap=st.trueSecond?`<div class="pl-lbl">${ri===st.con.length-1?(st.secondBye?'2nd awarded — no bout printed':'For 2nd · v the runner-up'):(mi?'For 3rd · beaten by ':'For 2nd · beaten by ')+((st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||(mi?'the runner-up':'the champion'))}</div>`:null;
       const cap=tsCap!==null?tsCap:st.repCross?`<div class="pl-lbl">Chain ${mi+1}</div>`:st.repechage?`<div class="pl-lbl">${ri===0?'Beaten by ':'Chain of '}${(st.repFinalist&&st.repFinalist[mi]&&st.repFinalist[mi].n)||'finalist'}</div>`:'';html+=`<div>${cap}${matchHTML(m,'con',ri,mi,'con')}</div>`;});}   // finalist repechage: one chain per finalist
     html+=`</div></div><div class="rconn"></div>`;
   });
   html+=`<div class="rcol"><div class="rhdr" style="color:#cd7f32">Place Matches</div><div style="display:flex;flex-direction:column;gap:10px">`;
-  [{m:st.place3,bkt:'p3',lbl:st.place3.auto?'🥉 3rd Place — no bout (the runner-up lost the 2nd-place bout)':'🥉 3rd Place',cls:'pm'},{m:st.place5,bkt:'p5',lbl:'5th Place',cls:'con'},{m:st.place7,bkt:'p7',lbl:'7th Place',cls:'con'}]
+  [{m:st.place3,bkt:'p3',lbl:st.place3.auto?'🥉 3rd Place — no bout (the runner-up lost the 2nd-place bout)':st.place3.awarded?'🥉 3rd Place — no bout (awarded as printed)':'🥉 3rd Place',cls:'pm'},{m:st.place5,bkt:'p5',lbl:'5th Place',cls:'con'},{m:st.place7,bkt:'p7',lbl:'7th Place',cls:'con'}]
     .forEach(({m,bkt,lbl,cls})=>{
       if(m.a||m.b){html+=`<div><div class="pl-lbl">${lbl}</div>${matchHTML(m,bkt,0,0,cls)}</div>`;}
     });
@@ -2869,7 +2869,8 @@ function renderOlympic(st){
   const esc=t=>String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const res=m=>{const r=m.res||{};const t=r.resultType==='Fall'?'Fall'+(r.time?' '+r.time:''):r.resultType==='MedFFT'?(/^DEF|^DFT/.test(m.printed)?'Default':'Med. forfeit'):'Dec';return t;};
   let html=`<div class="sec-hd sec-champ"><div class="line"></div><div class="lbl">Olympic bad-point rounds — no bracket</div><div class="line"></div></div>`;
-  html+=`<div style="font-size:12px;color:var(--t2);margin:0 4px 12px;line-height:1.5;max-width:900px">In 1948, an Olympic year, the NCAA wrestled under Olympic rules. Each round paired the wrestlers still in. A fall gave the winner 0 bad points and a decision 1; the loser took 3 (2 for a close decision). A wrestler was out once his bad points reached the limit, and the last men in decided the places. The numbers beside each name are that bout’s bad points and his running total, as printed.</div>`;
+  if(window.historicalBracketYear===1936) html+=`<div style="font-size:12px;color:var(--t2);margin:0 4px 12px;line-height:1.5;max-width:900px">In 1936, an Olympic year, the NCAA Championships were also the Semi-Final American Olympic Tryouts and were wrestled under Olympic rules. Each round paired the wrestlers still in. A fall gave the winner 0 bad points and a decision 1; the loser took 3 (2 for a split decision). A wrestler was out once he had more than 5 bad points, and the last men in wrestled for the places; the top four went on to the final Olympic tryouts. The numbers beside each name are that bout’s bad points and his running total, as printed.</div>`;
+  else html+=`<div style="font-size:12px;color:var(--t2);margin:0 4px 12px;line-height:1.5;max-width:900px">In 1948, an Olympic year, the NCAA wrestled under Olympic rules. Each round paired the wrestlers still in. A fall gave the winner 0 bad points and a decision 1; the loser took 3 (2 for a close decision). A wrestler was out once his bad points reached the limit, and the last men in decided the places. The numbers beside each name are that bout’s bad points and his running total, as printed.</div>`;
   html+=`<div class="bgrid" style="align-items:flex-start">`;
   st.rounds.forEach((R,ri)=>{
     html+=`<div class="rcol"><div class="rhdr gc">Round ${ri+1}</div><div style="display:flex;flex-direction:column;gap:10px">`;
@@ -4275,7 +4276,7 @@ if (TC_DEEP_LINK) {
 <script src="official-writer.js?v=lr"></script>
 <script src="flo-import.js?v=20261001a"></script>
 <script src="tournament-central.js?v=layout1"></script>
-<script src="path-panel.js?v=hx1"></script>
+<script src="path-panel.js?v=hx2"></script>
 <script src="team-panel.js?v=hx1"></script>
 <script src="official-aa-view.js?v=lr"></script>
 </body>
@@ -4621,12 +4622,12 @@ setTimeout(updateChampPill, 100);
 </script>
 <!-- HISTORY MODE (read-only, never writes Firebase/OFFICIAL) -->
 <script src="historical-adapter.js?v=4"></script>
-<script src="historical-seeds.js?v=7"></script>
+<script src="historical-seeds.js?v=8"></script>
 <script src="historical-core.js?v=1"></script>
-<script src="historical-state-builder.js?v=10"></script>
+<script src="historical-state-builder.js?v=11"></script>
 <script src="historical-adjustments.js?v=2"></script>
-<script src="historical-rules.js?v=5"></script>
-<script src="historical-mode.js?v=13"></script>
-<script src="historical-careers.js?v=7"></script>
-<script src="career-panel.js?v=7"></script>
+<script src="historical-rules.js?v=6"></script>
+<script src="historical-mode.js?v=14"></script>
+<script src="historical-careers.js?v=8"></script>
+<script src="career-panel.js?v=8"></script>
 <!-- ════════════════════════════════════════════════════════════ -->
