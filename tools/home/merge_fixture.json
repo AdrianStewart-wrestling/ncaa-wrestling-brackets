@@ -1,5 +1,5 @@
 {
- "_note": "Approved career merges (transfers). Each canonical ID must hold exactly these appearances; each alias must resolve to it. Checked by test_registry.js on every build. Updated Oct 14 2026: R186, R194-R258 and P1 added; Joseph Booth extended by R256.",
+ "_note": "Approved career merges (transfers). Each canonical ID must hold exactly these appearances; each alias must resolve to it. Checked by test_registry.js on every build. Updated Oct 14 2026: R186, R194-R258 and P1 added; Joseph Booth extended by R256. Updated Oct 14 2026 (transfer candidate): R259-R270 merges and the R264 Kessler split.",
  "merges": [
   {
    "name": "Mike Longo",
@@ -3204,6 +3204,152 @@
     "1940:133-03"
    ],
    "batch": "Oct 14 2026: P1 (1928-1939 series)"
+  },
+  {
+   "name": "Billy Miller",
+   "canonical": "C0317",
+   "aliases": [
+    "C0826"
+   ],
+   "keys": [
+    "2016:285-20",
+    "2017:285-12",
+    "2018:285-13",
+    "2019:285-22"
+   ],
+   "batch": "Oct 14 2026: R259 (older transfers)"
+  },
+  {
+   "name": "Chris Drouin",
+   "canonical": "C2382",
+   "aliases": [
+    "C2624"
+   ],
+   "keys": [
+    "2008:141-24",
+    "2009:141-07",
+    "2010:141-25",
+    "2011:141-24"
+   ],
+   "batch": "Oct 14 2026: R260 (older transfers)"
+  },
+  {
+   "name": "Rob Deutsch",
+   "canonical": "C0056",
+   "aliases": [
+    "C1866"
+   ],
+   "keys": [
+    "2013:125-25",
+    "2014:125-11",
+    "2015:133-19",
+    "2016:133-23"
+   ],
+   "batch": "Oct 14 2026: R261 (older transfers)"
+  },
+  {
+   "name": "Matt Schmitt",
+   "canonical": "C0550",
+   "aliases": [
+    "C0859"
+   ],
+   "keys": [
+    "2018:133-27",
+    "2019:133-16",
+    "2021:133-06"
+   ],
+   "batch": "Oct 14 2026: R262 (older transfers)"
+  },
+  {
+   "name": "Mike Kessler (Rider)",
+   "canonical": "C2403",
+   "aliases": [
+    "C2862"
+   ],
+   "keys": [
+    "2006:149-24",
+    "2007:149-29",
+    "2009:157-28",
+    "2010:149-14"
+   ],
+   "batch": "Oct 14 2026: R263 (older transfers)"
+  },
+  {
+   "name": "Bubby Graham",
+   "canonical": "C1993",
+   "aliases": [
+    "C2659"
+   ],
+   "keys": [
+    "2011:165-30",
+    "2012:165-24",
+    "2013:165-06"
+   ],
+   "batch": "Oct 14 2026: R265 (older transfers)"
+  },
+  {
+   "name": "Mike Larson",
+   "canonical": "C2054",
+   "aliases": [
+    "C2532"
+   ],
+   "keys": [
+    "2010:184-29",
+    "2011:184-31",
+    "2012:184-10",
+    "2013:184-11"
+   ],
+   "batch": "Oct 14 2026: R266 (older transfers)"
+  },
+  {
+   "name": "Mitchell Wightman",
+   "canonical": "C0198",
+   "aliases": [
+    "C2202"
+   ],
+   "keys": [
+    "2014:165-32",
+    "2016:165-33"
+   ],
+   "batch": "Oct 14 2026: R267 (older transfers)"
+  },
+  {
+   "name": "Zeke Moisey",
+   "canonical": "C0525",
+   "aliases": [
+    "C0679"
+   ],
+   "keys": [
+    "2015:125-18",
+    "2018:125-13",
+    "2019:125-18"
+   ],
+   "batch": "Oct 14 2026: R268 (older transfers)"
+  },
+  {
+   "name": "Pat Lugo",
+   "canonical": "C0115",
+   "aliases": [
+    "C0725"
+   ],
+   "keys": [
+    "2016:149-16",
+    "2017:149-08",
+    "2019:149-10"
+   ],
+   "batch": "Oct 14 2026: R269 (older transfers)"
+  },
+  {
+   "name": "Zac Carson",
+   "canonical": "C0617",
+   "aliases": [
+    "C0742"
+   ],
+   "keys": [
+    "2018:165-29",
+    "2019:157-22"
+   ],
+   "batch": "Oct 14 2026: R270 (older transfers)"
   }
  ],
  "heldSplit": {
@@ -3265,6 +3411,14 @@
      "2014:133-25"
     ],
     "why": "different people"
+   },
+   {
+    "name": "Mike Kessler: Rider (Randallstown, Md.) vs Appalachian State (Bay City, Mich.)",
+    "keys": [
+     "2010:149-14",
+     "2012:141-26"
+    ],
+    "why": "R264 SPLIT (permanent, owner decision Oct 14 2026): different wrestlers, at two schools in the same seasons"
    }
   ]
  }
