@@ -26,8 +26,9 @@ for (const y of YEARS) {
   const pub = HELD.includes(y) ? (/Team Champion\s+(.+?) - \d+/.exec(JSON.parse(fs.readFileSync(path.join(ROOT, 'tools', 'pre1999', 'extracted', 'x' + y + '.json'), 'utf8')).summary) || [])[1] : null;
   if (HELD.includes(y)) check(!!pub, `${y}: no published team champion on the summary page`);
   const coChamps = Y.scores.teams.filter(t => t.total === top.total).map(t => t.school);   // a tie for 1st (1933): every co-champion is named
-  years.push({ y, champ: pub || (top.tied ? coChamps.join(' and ') : top.school), tied: pub ? false : !!top.tied, weights: global.HistoricalWeights.classes(y).map(String),
-               adj: Y.scores.teams.filter(t => t.adj).length });
+  const unofficial = !!Y.scores.unofficial;   // 1928: no team scoring was published -- no team champion is named on the homepage
+  years.push(Object.assign({ y, champ: unofficial ? 'No team scoring (individual titles only)' : pub || (top.tied ? coChamps.join(' and ') : top.school), tied: unofficial ? false : pub ? false : !!top.tied }, unofficial ? { noTeamScoring: true } : {}, { weights: global.HistoricalWeights.classes(y).map(String),
+               adj: Y.scores.teams.filter(t => t.adj).length }));
 }
 check(years.length === YEARS.length && years.length > 0 && !YEARS.includes(2020), `championship list inconsistent: ${years.length} of ${YEARS.length}`);
 

@@ -1,0 +1,3 @@
+# Career decisions for 1928-1939 appearances (series P, kept apart from the R series until R194-R258 are added to career-decisions.txt).
+# CASE | LINK|SPLIT | key,key,... | evidence | source
+P1 | LINK | 1937:133-01,1940:133-03 | Confirmed transfer (Oklahoma State -> Oklahoma): NWHOF: "Harold Byrd (class of 1935) has the distinction of wrestling for both Oklahoma State and Oklahoma. As a Cowboy, Byrd reached the NCAA semifinals at 126 pounds in 1937 but failed to place. He transferred to Oklahoma and in 1940 won the 128-pound crown for the Sooners." Canonical ID C13165 (live) kept; C13818 retired as an alias. | https://nwhof.org/news/tulsa-central-has-long-list-of-ncaa-glory (verified 2026-10-14); approved by the owner 2026-10-14

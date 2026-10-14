@@ -30,7 +30,8 @@
     var t = r.team;
     if (t) {
       var chips = el('div', 'pp-chips');
-      chips.appendChild(el('span', 'pp-chip', t.rankLabel + ' place · ' + fmtN(t.total) + ' pts'));
+      var unoff = r.year && window.historicalYear && window.historicalYear.scores && window.historicalYear.scores.unofficial;   // 1928: no team scoring published
+      chips.appendChild(el('span', 'pp-chip', (unoff ? 'Unofficial reconstruction: ' : '') + t.rankLabel + ' place · ' + fmtN(t.total) + ' pts'));
       if ('adj' in t && t.adj) chips.appendChild(el('span', 'pp-chip pp-chip--aa', (t.adj > 0 ? '+' : '') + fmtN(t.adj) + ' adjustment'));
       if (t.aa) chips.appendChild(el('span', 'pp-chip pp-chip--aa', t.aa + ' All-American' + (t.aa === 1 ? '' : 's')));
       b.appendChild(chips);

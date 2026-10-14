@@ -631,7 +631,7 @@ TCCountdown.render(); setInterval(function () { TCCountdown.render(); }, 60000);
       var r = byYear[y];
       if (!r) { var why = NOT_HELD.indexOf(y) >= 0 ? 'championships canceled' : 'not yet in Tournament Central'; var g = el('span', 'hx gap'); g.title = y + ': ' + why; g.setAttribute('role', 'img'); g.setAttribute('aria-label', y + ', ' + why); g.appendChild(el('span', null, String(y).slice(2))); cells.appendChild(g); continue; }
       var b = el('button', 'hx'); b.type = 'button'; b.style.setProperty('--era', eraColor(r.era));
-      b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', y + ' NCAA Championships, champion ' + r.champ);
+      b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', y + ' NCAA Championships, ' + (r.noTeamScoring ? 'no team scoring' : 'champion ' + r.champ));
       b.appendChild(el('span', null, String(y).slice(2)));
       b.addEventListener('click', (function (yy) { return function () { select(yy, true); }; })(y));
       buttons[y] = b; cells.appendChild(b);
@@ -648,13 +648,14 @@ TCCountdown.render(); setInterval(function () { TCCountdown.render(); }, 60000);
     panel.style.setProperty('--era', eraColor(r.era)); panel.textContent = '';
     panel.appendChild(el('div', 'p-yr', String(y)));
     var era = el('div', 'p-era', e.name + ' (' + (e.label || (e.from === e.to ? e.from : e.from + '–' + e.to)) + ')'); panel.appendChild(era);
-    var ch = el('div', 'p-ch', r.tied ? 'Team champions (tied)' : 'Team champion'); ch.appendChild(el('b', null, r.champ)); panel.appendChild(ch);
+    var ch = el('div', 'p-ch', r.noTeamScoring ? 'Team title' : r.tied ? 'Team champions (tied)' : 'Team champion'); ch.appendChild(el('b', null, r.noTeamScoring ? 'None awarded' : r.champ)); panel.appendChild(ch);   // 1928: no team scoring was published
+    if (r.noTeamScoring) panel.appendChild(el('div', 'p-k', 'No team scores were kept in ' + y + ' (an individual championship meet).'));
     panel.appendChild(el('div', 'p-k', 'Brackets by weight class'));
     var w = el('div', 'wts');
     r.weights.forEach(function (wt) { var l = a(hist('&year=' + y + '&weight=' + encodeURIComponent(wt)), null, wt); l.setAttribute('aria-label', y + ' ' + wt + ' bracket'); w.appendChild(l); });
     panel.appendChild(w);
     var act = el('div', 'p-act');
-    act.appendChild(a(hist('&year=' + y + '&show=scores'), 'btn', y + ' team scores'));
+    act.appendChild(a(hist('&year=' + y + '&show=scores'), 'btn', r.noTeamScoring ? y + ' unofficial team scores' : y + ' team scores'));
     act.appendChild(a('#era-' + r.era, 'lnk', 'How ' + y + ' was scored'));
     panel.appendChild(act);
   }

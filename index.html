@@ -2608,7 +2608,7 @@ function showHistoricalScores(Y) {
 function historicalViewStatus(Y) {
   let res = null; try { res = historicalScoresModel(); } catch (e) { console.error('Historical scores could not be calculated:', e); }
   if (!res) return { mode: 'unavailable', text: Y.year + ' team scores could not be calculated.', res: null };
-  return { mode: 'historical', text: '🕰️ ' + Y.year + ' NCAA CHAMPIONSHIPS · FINAL · ' + res.stats.records + ' bouts replayed from historical results · read-only', res: res };
+  return { mode: 'historical', text: '🕰️ ' + Y.year + ' NCAA CHAMPIONSHIPS · ' + (res.unofficial ? 'UNOFFICIAL RECONSTRUCTION' : 'FINAL') + ' · ' + res.stats.records + ' bouts replayed from historical results · read-only', res: res };
 }
 function switchW(w) {
   CW=w; showScores=false; showAA=false; showLeaderboard=false;
@@ -2986,11 +2986,13 @@ function renderOfficialScores() {
     live: (r, t, inf) => '● LIVE · ' + r.stats.records + ' result' + (r.stats.records === 1 ? '' : 's') + ' counted · last refreshed ' + t(inf.loadedAt) });
   const i = hist ? { legacyIgnored: 0, problems: [] } : officialInfo, res = S.res;
   const L = hist
-    ? { badge: '🕰️ HISTORY', title: hist.year + ' TEAM SCORES', sub: (res && res.subtitle) || 'Final NCAA results replayed from historical bout data · read-only · same scoring model as the 2026 Master', caption: hist.year + ' NCAA TEAM SCORES · historical' }
+    ? (res && res.unofficial) ? { badge: '🕰️ HISTORY · UNOFFICIAL', title: hist.year + ' ' + res.unofficial.label.toUpperCase(), sub: res.subtitle, caption: hist.year + ' UNOFFICIAL RECONSTRUCTED TEAM SCORES · not an NCAA result' }   // 1928: no team scoring was published
+      : { badge: '🕰️ HISTORY', title: hist.year + ' TEAM SCORES', sub: (res && res.subtitle) || 'Final NCAA results replayed from historical bout data · read-only · same scoring model as the 2026 Master', caption: hist.year + ' NCAA TEAM SCORES · historical' }
     : { badge: '🔒 MASTER', title: 'MASTER TEAM SCORES', sub: 'Actual NCAA tournament results — not picks · placement points count the moment a finish is clinched', caption: 'MASTER TEAM SCORES · actual tournament' };
   [['.os-badge', L.badge], ['.os-title', L.title], ['.os-sub', L.sub], ['#os-table caption', L.caption]].forEach(([q, x]) => { const e = v.querySelector(q); if (e) e.textContent = x; });
   st.className = 'os-status os-status--' + S.mode; st.textContent = S.text; v.setAttribute('data-os-state', S.mode);
   if (!res) return;
+  if (hist && res.unofficial) { st.textContent = '🕰️ ' + hist.year + ' NCAA CHAMPIONSHIPS · UNOFFICIAL RECONSTRUCTION · ' + res.stats.records + ' bouts replayed · no team scoring was published'; notes.appendChild(mk('div', 'os-note os-note--warn', res.unofficial.note)); }
 
   if (i.legacyIgnored > 0) notes.appendChild(mk('div', 'os-note', i.legacyIgnored + ' older record' + (i.legacyIgnored === 1 ? ' is' : 's are') + ' not included in MASTER scores.'));
   const bad = (res.problems ? res.problems.length : 0) + ((i.problems && i.problems.length) || 0);
@@ -4277,7 +4279,7 @@ if (TC_DEEP_LINK) {
 <script src="flo-import.js?v=20261001a"></script>
 <script src="tournament-central.js?v=layout1"></script>
 <script src="path-panel.js?v=hx2"></script>
-<script src="team-panel.js?v=hx1"></script>
+<script src="team-panel.js?v=hx2"></script>
 <script src="official-aa-view.js?v=lr"></script>
 </body>
 </html>

@@ -238,6 +238,12 @@ const HistoricalWrestlebackScoring = (function () {
     });
     return out;
   }
+  const UNOFFICIAL_TEAM_SCORING = {
+    1928: { label: 'Unofficial reconstructed team scores',
+      subtitle: 'Unofficial reconstructed team scores · no team scoring was published for 1928 · not an NCAA team result',
+      note: 'No team scores were kept in 1928: the first NCAA Championships were conducted as an individual championship meet (Official Wrestling Guide 1929-30). These totals are a reconstruction, scored with the rule the NCAA adopted for 1929 (5-3-1 for places, 1 per fall, a won default or forfeit counting as a fall). They are not an official team standing and no 1928 team champion is recognized here.',
+      key: 'Unofficial: no team scoring was published for 1928 (an individual championship meet). This reconstruction applies the 1929 NCAA team-scoring rule to the 1928 bouts; it is not an official result.' }
+  };
   function compute(year, records, schoolOf, schools, opts) {
     CON = CONS[(opts && opts.shape) || 'qf-wrestleback'] || CONS['qf-wrestleback'];
     Y7273 = Number(year) >= 1970 && Number(year) <= 1973;
@@ -378,8 +384,12 @@ const HistoricalWrestlebackScoring = (function () {
               : 'Place: 16-12-9-7-5-3-2-1 (1979), counted the moment a finish is clinched on this era’s consolation (only wrestlers beaten by a quarterfinalist wrestle back): QF win clinches 6th · SF win 2nd · Con. Rd 3 win 8th · Con. Qtrs win 6th · Con. Semis win 4th.',
       ...(HISTORICAL_TEAM_ELIGIBILITY[y] ? ['Team scoring: ' + (HISTORICAL_TEAM_ELIGIBILITY[y].scope || 'Division I') + ' schools only. Wrestlers from ' + Object.keys(HISTORICAL_TEAM_ELIGIBILITY[y].ineligible).length + ' ' + (HISTORICAL_TEAM_ELIGIBILITY[y].keyLabel || 'Division II/III schools') + ' competed and placed normally but score no ' + (HISTORICAL_TEAM_ELIGIBILITY[y].scope || 'Division I') + ' team points (' + HISTORICAL_TEAM_ELIGIBILITY[y].source.split(':')[0] + ').'] : []),
       'Rules source: WrestlingStats “NCAA Wrestling Rules for Scoring”. No adjustments are applied; differences from the published totals are reported, not reconciled. Click a team name for its roster.'];
-    return { teams, events, problems, floors, stats: { records: records.length, teams: teams.length, events: events.length }, model: 'wrestleback-1990s',
-      subtitle: 'Final NCAA results replayed from historical bout data · read-only · scored with the ' + y + ' NCAA rules (history-layer model)', keyTitle: 'How these scores work (' + y + ' NCAA rules)', keyLines };
+    // Championships with NO published team scoring (1928: "conducted as an individual championship meet", Official Wrestling Guide
+    // 1929-30): the totals are a reconstruction, never presented as an official standing.
+    const unofficial = UNOFFICIAL_TEAM_SCORING[y] || null;
+    if (unofficial) keyLines.push(unofficial.key);
+    return { teams, events, problems, floors, stats: { records: records.length, teams: teams.length, events: events.length }, model: 'wrestleback-1990s', unofficial,
+      subtitle: unofficial ? unofficial.subtitle : 'Final NCAA results replayed from historical bout data · read-only · scored with the ' + y + ' NCAA rules (history-layer model)', keyTitle: unofficial ? 'How these reconstructed scores work (' + y + ')' : 'How these scores work (' + y + ' NCAA rules)', keyLines };
   }
   return { compute, byeCredits /* printed-only reading, sensitivity only */, BONUS, ADV, SCHEDULE, PLACE };
 })();
