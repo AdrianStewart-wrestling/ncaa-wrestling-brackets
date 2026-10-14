@@ -1,5 +1,5 @@
 {
- "_note": "Approved career merges (transfers). Each canonical ID must hold exactly these appearances; each alias must resolve to it. Checked by test_registry.js on every build.",
+ "_note": "Approved career merges (transfers). Each canonical ID must hold exactly these appearances; each alias must resolve to it. Checked by test_registry.js on every build. Updated Oct 14 2026: R186, R194-R258 and P1 added; Joseph Booth extended by R256.",
  "merges": [
   {
    "name": "Mike Longo",
@@ -2122,13 +2122,16 @@
    "name": "Joseph Booth",
    "canonical": "C2193",
    "aliases": [
-    "C2446"
+    "C2446",
+    "C2660"
    ],
    "keys": [
     "2010:157-30",
+    "2011:165-32",
+    "2012:165-30",
     "2014:165-09"
    ],
-   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+   "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185); extended by R256 (Oct 13 2026)"
   },
   {
    "name": "Tyler Caldwell",
@@ -2326,6 +2329,881 @@
     "2016:174-03"
    ],
    "batch": "Oct 8 2026: 2000-2014 transfers (R124-R185)"
+  },
+  {
+   "name": "Cary Kolat",
+   "canonical": "C4612",
+   "aliases": [
+    "C5246"
+   ],
+   "keys": [
+    "1993:141-25",
+    "1994:141-13",
+    "1996:141-14",
+    "1997:149-17"
+   ],
+   "batch": "Oct 9 2026: R186"
+  },
+  {
+   "name": "Zach Redding",
+   "canonical": "C0865",
+   "aliases": [
+    "C1691"
+   ],
+   "keys": [
+    "2021:133-13",
+    "2023:133-14",
+    "2026:133-22"
+   ],
+   "batch": "Oct 13 2026: R194"
+  },
+  {
+   "name": "AJ Ferrari",
+   "canonical": "C1024",
+   "aliases": [
+    "C1627",
+    "C1826"
+   ],
+   "keys": [
+    "2021:197-04",
+    "2025:197-03",
+    "2026:285-04"
+   ],
+   "batch": "Oct 13 2026: R195"
+  },
+  {
+   "name": "Joe Olivieri",
+   "canonical": "C1085",
+   "aliases": [
+    "C1533",
+    "C1702"
+   ],
+   "keys": [
+    "2022:133-22",
+    "2025:141-15",
+    "2026:141-09"
+   ],
+   "batch": "Oct 13 2026: R196"
+  },
+  {
+   "name": "Carter Young",
+   "canonical": "C1102",
+   "aliases": [
+    "C1722"
+   ],
+   "keys": [
+    "2022:141-25",
+    "2023:141-13",
+    "2026:149-12"
+   ],
+   "batch": "Oct 13 2026: R197"
+  },
+  {
+   "name": "Michael Caliendo III",
+   "canonical": "C1278",
+   "aliases": [
+    "C1420",
+    "C1757"
+   ],
+   "keys": [
+    "2023:165-07",
+    "2024:165-06",
+    "2025:165-03",
+    "2026:165-03"
+   ],
+   "batch": "Oct 13 2026: R198"
+  },
+  {
+   "name": "Alex Facundo",
+   "canonical": "C1279",
+   "aliases": [
+    "C1771"
+   ],
+   "keys": [
+    "2023:165-13",
+    "2026:174-08"
+   ],
+   "batch": "Oct 13 2026: R199"
+  },
+  {
+   "name": "Joseph Novak",
+   "canonical": "C1472",
+   "aliases": [
+    "C1808"
+   ],
+   "keys": [
+    "2024:197-17",
+    "2025:197-15",
+    "2026:197-05"
+   ],
+   "batch": "Oct 13 2026: R200"
+  },
+  {
+   "name": "James Harrington",
+   "canonical": "C1574",
+   "aliases": [
+    "C1746"
+   ],
+   "keys": [
+    "2025:157-29",
+    "2026:157-20"
+   ],
+   "batch": "Oct 13 2026: R201"
+  },
+  {
+   "name": "Matthew Singleton",
+   "canonical": "C1597",
+   "aliases": [
+    "C1770"
+   ],
+   "keys": [
+    "2025:174-14",
+    "2026:174-06"
+   ],
+   "batch": "Oct 13 2026: R202"
+  },
+  {
+   "name": "Kyle Burwick",
+   "canonical": "C0869",
+   "aliases": [
+    "C1528"
+   ],
+   "keys": [
+    "2021:133-18",
+    "2022:133-31",
+    "2025:133-24"
+   ],
+   "batch": "Oct 13 2026: R203"
+  },
+  {
+   "name": "Connor McGonagle",
+   "canonical": "C0898",
+   "aliases": [
+    "C1520"
+   ],
+   "keys": [
+    "2021:141-24",
+    "2022:141-29",
+    "2025:133-06"
+   ],
+   "batch": "Oct 13 2026: R204"
+  },
+  {
+   "name": "Zach Braunagel",
+   "canonical": "C1011",
+   "aliases": [
+    "C1321"
+   ],
+   "keys": [
+    "2021:184-19",
+    "2022:184-09",
+    "2023:197-12",
+    "2025:197-09"
+   ],
+   "batch": "Oct 13 2026: R205"
+  },
+  {
+   "name": "Josh Heindselman",
+   "canonical": "C1052",
+   "aliases": [
+    "C1646"
+   ],
+   "keys": [
+    "2021:285-19",
+    "2022:285-30",
+    "2023:285-18",
+    "2024:285-11",
+    "2025:285-06"
+   ],
+   "batch": "Oct 13 2026: R206"
+  },
+  {
+   "name": "Joshua Koderhandt",
+   "canonical": "C1081",
+   "aliases": [
+    "C1234"
+   ],
+   "keys": [
+    "2022:133-16",
+    "2023:141-16",
+    "2024:141-11",
+    "2025:141-04"
+   ],
+   "batch": "Oct 13 2026: R207"
+  },
+  {
+   "name": "Joshua Edmond",
+   "canonical": "C1117",
+   "aliases": [
+    "C1381"
+   ],
+   "keys": [
+    "2022:149-26",
+    "2024:141-21",
+    "2025:141-23"
+   ],
+   "batch": "Oct 13 2026: R208"
+  },
+  {
+   "name": "Christopher Foca",
+   "canonical": "C1145",
+   "aliases": [
+    "C1287"
+   ],
+   "keys": [
+    "2022:174-14",
+    "2023:174-04",
+    "2024:184-14",
+    "2025:184-06"
+   ],
+   "batch": "Oct 13 2026: R209"
+  },
+  {
+   "name": "Kurtis Phipps",
+   "canonical": "C1218",
+   "aliases": [
+    "C1360"
+   ],
+   "keys": [
+    "2023:133-25",
+    "2024:133-13",
+    "2025:133-25"
+   ],
+   "batch": "Oct 13 2026: R210"
+  },
+  {
+   "name": "Brayton Lee",
+   "canonical": "C0931",
+   "aliases": [
+    "C1409"
+   ],
+   "keys": [
+    "2021:157-06",
+    "2024:157-11"
+   ],
+   "batch": "Oct 13 2026: R211"
+  },
+  {
+   "name": "Austin Gomez",
+   "canonical": "C1110",
+   "aliases": [
+    "C1389"
+   ],
+   "keys": [
+    "2022:149-03",
+    "2023:149-14",
+    "2024:149-06"
+   ],
+   "batch": "Oct 13 2026: R212"
+  },
+  {
+   "name": "Matthew Finesilver",
+   "canonical": "C0625",
+   "aliases": [
+    "C0768",
+    "C1302"
+   ],
+   "keys": [
+    "2018:174-28",
+    "2019:174-12",
+    "2022:174-13",
+    "2023:184-08"
+   ],
+   "batch": "Oct 13 2026: R213"
+  },
+  {
+   "name": "Maxwell Dean",
+   "canonical": "C0631",
+   "aliases": [
+    "C1167"
+   ],
+   "keys": [
+    "2018:184-09",
+    "2019:184-05",
+    "2022:197-01",
+    "2023:197-09"
+   ],
+   "batch": "Oct 13 2026: R214"
+  },
+  {
+   "name": "Tanner Harvey",
+   "canonical": "C0792",
+   "aliases": [
+    "C1322"
+   ],
+   "keys": [
+    "2019:184-24",
+    "2023:197-18"
+   ],
+   "batch": "Oct 13 2026: R215"
+  },
+  {
+   "name": "William Formato",
+   "canonical": "C0960",
+   "aliases": [
+    "C1285"
+   ],
+   "keys": [
+    "2021:165-16",
+    "2022:165-20",
+    "2023:165-27"
+   ],
+   "batch": "Oct 13 2026: R216"
+  },
+  {
+   "name": "Joseph Heilmann",
+   "canonical": "C1083",
+   "aliases": [
+    "C1212"
+   ],
+   "keys": [
+    "2022:133-18",
+    "2023:133-16"
+   ],
+   "batch": "Oct 13 2026: R217"
+  },
+  {
+   "name": "Brock Hudkins",
+   "canonical": "C0345",
+   "aliases": [
+    "C1078"
+   ],
+   "keys": [
+    "2017:125-28",
+    "2018:125-26",
+    "2022:133-13"
+   ],
+   "batch": "Oct 13 2026: R218"
+  },
+  {
+   "name": "Chris Weiler",
+   "canonical": "C0655",
+   "aliases": [
+    "C1006"
+   ],
+   "keys": [
+    "2018:197-23",
+    "2021:184-13",
+    "2022:184-29"
+   ],
+   "batch": "Oct 13 2026: R219"
+  },
+  {
+   "name": "Benjamin Barton",
+   "canonical": "C0750",
+   "aliases": [
+    "C1126"
+   ],
+   "keys": [
+    "2019:157-31",
+    "2021:157-22",
+    "2022:157-26"
+   ],
+   "batch": "Oct 13 2026: R220"
+  },
+  {
+   "name": "Dom Ducharme",
+   "canonical": "C0796",
+   "aliases": [
+    "C1013"
+   ],
+   "keys": [
+    "2019:184-30",
+    "2021:184-21"
+   ],
+   "batch": "Oct 13 2026: R221"
+  },
+  {
+   "name": "Gary Wayne Harding",
+   "canonical": "C0051",
+   "aliases": [
+    "C0696"
+   ],
+   "keys": [
+    "2015:133-17",
+    "2016:133-18",
+    "2019:133-18"
+   ],
+   "batch": "Oct 13 2026: R222"
+  },
+  {
+   "name": "Zachary Zavatsky",
+   "canonical": "C0236",
+   "aliases": [
+    "C0629"
+   ],
+   "keys": [
+    "2016:184-05",
+    "2017:184-05",
+    "2018:184-06",
+    "2019:184-03"
+   ],
+   "batch": "Oct 13 2026: R223"
+  },
+  {
+   "name": "Nicholas Gravina",
+   "canonical": "C0246",
+   "aliases": [
+    "C0633"
+   ],
+   "keys": [
+    "2016:184-15",
+    "2017:184-30",
+    "2018:184-14",
+    "2019:184-21"
+   ],
+   "batch": "Oct 13 2026: R224"
+  },
+  {
+   "name": "Sam Stoll",
+   "canonical": "C0308",
+   "aliases": [
+    "C0662"
+   ],
+   "keys": [
+    "2016:285-11",
+    "2018:285-05",
+    "2019:285-28"
+   ],
+   "batch": "Oct 13 2026: R225"
+  },
+  {
+   "name": "Samuel Krivus",
+   "canonical": "C0393",
+   "aliases": [
+    "C0586"
+   ],
+   "keys": [
+    "2017:149-18",
+    "2018:149-27",
+    "2019:141-26"
+   ],
+   "batch": "Oct 13 2026: R226"
+  },
+  {
+   "name": "Alex Klucker",
+   "canonical": "C0594",
+   "aliases": [
+    "C0751"
+   ],
+   "keys": [
+    "2018:157-18",
+    "2019:157-32"
+   ],
+   "batch": "Oct 13 2026: R227"
+  },
+  {
+   "name": "Richard Robertson",
+   "canonical": "C0231",
+   "aliases": [
+    "C0485"
+   ],
+   "keys": [
+    "2015:184-15",
+    "2016:174-33",
+    "2017:197-15",
+    "2018:184-11"
+   ],
+   "batch": "Oct 13 2026: R228"
+  },
+  {
+   "name": "Nate Rotert",
+   "canonical": "C0279",
+   "aliases": [
+    "C2301"
+   ],
+   "keys": [
+    "2015:197-33",
+    "2016:197-15",
+    "2017:197-09",
+    "2018:197-08"
+   ],
+   "batch": "Oct 13 2026: R229"
+  },
+  {
+   "name": "Scotty Parker",
+   "canonical": "C0350",
+   "aliases": [
+    "C0539"
+   ],
+   "keys": [
+    "2015:125-28",
+    "2017:133-09",
+    "2018:133-06"
+   ],
+   "batch": "Oct 13 2026: R230"
+  },
+  {
+   "name": "Joey Lavallee",
+   "canonical": "C0405",
+   "aliases": [
+    "C0593"
+   ],
+   "keys": [
+    "2014:157-14",
+    "2015:157-09",
+    "2017:157-03",
+    "2018:157-02"
+   ],
+   "batch": "Oct 13 2026: R231"
+  },
+  {
+   "name": "Jacob Smith",
+   "canonical": "C0660",
+   "aliases": [
+    "C2298"
+   ],
+   "keys": [
+    "2015:197-18",
+    "2018:197-31"
+   ],
+   "batch": "Oct 13 2026: R232"
+  },
+  {
+   "name": "Joey Palmer",
+   "canonical": "C0063",
+   "aliases": [
+    "C0355"
+   ],
+   "keys": [
+    "2014:133-23",
+    "2016:133-30",
+    "2017:133-18"
+   ],
+   "batch": "Oct 13 2026: R233"
+  },
+  {
+   "name": "Zach Brunson",
+   "canonical": "C0203",
+   "aliases": [
+    "C0447"
+   ],
+   "keys": [
+    "2014:157-16",
+    "2015:174-11",
+    "2016:174-05",
+    "2017:174-10"
+   ],
+   "batch": "Oct 13 2026: R234"
+  },
+  {
+   "name": "Sammy Brooks",
+   "canonical": "C0233",
+   "aliases": [
+    "C0461",
+    "C2290"
+   ],
+   "keys": [
+    "2015:184-09",
+    "2016:184-02",
+    "2017:184-03"
+   ],
+   "batch": "Oct 13 2026: R235"
+  },
+  {
+   "name": "Matt McCutcheon",
+   "canonical": "C0247",
+   "aliases": [
+    "C2291"
+   ],
+   "keys": [
+    "2015:184-14",
+    "2016:184-16",
+    "2017:197-05"
+   ],
+   "batch": "Oct 13 2026: R236"
+  },
+  {
+   "name": "Nico Megaludis",
+   "canonical": "C0003",
+   "aliases": [
+    "C1846"
+   ],
+   "keys": [
+    "2012:125-10",
+    "2013:125-04",
+    "2014:125-03",
+    "2016:125-03"
+   ],
+   "batch": "Oct 13 2026: R237"
+  },
+  {
+   "name": "Eddie Klimara",
+   "canonical": "C0006",
+   "aliases": [
+    "C1860"
+   ],
+   "keys": [
+    "2013:125-19",
+    "2014:125-14",
+    "2015:125-07",
+    "2016:125-06"
+   ],
+   "batch": "Oct 13 2026: R238"
+  },
+  {
+   "name": "Mack McGuire",
+   "canonical": "C0042",
+   "aliases": [
+    "C1892"
+   ],
+   "keys": [
+    "2013:133-26",
+    "2014:133-16",
+    "2015:133-16",
+    "2016:133-09"
+   ],
+   "batch": "Oct 13 2026: R239"
+  },
+  {
+   "name": "Rick Durso",
+   "canonical": "C0075",
+   "aliases": [
+    "C1905"
+   ],
+   "keys": [
+    "2012:141-28",
+    "2013:141-09",
+    "2014:141-12",
+    "2016:141-09"
+   ],
+   "batch": "Oct 13 2026: R240"
+  },
+  {
+   "name": "Zachary Horan",
+   "canonical": "C0097",
+   "aliases": [
+    "C2155"
+   ],
+   "keys": [
+    "2012:133-21",
+    "2014:141-07",
+    "2015:141-10",
+    "2016:141-31"
+   ],
+   "batch": "Oct 13 2026: R241"
+  },
+  {
+   "name": "Mike DePalma",
+   "canonical": "C0109",
+   "aliases": [
+    "C2176"
+   ],
+   "keys": [
+    "2014:149-24",
+    "2015:149-20",
+    "2016:149-10"
+   ],
+   "batch": "Oct 13 2026: R242"
+  },
+  {
+   "name": "Michael Ottinger",
+   "canonical": "C0208",
+   "aliases": [
+    "C2017"
+   ],
+   "keys": [
+    "2012:165-13",
+    "2013:165-32",
+    "2014:174-10",
+    "2016:174-10"
+   ],
+   "batch": "Oct 13 2026: R243"
+  },
+  {
+   "name": "Nate Brown",
+   "canonical": "C0241",
+   "aliases": [
+    "C2027"
+   ],
+   "keys": [
+    "2013:174-09",
+    "2015:184-07",
+    "2016:184-10"
+   ],
+   "batch": "Oct 13 2026: R244"
+  },
+  {
+   "name": "Maxwell Huntley",
+   "canonical": "C0274",
+   "aliases": [
+    "C2297"
+   ],
+   "keys": [
+    "2012:197-27",
+    "2013:197-28",
+    "2015:197-08",
+    "2016:197-10"
+   ],
+   "batch": "Oct 13 2026: R245"
+  },
+  {
+   "name": "Phil Wellington",
+   "canonical": "C0275",
+   "aliases": [
+    "C2092"
+   ],
+   "keys": [
+    "2013:197-17",
+    "2014:197-08",
+    "2015:197-14",
+    "2016:197-11"
+   ],
+   "batch": "Oct 13 2026: R246"
+  },
+  {
+   "name": "Zachary Nye",
+   "canonical": "C0278",
+   "aliases": [
+    "C2233"
+   ],
+   "keys": [
+    "2014:197-29",
+    "2015:197-31",
+    "2016:197-14"
+   ],
+   "batch": "Oct 13 2026: R247"
+  },
+  {
+   "name": "Max Wessell",
+   "canonical": "C0305",
+   "aliases": [
+    "C2243"
+   ],
+   "keys": [
+    "2014:285-31",
+    "2016:285-08"
+   ],
+   "batch": "Oct 13 2026: R248"
+  },
+  {
+   "name": "Billy Smith",
+   "canonical": "C0309",
+   "aliases": [
+    "C2116"
+   ],
+   "keys": [
+    "2013:285-13",
+    "2014:285-18",
+    "2015:285-22",
+    "2016:285-12"
+   ],
+   "batch": "Oct 13 2026: R249"
+  },
+  {
+   "name": "Christopher Dardanes",
+   "canonical": "C1877",
+   "aliases": [
+    "C2719"
+   ],
+   "keys": [
+    "2012:133-10",
+    "2013:133-05",
+    "2014:141-06",
+    "2015:133-01"
+   ],
+   "batch": "Oct 13 2026: R250"
+  },
+  {
+   "name": "Ken Theobold",
+   "canonical": "C2175",
+   "aliases": [
+    "C2265"
+   ],
+   "keys": [
+    "2014:149-23",
+    "2015:149-23"
+   ],
+   "batch": "Oct 13 2026: R251"
+  },
+  {
+   "name": "Matt Brown",
+   "canonical": "C2204",
+   "aliases": [
+    "C2283"
+   ],
+   "keys": [
+    "2014:174-05",
+    "2015:174-02"
+   ],
+   "batch": "Oct 13 2026: R252"
+  },
+  {
+   "name": "Benjamin Stroh",
+   "canonical": "C2220",
+   "aliases": [
+    "C2296"
+   ],
+   "keys": [
+    "2014:184-19",
+    "2015:184-32"
+   ],
+   "batch": "Oct 13 2026: R253"
+  },
+  {
+   "name": "Daniel Yates",
+   "canonical": "C2028",
+   "aliases": [
+    "C2657"
+   ],
+   "keys": [
+    "2011:165-25",
+    "2012:165-18",
+    "2013:174-10",
+    "2014:165-13"
+   ],
+   "batch": "Oct 13 2026: R254"
+  },
+  {
+   "name": "Cash Quiroga",
+   "canonical": "C2144",
+   "aliases": [
+    "C2328"
+   ],
+   "keys": [
+    "2010:125-26",
+    "2012:133-09",
+    "2014:133-07"
+   ],
+   "batch": "Oct 13 2026: R255"
+  },
+  {
+   "name": "Benjamin Apland",
+   "canonical": "C2131",
+   "aliases": [
+    "C2708"
+   ],
+   "keys": [
+    "2011:285-30",
+    "2012:285-30",
+    "2013:285-30"
+   ],
+   "batch": "Oct 13 2026: R257"
+  },
+  {
+   "name": "Zac Stevens",
+   "canonical": "C2358",
+   "aliases": [
+    "C2718"
+   ],
+   "keys": [
+    "2010:133-29",
+    "2011:133-21",
+    "2012:133-08"
+   ],
+   "batch": "Oct 13 2026: R258"
+  },
+  {
+   "name": "Harold Byrd",
+   "canonical": "C13165",
+   "aliases": [
+    "C13818"
+   ],
+   "keys": [
+    "1937:133-01",
+    "1940:133-03"
+   ],
+   "batch": "Oct 14 2026: P1 (1928-1939 series)"
   }
  ],
  "heldSplit": {

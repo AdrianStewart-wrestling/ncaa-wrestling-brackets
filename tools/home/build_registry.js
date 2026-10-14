@@ -57,7 +57,9 @@ const groups = {}; apps.forEach(a => { const k = norm(a.name) + '|' + a.canon; (
 Object.values(groups).forEach(g => { g.sort((x, y) => x.year - y.year); if (g.length < 2 || !plausible(g)) return; for (let j = 1; j < g.length; j++) union(g[0].key, g[j].key); g.forEach(a => addProv(a.key, 'auto')); });
 
 // 2) DECISIONS   CASE | LINK|SPLIT | key,key,... | evidence | source [| display name]
-const decs = fs.readFileSync(path.join(HERE, 'career-decisions.txt'), 'utf8').split('\n').filter(l => /^[A-Z]\d+ \|/.test(l)).map(l => {
+// decisions: career-decisions.txt (R and lettered series) plus the separate 1928-1939 series (tools/pre1940/career-decisions-pre1940.txt, P series)
+const DEC_FILES = [path.join(HERE, 'career-decisions.txt'), path.join(HERE, '..', 'pre1940', 'career-decisions-pre1940.txt')].filter(f => fs.existsSync(f));
+const decs = DEC_FILES.map(f => fs.readFileSync(f, 'utf8')).join('\n').split('\n').filter(l => /^[A-Z]\d+ \|/.test(l)).map(l => {
   const [cse, d, keys, ev, src, dn] = l.split(' | '); return { cse, d: d.trim(), keys: keys.split(',').map(s => s.trim()), ev, src, dn: dn && dn.trim() }; })
   .filter(x => x.keys.every(k => { const y = +k.split(':')[0]; return y >= YMIN && y <= YMAX; }));
 decs.forEach(x => { if (!['LINK', 'SPLIT'].includes(x.d)) throw new Error(x.cse + ': decision must be LINK or SPLIT');

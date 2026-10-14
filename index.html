@@ -3332,10 +3332,13 @@ function careerFor(id) {
   const k = careerKeyFor(id), cid = k && window.HistoricalCareers.byKey[k];
   return cid ? { ok: true, careerId: cid, key: k } : { ok: false, code: 'unavailable' };
 }
+// Printed spellings of ONE institution (approved Oct 14 2026): the career header names the school once instead of showing a transfer.
+// Display only -- every season row keeps the school exactly as printed, and Mankato and Moorhead remain two separate institutions.
+const CAREER_SAME_SCHOOL = { 'Minnesota State': 'Minnesota State-Mankato', 'Moorhead State': 'Minnesota State-Moorhead' };
 function careerLoad(id) {                                  // Promise: the Career Card model, built only from existing Path + scoring results
   const c = careerFor(id); if (!c.ok) return Promise.resolve({ ok: false, message: 'No NCAA career is available for this wrestler.' });
   if (!window.HistoryMode || !window.HistoryMode.getYear) return Promise.resolve({ ok: false, message: 'History data loader unavailable.' });
-  const R = window.HistoricalCareers, rec = R.careers[c.careerId], aliases = R.schoolAliases || {};
+  const R = window.HistoricalCareers, rec = R.careers[c.careerId], aliases = Object.assign({}, CAREER_SAME_SCHOOL, R.schoolAliases || {});
   const years = [...new Set(rec.keys.map(k => Number(k.split(':')[0])))];
   return Promise.all(years.map(y => window.HistoryMode.getYear(y).then(Y => { window.historicalCareerYears[y] = Y; }))).then(() => {
     const rows = rec.keys.map(k => {

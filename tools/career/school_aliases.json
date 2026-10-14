@@ -1,0 +1,92 @@
+{
+ "_note": "Spelling-only school aliases: the printed school string -> the canonical school (SAME institution). \"aliases\" apply to every year. \"scoped\" apply only in the listed years (a printed string that means a different school in other years). displayOrder only fixes the key order of the display map embedded in historical-careers.js.",
+ "aliases": {
+  "Pennsylvania": "Penn",
+  "Army West Point": "Army",
+  "Uni": "Northern Iowa",
+  "North Carolina State": "NC State",
+  "SD State": "South Dakota State",
+  "Cal State Bakersfield": "CSU Bakersfield",
+  "California Poly": "Cal Poly",
+  "Tennessee-Chattanooga": "Chattanooga",
+  "App State": "Appalachian State",
+  "ND State": "North Dakota State",
+  "Virginia Military Institute": "VMI",
+  "Northern Illnois": "Northern Illinois",
+  "N. Illinois": "Northern Illinois",
+  "N. Colorado": "Northern Colorado",
+  "Oklahoma St.": "Oklahoma State",
+  "Penn St.": "Penn State",
+  "CSU": "Cleveland State",
+  "Campbell University": "Campbell",
+  "Campbellsville University": "Campbell",
+  "Campbell + Campbell Unattatched": "Campbell",
+  "SIUE": "SIU Edwardsville",
+  "Little Rock": "Little Rock",
+  "UALR": "Little Rock",
+  "Citadel": "The Citadel",
+  "Cleveland State University": "Cleveland State",
+  "Franklin & Marshall": "Franklin and Marshall",
+  "Buffalo": "Buffalo",
+  "Northern Illinois": "Northern Illinois",
+  "Oregon St.": "Oregon State",
+  "South Dakota St.": "South Dakota State",
+  "Southern Illinois Edwardsville": "SIU Edwardsville",
+  "Minnesota State": "Minnesota State-Mankato",
+  "Moorhead State": "Minnesota State-Moorhead"
+ },
+ "scoped": {
+  "George Washington": {
+   "to": "Gardner-Webb",
+   "years": [
+    2019,
+    2021
+   ],
+   "why": "The 2019 and 2021 source data print Gardner-Webb wrestlers as \"George Washington\". George Washington University is a different school that fielded its own NCAA wrestlers in earlier decades (e.g. Wade Hughes, 1985, 126 lbs), so the alias must not apply to other years."
+  },
+  "Southern Illinois": {
+   "to": "SIU Edwardsville",
+   "years": [
+    2017,
+    2018
+   ],
+   "why": "The 2017 and 2018 source data print SIU Edwardsville wrestlers as \"Southern Illinois\". Southern Illinois University (Carbondale) is a different school, so the alias must not apply to other years."
+  }
+ },
+ "displayOrder": [
+  "_note",
+  "Pennsylvania",
+  "Army West Point",
+  "Uni",
+  "North Carolina State",
+  "SD State",
+  "Cal State Bakersfield",
+  "California Poly",
+  "Tennessee-Chattanooga",
+  "App State",
+  "ND State",
+  "Virginia Military Institute",
+  "Northern Illnois",
+  "N. Illinois",
+  "N. Colorado",
+  "Oklahoma St.",
+  "Penn St.",
+  "CSU",
+  "Campbell University",
+  "Campbellsville University",
+  "Campbell + Campbell Unattatched",
+  "George Washington",
+  "SIUE",
+  "Southern Illinois",
+  "Little Rock",
+  "UALR",
+  "Citadel",
+  "Cleveland State University",
+  "Franklin & Marshall",
+  "Buffalo",
+  "Northern Illinois",
+  "Oregon St.",
+  "South Dakota St.",
+  "Southern Illinois Edwardsville"
+ ]
+}

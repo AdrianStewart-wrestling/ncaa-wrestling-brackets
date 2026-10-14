@@ -1,4 +1,4 @@
-// Career Registry regression tests (Oct 2026). Run: node tools/career/test_registry.js
+// Career Registry regression tests (Oct 2026; content check added Oct 14 2026). Run: node tools/career/test_registry.js
 // 1) the registry rebuilds byte-for-byte from the current one (deterministic, no ID movement);
 // 2) every approved merge in merge_fixture.json sits on its canonical (first-issued) ID with exactly its appearances,
 //    and every alias resolves to that canonical ID; 3) every alias points at a live career and no alias is also a live career;
@@ -11,6 +11,11 @@ let pass = 0, fail = 0; const check = (n, ok, d) => { ok ? pass++ : fail++; cons
 cp.execFileSync(process.execPath, [path.join(HERE, 'build_registry.js')], { stdio: 'ignore' });
 check('registry rebuilds byte-for-byte (deterministic, no ID moved)', fs.readFileSync(path.join(HERE, 'out', 'historical-careers.js'), 'utf8') === fs.readFileSync(path.join(ROOT, 'historical-careers.js'), 'utf8'));
 const R = rd(path.join(ROOT, 'historical-careers.js')), A = R.aliases || {};
+// the same careers as published: every appearance in the same career under the same ID, the same names and aliases (passes even
+// while the published file still carries the Oct 13 patch's provenance tags and order, which only a republish would refresh)
+{ const N = rd(path.join(HERE, 'out', 'historical-careers.js')), so = o => JSON.stringify(Object.fromEntries(Object.entries(o).sort()));
+  const sig = X => so(Object.fromEntries(Object.entries(X.careers).map(([k, v]) => [k, [v.name, v.keys.slice().sort()]])));
+  check('rebuild reproduces every published career, ID, appearance and alias', sig(N) === sig(R) && so(N.byKey) === so(R.byKey) && so(N.aliases || {}) === so(A)); }
 const resolve = id => R.careers[id] ? id : A[id] || null;
 const F = JSON.parse(fs.readFileSync(path.join(HERE, 'merge_fixture.json'), 'utf8'));
 const bad = F.merges.filter(m => !R.careers[m.canonical] || JSON.stringify(R.careers[m.canonical].keys.slice().sort()) !== JSON.stringify(m.keys.slice().sort()) || m.keys.some(k => R.byKey[k] !== m.canonical));
